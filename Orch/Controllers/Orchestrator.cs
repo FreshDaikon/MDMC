@@ -95,6 +95,33 @@ public class Orchestrator : ControllerBase
 
         await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
         _logger.Log(LogLevel.Information, "WebSocket connection closed");
+
+        OrchGame game;
+        if(OrchGameList.Games.TryGetValue(client.ServerKey, out game))
+        {
+            game.CurrentPlayers -= 1;
+            if(game.CurrentPlayers <= 0)
+            {
+                _logger.Log(LogLevel.Information, "No more players on server - shut it down.");
+                var id = game.SessionId;
+                OrchGameList.Games.TryRemove(client.ServerKey, out game!);
+                PlayFabSettings.staticSettings.TitleId = _configuration[TitleParamName]; 
+                PlayFabSettings.staticSettings.DeveloperSecretKey = _configuration[KeyParamName];
+                var closeResult = await PlayFabMultiplayerAPI.ShutdownMultiplayerServerAsync( new ShutdownMultiplayerServerRequest()
+                {
+                    SessionId = id                    
+                });
+
+                if(closeResult.Error != null )
+                {
+                    _logger.Log(LogLevel.Information, "WebSocket connection closed");
+                    _logger.Log(LogLevel.Information, "Reason: " + closeResult.Error.ErrorMessage);
+                }
+
+            }
+
+        }
+
         OrchConnections.Connections.TryRemove(webSocket, out client!);
     }
 
