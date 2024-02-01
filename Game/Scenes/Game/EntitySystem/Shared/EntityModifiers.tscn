@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://gtdhgpxhnebn"]
+
+[ext_resource type="Script" path="res://Code/Game/Entity/Components/EntityModifiers.cs" id="1_p4ak5"]
+
+[node name="EntityModifiers" type="Node"]
+script = ExtResource("1_p4ak5")
+modsPath = "res://Data/Instances/Modifiers"
+
+[node name="ModSpawner" type="MultiplayerSpawner" parent="."]
+unique_name_in_owner = true
+spawn_path = NodePath("../Mods")
+spawn_limit = 42
+
+[node name="Mods" type="Node" parent="."]
+unique_name_in_owner = true

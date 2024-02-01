@@ -1,0 +1,16 @@
+{
+    "godot_tools.editor_path": "c:\\Users\\Rune\\Desktop\\Godot\\Godot4.2\\Godot.exe",
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true
+    },
+    "workbench.colorCustomizations": {
+        "statusBar.background" : "#de8e0d",
+        "statusBar.noFolderBackground" : "#212121",
+        "statusBar.debuggingBackground": "#3db0ea"
+    },
+}

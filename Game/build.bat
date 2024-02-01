@@ -1,0 +1,1 @@
+echo C:\Users\Rune\Desktop\Godot\Godot4.2\Godot.exe --path .\project.godot --export "LinuxServer" .\.docker\bulid\Server.x86_64

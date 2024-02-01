@@ -1,0 +1,10 @@
+# Godot 4+ specific ignores
+.godot/
+.DIST/
+.Tools/
+.SOURCE/
+/*/bin/
+*/*/bin/
+obj/
+*/obj/
+.vscode/

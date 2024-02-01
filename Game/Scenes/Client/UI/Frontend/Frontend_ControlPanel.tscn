@@ -1,0 +1,90 @@
+[gd_scene load_steps=3 format=3 uid="uid://bdnsvy2s047ut"]
+
+[ext_resource type="FontFile" uid="uid://d4h6yly3wol4q" path="res://Assets/UI/Fonts/LibreFranklin-ExtraBoldItalic.ttf" id="1_7qdwh"]
+[ext_resource type="Script" path="res://Scenes/Client/UI/Frontend/FrontendControlPanel.cs" id="1_tavic"]
+
+[node name="ControlPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 350.0
+offset_bottom = 400.0
+script = ExtResource("1_tavic")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="VBoxContainer" parent="Panel"]
+custom_minimum_size = Vector2(300, 350)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -50.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+
+[node name="Welcome" type="Label" parent="Panel/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_fonts/font = ExtResource("1_7qdwh")
+theme_override_font_sizes/font_size = 32
+text = "Welcome to MDMC"
+horizontal_alignment = 1
+
+[node name="Overview" type="Label" parent="Panel/HBoxContainer"]
+layout_mode = 2
+text = "Overview"
+horizontal_alignment = 1
+
+[node name="TabContainer" type="TabContainer" parent="Panel/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/side_margin = 65
+tab_alignment = 1
+current_tab = 1
+
+[node name="Local" type="VBoxContainer" parent="Panel/HBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="LocalButton" type="Button" parent="Panel/HBoxContainer/TabContainer/Local"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Connect"
+
+[node name="Remote" type="VBoxContainer" parent="Panel/HBoxContainer/TabContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/HBoxContainer/TabContainer/Remote"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="RequestServer" type="Button" parent="Panel/HBoxContainer/TabContainer/Remote"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Request Server"
+
+[node name="IPLabel" type="Label" parent="Panel/HBoxContainer/TabContainer/Remote"]
+layout_mode = 2
+text = "Join Code :"
+horizontal_alignment = 1
+
+[node name="JoinCode" type="LineEdit" parent="Panel/HBoxContainer/TabContainer/Remote"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "..waiting.."
+alignment = 1
+max_length = 16
+
+[node name="JoinServer" type="Button" parent="Panel/HBoxContainer/TabContainer/Remote"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Join Server"

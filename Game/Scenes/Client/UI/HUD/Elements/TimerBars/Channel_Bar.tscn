@@ -1,0 +1,142 @@
+[gd_scene load_steps=6 format=3 uid="uid://c3nva5iqe38aq"]
+
+[ext_resource type="Script" path="res://Scenes/Client/UI/HUD/Elements/TimerBars/ChannelBar.cs" id="1_bx7ki"]
+[ext_resource type="FontFile" uid="uid://q3aynbg5gvis" path="res://Assets/UI/Fonts/LibreFranklin-BlackItalic.ttf" id="2_yixxx"]
+
+[sub_resource type="Animation" id="Animation_1214e"]
+resource_name = "Channeling"
+length = 0.3
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Control/CastingTitle:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.150164, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, -10), Vector2(0, -14), Vector2(0, -10)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Control/ColorRect:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.154517, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0.998, 0.998), Vector2(1.056, 1.056), Vector2(0.998, 0.998)]
+}
+
+[sub_resource type="Animation" id="Animation_c2esb"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Control/CastingTitle:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, -10)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Control/ColorRect:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.998, 0.998)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4nee4"]
+_data = {
+"Channeling": SubResource("Animation_1214e"),
+"RESET": SubResource("Animation_c2esb")
+}
+
+[node name="ChannelBar" type="Control" node_paths=PackedStringArray("ChannelBarRect", "animationPlayer")]
+custom_minimum_size = Vector2(450, 20)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 450.0
+offset_bottom = 20.0
+script = ExtResource("1_bx7ki")
+ChannelBarRect = NodePath("Control/BG/ChannelColor")
+ChannelBarWidth = 450.0
+animationPlayer = NodePath("AnimationPlayer")
+
+[node name="Control" type="Control" parent="."]
+anchors_preset = 0
+offset_left = -230.0
+offset_right = -230.0
+
+[node name="ColorRect" type="ColorRect" parent="Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_right = 460.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -0.00349066
+scale = Vector2(0.998, 0.998)
+pivot_offset = Vector2(230, 16)
+color = Color(0, 0, 0, 1)
+
+[node name="BG" type="ColorRect" parent="Control"]
+custom_minimum_size = Vector2(450, 20)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 5.0
+offset_top = 6.0
+offset_right = 455.0
+offset_bottom = 26.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(225, 10)
+color = Color(0.109804, 0.117647, 0.168627, 1)
+
+[node name="ChannelColor" type="ColorRect" parent="Control/BG"]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 20.0
+grow_vertical = 2
+color = Color(0.372549, 0.788235, 0.317647, 1)
+
+[node name="CastingTitle" type="Label" parent="Control"]
+custom_minimum_size = Vector2(100, 30)
+layout_mode = 1
+offset_top = -10.0
+offset_right = 121.0
+offset_bottom = 20.0
+rotation = -0.0418879
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("2_yixxx")
+theme_override_font_sizes/font_size = 20
+text = "Transfering!"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_4nee4")
+}

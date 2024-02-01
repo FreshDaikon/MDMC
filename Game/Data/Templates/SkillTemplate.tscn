@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://cw1wp3vd7l481"]
+
+[ext_resource type="Script" path="res://Code/Game/Combat/ArsenalSystem/Skill.cs" id="1_eaxwk"]
+
+[node name="SkillName" type="Node"]
+script = ExtResource("1_eaxwk")
+
+[node name="README" type="Node" parent="."]
+editor_description = "REMEMBER:
+1. Attach \"Skill.cs\" to SkillName
+2. Rename SkillName
+3. Click the id to generate an id.
+4. Delete the README!
+
+"
+
+[node name="Actions" type="Node" parent="."]
+unique_name_in_owner = true

@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://2d88ddjvw6iy"]
+
+[ext_resource type="Script" path="res://Code/Game/Combat/ArsenalSystem/Skill.cs" id="1_i2es2"]
+[ext_resource type="Script" path="res://Code/Commons/DataID.cs" id="2_i4pth"]
+
+[sub_resource type="Resource" id="Resource_jihya"]
+script = ExtResource("2_i4pth")
+Id = -1247022345
+
+[node name="SkillName" type="Node"]
+script = ExtResource("1_i2es2")
+OnCastPackages = "res://Data/Instances/Realizations/TestRealization.tscn"
+OnCastingPackages = "res://Data/Instances/Realizations/TestRealization.tscn"
+OnCastinFinshed = "res://Data/Instances/Realizations/TestRealization.tscn"
+ID = SubResource("Resource_jihya")
+
+[node name="README" type="Node" parent="."]
+editor_description = "REMEMBER:
+1. Attach \"Skill.cs\" to SkillName
+2. Rename SkillName
+3. Click the id to generate an id.
+4. Delete the README!
+
+"
+
+[node name="Actions" type="Node" parent="."]
+unique_name_in_owner = true

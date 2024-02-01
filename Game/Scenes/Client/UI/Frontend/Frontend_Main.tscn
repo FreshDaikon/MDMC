@@ -1,0 +1,198 @@
+[gd_scene load_steps=10 format=3 uid="uid://bovpsy7c6ytv4"]
+
+[ext_resource type="PackedScene" uid="uid://bmr2ifsea02hp" path="res://Scenes/Client/UI/Frontend/Components/Big_Button.tscn" id="1_rscf7"]
+[ext_resource type="Script" path="res://Scenes/Client/UI/Frontend/FrontendMain.cs" id="1_tlevm"]
+[ext_resource type="PackedScene" uid="uid://bdnsvy2s047ut" path="res://Scenes/Client/UI/Frontend/Frontend_ControlPanel.tscn" id="2_06dqm"]
+[ext_resource type="FontFile" uid="uid://q3aynbg5gvis" path="res://Assets/UI/Fonts/LibreFranklin-BlackItalic.ttf" id="2_o0prq"]
+[ext_resource type="PackedScene" uid="uid://drwf23ju3cmju" path="res://Scenes/Client/UI/Frontend/Components/MDMC_Title.tscn" id="2_on30d"]
+[ext_resource type="FontFile" uid="uid://xv28cftjto52" path="res://Assets/UI/Fonts/twoweekendssans-regular.otf" id="7_ybkak"]
+
+[sub_resource type="Animation" id="Animation_qdrq7"]
+resource_name = "Opening"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BG/OpenSliderBaddy:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(-432, -170), Vector2(-934, 332)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("BG/OpenSliderGoody:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(778, -1052), Vector2(1284, -1558)]
+}
+
+[sub_resource type="Animation" id="Animation_vfrsr"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BG/OpenSliderBaddy:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-432, -170)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("BG/OpenSliderGoody:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(778, -1052)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_stwb1"]
+_data = {
+"Opening": SubResource("Animation_qdrq7"),
+"RESET": SubResource("Animation_vfrsr")
+}
+
+[node name="Frontend_Main" type="Control" node_paths=PackedStringArray("animationPlayer", "connectButton")]
+clip_contents = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_tlevm")
+animationPlayer = NodePath("AnimationPlayer")
+connectButton = NodePath("ConnectLocal")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 1928.0
+offset_bottom = 1077.0
+color = Color(0.321569, 0.47451, 0.509804, 1)
+
+[node name="BG" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="OpenSliderBaddy" type="ColorRect" parent="BG"]
+layout_mode = 0
+offset_left = -432.0
+offset_top = -170.0
+offset_right = 1797.0
+offset_bottom = 1299.0
+rotation = 0.785398
+pivot_offset = Vector2(468, 493)
+color = Color(1, 0.211765, 0.298039, 1)
+
+[node name="OpenSliderGoody" type="ColorRect" parent="BG"]
+layout_mode = 0
+offset_left = 778.0
+offset_top = -1052.0
+offset_right = 3007.0
+offset_bottom = 417.0
+rotation = 0.785398
+pivot_offset = Vector2(468, 493)
+color = Color(0.27451, 0.384314, 0.533333, 1)
+
+[node name="ControlPanel" parent="." instance=ExtResource("2_06dqm")]
+offset_left = 816.0
+offset_top = 522.0
+offset_right = 1166.0
+offset_bottom = 922.0
+
+[node name="ConnectLabel" type="Label" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 724.0
+offset_top = 531.0
+offset_right = 1242.0
+offset_bottom = 603.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_fonts/font = ExtResource("2_o0prq")
+theme_override_font_sizes/font_size = 58
+text = "Connect to Server"
+
+[node name="ConnectLive" parent="." node_paths=PackedStringArray("buttonLabel") instance=ExtResource("1_rscf7")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+offset_left = -234.0
+offset_top = -445.0
+offset_right = 266.0
+offset_bottom = -345.0
+grow_vertical = 0
+rotation = 0.0802851
+pivot_offset = Vector2(250, 47.9521)
+Label = "Online"
+buttonLabel = NodePath("../ConnectLocal/Label")
+
+[node name="ConnectLocal" parent="." instance=ExtResource("1_rscf7")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+offset_left = -220.0
+offset_top = -273.0
+offset_right = 280.0
+offset_bottom = -173.0
+grow_vertical = 0
+rotation = 0.0802851
+pivot_offset = Vector2(250, 47.9521)
+Label = "Local Host"
+
+[node name="MDMCTitle" parent="." instance=ExtResource("2_on30d")]
+layout_mode = 1
+anchors_preset = 5
+anchor_top = 0.0
+anchor_bottom = 0.0
+offset_left = -254.0
+offset_top = 39.0
+offset_right = 346.0
+offset_bottom = 389.0
+grow_vertical = 1
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -17.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("7_ybkak")
+text = "MDMC. v.0.023 © Rune Rask Langkilde 2023"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_stwb1")
+}

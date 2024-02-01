@@ -1,0 +1,54 @@
+[gd_scene load_steps=10 format=3 uid="uid://isnvdicgl47u"]
+
+[ext_resource type="Script" path="res://Code/Game/Combat/ArsenalSystem/SkillContainer.cs" id="1_adsaq"]
+[ext_resource type="PackedScene" uid="uid://dguqhcrchvj7n" path="res://Scenes/Game/Combat/ArsenalSystem/SkillSlot.tscn" id="2_523rw"]
+[ext_resource type="Script" path="res://Code/Commons/DataID.cs" id="2_elc2r"]
+[ext_resource type="Texture2D" uid="uid://coyetxtc5aald" path="res://Assets/UI/ArsenalSystem/SkillContainers/Warlocks_MK3.png" id="2_jyorp"]
+[ext_resource type="Script" path="res://Code/Game/Combat/Modifiers/StatMod.cs" id="4_e70nk"]
+
+[sub_resource type="Resource" id="Resource_0e4w0"]
+script = ExtResource("2_elc2r")
+Id = -557544443
+
+[sub_resource type="Resource" id="Resource_gvda8"]
+script = ExtResource("4_e70nk")
+Category = 1
+Value = 5000.0
+Name = "Fielty of the red"
+
+[sub_resource type="Resource" id="Resource_3np2r"]
+script = ExtResource("4_e70nk")
+Category = 3
+Value = 0.85
+Name = "Targe of devils"
+
+[sub_resource type="Resource" id="Resource_3xx8b"]
+script = ExtResource("4_e70nk")
+Category = 7
+Value = 0.2
+Name = "Grace of the saber"
+
+[node name="Warlock_MK1" type="Node"]
+script = ExtResource("1_adsaq")
+ContainerName = "Warlock MK1"
+ContainerDescription = "An allrounder Armament that boasts little in terms any particular strenghts - rahter high GCD made up for by slight multiplier increase for heals."
+ContainerIcon = ExtResource("2_jyorp")
+ID = SubResource("Resource_0e4w0")
+StatMods = Array[Object]([SubResource("Resource_gvda8"), SubResource("Resource_3np2r"), SubResource("Resource_3xx8b")])
+
+[node name="SkillSlots" type="Node" parent="."]
+unique_name_in_owner = true
+
+[node name="SkillSlot1" parent="SkillSlots" instance=ExtResource("2_523rw")]
+SlotSkillType = 1
+
+[node name="SkillSlot2" parent="SkillSlots" instance=ExtResource("2_523rw")]
+SlotSkillType = 1
+
+[node name="SkillSlot3" parent="SkillSlots" instance=ExtResource("2_523rw")]
+SlotSkillType = 2
+PotencyMultiplier = 2.0
+
+[node name="SkillSlot4" parent="SkillSlots" instance=ExtResource("2_523rw")]
+SlotSkillType = 2
+PotencyMultiplier = 2.0

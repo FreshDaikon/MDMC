@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://dguqhcrchvj7n"]
+
+[ext_resource type="Script" path="res://Code/Game/Combat/ArsenalSystem/SkillSlot.cs" id="1_f3if5"]
+
+[node name="SkillSlot1" type="Node"]
+script = ExtResource("1_f3if5")
+skillsPath = "res://Data/Instances/Skills"
+
+[node name="Spawner" type="MultiplayerSpawner" parent="."]
+unique_name_in_owner = true
+spawn_path = NodePath("../SkillHolder")
+spawn_limit = 2
+
+[node name="SkillHolder" type="Node" parent="."]
+unique_name_in_owner = true

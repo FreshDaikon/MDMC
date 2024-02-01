@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://15d4rwkfy0ii"]
+
+[ext_resource type="Script" path="res://Code/Game/Entity/Player/Components/PlayerMover.cs" id="1_tlxlq"]
+
+[node name="Mover" type="Node"]
+script = ExtResource("1_tlxlq")

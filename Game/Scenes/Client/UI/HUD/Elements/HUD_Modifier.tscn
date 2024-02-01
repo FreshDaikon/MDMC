@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://b6v4qa4wb6ts1"]
+
+[node name="HudModifier" type="Control"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 3
+anchors_preset = 0
+
+[node name="ColorRect" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+offset_right = 50.0
+offset_bottom = 50.0
+color = Color(0.152941, 0.152941, 0.152941, 1)
+
+[node name="TimeLeft" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -9.5
+offset_top = -23.0
+offset_right = 9.5
+grow_horizontal = 2
+grow_vertical = 0
+text = "10"
+horizontal_alignment = 1
+vertical_alignment = 2

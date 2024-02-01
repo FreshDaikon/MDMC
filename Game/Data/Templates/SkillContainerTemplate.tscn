@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://dyytcx220qkgr"]
+
+[ext_resource type="PackedScene" uid="uid://dguqhcrchvj7n" path="res://Scenes/Game/Combat/ArsenalSystem/SkillSlot.tscn" id="1_acrbx"]
+[ext_resource type="Script" path="res://Code/Game/Combat/ArsenalSystem/SkillContainer.cs" id="1_ksow8"]
+
+[node name="ContainerName" type="Node"]
+script = ExtResource("1_ksow8")
+
+[node name="SkillSlots" type="Node" parent="."]
+unique_name_in_owner = true
+
+[node name="SkillSlot1" parent="SkillSlots" instance=ExtResource("1_acrbx")]
+SlotSkillType = 1
+
+[node name="SkillSlot2" parent="SkillSlots" instance=ExtResource("1_acrbx")]
+SlotSkillType = 2
+
+[node name="SkillSlot3" parent="SkillSlots" instance=ExtResource("1_acrbx")]
+SlotSkillType = 2
+
+[node name="SkillSlot4" parent="SkillSlots" instance=ExtResource("1_acrbx")]
+SlotSkillType = 2

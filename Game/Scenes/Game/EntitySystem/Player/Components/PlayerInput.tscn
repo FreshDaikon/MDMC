@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://g1ekudtsi5t0"]
+
+[ext_resource type="Script" path="res://Code/Game/Entity/Player/Components/PlayerInput.cs" id="1_a27gs"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_0bh4d"]
+properties/0/path = NodePath(".:Direction")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="Input" type="Node"]
+script = ExtResource("1_a27gs")
+
+[node name="Sync" type="MultiplayerSynchronizer" parent="."]
+unique_name_in_owner = true
+replication_config = SubResource("SceneReplicationConfig_0bh4d")

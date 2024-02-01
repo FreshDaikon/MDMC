@@ -1,0 +1,71 @@
+[gd_scene load_steps=12 format=3 uid="uid://c7cpyo2qxinvj"]
+
+[ext_resource type="Script" path="res://Code/Game/Combat/ArsenalSystem/SkillContainer.cs" id="1_mmgbo"]
+[ext_resource type="Texture2D" uid="uid://d1g6ehxjt0nof" path="res://Assets/UI/ArsenalSystem/SkillContainers/Drachen_MK1.png" id="2_7uj71"]
+[ext_resource type="PackedScene" uid="uid://dguqhcrchvj7n" path="res://Scenes/Game/Combat/ArsenalSystem/SkillSlot.tscn" id="2_13mie"]
+[ext_resource type="Script" path="res://Code/Game/Combat/ArsenalSystem/ComboSlot.cs" id="3_trlxi"]
+[ext_resource type="Script" path="res://Code/Commons/DataID.cs" id="3_vbij5"]
+[ext_resource type="Script" path="res://Code/Game/Combat/Modifiers/StatMod.cs" id="4_20jmv"]
+
+[sub_resource type="Resource" id="Resource_nuax0"]
+script = ExtResource("3_trlxi")
+ComboSlotIndex = 3
+ComboPotecyBonus = 1.0
+FailurePotencyPenalty = 1.0
+
+[sub_resource type="Resource" id="Resource_ybvqb"]
+script = ExtResource("3_trlxi")
+ComboSlotIndex = 0
+ComboPotecyBonus = 1.3
+FailurePotencyPenalty = 0.7
+
+[sub_resource type="Resource" id="Resource_3tgaa"]
+script = ExtResource("3_trlxi")
+ComboSlotIndex = 1
+ComboPotecyBonus = 2.0
+FailurePotencyPenalty = 0.7
+
+[sub_resource type="Resource" id="Resource_lne6g"]
+script = ExtResource("3_vbij5")
+Id = 462203807
+
+[sub_resource type="Resource" id="Resource_xqqfo"]
+script = ExtResource("4_20jmv")
+Category = 5
+Value = 0.1
+Name = "The soul of Dragoon"
+
+[node name="ContainerName" type="Node"]
+script = ExtResource("1_mmgbo")
+ContainerName = "Drachen MK1"
+ContainerDescription = "The Drachen MK1 is a damage focused Armament.
+Offers little utility in exchange for high damage and a average GCD.
+Having this equipped increase all damage by 10%
+GCD : 2.5 seconds
+Skill Slot 1 : DPS, 1.5x dmg.
+Skill Slot 2 : DPS, 1.5x dmg.
+Skill Slot 3 : DPS, 1.5x dmg.
+Skill Slot 4 : DPS, 1.5x dmg."
+ContainerIcon = ExtResource("2_7uj71")
+ComboSlots = Array[Object]([SubResource("Resource_nuax0"), SubResource("Resource_ybvqb"), SubResource("Resource_3tgaa")])
+ID = SubResource("Resource_lne6g")
+StatMods = Array[Object]([SubResource("Resource_xqqfo")])
+
+[node name="SkillSlots" type="Node" parent="."]
+unique_name_in_owner = true
+
+[node name="SkillSlot1" parent="SkillSlots" instance=ExtResource("2_13mie")]
+SlotSkillType = 1
+PotencyMultiplier = 1.2
+
+[node name="SkillSlot2" parent="SkillSlots" instance=ExtResource("2_13mie")]
+SlotSkillType = 1
+PotencyMultiplier = 1.2
+
+[node name="SkillSlot3" parent="SkillSlots" instance=ExtResource("2_13mie")]
+SlotSkillType = 1
+PotencyMultiplier = 1.2
+
+[node name="SkillSlot4" parent="SkillSlots" instance=ExtResource("2_13mie")]
+SlotSkillType = 1
+PotencyMultiplier = 1.2

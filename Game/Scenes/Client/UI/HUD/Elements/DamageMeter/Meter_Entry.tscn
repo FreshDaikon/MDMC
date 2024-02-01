@@ -1,0 +1,85 @@
+[gd_scene load_steps=4 format=3 uid="uid://dj2hy5o46q1b1"]
+
+[ext_resource type="FontFile" uid="uid://bc4wv1o6qdbo8" path="res://Assets/UI/Fonts/Helvete_extraBlack.ttf" id="1_1e5j5"]
+[ext_resource type="Script" path="res://Scenes/Client/UI/HUD/Elements/DamageMeter/DamageMeterEntry.cs" id="1_stdyy"]
+[ext_resource type="FontFile" uid="uid://xv28cftjto52" path="res://Assets/UI/Fonts/twoweekendssans-regular.otf" id="2_2thcw"]
+
+[node name="Entry1" type="ColorRect" node_paths=PackedStringArray("playerColor", "playerName", "playerDPS", "playerTotal")]
+custom_minimum_size = Vector2(350, 20)
+color = Color(0.0235294, 0, 0, 0.12549)
+script = ExtResource("1_stdyy")
+playerColor = NodePath("PlayerColor")
+playerName = NodePath("NameMargin/PlayerName")
+playerDPS = NodePath("MarginContainer/DisplayValues/VPS")
+playerTotal = NodePath("MarginContainer/DisplayValues/VT")
+EntryWidth = 350.0
+
+[node name="PlayerColor" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -10.0
+offset_right = 350.0
+offset_bottom = 10.0
+grow_vertical = 2
+color = Color(0.2, 0.576471, 0.498039, 1)
+
+[node name="NameMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -8.0
+offset_right = 97.0
+offset_bottom = 8.0
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+
+[node name="PlayerName" type="Label" parent="NameMargin"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 0
+theme_override_constants/shadow_outline_size = 3
+theme_override_fonts/font = ExtResource("1_1e5j5")
+text = "SomePlayer"
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -86.0
+offset_top = -8.5
+offset_bottom = 8.5
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_constants/margin_right = 8
+
+[node name="DisplayValues" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+alignment = 2
+
+[node name="VPS" type="Label" parent="MarginContainer/DisplayValues"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_fonts/font = ExtResource("2_2thcw")
+text = "12k"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="VT" type="Label" parent="MarginContainer/DisplayValues"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_fonts/font = ExtResource("2_2thcw")
+text = "9mil"
+horizontal_alignment = 2
+vertical_alignment = 1

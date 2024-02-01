@@ -1,0 +1,80 @@
+[gd_scene load_steps=3 format=3 uid="uid://cwh6awh6v5gr8"]
+
+[ext_resource type="Script" path="res://Scenes/Client/UI/HUD/Elements/Target/TargetBar.cs" id="1_eeu2a"]
+[ext_resource type="FontFile" uid="uid://dftj2ckdl3j7d" path="res://Assets/UI/Fonts/LibreFranklin-Black.ttf" id="1_qjro6"]
+
+[node name="TargetFriend" type="Control" node_paths=PackedStringArray("targetHealthBar", "targetName", "targetHealthPercent")]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_eeu2a")
+targetHealthBar = NodePath("Control/BG/HealthColor")
+targetName = NodePath("Control/TargetName")
+targetHealthPercent = NodePath("Control/TargetHealthPercent")
+BarSize = 340.0
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 0
+offset_left = -350.0
+offset_bottom = 53.0
+
+[node name="Frame" type="ColorRect" parent="Control"]
+layout_mode = 0
+offset_left = 0.414276
+offset_top = -2.7457
+offset_right = 350.414
+offset_bottom = 47.2543
+rotation = 0.015708
+pivot_offset = Vector2(175, 25)
+color = Color(0, 0, 0, 1)
+
+[node name="BG" type="ColorRect" parent="Control"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 2.0
+offset_right = 345.0
+offset_bottom = 44.0
+pivot_offset = Vector2(175, 25)
+color = Color(0.109804, 0.117647, 0.168627, 1)
+
+[node name="HealthColor" type="ColorRect" parent="Control/BG"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -18.5
+offset_right = 188.0
+offset_bottom = 18.5
+grow_vertical = 2
+pivot_offset = Vector2(175, 25)
+color = Color(0.278431, 0.580392, 0.27451, 1)
+
+[node name="TargetName" type="Label" parent="Control"]
+layout_mode = 0
+offset_top = -39.0
+offset_right = 300.0
+offset_bottom = -2.0
+rotation = -0.0244346
+pivot_offset = Vector2(150, 12.5)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("1_qjro6")
+theme_override_font_sizes/font_size = 30
+text = "SomeTarget!"
+
+[node name="TargetHealthPercent" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 22.0
+offset_right = 342.0
+offset_bottom = 59.0
+rotation = 0.00698132
+pivot_offset = Vector2(150, 12.5)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("1_qjro6")
+theme_override_font_sizes/font_size = 25
+text = "98%"
+vertical_alignment = 2

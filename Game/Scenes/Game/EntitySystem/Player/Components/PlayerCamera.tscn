@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://uipio1vlxvl5"]
+
+[ext_resource type="Script" path="res://Code/Game/Entity/Player/Components/PlayerCamera.cs" id="1_evmce"]
+
+[node name="Rig" type="SpringArm3D"]
+collision_mask = 4
+script = ExtResource("1_evmce")
+
+[node name="Camera" type="Camera3D" parent="."]
+unique_name_in_owner = true

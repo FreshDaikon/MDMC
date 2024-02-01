@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://blkuj16g1jd1w"]
+
+[ext_resource type="Script" path="res://Code/Game/Entity/Components/EntityStatus.cs" id="1_q7ndn"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_0n5mt"]
+properties/0/path = NodePath(".:CurrentHealth")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+
+[node name="EntityStatus" type="Node"]
+script = ExtResource("1_q7ndn")
+
+[node name="StatusSync" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_0n5mt")

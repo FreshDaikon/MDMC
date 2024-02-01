@@ -1,0 +1,85 @@
+[gd_scene load_steps=14 format=3 uid="uid://dkewiv4f333eh"]
+
+[ext_resource type="Script" path="res://Code/Game/Entity/Player/PlayerEntity.cs" id="1_6j6p2"]
+[ext_resource type="PackedScene" uid="uid://g1ekudtsi5t0" path="res://Scenes/Game/EntitySystem/Player/Components/PlayerInput.tscn" id="3_1ru0t"]
+[ext_resource type="PackedScene" uid="uid://blkuj16g1jd1w" path="res://Scenes/Game/EntitySystem/Shared/EntityStatus.tscn" id="3_ocq80"]
+[ext_resource type="PackedScene" uid="uid://c5m53oj4o6moe" path="res://Scenes/Game/EntitySystem/Player/Components/PlayerArsenal.tscn" id="3_sdwaw"]
+[ext_resource type="PackedScene" uid="uid://15d4rwkfy0ii" path="res://Scenes/Game/EntitySystem/Player/Components/PlayerMover.tscn" id="6_7ov6x"]
+[ext_resource type="PackedScene" uid="uid://bc6rhldsgpesr" path="res://Scenes/Game/EntitySystem/Shared/EntityController.tscn" id="6_lhg4c"]
+[ext_resource type="PackedScene" uid="uid://uipio1vlxvl5" path="res://Scenes/Game/EntitySystem/Player/Components/PlayerCamera.tscn" id="6_wf2nq"]
+[ext_resource type="PackedScene" uid="uid://gtdhgpxhnebn" path="res://Scenes/Game/EntitySystem/Shared/EntityModifiers.tscn" id="7_wtkie"]
+[ext_resource type="PackedScene" uid="uid://cqhl1y0g5lq7x" path="res://Assets/3D/Heroes/Hero_Male_Base.blend" id="9_b3bqd"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_jddvm"]
+properties/0/path = NodePath(".:TargetId")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:EntityName")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:FriendlyTargetId")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_7gxjr"]
+radius = 0.2
+
+[sub_resource type="Gradient" id="Gradient_eifaf"]
+offsets = PackedFloat32Array(0.37018, 0.624679, 0.650386, 0.66838)
+colors = PackedColorArray(0.29, 1, 0.29, 0, 0, 1, 0, 1, 0.0293392, 1, 0.0293392, 1, 0.29, 1, 0.29, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_hrlgr"]
+gradient = SubResource("Gradient_eifaf")
+width = 512
+height = 512
+use_hdr = true
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 1)
+
+[node name="PlayerEntity" type="Node3D"]
+script = ExtResource("1_6j6p2")
+targetable = true
+team = 0
+
+[node name="EntitySync" type="MultiplayerSynchronizer" parent="."]
+replication_interval = 0.083
+delta_interval = 0.083
+replication_config = SubResource("SceneReplicationConfig_jddvm")
+
+[node name="EntityStatus" parent="." instance=ExtResource("3_ocq80")]
+unique_name_in_owner = true
+BaseSpeed = 10.0
+
+[node name="Arsenal" parent="." instance=ExtResource("3_sdwaw")]
+unique_name_in_owner = true
+skillContainersPath = "res://Data/Instances/SkillContainers"
+
+[node name="Input" parent="." instance=ExtResource("3_1ru0t")]
+unique_name_in_owner = true
+
+[node name="Mover" parent="." instance=ExtResource("6_7ov6x")]
+unique_name_in_owner = true
+
+[node name="EntityModifiers" parent="." instance=ExtResource("7_wtkie")]
+unique_name_in_owner = true
+
+[node name="Rig" parent="." instance=ExtResource("6_wf2nq")]
+unique_name_in_owner = true
+
+[node name="Controller" parent="." instance=ExtResource("6_lhg4c")]
+unique_name_in_owner = true
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Controller"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_7gxjr")
+
+[node name="Decal" type="Decal" parent="Controller"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.29951, 0)
+size = Vector3(2, 8.74156, 2)
+texture_albedo = SubResource("GradientTexture2D_hrlgr")
+
+[node name="Hero_Male_Base2" parent="Controller" instance=ExtResource("9_b3bqd")]
+
+[editable path="Controller/Hero_Male_Base2"]

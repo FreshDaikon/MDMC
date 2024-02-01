@@ -1,0 +1,207 @@
+[gd_scene load_steps=9 format=3 uid="uid://ds72o2h662r4r"]
+
+[ext_resource type="Script" path="res://Scenes/Client/UI/HUD/PlayerHUD.cs" id="1_1cu7q"]
+[ext_resource type="PackedScene" uid="uid://d0fgtib258a7k" path="res://Scenes/Client/UI/HUD/Elements/DamageMeter/Damage_Meter.tscn" id="2_t5a6y"]
+[ext_resource type="PackedScene" uid="uid://cj1yyie770nrc" path="res://Scenes/Client/UI/HUD/Elements/TimerBars/Cast_Bar.tscn" id="3_27437"]
+[ext_resource type="PackedScene" uid="uid://c3nva5iqe38aq" path="res://Scenes/Client/UI/HUD/Elements/TimerBars/Channel_Bar.tscn" id="4_cntgf"]
+[ext_resource type="PackedScene" uid="uid://cwh6awh6v5gr8" path="res://Scenes/Client/UI/HUD/Elements/Target/Target_Friendly.tscn" id="5_jsa1w"]
+[ext_resource type="PackedScene" uid="uid://dqc2ol81a8nmg" path="res://Scenes/Client/UI/HUD/Elements/Target/Target_Enemy.tscn" id="6_rd5gx"]
+[ext_resource type="PackedScene" uid="uid://cj5m27jrog0rj" path="res://Scenes/Client/UI/HUD/Arsenal/hud_skill_container.tscn" id="7_55lo1"]
+[ext_resource type="FontFile" uid="uid://xv28cftjto52" path="res://Assets/UI/Fonts/twoweekendssans-regular.otf" id="8_aw1je"]
+
+[node name="PlayerHud" type="Control" node_paths=PackedStringArray("idLabel", "healthLabel", "speedLabel", "modContainer", "dmgNumberContainer")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1cu7q")
+idLabel = NodePath("VBoxContainer/ID/IDValue")
+healthLabel = NodePath("VBoxContainer/Health/HealthValue")
+speedLabel = NodePath("VBoxContainer/Speed/SpeedValue")
+modContainer = NodePath("VBoxContainer/MODS/ModContainer")
+modPath = "res://Scenes/UI/HUD/Elements/HUD_Modifier.tscn"
+dmgNumberPath = "res://Scenes/Client/UI/HUD/Elements/DamageNumber/DamageNumber.tscn"
+dmgNumberContainer = NodePath("DmgNumberContainer")
+metadata/_edit_lock_ = true
+
+[node name="DmgNumberContainer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_lock_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+modulate = Color(1, 0.32549, 1, 0.654902)
+layout_mode = 1
+offset_left = 8.0
+offset_top = 674.0
+offset_right = 397.0
+offset_bottom = 782.0
+metadata/_edit_lock_ = true
+
+[node name="ID" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/ID"]
+layout_mode = 2
+text = "Player ID :"
+
+[node name="IDValue" type="Label" parent="VBoxContainer/ID"]
+layout_mode = 2
+text = "0"
+
+[node name="Speed" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/Speed"]
+layout_mode = 2
+text = "Player Speed"
+
+[node name="SpeedValue" type="Label" parent="VBoxContainer/Speed"]
+layout_mode = 2
+text = "0"
+
+[node name="Health" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/Health"]
+layout_mode = 2
+text = "Health: "
+
+[node name="HealthValue" type="Label" parent="VBoxContainer/Health"]
+layout_mode = 2
+text = "0"
+
+[node name="MODS" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/MODS"]
+layout_mode = 2
+text = "MODS"
+
+[node name="ModContainer" type="HBoxContainer" parent="VBoxContainer/MODS"]
+layout_mode = 2
+
+[node name="DamageMeter" parent="." instance=ExtResource("2_t5a6y")]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -14.0
+offset_right = 10.0
+offset_bottom = -14.0
+grow_vertical = 0
+
+[node name="TopCenter" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -5.0
+offset_top = 64.0
+offset_right = 5.0
+offset_bottom = 74.0
+grow_horizontal = 2
+
+[node name="TargetFriend" parent="TopCenter" instance=ExtResource("5_jsa1w")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -5.0
+offset_top = -5.0
+offset_right = 345.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TargetEnemy" parent="TopCenter" instance=ExtResource("6_rd5gx")]
+layout_mode = 1
+offset_left = -175.0
+offset_top = 1.0
+offset_right = -175.0
+offset_bottom = 1.0
+
+[node name="CenterCenter" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ChannelBar" parent="CenterCenter" instance=ExtResource("4_cntgf")]
+layout_mode = 1
+offset_top = 200.0
+offset_bottom = 220.0
+
+[node name="CastBar" parent="CenterCenter" instance=ExtResource("3_27437")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = 200.0
+offset_right = 450.0
+offset_bottom = 220.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BottomCenter" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="MAIN" parent="BottomCenter" instance=ExtResource("7_55lo1")]
+offset_top = -180.0
+offset_bottom = -180.0
+Activators = PackedStringArray("Activator1", "Activator2")
+
+[node name="LEFT" parent="BottomCenter" instance=ExtResource("7_55lo1")]
+offset_left = -200.0
+offset_top = -120.0
+offset_right = -200.0
+offset_bottom = -120.0
+containerName = "Left"
+Activators = PackedStringArray("Activator1")
+
+[node name="RIGHT" parent="BottomCenter" instance=ExtResource("7_55lo1")]
+offset_left = 200.0
+offset_top = -120.0
+offset_right = 200.0
+offset_bottom = -120.0
+containerName = "Right"
+Activators = PackedStringArray("Activator2")
+
+[node name="FPS" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -264.0
+offset_bottom = 23.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(0.890196, 0.788235, 0.482353, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("8_aw1je")
+theme_override_font_sizes/font_size = 22
+text = "FPS: 99"
+horizontal_alignment = 2
+vertical_alignment = 1

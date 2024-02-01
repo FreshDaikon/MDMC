@@ -1,0 +1,159 @@
+[gd_scene load_steps=11 format=3 uid="uid://cj5m27jrog0rj"]
+
+[ext_resource type="Script" path="res://Scenes/Client/UI/HUD/Arsenal/HUD_SkillContainer.cs" id="1_3uhms"]
+[ext_resource type="Texture2D" uid="uid://coyetxtc5aald" path="res://Assets/UI/ArsenalSystem/SkillContainers/Warlocks_MK3.png" id="1_kaaot"]
+[ext_resource type="FontFile" uid="uid://q3aynbg5gvis" path="res://Assets/UI/Fonts/LibreFranklin-BlackItalic.ttf" id="1_q1tj0"]
+[ext_resource type="PackedScene" uid="uid://cxax3of812334" path="res://Scenes/Client/UI/HUD/Arsenal/hud_SkillSlot.tscn" id="1_q3fjt"]
+[ext_resource type="Texture2D" uid="uid://dnshiwotimgv1" path="res://Assets/UI/Core/Blur_Drop.png" id="4_756ky"]
+[ext_resource type="PackedScene" uid="uid://de5742ksrt2q4" path="res://Scenes/Client/UI/HUD/Arsenal/hud_combo_slot.tscn" id="5_6hhsb"]
+
+[sub_resource type="Animation" id="Animation_as1gm"]
+resource_name = "Active"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.43),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1.3, 1.3), Vector2(1.2, 1.2)]
+}
+
+[sub_resource type="Animation" id="Animation_bxk7c"]
+resource_name = "Idle"
+
+[sub_resource type="Animation" id="Animation_6hdv7"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8c1c3"]
+_data = {
+"Active": SubResource("Animation_as1gm"),
+"Idle": SubResource("Animation_bxk7c"),
+"RESET": SubResource("Animation_6hdv7")
+}
+
+[node name="HUD_SkillContainer" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_3uhms")
+containerName = "Main"
+
+[node name="DropShadow" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -128.0
+offset_right = 128.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_756ky")
+expand_mode = 1
+
+[node name="ContainerIcon" type="TextureRect" parent="."]
+unique_name_in_owner = true
+texture_filter = 2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 64.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(64, 64)
+texture = ExtResource("1_kaaot")
+expand_mode = 1
+
+[node name="Slot1" parent="." instance=ExtResource("1_q3fjt")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = -80.0
+offset_bottom = -44.0
+
+[node name="Slot2" parent="." instance=ExtResource("1_q3fjt")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 63.0
+offset_top = -18.0
+offset_right = 63.0
+offset_bottom = 18.0
+
+[node name="Slot3" parent="." instance=ExtResource("1_q3fjt")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 44.0
+offset_bottom = 80.0
+
+[node name="Slot4" parent="." instance=ExtResource("1_q3fjt")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = -64.0
+offset_top = -19.0
+offset_right = -64.0
+offset_bottom = 17.0
+
+[node name="Combo1" parent="." instance=ExtResource("5_6hhsb")]
+unique_name_in_owner = true
+offset_top = -104.0
+offset_bottom = -84.0
+
+[node name="Combo2" parent="." instance=ExtResource("5_6hhsb")]
+unique_name_in_owner = true
+offset_left = 53.0
+offset_top = -50.0
+offset_right = 73.0
+offset_bottom = -30.0
+
+[node name="Combo3" parent="." instance=ExtResource("5_6hhsb")]
+unique_name_in_owner = true
+offset_left = -9.0
+offset_top = 14.0
+offset_right = 11.0
+offset_bottom = 34.0
+
+[node name="Combo4" parent="." instance=ExtResource("5_6hhsb")]
+unique_name_in_owner = true
+offset_left = -74.0
+offset_top = -51.0
+offset_right = -54.0
+offset_bottom = -31.0
+
+[node name="Activator" type="Label" parent="."]
+layout_mode = 0
+offset_left = -64.0
+offset_top = -83.0
+offset_right = -24.0
+offset_bottom = -60.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_q1tj0")
+text = "LB"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_8c1c3")
+}

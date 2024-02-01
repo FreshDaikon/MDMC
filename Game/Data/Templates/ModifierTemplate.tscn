@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://dsac600h4ecjh"]
+
+[ext_resource type="Script" path="res://Code/Game/Combat/Modifiers/Modifier.cs" id="1_3wb44"]
+
+[node name="ModifierName" type="Node"]
+script = ExtResource("1_3wb44")
+
+[node name="README" type="Node" parent="."]
+editor_description = "REMEMBER:
+1. Attach \"Modifier.cs\" to Modifier
+2. Rename SkillName
+3. Re-Open Scene to gen ID.
+4. Delete the README!
+5. !! Remember to hook up the MultiplayerSyncer!
+
+"
