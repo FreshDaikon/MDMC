@@ -108,9 +108,13 @@ public partial class WSClient : Node
     }
 
     public void RequestServer()
-    {
+    {        
         SendData(new {
-            MessageType = ClientMessageType.RequestGame
+            MessageType = ClientMessageType.RequestGame,
+            MessageContent = new RequestGameMessage()
+            {
+                Arena = "Test_Arena"
+            }
         });
     }
 

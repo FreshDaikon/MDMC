@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://hriaw8ngvo8g"]
+
+[node name="ArenaName" type="Node3D"]
+
+[node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://Scenes/Game/EntitySystem/Player/PlayerEntity.tscn")
+spawn_path = NodePath("../Players_Dynamic")
+
+[node name="DynamicSpawner" type="MultiplayerSpawner" parent="."]
+spawn_path = NodePath("../Entities_Dynamic")
+
+[node name="Players_Dynamic" type="Node3D" parent="."]
+
+[node name="Entities_Dynamic" type="Node3D" parent="."]
+
+[node name="Entities_Baked" type="Node3D" parent="."]
+
+[node name="Arena" type="Node3D" parent="."]

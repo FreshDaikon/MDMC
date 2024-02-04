@@ -1,4 +1,4 @@
 public class GameRequstFailedMessage
 {
-    public string? Reason { get; set; }
+    public string Reason { get; set; }
 }

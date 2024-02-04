@@ -1,4 +1,5 @@
 using Godot;
+using Microsoft.Playfab.Gaming.GSDK.CSharp;
 using System;
 using System.Linq;
 using System.Threading;
@@ -8,8 +9,7 @@ public partial class ServerManager : Node3D
     public static ServerManager Instance;
     public string ConnectionType { get; private set;}
     private ENetMultiplayerPeer peer;
-    private const int PORT = 8080;
-    
+   
     private Node3D EntityContainer;
     [Export]
     private string playerEntityPath;
@@ -29,7 +29,7 @@ public partial class ServerManager : Node3D
         
     }
 
-    public void StartAsServer(int port, int maxPlayers)
+    public void StartAsStandaloneServer(int port, int maxPlayers)
     {
         Engine.MaxFps = 60;
         GD.Print("Starting Server...");
@@ -37,7 +37,7 @@ public partial class ServerManager : Node3D
         Multiplayer.PeerConnected += PeerConnected;
         Multiplayer.PeerDisconnected += PeerDisconnected; 
         peer = new ENetMultiplayerPeer();
-        var error = peer.CreateServer(PORT, 8);   
+        var error = peer.CreateServer(port, maxPlayers);   
         if(error != Error.Ok)
         {
             GD.Print("Can't Host : " + error.ToString());
@@ -46,11 +46,36 @@ public partial class ServerManager : Node3D
         Multiplayer.MultiplayerPeer = peer;   
         GD.Print("Server Started! Awaiting Clients...");        
     }
+
+    public void StartAsPlayfabServer(string cookie, int port, int maxPlayers)
+    {
+        Engine.MaxFps = 60;
+        Multiplayer.PeerConnected += PeerConnected;
+        Multiplayer.PeerDisconnected += PeerDisconnected;
+        MD.Log(cookie);
+        peer = new ENetMultiplayerPeer();
+        var error = peer.CreateServer(port, maxPlayers);   
+        if(error != Error.Ok)
+        {
+            GD.Print("Can't Host : " + error.ToString());
+            return;
+        }
+        Multiplayer.MultiplayerPeer = peer;   
+        GD.Print("Server Started! Awaiting Clients..."); 
+
+    }
+
     // SIGNALS:
     private void PeerDisconnected(long id)
     {
         GD.Print("Peer Disconnected : " + id);
         RemovePlayer(id);
+        MD.Log(Multiplayer.GetPeers().Length.ToString());
+        if(Multiplayer.GetPeers().Length <= 0)
+        {
+            GetTree().Quit();
+        }
+
     }
     private void PeerConnected(long id)
     {

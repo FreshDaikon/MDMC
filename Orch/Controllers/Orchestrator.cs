@@ -7,6 +7,7 @@ using System.Text.Json.Nodes;
 using PlayFab;
 using PlayFab.MultiplayerModels;
 using System.Data;
+using System.Linq;
 
 [ApiController]
 [Route("[controller]")]
@@ -55,8 +56,8 @@ public class Orchestrator : ControllerBase
             else 
             {
                 _logger.Log(LogLevel.Information, "WebSocket connection established");
-                _logger.Log(LogLevel.Information, "Number of connections :" + OrchConnections.Connections.Count);
                 OrchConnections.Connections.TryAdd(webSocket, client);
+                _logger.Log(LogLevel.Information, "Number of connections :" + OrchConnections.Connections.Count);
                 await HandleWebSocketConnection(webSocket, client);
             }
         } 
@@ -64,6 +65,12 @@ public class Orchestrator : ControllerBase
         {
             HttpContext.Response.StatusCode = 400;
         }
+    }
+
+    [HttpGet("/Admin")]
+    public async Task Admin()
+    {
+
     }
 
     [HttpGet("/Banana")]
@@ -84,6 +91,7 @@ public class Orchestrator : ControllerBase
         });
 
         _logger.Log(LogLevel.Information, "Welcome message sent");
+        _logger.Log(LogLevel.Information, "Number of connections :" + OrchConnections.Connections.Count);
         var buffer = new byte[1024 * 4];
         var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
 
@@ -95,33 +103,6 @@ public class Orchestrator : ControllerBase
 
         await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
         _logger.Log(LogLevel.Information, "WebSocket connection closed");
-
-        OrchGame game;
-        if(OrchGameList.Games.TryGetValue(client.ServerKey, out game))
-        {
-            game.CurrentPlayers -= 1;
-            if(game.CurrentPlayers <= 0)
-            {
-                _logger.Log(LogLevel.Information, "No more players on server - shut it down.");
-                var id = game.SessionId;
-                OrchGameList.Games.TryRemove(client.ServerKey, out game!);
-                PlayFabSettings.staticSettings.TitleId = _configuration[TitleParamName]; 
-                PlayFabSettings.staticSettings.DeveloperSecretKey = _configuration[KeyParamName];
-                var closeResult = await PlayFabMultiplayerAPI.ShutdownMultiplayerServerAsync( new ShutdownMultiplayerServerRequest()
-                {
-                    SessionId = id                    
-                });
-
-                if(closeResult.Error != null )
-                {
-                    _logger.Log(LogLevel.Information, "WebSocket connection closed");
-                    _logger.Log(LogLevel.Information, "Reason: " + closeResult.Error.ErrorMessage);
-                }
-
-            }
-
-        }
-
         OrchConnections.Connections.TryRemove(webSocket, out client!);
     }
 
@@ -176,14 +157,23 @@ public class Orchestrator : ControllerBase
         switch ((ClientMessageType) (int) messageData!["MessageType"]!) 
         {
             case ClientMessageType.RequestGame:
+                var requestContent = messageData["MessageContent"].Deserialize<RequestGameMessage>();
+                var arena = requestContent?.Arena;
                 await SendMessageToConnection(webSocket, new {
                     MessageType = OrchMessageType.RequestingGame,
                 });
-                await this.TryCreateGame(webSocket, client);
+                if(arena != null)
+                {
+                    await TryCreateGame(webSocket, client, arena);
+                }
+                else
+                {
+                    await TryCreateGame(webSocket, client, "none");
+                }
                 break;
             case ClientMessageType.JoinGame:
-                var content = messageData["MessageContent"].Deserialize<JoinGameMessage>();
-                var code = content?.ShareableCode;
+                var joinContent = messageData["MessageContent"].Deserialize<JoinGameMessage>();
+                var code = joinContent?.ShareableCode;
                 if(code != null)
                 {
                     await TryJoinGame(webSocket, code, client);  
@@ -192,7 +182,7 @@ public class Orchestrator : ControllerBase
         }
     }
     
-    private async Task TryCreateGame(WebSocket sourceSocket, OrchClient client)
+    private async Task TryCreateGame(WebSocket sourceSocket, OrchClient client, string arena)
     {
         PlayFabSettings.staticSettings.TitleId = _configuration[TitleParamName]; 
         PlayFabSettings.staticSettings.DeveloperSecretKey = _configuration[KeyParamName];
@@ -231,7 +221,8 @@ public class Orchestrator : ControllerBase
                     {
                         BuildId = latest,
                         PreferredRegions = new[] {"NorthEurope"}.ToList(),
-                        SessionId = SessionId
+                        SessionId = SessionId,
+                        SessionCookie = arena
                     });
                     if(Server.Error != null)
                     {
@@ -255,8 +246,7 @@ public class Orchestrator : ControllerBase
                             Host = apiResult.FQDN,
                             Port = apiResult.Ports.First(port => port.Name == "GameServer")?.Num,
                             JoinCode = joinCode,
-                            MaxPlayers = 8,
-                            CurrentPlayers = 1
+
                         };
                         OrchGameList.Games.TryAdd(joinCode, newGame);
 
@@ -294,7 +284,6 @@ public class Orchestrator : ControllerBase
         {
             if(game != null)
             {                
-                game.CurrentPlayers += 1;
                 client.ServerKey = joinCode;
                 var ServerFoundMessage = new {
                     MessageType = OrchMessageType.GameFound,

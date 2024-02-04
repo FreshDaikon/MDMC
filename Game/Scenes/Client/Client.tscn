@@ -118,6 +118,44 @@ unique_name_in_owner = true
 
 [node name="Frontend_Main" parent="Client_Container" instance=ExtResource("6_ygd82")]
 
+[node name="Control" type="Control" parent="Client_Container"]
+custom_minimum_size = Vector2(400, 48.325)
+layout_mode = 3
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -400.0
+offset_top = -48.0
+offset_bottom = 0.324951
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="Panel" type="Panel" parent="Client_Container/Control"]
+modulate = Color(0, 0, 0, 0.313726)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 27.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Status" type="Label" parent="Client_Container/Control"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -399.0
+offset_top = -23.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Status ...      <"
+horizontal_alignment = 2
+
 [node name="Game_Container" type="Node3D" parent="."]
 unique_name_in_owner = true
 

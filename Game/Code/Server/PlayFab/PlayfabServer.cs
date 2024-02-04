@@ -8,9 +8,10 @@ public partial class PlayfabServer : Node
 {
 
     public static PlayfabServer instance;
-    public string ListeningPortKey = "game_port";
-    
+    public string ListeningPortKey = "game_port";    
     private string arena = "None";
+    
+    public bool Running = false;
 
     public override void _Ready()
     {
@@ -32,6 +33,7 @@ public partial class PlayfabServer : Node
             if(argument.Contains("--playfab"))
             {
                 MD.Log("Init Playfab Instance..");
+                Running = true;
                 StartAsPlayfabInstance();
                 return;
             }
@@ -65,33 +67,35 @@ public partial class PlayfabServer : Node
             // Just shut down right now... whatever.
             GetTree().Quit();
         }); 
-        // Start up connection to MP agent:
-        try 
-        {
-            GameserverSDK.Start();
-        }
-        catch(GSDKInitializationException initEx)
-        {
-            GD.Print("Cannot start GSDK. Please make sure the MockAgent is running.", false);
-            GD.Print($"Got Exception: {initEx.ToString() }", false);
-            return;
-        }
         IDictionary<string, string> config = GameserverSDK.getConfigSettings();
         int listeningPort = 8080;
         if(config?.ContainsKey(ListeningPortKey) == true)
         {
             listeningPort = int.Parse(config[ListeningPortKey]);
         }
-        if(GameserverSDK.ReadyForPlayers() )
+        if(GameserverSDK.ReadyForPlayers())
         {
-            MD.Log("Start Playfab on [ " + listeningPort + " ]");
-            ServerManager.Instance.StartAsServer(listeningPort, 8);
+            string cookie;
+            if(config.TryGetValue(GameserverSDK.SessionCookieKey, out cookie))
+            {
+                MD.Log("Start Playfab on [ " + listeningPort + " ]");
+                ServerManager.Instance.StartAsPlayfabServer(cookie, listeningPort, 8);
+                return;    
+            }
+            else
+            {
+                MD.Log("Start Playfab on [ " + listeningPort + " ]");
+                ServerManager.Instance.StartAsPlayfabServer("none", listeningPort, 8);
+                return;
+            }
+
         }
         
     }
 
+
     private void StartAsStandalone()
     {
-        ServerManager.Instance.StartAsServer(8080, 8);
+        ServerManager.Instance.StartAsStandaloneServer(8080, 8);
     }
 }
