@@ -67,12 +67,6 @@ public class Orchestrator : ControllerBase
         }
     }
 
-    [HttpGet("/Admin")]
-    public async Task Admin()
-    {
-
-    }
-
     [HttpGet("/Banana")]
     public string? Banana()
     {

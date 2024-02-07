@@ -2,11 +2,11 @@
 
 [ext_resource type="Script" path="res://Code/Game/Realization/RealizationObject.cs" id="1_blwot"]
 
-[sub_resource type="Animation" id="Animation_pqflw"]
-resource_name = "Spawn"
-
 [sub_resource type="Animation" id="Animation_8aq24"]
 resource_name = "End"
+
+[sub_resource type="Animation" id="Animation_pqflw"]
+resource_name = "Spawn"
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_xvqh6"]
 _data = {

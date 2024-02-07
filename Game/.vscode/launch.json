@@ -16,6 +16,17 @@
             "args": ["--path", "${workspaceRoot}", " --headless" ]
         },
         {
+            "name": "ClientAlone",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "C:/Users/Rune/Desktop/Godot/Godot4.2/Godot.exe",
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "args": ["--path", "${workspaceRoot}", " -w"]
+            
+        },
+        {
             "name": "PlayfabServer",
             "type": "coreclr",
             "request": "launch",
@@ -33,7 +44,7 @@
             "program": "C:/Users/Rune/Desktop/Godot/Godot4.2/Godot.exe",
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
-            "args": ["--path","${workspaceRoot}", " -w", " --position 0,500"]
+            "args": ["--path","${workspaceRoot}", " -w"]
         },
         {
             "name": "Client_2",
@@ -103,6 +114,7 @@
             "args": ["--path", "${workspaceRoot}", " -w", " --position 1280,500"]
             
         }
+        
 
     ],
     "compounds": [

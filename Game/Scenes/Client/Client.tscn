@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://dpji27mmqwobu"]
+[gd_scene load_steps=25 format=3 uid="uid://dpji27mmqwobu"]
 
 [ext_resource type="Script" path="res://Code/Client/ClientManager.cs" id="1_f104j"]
 [ext_resource type="Script" path="res://Code/System/GameManager.cs" id="2_0kdj7"]
@@ -12,6 +12,7 @@
 [ext_resource type="Script" path="res://Code/System/InputBuffer.cs" id="7_ubedu"]
 [ext_resource type="PackedScene" uid="uid://c3rdlqkf2jd7e" path="res://Assets/3D/Hero_Female_Base.glb" id="8_681dk"]
 [ext_resource type="PackedScene" uid="uid://dbmg74fi1wc6k" path="res://Assets/3D/Hero_Male_Base.glb" id="9_n87me"]
+[ext_resource type="Script" path="res://Code/Client/Steam/SteamManager.cs" id="9_v17ox"]
 [ext_resource type="PackedScene" uid="uid://cqhl1y0g5lq7x" path="res://Assets/3D/Heroes/Hero_Male_Base.blend" id="10_5xgew"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_40pt1"]
@@ -110,6 +111,9 @@ script = ExtResource("6_n41qi")
 
 [node name="InputBuffer" type="Node" parent="Managers"]
 script = ExtResource("7_ubedu")
+
+[node name="SteamManager" type="Node" parent="Managers"]
+script = ExtResource("9_v17ox")
 
 [node name="Client_Container" type="Node3D" parent="."]
 unique_name_in_owner = true

@@ -104,14 +104,22 @@ public static class MD
         TARGET
     }
 
+    public enum Runtime
+    {
+        Client,
+        Server,
+        SteamClient, 
+        PlayfabServer,
+        Offline
+    }
+
     public static float Gravity = (float)ProjectSettings.GetSetting("physics/3d/default_gravity");
 
     public static void Log(string message)
     {
         if(GameManager.Instance.isDebug)
         {
-            if(GameManager.Instance
-            .Multiplayer.GetUniqueId() == 1 )
+            if(GameManager.Instance.Multiplayer.GetUniqueId() == 1 )
             {
                 GD.Print("(SERVER) message : time [ " + GameManager.Instance.ServerTick + " ] " + " [ " + message + " ]");
             }
@@ -122,6 +130,13 @@ public static class MD
             
         }
     }
+
+    public static void Log(Runtime runtime, String sender, String message)
+    {
+        GD.Print("(" + runtime.ToString() + ")[" + sender + "]@[ " + GameManager.Instance.ServerTick + " ]M:" + "[ " + message + " ]");
+    }
+
+
     public static string FormatDisplayNumber(float num)
 	{
 		 // Ensure number has max 3 significant digits (no rounding up can happen)

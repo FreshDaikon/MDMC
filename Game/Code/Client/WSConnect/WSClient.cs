@@ -1,12 +1,7 @@
 using Godot;
-using PlayFab.MultiplayerModels;
-using System;
-using System.Linq;
-using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Text.Unicode;
 
 
 public partial class WSClient : Node
@@ -28,6 +23,7 @@ public partial class WSClient : Node
             return;
         }                
         Instance = this;
+
         ConnectToOrchestrator();
     }
 
@@ -82,6 +78,7 @@ public partial class WSClient : Node
     private void ConnectToOrchestrator()
     {
         _wsClient = new WebSocketPeer();
+        
         string key = "testclientkey123";
         var _connHeader = new string[]{$"keyToken: {key}"};
         _wsClient.HandshakeHeaders = _connHeader;
