@@ -110,7 +110,8 @@ public static class MD
         Server,
         SteamClient, 
         PlayfabServer,
-        Offline
+        Offline,
+        GAME
     }
 
     public static float Gravity = (float)ProjectSettings.GetSetting("physics/3d/default_gravity");

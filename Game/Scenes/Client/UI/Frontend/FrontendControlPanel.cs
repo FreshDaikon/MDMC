@@ -1,4 +1,5 @@
 using Godot;
+using Steamworks;
 using System;
 
 public partial class FrontendControlPanel : Control
@@ -13,6 +14,7 @@ public partial class FrontendControlPanel : Control
 	private const int PORT = 8080;
 	private const string localIP = "127.0.0.1";
     private string onlineIP="194.163.183.217";
+	private Arena arena;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -26,7 +28,7 @@ public partial class FrontendControlPanel : Control
 
 		//Connect:
 		connectLocalButton.Pressed += () => ConnectLocal();
-		RequestServerButton.Pressed +=() => WSClient.Instance.RequestServer();
+		RequestServerButton.Pressed +=() => WSClient.Instance.RequestGame(arena);
 		JoinServerButton.Pressed += () => WSClient.Instance.JoinServer(JoinCode.Text);
 	} 
 	private void ConnectLocal()

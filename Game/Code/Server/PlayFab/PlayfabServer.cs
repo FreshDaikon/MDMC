@@ -12,7 +12,6 @@ public partial class PlayfabServer : Node
     private string arena = "None";
     
     public bool Running = false;
-
     public override void _Ready()
     {
         if(instance != null)
@@ -73,24 +72,44 @@ public partial class PlayfabServer : Node
         {
             listeningPort = int.Parse(config[ListeningPortKey]);
         }
-        if(GameserverSDK.ReadyForPlayers())
+        string cookie;
+        if(config.TryGetValue(GameserverSDK.SessionCookieKey, out cookie))
         {
-            string cookie;
-            if(config.TryGetValue(GameserverSDK.SessionCookieKey, out cookie))
+            MD.Log("Start Playfab on [ " + listeningPort + " ]");
+            if(ServerManager.Instance.StartAsPlayfabServer(cookie, listeningPort, 8))
             {
-                MD.Log("Start Playfab on [ " + listeningPort + " ]");
-                ServerManager.Instance.StartAsPlayfabServer(cookie, listeningPort, 8);
-                return;    
+                if(GameserverSDK.ReadyForPlayers())
+                {
+                    MD.Log("Server Success!");
+                    return;
+                }
+                else 
+                {
+                    GameserverSDK.LogMessage("Server could not be started..shutdown");
+                    GetTree().Quit();
+                }
             }
             else
             {
-                MD.Log("Start Playfab on [ " + listeningPort + " ]");
-                ServerManager.Instance.StartAsPlayfabServer("none", listeningPort, 8);
+                GameserverSDK.LogMessage("Server could not be started..shutdown");
+                GetTree().Quit();
+            }  
+        }
+        else
+        {
+            MD.Log("Start Playfab on [ " + listeningPort + " ]");
+            ServerManager.Instance.StartAsPlayfabServer("-1", listeningPort, 8);
+            if(GameserverSDK.ReadyForPlayers())
+            {
+                MD.Log("Server Success!");
                 return;
             }
-
+            else 
+            {
+                GameserverSDK.LogMessage("Server could not be started..shutdown");
+                GetTree().Quit();
+            }
         }
-        
     }
 
 

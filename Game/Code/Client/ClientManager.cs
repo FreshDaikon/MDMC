@@ -34,7 +34,6 @@ public partial class ClientManager : Node3D
                 return; 
             }
             Multiplayer.MultiplayerPeer = peer;
-            MessageBus.Instance.EmitSignal(nameof(MessageBus.ClientConnected));
             GD.Print("Client Connected to Server! As : " + Multiplayer.MultiplayerPeer ); 
     }
 

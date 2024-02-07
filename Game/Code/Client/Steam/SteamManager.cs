@@ -43,9 +43,4 @@ public partial class SteamManager : Node
         SteamClient.Shutdown();
         base._ExitTree();
     }
-
-    public override void _Process(double delta)
-    {
-            MD.Log(MD.Runtime.SteamClient, "SteamManager.cs", "Failed to init instance..");
-    }
 }

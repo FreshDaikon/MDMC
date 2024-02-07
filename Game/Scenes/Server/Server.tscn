@@ -1,12 +1,11 @@
-[gd_scene load_steps=16 format=3 uid="uid://cot2lmy1em7xm"]
+[gd_scene load_steps=15 format=3 uid="uid://cot2lmy1em7xm"]
 
 [ext_resource type="Script" path="res://Code/Server/ServerManager.cs" id="1_pi4fx"]
 [ext_resource type="Script" path="res://Code/System/GameManager.cs" id="2_cf4ai"]
 [ext_resource type="Script" path="res://Code/Server/PlayFab/PlayfabServer.cs" id="2_p2psv"]
-[ext_resource type="Script" path="res://Code/System/MessageBus.cs" id="3_aixyf"]
-[ext_resource type="Script" path="res://Code/System/StateManager.cs" id="4_0d82u"]
 [ext_resource type="Script" path="res://Code/Game/Combat/CombatManager.cs" id="4_03lm5"]
 [ext_resource type="Script" path="res://Code/System/DataManager.cs" id="5_2vpff"]
+[ext_resource type="Script" path="res://Code/Game/Arena/ArenaManager.cs" id="6_wdpge"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_yqd10"]
 properties/0/path = NodePath(".:ServerTick")
@@ -56,20 +55,17 @@ replication_interval = 0.03
 delta_interval = 0.03
 replication_config = SubResource("SceneReplicationConfig_yqd10")
 
-[node name="EventBus" type="Node" parent="Managers"]
-script = ExtResource("3_aixyf")
-
 [node name="CombatManager" type="Node" parent="Managers"]
 script = ExtResource("4_03lm5")
-
-[node name="StateManager" type="Node" parent="Managers"]
-script = ExtResource("4_0d82u")
 
 [node name="DataManager" type="Node" parent="Managers"]
 script = ExtResource("5_2vpff")
 SkillContainersPath = "res://Data/Instances/SkillContainers"
 SkillsPath = "res://Data/Instances/Skills"
 ModifiersPath = "res://Data/Instances/Modifiers"
+
+[node name="ArenaManager" type="Node" parent="Managers"]
+script = ExtResource("6_wdpge")
 
 [node name="Game_Container" type="Node3D" parent="."]
 unique_name_in_owner = true

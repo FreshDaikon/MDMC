@@ -3,7 +3,6 @@
 [ext_resource type="Script" path="res://Code/Client/ClientManager.cs" id="1_f104j"]
 [ext_resource type="Script" path="res://Code/System/GameManager.cs" id="2_0kdj7"]
 [ext_resource type="Script" path="res://Code/Client/WSConnect/WSClient.cs" id="2_3h7sj"]
-[ext_resource type="Script" path="res://Code/System/MessageBus.cs" id="3_q1v4q"]
 [ext_resource type="Script" path="res://Code/System/StateManager.cs" id="4_4630x"]
 [ext_resource type="Script" path="res://Code/System/DataManager.cs" id="5_wm4mv"]
 [ext_resource type="Script" path="res://Code/Game/Combat/CombatManager.cs" id="6_n41qi"]
@@ -11,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://ds72o2h662r4r" path="res://Scenes/Client/UI/HUD/Player_HUD.tscn" id="7_k2jby"]
 [ext_resource type="Script" path="res://Code/System/InputBuffer.cs" id="7_ubedu"]
 [ext_resource type="PackedScene" uid="uid://c3rdlqkf2jd7e" path="res://Assets/3D/Hero_Female_Base.glb" id="8_681dk"]
+[ext_resource type="Script" path="res://Code/Game/Arena/ArenaManager.cs" id="9_a7vxa"]
 [ext_resource type="PackedScene" uid="uid://dbmg74fi1wc6k" path="res://Assets/3D/Hero_Male_Base.glb" id="9_n87me"]
 [ext_resource type="Script" path="res://Code/Client/Steam/SteamManager.cs" id="9_v17ox"]
 [ext_resource type="PackedScene" uid="uid://cqhl1y0g5lq7x" path="res://Assets/3D/Heroes/Hero_Male_Base.blend" id="10_5xgew"]
@@ -94,9 +94,6 @@ replication_interval = 0.03
 delta_interval = 0.03
 replication_config = SubResource("SceneReplicationConfig_surrf")
 
-[node name="EventBus" type="Node" parent="Managers"]
-script = ExtResource("3_q1v4q")
-
 [node name="StateManager" type="Node" parent="Managers"]
 script = ExtResource("4_4630x")
 
@@ -108,6 +105,9 @@ ModifiersPath = "res://Data/Instances/Modifiers"
 
 [node name="CombatManager" type="Node" parent="Managers"]
 script = ExtResource("6_n41qi")
+
+[node name="ArenaManager" type="Node" parent="Managers"]
+script = ExtResource("9_a7vxa")
 
 [node name="InputBuffer" type="Node" parent="Managers"]
 script = ExtResource("7_ubedu")

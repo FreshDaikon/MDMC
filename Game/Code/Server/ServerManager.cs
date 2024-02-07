@@ -2,6 +2,7 @@ using Godot;
 using Microsoft.Playfab.Gaming.GSDK.CSharp;
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading;
 
 public partial class ServerManager : Node3D
@@ -29,6 +30,19 @@ public partial class ServerManager : Node3D
         
     }
 
+    public override void _Process(double delta)
+    {
+        var currentArena = ArenaManager.Instance.GetCurrentArena();
+        if(!currentArena.GetArenaFailedState())
+        {
+            foreach(var player in Multiplayer.GetPeers())
+            {
+                peer.DisconnectPeer(player);
+            }
+        }
+        base._Process(delta);
+    }
+
     public void StartAsStandaloneServer(int port, int maxPlayers)
     {
         Engine.MaxFps = 60;
@@ -47,7 +61,7 @@ public partial class ServerManager : Node3D
         GD.Print("Server Started! Awaiting Clients...");        
     }
 
-    public void StartAsPlayfabServer(string cookie, int port, int maxPlayers)
+    public bool StartAsPlayfabServer(string cookie, int port, int maxPlayers)
     {
         Engine.MaxFps = 60;
         Multiplayer.PeerConnected += PeerConnected;
@@ -58,11 +72,30 @@ public partial class ServerManager : Node3D
         if(error != Error.Ok)
         {
             GD.Print("Can't Host : " + error.ToString());
-            return;
+            return false;
         }
         Multiplayer.MultiplayerPeer = peer;   
-        GD.Print("Server Started! Awaiting Clients..."); 
-
+        if(cookie != "-1")
+        {
+            //Arena Setup:
+            int id = int.Parse(cookie);
+            if(ArenaManager.Instance.LoadArena(id))
+            {
+                //When done:
+                GD.Print("Server Started! Awaiting Clients..."); 
+                return true;
+            }
+            else 
+            {
+                GD.Print("Could Not Load Arena - abort!"); 
+                return false;
+            }
+        }
+        else
+        {
+            GD.Print("Server Started! Awaiting Clients..."); 
+            return true;
+        }
     }
 
     // SIGNALS:

@@ -104,13 +104,14 @@ public partial class WSClient : Node
         return _wsClient.PutPacket(Encoding.UTF8.GetBytes(messageContent));
     }
 
-    public void RequestServer()
+    public void RequestGame(Arena arena)
     {        
+        var id = arena.Id.ToString();
         SendData(new {
             MessageType = ClientMessageType.RequestGame,
             MessageContent = new RequestGameMessage()
             {
-                Arena = "Test_Arena"
+                Arena = id
             }
         });
     }

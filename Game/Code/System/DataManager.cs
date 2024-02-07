@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Godot;
 
 public partial class DataManager : Node
@@ -13,11 +15,17 @@ public partial class DataManager : Node
     private string SkillsPath;
     [Export]
     private string ModifiersPath;
+    [Export]
+    private string ArenasPath;
 
     //Keep Listing:
     private List<SkillContainer> skillContainers;
     private List<Skill> skills;
     private List<Modifier> modifiers;
+    private List<Arena> arenas;
+
+    // id and path...
+    private Dictionary<int, PackedScene> ArenaLookup;
 
     public override void _Ready()
     {
@@ -29,6 +37,7 @@ public partial class DataManager : Node
         SetupModifiers();
         SetupSkillContainers();
         SetupSkills();
+        SetupArenas();
     }
 
     private void SetupModifiers()
@@ -85,6 +94,28 @@ public partial class DataManager : Node
             dir.ListDirEnd();
         }
     }
+
+    private void SetupArenas()
+    {
+        arenas = new List<Arena>();
+        ArenaLookup = new Dictionary<int, PackedScene>();
+        using var dir = DirAccess.Open(ArenasPath);
+        if(dir != null)
+        {
+            dir.ListDirBegin();
+            string file = dir.GetNext();
+            while(file != "")
+            {
+                var res = (PackedScene)ResourceLoader.Load(ArenasPath + "/" + file.Replace(".remap", ""));
+                var instance = (Arena)res.Instantiate();
+                var id = instance.Id;
+                ArenaLookup.Add(id, res);
+                instance.QueueFree();
+                file = dir.GetNext();
+            }
+            dir.ListDirEnd();
+        }
+    }
     public Modifier GetModifier(int id)
     {
         var mod = modifiers.Find(a => a.Id == id);
@@ -108,6 +139,18 @@ public partial class DataManager : Node
         var skill = skills.Find(a => a.Id == id);
         return skill == null ? null : (Skill)skill.Duplicate();
     }    
+    public Arena GetArena(int id)
+    {
+        PackedScene scene;
+        if(ArenaLookup.TryGetValue(id, out scene))
+        {
+            return scene.Instantiate<Arena>();
+        }
+        else
+        {
+            return null;
+        }
+    }
     public Modifier GetModifierFromPath(string path)
     {
         var res = (PackedScene)ResourceLoader.Load(path.Replace(".remap", ""));

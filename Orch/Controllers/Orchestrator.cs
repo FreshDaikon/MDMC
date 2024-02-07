@@ -162,7 +162,7 @@ public class Orchestrator : ControllerBase
                 }
                 else
                 {
-                    await TryCreateGame(webSocket, client, "none");
+                    await TryCreateGame(webSocket, client, "-1");
                 }
                 break;
             case ClientMessageType.JoinGame:
