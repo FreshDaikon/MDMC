@@ -1,0 +1,129 @@
+[gd_scene load_steps=16 format=3 uid="uid://04nun7ayudyy"]
+
+[ext_resource type="Script" path="res://Code/Game/Arena/Arena.cs" id="1_1mb5o"]
+[ext_resource type="Script" path="res://Code/Commons/DataID.cs" id="2_5wus2"]
+[ext_resource type="PackedScene" uid="uid://c3rdlqkf2jd7e" path="res://Assets/3D/Hero_Female_Base.glb" id="3_4es0r"]
+[ext_resource type="PackedScene" uid="uid://dbmg74fi1wc6k" path="res://Assets/3D/Hero_Male_Base.glb" id="4_0p4my"]
+[ext_resource type="PackedScene" uid="uid://cqhl1y0g5lq7x" path="res://Assets/3D/Heroes/Hero_Male_Base.blend" id="5_esgk8"]
+
+[sub_resource type="Resource" id="Resource_1ysff"]
+script = ExtResource("2_5wus2")
+Id = -316415308
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tt0g8"]
+sky_top_color = Color(0.231373, 0.505882, 0.890196, 1)
+sky_horizon_color = Color(0, 0.145098, 0.431373, 1)
+sky_curve = 0.261165
+ground_bottom_color = Color(0.470588, 0.364706, 0.364706, 1)
+ground_horizon_color = Color(0, 0.14902, 0.45098, 1)
+sun_angle_max = 28.68
+
+[sub_resource type="Sky" id="Sky_nj8bo"]
+sky_material = SubResource("ProceduralSkyMaterial_tt0g8")
+
+[sub_resource type="Environment" id="Environment_e0a7j"]
+background_mode = 2
+background_color = Color(0.0941176, 0.803922, 0.870588, 1)
+background_energy_multiplier = 0.66
+sky = SubResource("Sky_nj8bo")
+ambient_light_source = 3
+ambient_light_color = Color(1, 0, 0, 1)
+ambient_light_energy = 16.0
+reflected_light_source = 2
+tonemap_mode = 3
+ssao_enabled = true
+ssao_radius = 3.56
+sdfgi_enabled = true
+sdfgi_y_scale = 0
+glow_intensity = 1.0
+glow_bloom = 0.02
+fog_light_color = Color(0.368627, 0.101961, 0.0313726, 1)
+fog_light_energy = 0.5
+fog_density = 0.0525
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0022
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5y40w"]
+albedo_color = Color(0.133333, 0.192157, 0.258824, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_uexrp"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fnwy2"]
+size = Vector3(49.5651, 1, 41.6669)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bxdhf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1vy03"]
+albedo_color = Color(0.235294, 0.290196, 0.329412, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_gg4ma"]
+top_radius = 20.0
+bottom_radius = 20.0
+height = 1.0
+
+[node name="ArenaName" type="Node3D"]
+script = ExtResource("1_1mb5o")
+ID = SubResource("Resource_1ysff")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_e0a7j")
+
+[node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://Scenes/Game/EntitySystem/Player/PlayerEntity.tscn")
+spawn_path = NodePath("../EntityContainer")
+spawn_limit = 8
+
+[node name="EntityContainer" type="Node3D" parent="."]
+unique_name_in_owner = true
+
+[node name="Arena" type="Node3D" parent="."]
+unique_name_in_owner = true
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
+
+[node name="ArenaMesh" type="StaticBody3D" parent="Arena"]
+collision_layer = 4
+collision_mask = 7
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Arena/ArenaMesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.99027, 0)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Arena/ArenaMesh"]
+transform = Transform3D(47.187, 0, 0, 0, 1, 0, 0, 0, 41.9396, 0, -0.64447, 0)
+material_override = SubResource("StandardMaterial3D_5y40w")
+mesh = SubResource("BoxMesh_uexrp")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Arena/ArenaMesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.560022, 0)
+shape = SubResource("BoxShape3D_fnwy2")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Arena/ArenaMesh"]
+transform = Transform3D(8.92048, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.201727, -13.1924)
+mesh = SubResource("BoxMesh_bxdhf")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="Arena/ArenaMesh"]
+transform = Transform3D(8.92048, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.201727, 13.2444)
+mesh = SubResource("BoxMesh_bxdhf")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Arena/ArenaMesh"]
+transform = Transform3D(1.00623, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+layers = 4
+material_override = SubResource("StandardMaterial3D_1vy03")
+mesh = SubResource("CylinderMesh_gg4ma")
+skeleton = NodePath("../..")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Arena"]
+transform = Transform3D(0.443692, 0.66945, -0.595797, -0.0510172, 0.682609, 0.729001, 0.894726, -0.293056, 0.337022, 0, 18, 0)
+shadow_enabled = true
+
+[node name="Hero_Female_Base" parent="Arena" instance=ExtResource("3_4es0r")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.8938, -0.118534, 20.5807)
+
+[node name="Hero_Male_Base" parent="Arena" instance=ExtResource("4_0p4my")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.6114, -0.126356, 20.6214)
+
+[node name="Hero_Male_Base2" parent="Arena" instance=ExtResource("5_esgk8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.0716, 0, 20.7283)
+
+[node name="RealizationPool" type="Node3D" parent="."]
+unique_name_in_owner = true

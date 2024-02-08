@@ -106,6 +106,7 @@ public partial class DataManager : Node
             string file = dir.GetNext();
             while(file != "")
             {
+                GD.Print("DataManager Adding Arena :");
                 var res = (PackedScene)ResourceLoader.Load(ArenasPath + "/" + file.Replace(".remap", ""));
                 var instance = (Arena)res.Instantiate();
                 var id = instance.Id;
@@ -151,6 +152,19 @@ public partial class DataManager : Node
             return null;
         }
     }
+
+    public List<Arena> GetArenas()
+    {
+        List<Arena> arenas = new List<Arena>();
+        var scenes = ArenaLookup.Values;
+        foreach(PackedScene scene in scenes)
+        {
+            var instance = scene.Instantiate<Arena>();
+            arenas.Add(instance);
+        }
+        return arenas;
+    }
+
     public Modifier GetModifierFromPath(string path)
     {
         var res = (PackedScene)ResourceLoader.Load(path.Replace(".remap", ""));

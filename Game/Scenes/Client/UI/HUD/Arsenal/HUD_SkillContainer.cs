@@ -68,7 +68,7 @@ public partial class HUD_SkillContainer : Control
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _PhysicsProcess(double delta)
 	{
-		var localPlayer = GameManager.Instance.GetPlayers().Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
+		var localPlayer = ArenaManager.Instance.GetCurrentArena().GetPlayers().Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
 		if(localPlayer == null)
 		{
 			wasActivated = false;

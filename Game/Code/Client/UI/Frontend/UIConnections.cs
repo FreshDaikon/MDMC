@@ -2,10 +2,11 @@ using Godot;
 using Steamworks;
 using System;
 
-public partial class FrontendControlPanel : Control
+public partial class UIConnections : Control
 {
 	// Local:
 	private Button connectLocalButton;
+	private Button StartLocalServerButton;
 	// Remote:
 	private LineEdit JoinCode;
 	private Button RequestServerButton;
@@ -21,19 +22,30 @@ public partial class FrontendControlPanel : Control
 	{
 		// Local:
 		connectLocalButton = GetNode<Button>("%LocalButton");
+		StartLocalServerButton = GetNode<Button>("%StartLocalServerButton");
 		// Remote:
 		JoinCode = GetNode<LineEdit>("%JoinCode");
 		RequestServerButton = GetNode<Button>("%RequestServer");
 		JoinServerButton = GetNode<Button>("%JoinServer");
-
 		//Connect:
 		connectLocalButton.Pressed += () => ConnectLocal();
-		RequestServerButton.Pressed +=() => WSClient.Instance.RequestGame(arena);
-		JoinServerButton.Pressed += () => WSClient.Instance.JoinServer(JoinCode.Text);
-	} 
-	private void ConnectLocal()
+		RequestServerButton.Pressed +=() => WSManager.Instance.RequestGame(arena);
+		JoinServerButton.Pressed += () => WSManager.Instance.JoinGame(JoinCode.Text);
+	}
+
+    public override void _Process(double delta)
+    {
+		
+        base._Process(delta);
+    }
+    private void ConnectLocal()
 	{
-		ClientManager.Instance.StartAsClient(localIP, PORT);
+		
+	}
+
+	private void StartLocalServer()
+	{
+		var arena = DataManager.Instance.GetArena(-1);
 	}
 
 }

@@ -28,7 +28,7 @@ public partial class TargetBar : Control
 	{	
 		if(localPlayer == null)
 		{			
-			localPlayer = GameManager.Instance.GetPlayers().Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
+			localPlayer = ArenaManager.Instance.GetCurrentArena().GetPlayers().Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
 		}
 		else
 		{

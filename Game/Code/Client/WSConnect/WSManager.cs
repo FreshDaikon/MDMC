@@ -4,39 +4,41 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 
 
-public partial class WSClient : Node
+public partial class WSManager : Node
 {
-    public static WSClient Instance;
+    public static WSManager Instance;
 
     private WebSocketPeer _wsClient;
     private const string LocalTestHost = "ws://localhost:5000/Orch";
     private const string WWHost = "wss://mdmc-orchestrator.azurewebsites.net/Orch";
     private const string VPShost = "ws://194.163.183.217:5001/Orch";
-    private bool State = false;
+    private bool _running = false;
+
+    public MD.WSConnectionState State = MD.WSConnectionState.Closed;
+
+
 
     public override void _Ready()
     {
-        base._Ready();
         if(Instance != null)
         {
             Free();
             return;
         }                
         Instance = this;
-
-        ConnectToOrchestrator();
     }
 
     public override void _Process(double delta)
     {
         base._Process(delta);
-        if(State)
+        if(_running)
         {
             _wsClient?.Poll();
             var state = _wsClient.GetReadyState();
             switch(state)
             {
                 case WebSocketPeer.State.Open:
+                    State = MD.WSConnectionState.Open;
                     if(_wsClient.GetAvailablePacketCount() > 0)
                     {
                         MD.Log("WS Polling..");
@@ -44,14 +46,17 @@ public partial class WSClient : Node
                     }
                     break;
                 case WebSocketPeer.State.Closing:
+                    State = MD.WSConnectionState.Closing;
                     MD.Log("WS Closing..");
                     break;
                 case WebSocketPeer.State.Connecting:
+                    State = MD.WSConnectionState.Connecting;
                     MD.Log("WS Connecting.."); 
                     break;
                 case WebSocketPeer.State.Closed:
+                    State = MD.WSConnectionState.Closed;
                     MD.Log("WS Closed..");
-                    State = false;
+                    _running = false;
                     break;
             }
         }
@@ -59,32 +64,28 @@ public partial class WSClient : Node
 
     public override void _ExitTree()
     {
-        _wsClient.Close();
+        if(_running)
+        {
+            _wsClient.Close();
+        }
         base._ExitTree();
     }
 
-    public void Connect()
+    public bool ConnectToOrchestrator()
     {
-        if(State == false)
+        if(_running)
         {
-            ConnectToOrchestrator();
+            MD.Log("WS Already Going..");
+            return false;
         }
-        else
-        { 
-            MD.Log("Connection already going.");
-        }
-    }
-
-    private void ConnectToOrchestrator()
-    {
-        _wsClient = new WebSocketPeer();
-        
+        _wsClient = new WebSocketPeer();        
         string key = "testclientkey123";
         var _connHeader = new string[]{$"keyToken: {key}"};
         _wsClient.HandshakeHeaders = _connHeader;
         //Connect:
         _wsClient.ConnectToUrl(VPShost);
-        State = true;
+        _running = true;
+        return true;
     }
 
     private void HandleDataReceived() 
@@ -116,7 +117,7 @@ public partial class WSClient : Node
         });
     }
 
-    public void JoinServer(string JoinCode)
+    public void JoinGame(string JoinCode)
     {
         SendData(new {
             MessageType = ClientMessageType.JoinGame,
@@ -145,16 +146,14 @@ public partial class WSClient : Node
                 MD.Log("Host is: " + createdMessage.ServerUrl );
                 MD.Log("Port is: " + createdMessage.ServerPort );
                 MD.Log("Code is: " + createdMessage.ShareableCode );
-                ClientManager.Instance.StartAsClient(createdMessage.ServerUrl, createdMessage.ServerPort);
-                FrontendMain.Instance.SetState(false);
+                ClientMultiplayerManager.Instance.SetData(createdMessage.ServerUrl, createdMessage.ServerPort);
                 break;
             case OrchMessageType.GameFound:
                 MD.Log("Server Found!");
                 var foundMessage = messageData["MessageContent"].Deserialize<GameFoundMessage>(); 
                 MD.Log("Host is: " + foundMessage.ServerUrl );
                 MD.Log("Port is: " + foundMessage.ServerPort );
-                ClientManager.Instance.StartAsClient(foundMessage.ServerUrl, foundMessage.ServerPort);
-                FrontendMain.Instance.SetState(false);
+                ClientMultiplayerManager.Instance.SetData(foundMessage.ServerUrl, foundMessage.ServerPort);
                 break;
         }
     }   

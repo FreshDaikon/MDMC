@@ -39,10 +39,18 @@ project/assembly_name="Mdmc"
 folder_colors={
 "res://Assets/": "purple",
 "res://Code/": "orange",
+"res://Code/Client/": "teal",
+"res://Code/Commons/": "gray",
+"res://Code/Game/": "pink",
+"res://Code/Server/": "blue",
+"res://Code/System/": "gray",
 "res://Data/": "blue",
 "res://Data/Instances/": "green",
 "res://Data/Templates/": "red",
-"res://Scenes/": "green"
+"res://Scenes/": "yellow",
+"res://Scenes/Client/": "teal",
+"res://Scenes/Game/": "pink",
+"res://Scenes/Server/": "blue"
 }
 
 [input]

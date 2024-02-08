@@ -1,15 +1,32 @@
 using Godot;
+using Steamworks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading;
 
 public partial class ClientManager : Node3D
 {	
+    //Singleton Instance: 
     public static ClientManager Instance;
-    public string ConnectionType { get; private set;}
-    private ENetMultiplayerPeer peer;
+
     public MD.InputScheme CurrentInputScheme { get; private set; } 
+    //References & Denpendencies:
+    // UI :
+    [Export(PropertyHint.File)]
+    private string frontendPath;
+    [Export(PropertyHint.File)]
+    private string hudPath;
+    [Export(PropertyHint.File)]
+    private string ingamemenuPath;
+
+    private UILandingPage frontend;
+    private UIHUDMain hud;
+    private UIIngameMenu ingameMenu;
+    
+    //Game Containers:
+    private Node UIContainer;
 
     public override void _Ready()
     {  
@@ -19,22 +36,68 @@ public partial class ClientManager : Node3D
             return;
         }
         Instance = this;
-        GD.Print("Client Starting");
-        
+        GD.Print("Client Starting...");
+        //Call when Ready:
+        CallDeferred(nameof(InitClient));
     }
-    public void StartAsClient(string IP, int PORT)
+
+    private void InitClient()
     {
-            Engine.MaxFps = 120;
-            GD.Print("Prepare - connect to server...");
-            peer = new ENetMultiplayerPeer();
-            var error = peer.CreateClient(IP, PORT);
-            if(error != Error.Ok)
-            {
-                OS.Alert("Failed to start Client [" + error.ToString() +"]");
-                return; 
-            }
-            Multiplayer.MultiplayerPeer = peer;
-            GD.Print("Client Connected to Server! As : " + Multiplayer.MultiplayerPeer ); 
+        // Get References:
+        UIContainer = GetNode<Node>("%UIContainer");
+        // Get Dependencies:
+        // Frontend
+        var frontendScene = (PackedScene)ResourceLoader.Load(frontendPath);
+        frontend = frontendScene.Instantiate<UILandingPage>();
+        // HUD
+        var hudScene = (PackedScene)ResourceLoader.Load(hudPath);
+        hud = hudScene.Instantiate<UIHUDMain>();
+
+        // Steam Init:
+        if(SteamManager.Instance.InitSteam())
+        {
+            //Steam was success.
+            ToggleFrontend();
+        }
+    }
+
+    public void ToggleHud()
+    {
+        Node hudContainer = UIContainer.GetNode("HUDContainer");
+        if(hudContainer.GetNode(hud.Name.ToString()) != null)
+        {
+            hudContainer.RemoveChild(hud);
+        }
+        else
+        {
+            hudContainer.AddChild(hud);
+        }
+    }
+
+    public void ToggleFrontend()
+    {
+        Node frontendContainer = UIContainer.GetNode("FrontendContainer");
+        if(frontendContainer.GetNode(frontend.Name.ToString()) != null)
+        {
+            frontendContainer.RemoveChild(frontend);
+        }
+        else
+        {
+            frontendContainer.AddChild(frontend);
+        }
+    }
+
+    public void ToggleIngameMenu()
+    {
+        Node ingameContainer = UIContainer.GetNode("IngameContainer");
+        if(ingameContainer.GetNode(ingameMenu.Name.ToString()) != null)
+        {
+            ingameContainer.RemoveChild(ingameMenu);
+        }
+        else
+        {
+            ingameContainer.AddChild(ingameMenu);
+        }
     }
 
     public override void _PhysicsProcess(double delta)
@@ -48,10 +111,5 @@ public partial class ClientManager : Node3D
             CurrentInputScheme = MD.InputScheme.GAMEPAD;
         }
         base._PhysicsProcess(delta);
-    }
-
-    public void TempStart(string ip, int port)
-    {
-        StartAsClient(ip, port);
     }
 }

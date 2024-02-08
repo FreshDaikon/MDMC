@@ -3,38 +3,45 @@ using Steamworks;
 
 public partial class SteamManager : Node
 {
-    public static SteamManager Instance { get; set; }
-    private static uint appId { get; set; } = 2828690;
+    public static SteamManager Instance;
 
-    public SteamManager()
+    private static uint appId { get; } = 2828690;
+
+    public override void _Ready()
     {
-        if(Instance == null)
+        if(Instance != null)
         {
-            Instance = this;
-            try
-            {
-                SteamClient.Init(appId, true);
-                if(!SteamClient.IsValid)
-                {
-                    GD.Print("Something went wrong...");
-                }
-                else
-                {
-                    GD.Print("Steam successfully initialized!");
-                    GD.Print("Welcome " + SteamClient.Name);
-                    GD.Print("Overlay: " + SteamUtils.IsOverlayEnabled.ToString());                    
-                }
+            QueueFree();
+            return;
+        }
+        Instance = this;
+        base._Ready();
+    }
 
-            }
-            catch (System.Exception e)
+    public bool InitSteam()
+    {
+        OS.SetEnvironment("SteamAppID", appId.ToString());
+        OS.SetEnvironment("SteamAppName", appId.ToString());
+        try
+        {
+            SteamClient.Init(appId, true);
+            if(!SteamClient.IsValid)
             {
-                OS.Alert(("Something failed when initializing Steam..: " + e.Message)  , "STEAM");
-                throw;
+                GD.Print("Something went wrong...");
+                return false;
+            }
+            else
+            {
+                GD.Print("Steam successfully initialized!");
+                GD.Print("Welcome " + SteamClient.Name);
+                GD.Print("Overlay: " + SteamUtils.IsOverlayEnabled.ToString());    
+                return true;                
             }
         }
-        else
+        catch (System.Exception e)
         {
-            GD.Print("Somehow a intsance already exists.");
+            OS.Alert(("Something failed when initializing Steam..: " + e.Message)  , "STEAM");
+            throw;
         }
     }
 

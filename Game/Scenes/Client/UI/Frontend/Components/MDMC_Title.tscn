@@ -4,6 +4,23 @@
 [ext_resource type="FontFile" uid="uid://bhifua4iwh2rf" path="res://Assets/UI/Fonts/DelaGothicOne-Regular.ttf" id="2_coh60"]
 [ext_resource type="FontFile" uid="uid://0sqm8uhipuvo" path="res://Assets/UI/Fonts/Helvete_extraBlack_Cursive.ttf" id="4_60quq"]
 
+[sub_resource type="Animation" id="Animation_sskd2"]
+resource_name = "Idle"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Control:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(2, 0.5, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, 15), Vector2(0, 0)]
+}
+
 [sub_resource type="Animation" id="Animation_8xi6v"]
 resource_name = "Open"
 length = 0.7
@@ -263,23 +280,6 @@ tracks/10/keys = {
 "values": [Vector2(0, 0)]
 }
 
-[sub_resource type="Animation" id="Animation_sskd2"]
-resource_name = "Idle"
-length = 2.0
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Control:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 1, 2),
-"transitions": PackedFloat32Array(2, 0.5, 1),
-"update": 0,
-"values": [Vector2(0, 0), Vector2(0, 15), Vector2(0, 0)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_2834y"]
 _data = {
 "Idle": SubResource("Animation_sskd2"),
@@ -290,17 +290,9 @@ _data = {
 [node name="MDMCTitle" type="Control" node_paths=PackedStringArray("animationPlayer")]
 custom_minimum_size = Vector2(600, 350)
 layout_mode = 3
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -275.0
-offset_top = -167.0
-offset_right = 325.0
-offset_bottom = 183.0
-grow_horizontal = 2
-grow_vertical = 2
+anchors_preset = 0
+offset_right = 600.0
+offset_bottom = 350.0
 pivot_offset = Vector2(258, 183)
 script = ExtResource("1_nob6i")
 animationPlayer = NodePath("AnimationPlayer")

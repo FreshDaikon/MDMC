@@ -67,10 +67,9 @@ public partial class RealizationObject: Node3D
     public virtual void Spawn(Vector3 worldPos)
     {
         realizationMode = MD.RealizationMode.STATIC;
-
         Position = worldPos;
         _startTime = Time.GetTicksMsec();
-        GameManager.Instance.GetRealizationPool().AddChild(this);
+        ArenaManager.Instance.GetRealizationPool()?.AddChild(this);
         animationPlayer.Play("Spawn");    
     }
     public virtual void SpawnInTransform(Node3D transform, Vector3 offset)
@@ -89,7 +88,7 @@ public partial class RealizationObject: Node3D
         _startPos = startPosition;
         _target = target;
         _startTime = Time.GetTicksMsec();
-        GameManager.Instance.GetRealizationPool().AddChild(this);
+        ArenaManager.Instance.GetRealizationPool()?.AddChild(this);
         animationPlayer.Play("Spawn");
     }
 

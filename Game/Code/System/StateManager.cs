@@ -3,8 +3,9 @@ using Godot;
 
 public partial class StateManager : Node
 {
-    public static StateManager Instance;
 
+    
+    public static StateManager Instance;
     public bool HasFocus = true;
 
     public override void _Ready()

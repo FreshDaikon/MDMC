@@ -13,7 +13,7 @@
             "cwd": "${workspaceFolder}",
             "console": "externalTerminal",
             "stopAtEntry": false,
-            "args": ["--path", "${workspaceRoot}", " --headless" ]
+            "args": ["--path", "${workspaceRoot}", "--headless", "--arena -316415308"]
         },
         {
             "name": "ClientAlone",
@@ -23,7 +23,7 @@
             "program": "C:/Users/Rune/Desktop/Godot/Godot4.2/Godot.exe",
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
-            "args": ["--path", "${workspaceRoot}", " -w"]
+            "args": ["--path", "${workspaceRoot}", "-w"]
             
         },
         {
@@ -35,7 +35,7 @@
             "cwd": "${workspaceFolder}",
             "console": "externalTerminal",
             "stopAtEntry": false,
-            "args": ["--path", "${workspaceRoot}", " --headless", "--playfab" ]
+            "args": ["--path", "${workspaceRoot}", "--headless", "--playfab" ]
         },
         {
             "name": "Client_1",
@@ -53,7 +53,7 @@
             "program": "C:/Users/Rune/Desktop/Godot/Godot4.2/Godot.exe",
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
-            "args": ["--path", "${workspaceRoot}", " -w", " --position 1280,500"]
+            "args": ["--path", "${workspaceRoot}", "-w", "--position 1280,500"]
         },
         {
             "name": "Client_3",
@@ -62,7 +62,7 @@
             "program": "C:/Users/Rune/Desktop/Godot/Godot4.2/Godot.exe",
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
-            "args": ["--path", "${workspaceRoot}", " -w", " --position 0,500"]
+            "args": ["--path", "${workspaceRoot}", "-w", "--position 0,500"]
         },
         {
             "name": "Client_4",
@@ -81,7 +81,7 @@
             "program": "C:/Users/Rune/Desktop/Godot/Godot4.2/Godot.exe",
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
-            "args": ["--path", "${workspaceRoot}", " -w", " --position 0,500"]
+            "args": ["--path", "${workspaceRoot}", " -w", "--position 0,500"]
 
         },
         {
@@ -91,7 +91,7 @@
             "program": "C:/Users/Rune/Desktop/Godot/Godot4.2/Godot.exe",
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
-            "args": ["--path", "${workspaceRoot}", " -w", " --position 1280,500"]
+            "args": ["--path", "${workspaceRoot}", " -w", "--position 1280,500"]
 
         },
         {
@@ -101,7 +101,7 @@
             "program": "C:/Users/Rune/Desktop/Godot/Godot4.2/Godot.exe",
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
-            "args": ["--path", "${workspaceRoot}", " -w", " --position 0,500"]
+            "args": ["--path", "${workspaceRoot}", " -w", "--position 0,500"]
             
         },
         {
@@ -111,7 +111,7 @@
             "program": "C:/Users/Rune/Desktop/Godot/Godot4.2/Godot.exe",
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
-            "args": ["--path", "${workspaceRoot}", " -w", " --position 1280,500"]
+            "args": ["--path", "${workspaceRoot}", " -w", "--position 1280,500"]
             
         }
         
@@ -120,7 +120,7 @@
     "compounds": [
         {
             "name": "ServerClient",
-            "configurations": ["SERVER", "Client_1", "Client_2"],
+            "configurations": ["SERVER", "Client_1"],
             "stopAll": true
         },
         {

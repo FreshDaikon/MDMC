@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Godot;
 
 
@@ -114,22 +115,28 @@ public static class MD
         GAME
     }
 
+    public enum WSConnectionState
+    {
+        Connecting,
+        Open,
+        Closing,
+        Closed,
+        RequestingNewGame,
+        RequestingJoinGame,
+    }
+
+    public enum ClientGameState
+    {
+        Pregame,
+        InArena,
+        
+    }
+
     public static float Gravity = (float)ProjectSettings.GetSetting("physics/3d/default_gravity");
 
     public static void Log(string message)
     {
-        if(GameManager.Instance.isDebug)
-        {
-            if(GameManager.Instance.Multiplayer.GetUniqueId() == 1 )
-            {
-                GD.Print("(SERVER) message : time [ " + GameManager.Instance.ServerTick + " ] " + " [ " + message + " ]");
-            }
-            else
-            {
-                GD.Print("(CLIENT) message : time [ " + GameManager.Instance.ServerTick + " ] " + " [ " + message + " ]");
-            }
-            
-        }
+        GD.Print("[Generic]_" + "_[ " + message + " ]");
     }
 
     public static void Log(Runtime runtime, String sender, String message)
@@ -137,6 +144,19 @@ public static class MD
         GD.Print("(" + runtime.ToString() + ")[" + sender + "]@[ " + GameManager.Instance.ServerTick + " ]M:" + "[ " + message + " ]");
     }
 
+    public static Dictionary<string, string> GetArgs()
+    {
+        var args = new Dictionary<string, string>();        
+        foreach (var argument in OS.GetCmdlineArgs())
+        {
+            GD.Print(MD.Runtime.PlayfabServer, " ** ", "Arg is: " + argument);
+            string[] keyValue = argument.Split(" ");
+            keyValue[0] = keyValue[0].Replace("--", "");
+            GD.Print(MD.Runtime.PlayfabServer, " ** ", "Formatted: " + (keyValue.Length > 1 ? keyValue[1] : ""));
+            args.Add(keyValue[0], keyValue.Length > 1 ? keyValue[1] : "");
+        }
+        return args;
+    }
 
     public static string FormatDisplayNumber(float num)
 	{

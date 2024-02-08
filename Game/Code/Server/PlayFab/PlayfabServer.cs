@@ -26,19 +26,33 @@ public partial class PlayfabServer : Node
 
     private void CheckCMD()
     {
-        var arguments = new Godot.Collections.Dictionary();
+        var args = new Dictionary<string, string>();
         foreach (var argument in OS.GetCmdlineArgs())
         {
-            if(argument.Contains("--playfab"))
-            {
-                MD.Log("Init Playfab Instance..");
-                Running = true;
-                StartAsPlayfabInstance();
-                return;
-            }
+            MD.Log(MD.Runtime.PlayfabServer, " ** ", "Arg is: " + argument);
+            string[] keyValue = argument.Split(" ");
+            keyValue[0] = keyValue[0].Replace("--", "");
+            MD.Log(MD.Runtime.PlayfabServer, " ** ", "Formatted: " + keyValue[0] + ", " + keyValue[1]);
+            args.Add(keyValue[0], keyValue.Length > 1 ? keyValue[1] : "");
         }
-        MD.Log("Start Standalone.."); 
-        StartAsStandalone();
+        if(args.ContainsKey("playfab"))
+        {
+            MD.Log(MD.Runtime.PlayfabServer, "", "Init Playfab Instance..");
+            Running = true;
+            StartAsPlayfabInstance();
+            return;
+        }
+        else if(args.ContainsKey("arena"))
+        {
+            MD.Log(MD.Runtime.PlayfabServer, "", "Init Local Server with arena..");
+            var arena = args["arena"];
+            ServerManager.Instance.StartAsStandaloneServer(8080, 8, arena);
+        }
+        else
+        {
+            MD.Log(MD.Runtime.PlayfabServer, "", "Init Local Server Without Arena..");
+            ServerManager.Instance.StartAsStandaloneServer(8080, 8);
+        }
     }
 
     private void StartAsPlayfabInstance()
@@ -62,7 +76,7 @@ public partial class PlayfabServer : Node
             GetTree().Quit();
         }); 
         GameserverSDK.RegisterMaintenanceCallback((time) => {
-            MD.Log("Maintenance shutdown in : " + time.ToString());
+            MD.Log(MD.Runtime.PlayfabServer, "", "Maintenance shutdown in : " + time.ToString());
             // Just shut down right now... whatever.
             GetTree().Quit();
         }); 
@@ -75,12 +89,12 @@ public partial class PlayfabServer : Node
         string cookie;
         if(config.TryGetValue(GameserverSDK.SessionCookieKey, out cookie))
         {
-            MD.Log("Start Playfab on [ " + listeningPort + " ]");
+            MD.Log(MD.Runtime.PlayfabServer, "", "Start Playfab on [ " + listeningPort + " ]");
             if(ServerManager.Instance.StartAsPlayfabServer(cookie, listeningPort, 8))
             {
                 if(GameserverSDK.ReadyForPlayers())
                 {
-                    MD.Log("Server Success!");
+                    MD.Log(MD.Runtime.PlayfabServer, "", "Server Success!");
                     return;
                 }
                 else 
@@ -97,11 +111,11 @@ public partial class PlayfabServer : Node
         }
         else
         {
-            MD.Log("Start Playfab on [ " + listeningPort + " ]");
+            MD.Log(MD.Runtime.PlayfabServer, "", "Start Playfab on [ " + listeningPort + " ]");
             ServerManager.Instance.StartAsPlayfabServer("-1", listeningPort, 8);
             if(GameserverSDK.ReadyForPlayers())
             {
-                MD.Log("Server Success!");
+                MD.Log(MD.Runtime.PlayfabServer, "", "Server Success!");
                 return;
             }
             else 
@@ -112,9 +126,4 @@ public partial class PlayfabServer : Node
         }
     }
 
-
-    private void StartAsStandalone()
-    {
-        ServerManager.Instance.StartAsStandaloneServer(8080, 8);
-    }
 }

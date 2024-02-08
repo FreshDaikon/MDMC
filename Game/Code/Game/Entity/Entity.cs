@@ -57,7 +57,7 @@ public partial class Entity : Node3D
         get {
             if(TargetId != -1)
             {
-                var target = GameManager.Instance.GetEntity(TargetId);
+                var target = ArenaManager.Instance.GetCurrentArena().GetEntity(TargetId);
                 if(target == null)
                 { 
                     TargetId = -1;    

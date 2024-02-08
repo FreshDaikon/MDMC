@@ -27,7 +27,7 @@ public partial class DamageMeterEntry : ColorRect
 
     public override void _Ready()
     {
-       var testEntity = GameManager.Instance.GetEntities()
+       var testEntity = ArenaManager.Instance.GetCurrentArena().GetEntities()
 			.Where(e => e is PlayerEntity)
 			.Cast<PlayerEntity>()
 			.ToList()
@@ -40,7 +40,7 @@ public partial class DamageMeterEntry : ColorRect
 		if(!CombatManager.Instance.IsInCombat)
 			return;
 		
-		var testEntity = GameManager.Instance.GetEntities()
+		var testEntity = ArenaManager.Instance.GetCurrentArena().GetEntities()
 			.Where(e => e is PlayerEntity)
 			.Cast<PlayerEntity>()
 			.ToList()

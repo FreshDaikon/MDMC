@@ -216,7 +216,7 @@ public partial class PlayerInput : Node
         {
             if(player.TargetId == -1)
             {
-                var target = GameManager.Instance.GetEnemyEntities()[0];
+                var target = ArenaManager.Instance.GetCurrentArena().GetEnemyEntities()[0];
                 if(target != null)
                 {
                     player.TargetId = int.Parse(target.Name);
@@ -228,9 +228,9 @@ public partial class PlayerInput : Node
             }
             else
             {                
-                int index = GameManager.Instance.GetEnemyIndex(player.TargetId) + (direction ? 1 : -1);
-                int newIndex = Mathf.Wrap(index, 0, GameManager.Instance.GetEnemyEntities().Count);
-                player.TargetId = int.Parse(GameManager.Instance.GetEnemyEntities()[newIndex].Name);
+                int index = ArenaManager.Instance.GetCurrentArena().GetEnemyIndex(player.TargetId) + (direction ? 1 : -1);
+                int newIndex = Mathf.Wrap(index, 0, ArenaManager.Instance.GetCurrentArena().GetEnemyEntities().Count);
+                player.TargetId = int.Parse(ArenaManager.Instance.GetCurrentArena().GetEnemyEntities()[newIndex].Name);
             }
         }
     }
@@ -251,7 +251,7 @@ public partial class PlayerInput : Node
         {
             if(player.FriendlyTargetId == -1)
             {
-                var target = GameManager.Instance.GetFriendlyEntities()[0];
+                var target = ArenaManager.Instance.GetCurrentArena().GetFriendlyEntities()[0];
                 if(target != null)
                 {
                     player.FriendlyTargetId = int.Parse(target.Name);
@@ -263,9 +263,9 @@ public partial class PlayerInput : Node
             }
             else
             {                
-                int index = GameManager.Instance.GetFriendlyIndex(player.FriendlyTargetId) + (direction ? 1 : -1);
-                int newIndex = Mathf.Wrap(index, 0, GameManager.Instance.GetFriendlyEntities().Count);
-                player.FriendlyTargetId = int.Parse(GameManager.Instance.GetFriendlyEntities()[newIndex].Name);
+                int index = ArenaManager.Instance.GetCurrentArena().GetFriendlyIndex(player.FriendlyTargetId) + (direction ? 1 : -1);
+                int newIndex = Mathf.Wrap(index, 0, ArenaManager.Instance.GetCurrentArena().GetFriendlyEntities().Count);
+                player.FriendlyTargetId = int.Parse(ArenaManager.Instance.GetCurrentArena().GetFriendlyEntities()[newIndex].Name);
             }
         }
     }

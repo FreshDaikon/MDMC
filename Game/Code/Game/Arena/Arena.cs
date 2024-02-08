@@ -15,38 +15,46 @@ public partial class Arena : Node3D
     }
 
     [Export]
+    public string ArenaName = "Some Cool Arena.";
+    [Export]
     public float ArenaDuration = 120f;
-    private ulong StartTime;
+    //containers:
     private Node3D EntityContainer;
-    private bool arenaFailed = false;
+    public Node3D RealizationPool;
+    //How Long has the arena been going in minutes:
+    private ulong _startTime;
+    private float _lapsed;
 
     public override void _Ready()
     {
-        StartTime = GameManager.Instance.ServerTick;
+        if(Multiplayer.IsServer())
+        {
+            _startTime = GameManager.Instance.ServerTick;
+            Rpc(nameof(SyncStartTime), _startTime);
+        }
         EntityContainer = GetNode<Node3D>("%EntityContainer");
+        RealizationPool = GetNode<Node3D>("%RealizationPool");
     }
 
     public override void _Process(double delta)
     {
-        CheckArenaFailedState();
+        _lapsed = (GameManager.Instance.ServerTick - _startTime) / 60000f;
     }
 
-
-    private void CheckArenaFailedState()
+    public float GetTimeLeft()
     {
-        var lapsed = (GameManager.Instance.ServerTick - StartTime) / 60000f;
-        if(lapsed >= ArenaDuration)
-        {
-            arenaFailed = true;
-        }
-        // Other fail states go here:
+        return Mathf.Clamp(ArenaDuration - _lapsed, 0, ArenaDuration);
     }
 
-    public bool GetArenaFailedState()
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]  
+    public void SyncStartTime(ulong time)
     {
-        return arenaFailed;
+        _startTime = time;
     }
-
+    //
+    // Add and Remove Player Entities:
+    //
     public void AddPlayerEntity(PlayerEntity player)
     {
         if(Multiplayer.IsServer())
@@ -66,6 +74,9 @@ public partial class Arena : Node3D
         }
     }
 
+    //
+    // Fetch Various Entities:
+    //
     public Entity GetEntity(int id)
     {
         if(EntityContainer.GetChildCount() == 0)

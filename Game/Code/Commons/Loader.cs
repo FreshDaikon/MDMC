@@ -3,43 +3,31 @@ using Godot;
 
 public partial class Loader : Node
 {
+    //Dependency Scenes:
     [Export(PropertyHint.File)]
     private string ServerPath;
     [Export(PropertyHint.File)]
     private string ClientPath;
-
+   
     public override void _Ready()
     {
-        if(DisplayServer.GetName() == "headless")
-        {            
-            var res = (PackedScene)ResourceLoader.Load(ServerPath);
-            var server = res.Instantiate();
+        GD.Print("Starting MDMC");
+        var args = MD.GetArgs();
+        GD.Print(args);
+        //First check for Server:
+        if(args.ContainsKey("headless"))
+        {
+            var ServerSceneRes = (PackedScene)ResourceLoader.Load(ServerPath);
+            var server = ServerSceneRes.Instantiate();
             AddChild(server);
         }
+        // We are a Client:
         else
         {
-            var arguments = new Godot.Collections.Dictionary();
-            foreach (var argument in OS.GetCmdlineArgs())
-            {
-                if(argument.Contains("--resolution"))
-                {
-                    var value = argument.Replace("--resolution ", "");
-                    var x = value.Split("x")[0];
-                    var y = value.Split("x")[1];
-                    DisplayServer.WindowSetSize(new Vector2I(int.Parse(x), int.Parse(y)));
-                }
-                if(argument.Contains("--position"))
-                {
-                    var value = argument.Replace("--position ", "");
-                    var x = value.Split(",")[0];
-                    var y = value.Split(",")[1];
-                    DisplayServer.WindowSetPosition(new Vector2I(int.Parse(x), int.Parse(y)));
-                }
-            }
-            var res = (PackedScene)ResourceLoader.Load(ClientPath);
-            var client = res.Instantiate();
+            GD.Print("Starting as client..");
+            var ClientSceneRes = (PackedScene)ResourceLoader.Load(ClientPath);
+            var client = ClientSceneRes.Instantiate();
             AddChild(client);
         }
-        base._Ready();
     }
 }

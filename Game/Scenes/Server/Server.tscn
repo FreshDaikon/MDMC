@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://cot2lmy1em7xm"]
+[gd_scene load_steps=7 format=3 uid="uid://cot2lmy1em7xm"]
 
 [ext_resource type="Script" path="res://Code/Server/ServerManager.cs" id="1_pi4fx"]
 [ext_resource type="Script" path="res://Code/System/GameManager.cs" id="2_cf4ai"]
@@ -7,65 +7,35 @@
 [ext_resource type="Script" path="res://Code/System/DataManager.cs" id="5_2vpff"]
 [ext_resource type="Script" path="res://Code/Game/Arena/ArenaManager.cs" id="6_wdpge"]
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_yqd10"]
-properties/0/path = NodePath(".:ServerTick")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n5s8r"]
-albedo_color = Color(0.235294, 0.290196, 0.329412, 1)
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_3n6aq"]
-top_radius = 20.0
-bottom_radius = 20.0
-height = 1.0
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_rnpco"]
-radius = 20.2692
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hbler"]
-albedo_color = Color(0.133333, 0.192157, 0.258824, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_ahdx2"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_uy5kx"]
-size = Vector3(49.5651, 1, 41.6669)
-
-[sub_resource type="BoxMesh" id="BoxMesh_55agn"]
-
 [node name="Main" type="Node3D"]
 script = ExtResource("1_pi4fx")
 playerEntityPath = "res://Scenes/Game/EntitySystem/Player/PlayerEntity.tscn"
 sackManEntityPath = "res://Scenes/Game/Bosses/SackMan.tscn"
 
-[node name="PlayFab" type="Node" parent="."]
-script = ExtResource("2_p2psv")
-
-[node name="EntitySpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://Scenes/Game/EntitySystem/Player/PlayerEntity.tscn", "res://Scenes/Game/Bosses/SackMan.tscn")
-spawn_path = NodePath("../Game_Container/Entities")
-
 [node name="Managers" type="Node" parent="."]
 
-[node name="GameManager" type="Node" parent="Managers"]
-script = ExtResource("2_cf4ai")
+[node name="Game" type="Node" parent="Managers"]
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Managers/GameManager"]
-replication_interval = 0.03
-delta_interval = 0.03
-replication_config = SubResource("SceneReplicationConfig_yqd10")
-
-[node name="CombatManager" type="Node" parent="Managers"]
-script = ExtResource("4_03lm5")
-
-[node name="DataManager" type="Node" parent="Managers"]
+[node name="DataManager" type="Node" parent="Managers/Game"]
 script = ExtResource("5_2vpff")
 SkillContainersPath = "res://Data/Instances/SkillContainers"
 SkillsPath = "res://Data/Instances/Skills"
 ModifiersPath = "res://Data/Instances/Modifiers"
+ArenasPath = "res://Data/Instances/Arenas"
 
-[node name="ArenaManager" type="Node" parent="Managers"]
+[node name="GameManager" type="Node" parent="Managers/Game"]
+script = ExtResource("2_cf4ai")
+
+[node name="ArenaManager" type="Node" parent="Managers/Game"]
 script = ExtResource("6_wdpge")
+
+[node name="CombatManager" type="Node" parent="Managers/Game"]
+script = ExtResource("4_03lm5")
+
+[node name="Server" type="Node" parent="Managers"]
+
+[node name="PlayFabManager" type="Node" parent="Managers/Server"]
+script = ExtResource("2_p2psv")
 
 [node name="Game_Container" type="Node3D" parent="."]
 unique_name_in_owner = true
@@ -73,44 +43,5 @@ unique_name_in_owner = true
 [node name="RealizationPool" type="Node3D" parent="Game_Container"]
 unique_name_in_owner = true
 
-[node name="Entities" type="Node3D" parent="Game_Container"]
+[node name="ArenaContainer" type="Node3D" parent="Game_Container"]
 unique_name_in_owner = true
-
-[node name="Arena" type="Node3D" parent="Game_Container"]
-unique_name_in_owner = true
-
-[node name="ArenaMesh" type="StaticBody3D" parent="Game_Container/Arena"]
-collision_layer = 4
-collision_mask = 7
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Game_Container/Arena/ArenaMesh"]
-transform = Transform3D(1.00623, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
-layers = 4
-material_override = SubResource("StandardMaterial3D_n5s8r")
-mesh = SubResource("CylinderMesh_3n6aq")
-skeleton = NodePath("../../..")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Game_Container/Arena/ArenaMesh"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.99027, 0)
-shape = SubResource("CylinderShape3D_rnpco")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Game_Container/Arena/ArenaMesh"]
-transform = Transform3D(47.187, 0, 0, 0, 1, 0, 0, 0, 41.9396, 0, -0.64447, 0)
-material_override = SubResource("StandardMaterial3D_hbler")
-mesh = SubResource("BoxMesh_ahdx2")
-
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="Game_Container/Arena/ArenaMesh"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.560022, 0)
-shape = SubResource("BoxShape3D_uy5kx")
-
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="Game_Container/Arena/ArenaMesh"]
-transform = Transform3D(8.92048, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.201727, -13.1924)
-mesh = SubResource("BoxMesh_55agn")
-
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="Game_Container/Arena/ArenaMesh"]
-transform = Transform3D(8.92048, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.201727, 13.2444)
-mesh = SubResource("BoxMesh_55agn")
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Game_Container/Arena"]
-transform = Transform3D(0.443692, 0.66945, -0.595798, -0.0510172, 0.682609, 0.729, 0.894726, -0.293056, 0.337022, 0, 18, 0)
-shadow_enabled = true

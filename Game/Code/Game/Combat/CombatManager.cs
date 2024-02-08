@@ -63,8 +63,7 @@ public partial class CombatManager: Node
             Value = value,
             MessageType = (MD.CombatMessageType)messageType
         };
-        var dmgNumberPos = GameManager.Instance.GetEntity(target);
-        
+        var dmgNumberPos = ArenaManager.Instance.GetCurrentArena().GetEntity(target);
         UpdateEntityTracker(newMessage);
         Messages.Add(newMessage);
     }

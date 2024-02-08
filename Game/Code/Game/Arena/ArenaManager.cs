@@ -16,13 +16,8 @@ public partial class ArenaManager : Node
             return;
         }
         Instance = this;
-        ArenaContainer = GetNode<Arena>("%ArenaContainer");
+        ArenaContainer = GetNode<Node3D>("%ArenaContainer");
         base._Ready();
-    }
-
-    public void AddPlayerEntity(PlayerEntity player)
-    {
-        currentArena.AddPlayerEntity(player);
     }
 
     public Arena GetCurrentArena()
@@ -30,8 +25,23 @@ public partial class ArenaManager : Node
         return currentArena;
     }
 
+    public Node3D GetRealizationPool()
+    {
+        if(currentArena != null)
+        {
+            return currentArena.RealizationPool;
+        }
+        return null;
+    }
+
+    public bool HasArena()
+    {
+        return currentArena != null;
+    }
+
     public bool LoadArena(int id)
     {
+        MD.Log(MD.Runtime.GAME, "ArenaManager", "id to load is :" + id);
         var arena = DataManager.Instance.GetArena(id);
         if(arena != null)
         {
@@ -52,6 +62,10 @@ public partial class ArenaManager : Node
         {
             ArenaContainer.RemoveChild(currentArena);
             currentArena.QueueFree();
+        }
+        else
+        {
+            MD.Log("No Arena to unload..");
         }
     }
 }

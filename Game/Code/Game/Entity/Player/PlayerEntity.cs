@@ -24,7 +24,7 @@ public partial class PlayerEntity : Entity
         get {
             if(FriendlyTargetId != -1)
             {
-                var target = GameManager.Instance.GetEntity(FriendlyTargetId);
+                var target = ArenaManager.Instance.GetCurrentArena().GetEntity(FriendlyTargetId);
                 if(target == null)
                 { 
                     FriendlyTargetId = -1;    

@@ -1,14 +1,63 @@
-[gd_scene load_steps=3 format=3 uid="uid://bdnsvy2s047ut"]
+[gd_scene load_steps=10 format=3 uid="uid://bdnsvy2s047ut"]
 
-[ext_resource type="FontFile" uid="uid://d4h6yly3wol4q" path="res://Assets/UI/Fonts/LibreFranklin-ExtraBoldItalic.ttf" id="1_7qdwh"]
-[ext_resource type="Script" path="res://Scenes/Client/UI/Frontend/FrontendControlPanel.cs" id="1_tavic"]
+[ext_resource type="Script" path="res://Code/Client/UI/Frontend/UIConnections.cs" id="1_pdk0r"]
+[ext_resource type="FontFile" uid="uid://0kwf2k1lwj06" path="res://Assets/UI/Fonts/LibreFranklin-Bold.ttf" id="2_2q4cq"]
+[ext_resource type="FontFile" uid="uid://d4h6yly3wol4q" path="res://Assets/UI/Fonts/LibreFranklin-ExtraBoldItalic.ttf" id="3_v5kdg"]
+[ext_resource type="Theme" uid="uid://c1oxyfcm8n4ob" path="res://Assets/Themes/base.tres" id="4_h1f36"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cykyt"]
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.403922, 0.403922, 0.403922, 1)
+border_blend = true
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aebdd"]
+bg_color = Color(0.937255, 0.666667, 0.462745, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nj700"]
+bg_color = Color(0.909804, 0.301961, 0.529412, 1)
+border_width_bottom = 4
+border_color = Color(0.0588235, 0.054902, 0.0196078, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tm8xe"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.0980392, 0.105882, 0.121569, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="Theme" id="Theme_b7nhx"]
+Button/colors/font_color = Color(0.341176, 0.152941, 0.152941, 1)
+Button/colors/font_hover_color = Color(0.207843, 0.113725, 0.113725, 1)
+Button/font_sizes/font_size = 20
+Button/fonts/font = ExtResource("2_2q4cq")
+Button/styles/disabled = SubResource("StyleBoxFlat_cykyt")
+Button/styles/hover = SubResource("StyleBoxFlat_aebdd")
+Button/styles/normal = SubResource("StyleBoxFlat_nj700")
+Label/colors/font_color = Color(1, 1, 1, 1)
+Label/colors/font_outline_color = Color(0, 0, 0, 1)
+Label/constants/outline_size = 3
+Panel/styles/panel = SubResource("StyleBoxFlat_tm8xe")
 
 [node name="ControlPanel" type="Control"]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 350.0
 offset_bottom = 400.0
-script = ExtResource("1_tavic")
+script = ExtResource("1_pdk0r")
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 1
@@ -28,6 +77,7 @@ anchor_bottom = 1.0
 offset_bottom = -50.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = SubResource("Theme_b7nhx")
 theme_override_constants/separation = 8
 
 [node name="Welcome" type="Label" parent="Panel/HBoxContainer"]
@@ -35,7 +85,7 @@ layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
-theme_override_fonts/font = ExtResource("1_7qdwh")
+theme_override_fonts/font = ExtResource("3_v5kdg")
 theme_override_font_sizes/font_size = 32
 text = "Welcome to MDMC"
 horizontal_alignment = 1
@@ -70,6 +120,7 @@ layout_mode = 2
 [node name="RequestServer" type="Button" parent="Panel/HBoxContainer/TabContainer/Remote"]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("4_h1f36")
 text = "Request Server"
 
 [node name="IPLabel" type="Label" parent="Panel/HBoxContainer/TabContainer/Remote"]
@@ -87,4 +138,5 @@ max_length = 16
 [node name="JoinServer" type="Button" parent="Panel/HBoxContainer/TabContainer/Remote"]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("4_h1f36")
 text = "Join Server"

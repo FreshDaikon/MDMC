@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Code/Commons/Loader.cs" id="1_fgax2"]
 
-[node name="Main" type="Node3D"]
+[node name="Root" type="Node3D"]
 script = ExtResource("1_fgax2")
 ServerPath = "res://Scenes/Server/Server.tscn"
 ClientPath = "res://Scenes/Client/Client.tscn"

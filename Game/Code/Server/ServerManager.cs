@@ -25,19 +25,25 @@ public partial class ServerManager : Node3D
             return;
         }
         Instance = this;        
-        EntityContainer = GetNode<Node3D>("%Entities");
-        GD.Print("Instance Cleared... ");
-        
+        GD.Print("Instance Cleared... ");        
     }
 
     public override void _Process(double delta)
     {
         var currentArena = ArenaManager.Instance.GetCurrentArena();
-        if(!currentArena.GetArenaFailedState())
+
+        if(currentArena != null)
         {
-            foreach(var player in Multiplayer.GetPeers())
+            if(currentArena.GetTimeLeft() <= 0)
             {
-                peer.DisconnectPeer(player);
+                MD.Log(MD.Runtime.Server, "ServerManager", "Arena Time is up! - Closing Down..");
+                foreach(var player in Multiplayer.GetPeers())
+                {
+                    if(player != Multiplayer.GetUniqueId())
+                    {
+                        peer.DisconnectPeer(player);
+                    }
+                }
             }
         }
         base._Process(delta);
@@ -61,12 +67,48 @@ public partial class ServerManager : Node3D
         GD.Print("Server Started! Awaiting Clients...");        
     }
 
+    public void StartAsStandaloneServer(int port, int maxPlayers, string arena)
+    {
+        Engine.MaxFps = 60;
+        Multiplayer.PeerConnected += PeerConnected;
+        Multiplayer.PeerDisconnected += PeerDisconnected;
+        peer = new ENetMultiplayerPeer();
+        var error = peer.CreateServer(port, maxPlayers);   
+        if(error != Error.Ok)
+        {
+            GD.Print("Can't Host : " + error.ToString());
+            return;
+        }
+        Multiplayer.MultiplayerPeer = peer;   
+        if(arena != "-1")
+        {
+            //Arena Setup:
+            int id = int.Parse(arena);
+            if(ArenaManager.Instance.LoadArena(id))
+            {
+                //When done:
+                GD.Print("Server Started! Awaiting Clients..."); 
+                return;
+            }
+            else 
+            {
+                GD.Print("Could Not Load Arena - abort!"); 
+                return;
+            }
+        }
+        else
+        {
+            GD.Print("Server Started! Awaiting Clients..."); 
+            return;
+        }
+    }
+
     public bool StartAsPlayfabServer(string cookie, int port, int maxPlayers)
     {
         Engine.MaxFps = 60;
         Multiplayer.PeerConnected += PeerConnected;
         Multiplayer.PeerDisconnected += PeerDisconnected;
-        MD.Log(cookie);
+        MD.Log(MD.Runtime.Server, "", cookie);
         peer = new ENetMultiplayerPeer();
         var error = peer.CreateServer(port, maxPlayers);   
         if(error != Error.Ok)
@@ -101,50 +143,43 @@ public partial class ServerManager : Node3D
     // SIGNALS:
     private void PeerDisconnected(long id)
     {
-        GD.Print("Peer Disconnected : " + id);
-        RemovePlayer(id);
-        MD.Log(Multiplayer.GetPeers().Length.ToString());
+        MD.Log(MD.Runtime.Server, "","Player Disconnected...");
+        var arena = ArenaManager.Instance.GetCurrentArena();
+        if(arena != null)
+        {
+            arena.RemovePlayerEntity ((int)id);
+        }
+        MD.Log(MD.Runtime.Server, "Remaining Peers: ", Multiplayer.GetPeers().Length.ToString());
         if(Multiplayer.GetPeers().Length <= 0)
         {
+            MD.Log(MD.Runtime.Server, "*", "No Peers remaining after last disconnect - shutting down.");
             GetTree().Quit();
         }
 
     }
     private void PeerConnected(long id)
     {
-        GD.Print("Peer Connected : " + id);
-        AddPlayer(id);
+        MD.Log(MD.Runtime.Server, "","Player Connnected...");
+        if(ArenaManager.Instance.HasArena())
+        {   
+            var arena = ArenaManager.Instance.GetCurrentArena();
+            var newPlayer = CreateNewPlayer(id);
+            arena.AddPlayerEntity(newPlayer);
+        }
+        else 
+        {
+            MD.Log(MD.Runtime.Server, "","Could not add player - arena is null.. Disconnect Player:");
+            peer.DisconnectPeer((int)id);
+        }
     }
-    private void AddPlayer(long id)
+
+    private PlayerEntity CreateNewPlayer(long id)
     {
         var prefab = (PackedScene)ResourceLoader.Load(playerEntityPath);
         PlayerEntity player = prefab.Instantiate<PlayerEntity>();
-        int index = 0;
-        if(EntityContainer.GetChildCount() > 0)
-        {
-            index = EntityContainer.GetChildren().Where(p => p is PlayerEntity).Cast<PlayerEntity>().ToList().Count;
-        }       
-        if(index == 0)
-            AddSackMan();
-        player.Name = id.ToString();
-        player.EntityName = "Cool Player" + id.ToString().Substring(0, 4);
-        EntityContainer.AddChild(player);
-    }
-
-    private void RemovePlayer(long id)
-    {
-       var player = EntityContainer.GetNode(id.ToString());
-       if(player != null)
-       {
-            player.QueueFree();
-       }
-    }
-
-    private void AddSackMan()
-    {   
-        var prefab = (PackedScene)ResourceLoader.Load(sackManEntityPath);
-        Entity sack = prefab.Instantiate<Entity>();
-        sack.Name = ((int)ResourceUid.CreateId()).ToString();
-        EntityContainer.AddChild(sack);
+        //Sets the node name . TODO : add more identifying information (steam name fx.)
+        player.Name =  id.ToString();
+        player.EntityName = "Unknown Player" + id.ToString().Substring(0, 4);
+        return player;        
     }
 }
