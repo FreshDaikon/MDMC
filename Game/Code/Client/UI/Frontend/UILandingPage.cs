@@ -37,10 +37,11 @@ public partial class UILandingPage : Control
         RequestGameButton.Pressed += () => RequestGame();
         JoinGameButton.Pressed += () => JoinGame();
         ConnectWSButton.Pressed += () => ConnectWS();
+        StartServerButton.Pressed += () => StartLocalServer();
 
         //Setup Extras
         var args = MD.GetArgs();
-        if(args.ContainsKey("localserverenable"))
+        if(args.ContainsKey("localserver"))
         {
             StartServerButton.Visible = true;
             StartServerButton.Disabled = false;
@@ -73,7 +74,6 @@ public partial class UILandingPage : Control
         WSConnectionLabel.Text = "WS Connnection :" + WSManager.Instance.State.ToString();
         JoinGameButton.Disabled = !hasConnnection && (JoinCodeEdit.Text == "");
         RequestGameButton.Disabled = !hasConnnection;
-        StartServerButton.Disabled = true;
 
         var gameId = ClientMultiplayerManager.Instance.GetId();
 

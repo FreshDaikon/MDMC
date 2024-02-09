@@ -23,7 +23,7 @@
             "program": "C:/Users/Rune/Desktop/Godot/Godot4.2/Godot.exe",
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
-            "args": ["--path", "${workspaceRoot}", "-w"]
+            "args": ["--path", "${workspaceRoot}", "-w", "--localserver"]
             
         },
         {

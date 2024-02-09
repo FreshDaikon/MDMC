@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 public partial class ClientMultiplayerManager: Node
@@ -83,7 +84,9 @@ public partial class ClientMultiplayerManager: Node
     // Only works with a local copy of the x86 - dont try this on retail distros.
     public void StartLocalServer(Arena arena)
     {
-        var path = OS.GetExecutablePath();
-        var pid = OS.Execute(path + "/Server/Server.exe", new string[]{" --headless", "--arena "+ arena.Id.ToString()});
+        GD.Print("Trying to start local Server..");
+        var path = OS.GetExecutablePath().Replace("/MDMC_Client.exe", "");
+        GD.Print("At Path:" + path);
+        OS.CreateProcess(path + "/Server/MDMC_Server.console.exe", new string[]{" --headless", "--arena "+ arena.Id.ToString()}, true);
     }
 }
