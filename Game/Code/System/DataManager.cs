@@ -76,6 +76,7 @@ public partial class DataManager : Node
             dir.ListDirEnd();
         }
     }
+
     private void SetupSkills()
     {
         skills = new List<Skill>();
@@ -97,9 +98,11 @@ public partial class DataManager : Node
 
     private void SetupArenas()
     {
+        GD.Print("Setting up arenas..");
         arenas = new List<Arena>();
         ArenaLookup = new Dictionary<int, PackedScene>();
         using var dir = DirAccess.Open(ArenasPath);
+
         if(dir != null)
         {
             dir.ListDirBegin();

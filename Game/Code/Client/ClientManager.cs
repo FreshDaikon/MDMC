@@ -14,12 +14,12 @@ public partial class ClientManager : Node3D
     public MD.InputScheme CurrentInputScheme { get; private set; } 
     //References & Denpendencies:
     // UI :
-    [Export(PropertyHint.File)]
-    private string frontendPath;
-    [Export(PropertyHint.File)]
-    private string hudPath;
-    [Export(PropertyHint.File)]
-    private string ingamemenuPath;
+    [Export]
+    private PackedScene frontendScene;
+    [Export]
+    private PackedScene hudScene;
+    [Export]
+    private PackedScene ingamemenuScene; 
 
     private UILandingPage frontend;
     private UIHUDMain hud;
@@ -47,11 +47,11 @@ public partial class ClientManager : Node3D
         UIContainer = GetNode<Node>("%UIContainer");
         // Get Dependencies:
         // Frontend
-        var frontendScene = (PackedScene)ResourceLoader.Load(frontendPath);
         frontend = frontendScene.Instantiate<UILandingPage>();
         // HUD
-        var hudScene = (PackedScene)ResourceLoader.Load(hudPath);
         hud = hudScene.Instantiate<UIHUDMain>();
+        // Ingame 
+        ingameMenu = ingamemenuScene.Instantiate<UIIngameMenu>();
 
         // Steam Init:
         if(SteamManager.Instance.InitSteam())
@@ -64,7 +64,7 @@ public partial class ClientManager : Node3D
     public void ToggleHud()
     {
         Node hudContainer = UIContainer.GetNode("HUDContainer");
-        if(hudContainer.GetNode(hud.Name.ToString()) != null)
+        if(hudContainer.GetNodeOrNull(hud.Name.ToString()) != null)
         {
             hudContainer.RemoveChild(hud);
         }
@@ -77,7 +77,7 @@ public partial class ClientManager : Node3D
     public void ToggleFrontend()
     {
         Node frontendContainer = UIContainer.GetNode("FrontendContainer");
-        if(frontendContainer.GetNode(frontend.Name.ToString()) != null)
+        if(frontendContainer.GetNodeOrNull(frontend.Name.ToString()) != null)
         {
             frontendContainer.RemoveChild(frontend);
         }
@@ -90,7 +90,7 @@ public partial class ClientManager : Node3D
     public void ToggleIngameMenu()
     {
         Node ingameContainer = UIContainer.GetNode("IngameContainer");
-        if(ingameContainer.GetNode(ingameMenu.Name.ToString()) != null)
+        if(ingameContainer.GetNodeOrNull(ingameMenu.Name.ToString()) != null)
         {
             ingameContainer.RemoveChild(ingameMenu);
         }

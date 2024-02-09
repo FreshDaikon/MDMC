@@ -8,7 +8,9 @@ public partial class ClientMultiplayerManager: Node
 
     private string _hostUrl;
     private int _hostPort;
-    private bool _hasData;
+    private string _gameId;
+    private bool _hasData = false;
+    private bool _hasId = false;
 
     public override void _Ready()
     {
@@ -25,6 +27,24 @@ public partial class ClientMultiplayerManager: Node
         _hostPort = port;
         _hostUrl = url;
         _hasData = true;
+    }
+
+    public void SetId(string id)
+    {
+        _gameId = id;
+        _hasId = true;
+    }
+
+    public string GetId()
+    {
+        if(_hasId)
+        {
+            return _gameId;
+        }
+        else
+        {
+            return "";
+        }
     }
 
     public bool StartPeer()

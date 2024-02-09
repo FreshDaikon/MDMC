@@ -146,6 +146,7 @@ public partial class WSManager : Node
                 MD.Log("Host is: " + createdMessage.ServerUrl );
                 MD.Log("Port is: " + createdMessage.ServerPort );
                 MD.Log("Code is: " + createdMessage.ShareableCode );
+                ClientMultiplayerManager.Instance.SetId(createdMessage.ShareableCode);
                 ClientMultiplayerManager.Instance.SetData(createdMessage.ServerUrl, createdMessage.ServerPort);
                 break;
             case OrchMessageType.GameFound:

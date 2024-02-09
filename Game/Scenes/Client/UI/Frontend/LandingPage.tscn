@@ -1,5 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://1bpfjjvvkhfn"]
+[gd_scene load_steps=4 format=3 uid="uid://1bpfjjvvkhfn"]
 
+[ext_resource type="Script" path="res://Code/Client/UI/Frontend/UILandingPage.cs" id="1_p3haa"]
 [ext_resource type="FontFile" uid="uid://xv28cftjto52" path="res://Assets/UI/Fonts/twoweekendssans-regular.otf" id="1_pfx35"]
 [ext_resource type="PackedScene" uid="uid://drwf23ju3cmju" path="res://Scenes/Client/UI/Frontend/Components/MDMC_Title.tscn" id="2_cqgh0"]
 
@@ -10,8 +11,17 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_p3haa")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="BG" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="BG"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,7 +30,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="BG"]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -32,64 +42,116 @@ grow_vertical = 0
 theme_override_fonts/font = ExtResource("1_pfx35")
 text = "MDMC. v.0.023 © Rune Rask Langkilde 2023"
 
-[node name="MDMCTitle" parent="." instance=ExtResource("2_cqgh0")]
+[node name="MDMCTitle" parent="BG" instance=ExtResource("2_cqgh0")]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -615.0
-offset_top = 12.0
-offset_right = -15.0
-offset_bottom = 362.0
+offset_left = -628.0
+offset_top = 26.0
+offset_right = -28.0
+offset_bottom = 376.0
 grow_horizontal = 0
 
-[node name="Profile" type="Control" parent="."]
-anchors_preset = 0
-offset_left = 32.0
-offset_top = 34.0
-offset_right = 553.0
-offset_bottom = 141.0
-metadata/_edit_group_ = true
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 75.0
+offset_top = -414.0
+offset_right = 577.0
+offset_bottom = 418.0
+grow_vertical = 2
 
-[node name="ColorRect" type="ColorRect" parent="Profile"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.176471, 0.176471, 0.176471, 1)
 
-[node name="Profile2" type="Control" parent="."]
-anchors_preset = 0
-offset_left = 36.0
-offset_top = 288.0
-offset_right = 545.0
-offset_bottom = 988.0
-metadata/_edit_group_ = true
+[node name="Label" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "MDMC"
+horizontal_alignment = 1
 
-[node name="ColorRect" type="ColorRect" parent="Profile2"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.176471, 0.176471, 0.176471, 1)
+[node name="Spacer_01" type="MarginContainer" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
 
-[node name="Profile3" type="Control" parent="."]
-anchors_preset = 0
-offset_left = 1393.0
-offset_top = 922.0
-offset_right = 1902.0
-offset_bottom = 1060.0
-metadata/_edit_group_ = true
+[node name="SelectArenaLabel" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Select Arena:"
+horizontal_alignment = 1
 
-[node name="ColorRect" type="ColorRect" parent="Profile3"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.176471, 0.176471, 0.176471, 1)
+[node name="ArenaListOptions" type="OptionButton" parent="Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 1
+
+[node name="OnlineLabel" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Online:"
+horizontal_alignment = 1
+
+[node name="RequestGameButton" type="Button" parent="Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Request Game"
+
+[node name="JoinCodeEdit" type="LineEdit" parent="Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Input  Join Code"
+
+[node name="GeneratedCodeEdit" type="LineEdit" parent="Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Generated..."
+
+[node name="JoinGameButton" type="Button" parent="Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Join Game"
+
+[node name="Spacer_02" type="MarginContainer" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="LocalLabel" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Local:"
+horizontal_alignment = 1
+
+[node name="StartServerButton" type="Button" parent="Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Start Local Server"
+
+[node name="JoinLocalButton" type="Button" parent="Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Join Local Server
+"
+
+[node name="Spacer_03" type="MarginContainer" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="localOptionsLabel" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Socket Options"
+horizontal_alignment = 1
+
+[node name="ConnectWSButton" type="Button" parent="Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Connect to WS (Debug) "
+
+[node name="WSConnectionLabel" type="Label" parent="Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.254902, 0.721569, 0, 1)
+text = "Status..."

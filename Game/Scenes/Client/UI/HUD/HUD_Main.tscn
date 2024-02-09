@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://ds72o2h662r4r"]
 
-[ext_resource type="Script" path="res://Scenes/Client/UI/HUD/PlayerHUD.cs" id="1_1cu7q"]
+[ext_resource type="Script" path="res://Code/Client/UI/HUD/UIHUDMain.cs" id="1_poobr"]
 [ext_resource type="PackedScene" uid="uid://d0fgtib258a7k" path="res://Scenes/Client/UI/HUD/Elements/DamageMeter/Damage_Meter.tscn" id="2_t5a6y"]
 [ext_resource type="PackedScene" uid="uid://cj1yyie770nrc" path="res://Scenes/Client/UI/HUD/Elements/TimerBars/Cast_Bar.tscn" id="3_27437"]
 [ext_resource type="PackedScene" uid="uid://c3nva5iqe38aq" path="res://Scenes/Client/UI/HUD/Elements/TimerBars/Channel_Bar.tscn" id="4_cntgf"]
@@ -9,21 +9,14 @@
 [ext_resource type="PackedScene" uid="uid://cj5m27jrog0rj" path="res://Scenes/Client/UI/HUD/Arsenal/hud_skill_container.tscn" id="7_55lo1"]
 [ext_resource type="FontFile" uid="uid://xv28cftjto52" path="res://Assets/UI/Fonts/twoweekendssans-regular.otf" id="8_aw1je"]
 
-[node name="PlayerHud" type="Control" node_paths=PackedStringArray("idLabel", "healthLabel", "speedLabel", "modContainer", "dmgNumberContainer")]
+[node name="HUD_Main" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_1cu7q")
-idLabel = NodePath("VBoxContainer/ID/IDValue")
-healthLabel = NodePath("VBoxContainer/Health/HealthValue")
-speedLabel = NodePath("VBoxContainer/Speed/SpeedValue")
-modContainer = NodePath("VBoxContainer/MODS/ModContainer")
-modPath = "res://Scenes/UI/HUD/Elements/HUD_Modifier.tscn"
-dmgNumberPath = "res://Scenes/Client/UI/HUD/Elements/DamageNumber/DamageNumber.tscn"
-dmgNumberContainer = NodePath("DmgNumberContainer")
+script = ExtResource("1_poobr")
 metadata/_edit_lock_ = true
 
 [node name="DmgNumberContainer" type="Control" parent="."]
