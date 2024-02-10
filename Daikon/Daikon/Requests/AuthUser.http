@@ -1,0 +1,6 @@
+POST  http://localhost:5098/auth
+Content-Type: application/json
+
+{
+    "SteamTicket" : "bannana"
+}

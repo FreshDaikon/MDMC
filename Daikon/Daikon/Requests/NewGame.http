@@ -1,0 +1,6 @@
+GET http://localhost:5098/auth/NewGame
+Content-Type: application/json
+
+{
+    "SessionToken" : "c6ffc56f-1cd6-421c-8192-0450ea476e31"
+}
