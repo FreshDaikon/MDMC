@@ -2,7 +2,7 @@ namespace Daikon.Models.SteamUtils;
 
 public class SteamUserInfoResponse 
 {
-    public SteamUserInfoResponseData? Response { get;set; }
+    public SteamUserInfoResponseData? Response { get;set; } 
 }
 
 public class SteamUserInfoResponseData 

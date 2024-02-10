@@ -3,7 +3,7 @@ using Daikon.Models;
 
 namespace Daikon.Services.Users;
 
-public interface IAuthService 
+public interface IAuthService  
 {
     void AddNewToken(Guid token, DateTime startTime);
 

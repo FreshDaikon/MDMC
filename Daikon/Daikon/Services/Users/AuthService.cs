@@ -5,7 +5,7 @@ namespace Daikon.Services.Users;
 
 public class AuthService : IAuthService
 {
-    private static readonly Dictionary<Guid, DateTime> ValidTokens = new();
+    private static readonly Dictionary<Guid, DateTime> ValidTokens = new(); 
 
     public void AddNewToken(Guid token, DateTime startTime)
     {
