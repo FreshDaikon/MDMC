@@ -21,7 +21,7 @@ public class UsersController : ControllerBase
         _logger = logger;
     }
 
-    [HttpPost()]
+    [HttpGet()]
     public async Task<IActionResult> AuthUser(AuthUserRequest request)
     {
         var auth = await AuthUserWithSteam(request.SteamTicket);
@@ -34,18 +34,7 @@ public class UsersController : ControllerBase
         }
         else return NoContent();
     }
-
-    [HttpGet("NewGame")]
-    public IActionResult CreateGame(NewGameRequest request)
-    {
-        var token = request.SessionToken;
-        if(_userService.ValidateToken(token))
-        {
-            return Ok(token);
-        }
-        else return NoContent();
-    } 
-
+    
     private async Task<bool> AuthUserWithSteam(string ticket)
     {
         await Task.Delay(100);

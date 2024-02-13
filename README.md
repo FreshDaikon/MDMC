@@ -18,6 +18,16 @@ Useful Design Links for MDMC: </br>
 [Overall Tracker](https://github.com/users/FreshDaikon/projects/1)</br>
 
 
+Techical tips:</br>
+In order to build/run with the included launch.json, make sure to install Godot like so:</br>
+RootFolder(MDMC)/.Engine/Godot.exe</br>
+and </br>
+RootFolder(MDMC)/.Engine/Godot_Console.exe</br>
+/.Engine will naturally be excluded by git, so on a local repo simply just download Godot at :</br>
+https://godotengine.org/download/windows/</br>
+
+Addionally, if the steam_api64.dll is missing from /Game/.. please download it and place it there.
+
 
 
 

@@ -2,6 +2,7 @@
 .godot/
 .DIST/
 .Tools/
+.Engine/
 .SOURCE/
 /*/bin/
 */*/bin/

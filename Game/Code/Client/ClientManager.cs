@@ -90,16 +90,15 @@ public partial class ClientManager : Node3D
     public void ToggleIngameMenu()
     {
         Node ingameContainer = UIContainer.GetNode("IngameContainer");
-        if(ingameContainer.GetNodeOrNull(ingameMenu.Name.ToString()) != null)
+        if(ingameContainer.GetNodeOrNull(ingameMenu.Name.ToString()) != null) 
         {
             ingameContainer.RemoveChild(ingameMenu);
         }
-        else
+        else 
         {
             ingameContainer.AddChild(ingameMenu);
         }
     }
-
     public override void _PhysicsProcess(double delta)
     {
         if(Input.GetLastMouseVelocity().Length() > 0f)

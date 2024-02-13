@@ -4,6 +4,10 @@
     <ProjectReference Include="..\Daikon.Contracts\Daikon.Contracts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="PlayFabAllSDK" Version="1.175.240202" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
