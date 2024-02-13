@@ -1,5 +1,6 @@
 namespace Daikon.Contracts.Users;
 
-public record AuthUserRequest(
-    string SteamTicket
-);
+public record AuthUserRequest
+{
+    public required string SteamTicket { get; init;} 
+};

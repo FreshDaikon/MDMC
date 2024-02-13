@@ -20,13 +20,8 @@ public class GameCleaner : BackgroundService
     {
         while (await _tokenTimer.WaitForNextTickAsync(stoppingToken) && !stoppingToken.IsCancellationRequested)
         {
-            CheckGames();    
+            Console.WriteLine("Checking Games to cleanup..");
+            _gameManager.CleanupGames();
         }
-    }
-
-    private void CheckGames()
-    {
-        Console.WriteLine("Checking Games");
-        _gameManager.CleanupGames();
     }
 }

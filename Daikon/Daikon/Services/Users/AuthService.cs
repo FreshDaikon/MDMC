@@ -12,8 +12,9 @@ public class AuthService : IAuthService
         ValidTokens.Add(token, startTime);
     }
 
-    public void CleanTokens(DateTime time)
+    public void CleanTokens()
     {
+        DateTime time = DateTime.Now;
         Console.WriteLine("Cleaning Tokens :" + ValidTokens.Count);
         foreach(KeyValuePair<Guid, DateTime> entry in ValidTokens)
         {

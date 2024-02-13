@@ -1,6 +1,7 @@
 namespace Daikon.Contracts.Games;
 
-public record JoinGameRequest(
-    Guid SessionToken,
-    string JoinCode
-);
+public record JoinGameRequest
+{
+    public required Guid SessionToken { get; init; }
+    public required string JoinCode { get; init; }
+};

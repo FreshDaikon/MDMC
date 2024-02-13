@@ -1,8 +1,9 @@
 namespace Daikon.Contracts.Games;
 
-public record NewGameRequest (
-    Guid SessionToken,
-    string Arena
-);
+public record NewGameRequest 
+{
+    public required Guid SessionToken { get; init; }
+    public required string Arena { get; init;}
+};
     
 

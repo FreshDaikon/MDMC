@@ -8,5 +8,5 @@ public interface IAuthService
 
     bool ValidateToken(Guid token);
 
-    void CleanTokens(DateTime time);
+    void CleanTokens();
 }

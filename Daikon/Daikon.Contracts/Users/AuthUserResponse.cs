@@ -1,5 +1,6 @@
 namespace Daikon.Contracts.Users;
 
-public record AuthUserResponse(
-    Guid SessionToken
-);
+public record AuthUserResponse
+{
+    public required Guid SessionToken { get; init; }
+};

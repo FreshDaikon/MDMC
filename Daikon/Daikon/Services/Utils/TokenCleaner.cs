@@ -19,13 +19,8 @@ public class TokenCleaner : BackgroundService
     {
         while (await _tokenTimer.WaitForNextTickAsync(stoppingToken) && !stoppingToken.IsCancellationRequested)
         {
-            CheckTokens();    
+            Console.WriteLine("Checking Tokens");
+            _authService.CleanTokens();
         }
-    }
-
-    private void CheckTokens()
-    {
-        Console.WriteLine("Checking Tokens");
-        _authService.CleanTokens(DateTime.Now);
     }
 }

@@ -90,11 +90,11 @@ public class GamesController : ControllerBase
                             };
                             NewGame.LastHeartBeat = DateTime.Now;
                             _gameManager.AddGame(NewGame);
-                            var response = new GameCreatedResponse(
-                                JoinCode: joinCode,
-                                ServerHost: result.FQDN,
-                                ServerPort: result.Ports.First(port => port.Name == "GameServer")?.Num
-                            );
+                            var response = new GameCreatedResponse(){
+                                JoinCode = joinCode, 
+                                ServerHost = result.FQDN,
+                                ServerPort = result.Ports.First(port => port.Name == "GameServer").Num
+                            };
                             return Ok(response);
                         }
                     }

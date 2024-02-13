@@ -29,7 +29,9 @@ public class UsersController : ControllerBase
         {
             var token = Guid.NewGuid();
             _userService.AddNewToken(token, DateTime.Now);
-            var response = new AuthUserResponse(token);
+            var response = new AuthUserResponse(){
+                SessionToken = token,
+            };
             return Ok(response);
         }
         else return NoContent();
