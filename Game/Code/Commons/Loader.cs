@@ -14,7 +14,13 @@ public partial class Loader : Node
         var args = MD.GetArgs();
         GD.Print(args);
         //First check for Server:
-        if(args.ContainsKey("headless"))
+        if(args.ContainsKey("gameserver"))
+        {
+            var ServerSceneRes = (PackedScene)ResourceLoader.Load(ServerPath);
+            var server = ServerSceneRes.Instantiate();
+            AddChild(server);
+        }
+        else if(args.ContainsKey("playfab"))
         {
             var ServerSceneRes = (PackedScene)ResourceLoader.Load(ServerPath);
             var server = ServerSceneRes.Instantiate();

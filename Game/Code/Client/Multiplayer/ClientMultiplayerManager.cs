@@ -84,9 +84,23 @@ public partial class ClientMultiplayerManager: Node
     // Only works with a local copy of the x86 - dont try this on retail distros.
     public void StartLocalServer(Arena arena)
     {
+        var args = MD.GetArgs();
+        var path = OS.GetExecutablePath();
         GD.Print("Trying to start local Server..");
-        var path = OS.GetExecutablePath().Replace("/MDMC_Client.exe", "");
-        GD.Print("At Path:" + path);
-        OS.CreateProcess(path + "/Server/MDMC_Server.console.exe", new string[]{" --headless", "--arena "+ arena.Id.ToString()}, true);
+        if(args.ContainsKey("vscode"))
+        {
+            var projPath = path.Replace(".Engine/Godot.exe", "Game"); 
+            GD.Print("Project path :" + projPath);
+            path = path.Replace("Godot.exe", "Godot_console.exe");
+            GD.Print("Exe Path:" + path);
+            OS.CreateProcess(path, new string[]{"--path", projPath,"--headless", "--gameserver", "--arena "+ arena.Id.ToString()}, true);
+        }
+        else
+        {
+            path = path.Replace("MDMC.exe", "MDMC_Server.console.exe");
+            OS.CreateProcess(path + "/Server/MDMC_Server.console.exe", 
+                new string[]{" --headless", "--arena "+ arena.Id.ToString()},
+                true);
+        }
     }
 }

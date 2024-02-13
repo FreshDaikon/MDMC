@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Godot;
+using MDMC.Game.Entity;
 
 /// <summary>
 /// The basis for Manipulating Entities spatially.<br/>
@@ -20,22 +23,16 @@ public partial class EntityController : CharacterBody3D
     [Export]
     public Vector3 SyncRotation;
 
+    private const int interpolationOffset = 100;
+    private List<EntityState> entityStatesBuffer = new();
+    private EntityState lastState;
 
     public override void _PhysicsProcess(double delta)
     {
-        if(Multiplayer.GetUniqueId() == 1)
+        if(Multiplayer.IsServer())
         {
-            Vector3 velocity = Vector3.Zero;
-            //Add up all the forces:
-            foreach(var force in Forces)
-            {
-                velocity += force;
-            }
-            Velocity = velocity;
             MoveAndSlide();
-            Forces.Clear();
-            SyncPosition = Position;
-            SyncRotation = Rotation;
+            Rpc(nameof(UpdateEntityState),  (int)GameManager.Instance.ServerTick, Position, Rotation);
         }        
         else
         {
@@ -44,30 +41,63 @@ public partial class EntityController : CharacterBody3D
     }
     private void UpdateController()
     {  
-        Position = Position.Lerp(SyncPosition, 0.5f);
-        Rotation = Rotation.Lerp(SyncRotation, 0.5f);
-    }
-    private bool HasAuth()
-    {
-        return Multiplayer.GetUniqueId() == 1;
-    }
-    public void Move(Vector3 force)
-    {
-        if(!HasAuth())
+        if(GameManager.Instance.ServerTick == 0)
+        { 
             return;
-        Forces.Add(force);
+        }
+        var safeTime = (int)GameManager.Instance.ServerTick;
+        var renderTime = safeTime - interpolationOffset; 
+        if(entityStatesBuffer.Count > 1)
+        {
+            while(entityStatesBuffer.Count > 2 && renderTime > entityStatesBuffer[1].TimeStamp)
+            {
+                entityStatesBuffer.RemoveAt(0);
+            }
+            var current = renderTime - entityStatesBuffer[0].TimeStamp;
+            var difference = entityStatesBuffer[1].TimeStamp - entityStatesBuffer[0].TimeStamp;           
+            var interpolationFactor = (float)current / (float)difference;
+            if(current < 0)
+            {
+                return;
+            }
+            var newPosition = entityStatesBuffer[0].Position.Lerp(entityStatesBuffer[1].Position, interpolationFactor);
+            var newRotation = entityStatesBuffer[0].Rotation.Lerp(entityStatesBuffer[1].Rotation, interpolationFactor);
+            Position = newPosition;
+            Rotation = newRotation;
+        } 
     }
     public void Rotate(Vector2 direction)
     {
-        if(!HasAuth())
+        if(!Multiplayer.IsServer())
             return;
         Rotation = new Vector3(0f, direction.Angle(), 0f);
     }
     public void Teleport(Vector3 destination)
     {
-        if(!HasAuth())
+        if(Multiplayer.IsServer())
             return;
         Position = destination;
+    }
+    //RPC Calls:
+    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void UpdateEntityState(int time, Vector3 postition, Vector3 rotation)
+    {
+        MD.Log("Updating Entity State!");
+        var newState = new EntityState()
+        {
+          TimeStamp = time,
+          Position = postition,   
+          Rotation = rotation
+        };
+        if(lastState == null)
+        {
+            lastState = newState;
+        }
+        else if(newState.TimeStamp > lastState.TimeStamp)
+        {
+            lastState = newState;
+            entityStatesBuffer.Add(newState);
+        }
     }
 
 }

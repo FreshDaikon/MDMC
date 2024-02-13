@@ -1,11 +1,13 @@
+using System;
 using Godot;
 using Steamworks;
 
 public partial class SteamManager : Node
 {
     public static SteamManager Instance;
-
     private static uint appId { get; } = 2828690;
+
+    public bool IsSteamRunning = false;
 
     public override void _Ready()
     {
@@ -25,29 +27,32 @@ public partial class SteamManager : Node
         try
         {
             SteamClient.Init(appId, true);
-            if(!SteamClient.IsValid)
-            {
-                GD.Print("Something went wrong...");
-                return false;
-            }
-            else
-            {
-                GD.Print("Steam successfully initialized!");
-                GD.Print("Welcome " + SteamClient.Name);
-                GD.Print("Overlay: " + SteamUtils.IsOverlayEnabled.ToString());    
-                return true;                
-            }
         }
-        catch (System.Exception e)
+        catch(Exception e)
         {
-            OS.Alert(("Something failed when initializing Steam..: " + e.Message)  , "STEAM");
-            throw;
+            GD.Print("Steam failed.. :" + e.Message);
+            return false;
+        }
+        if(!SteamClient.IsValid)
+        {
+            GD.Print("Could not init steam.. continue.");
+            return false;
+        }
+        else
+        {
+            GD.Print("Steam Initialized!"); 
+            GD.Print("Welcome " + SteamClient.Name);
+            GD.Print("Overlay: " + SteamUtils.IsOverlayEnabled.ToString());    
+            return true;
         }
     }
 
     public override void _ExitTree()
     {
-        SteamClient.Shutdown();
+        if(IsSteamRunning)
+        {
+            SteamClient.Shutdown(); 
+        }
         base._ExitTree();
     }
 }

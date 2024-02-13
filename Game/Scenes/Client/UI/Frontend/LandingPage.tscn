@@ -130,7 +130,7 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Start Local Server"
 
-[node name="JoinLocalButton" type="Button" parent="Panel/VBoxContainer"]
+[node name="JoinLocalServerButton" type="Button" parent="Panel/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Join Local Server

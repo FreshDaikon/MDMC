@@ -51,7 +51,7 @@ public partial class ServerManager : Node3D
 
     public void StartAsStandaloneServer(int port, int maxPlayers)
     {
-        Engine.MaxFps = 60;
+        Engine.MaxFps = 12;
         GD.Print("Starting Server...");
         //Connect Signals:
         Multiplayer.PeerConnected += PeerConnected;
@@ -87,7 +87,7 @@ public partial class ServerManager : Node3D
             if(ArenaManager.Instance.LoadArena(id))
             {
                 //When done:
-                GD.Print("Server Started! Awaiting Clients..."); 
+                GD.Print("Server Started with Arena! Awaiting Clients..."); 
                 return;
             }
             else 
@@ -98,7 +98,7 @@ public partial class ServerManager : Node3D
         }
         else
         {
-            GD.Print("Server Started! Awaiting Clients..."); 
+            GD.Print("Server Started WITHOUT Arena!! Awaiting Clients..."); 
             return;
         }
     }

@@ -6,9 +6,15 @@ using System.Threading;
 
 public partial class GameManager : Node
 {
-    // This Bad Boy
+
     public static GameManager Instance;
-    public ulong ServerTick;
+    
+    private ulong _serverTick = 0;
+    public ulong ServerTick { 
+        get {
+            return _serverTick;
+        }     
+    }
 
     public override void _Ready()
     {  
@@ -23,9 +29,8 @@ public partial class GameManager : Node
     {
         if(Multiplayer.IsServer())
         {   
-            ServerTick = Time.GetTicksMsec();
-            Rpc(nameof(UpdateTick), ServerTick);
-            
+            _serverTick = Time.GetTicksMsec();
+            Rpc(nameof(UpdateTick), _serverTick);            
         }
     }
     // RPC Calls :
@@ -34,6 +39,6 @@ public partial class GameManager : Node
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void UpdateTick(ulong time)
     {
-       ServerTick = time;
+       _serverTick = time;
     }
 }

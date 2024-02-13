@@ -124,12 +124,10 @@ public static class MD
         RequestingNewGame,
         RequestingJoinGame,
     }
-
     public enum ClientGameState
     {
         Pregame,
-        InArena,
-        
+        InArena,        
     }
 
     public static float Gravity = (float)ProjectSettings.GetSetting("physics/3d/default_gravity");
@@ -149,10 +147,8 @@ public static class MD
         var args = new Dictionary<string, string>();        
         foreach (var argument in OS.GetCmdlineArgs())
         {
-            GD.Print(MD.Runtime.PlayfabServer, " ** ", "Arg is: " + argument);
             string[] keyValue = argument.Split(" ");
             keyValue[0] = keyValue[0].Replace("--", "");
-            GD.Print(MD.Runtime.PlayfabServer, " ** ", "Formatted: " + (keyValue.Length > 1 ? keyValue[1] : ""));
             args.Add(keyValue[0], keyValue.Length > 1 ? keyValue[1] : "");
         }
         return args;

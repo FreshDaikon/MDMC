@@ -52,13 +52,13 @@ public partial class ClientManager : Node3D
         hud = hudScene.Instantiate<UIHUDMain>();
         // Ingame 
         ingameMenu = ingamemenuScene.Instantiate<UIIngameMenu>();
-
         // Steam Init:
         if(SteamManager.Instance.InitSteam())
         {
             //Steam was success.
-            ToggleFrontend();
+            // TODO : Implement Steam Things.
         }
+        ToggleFrontend();
     }
 
     public void ToggleHud()

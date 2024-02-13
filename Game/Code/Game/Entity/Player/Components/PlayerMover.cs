@@ -1,76 +1,100 @@
 using Godot;
+using MDMC.Game.Entity;
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 /// <summary>
 /// Player mover, reads parts of the playerinput to send Move commands to the entitycontroller.<br/>
 /// *ONLY SERVER* <br/>
 /// </summary>
-public partial class PlayerMover : Node
+public partial class PlayerMover : Node, IEntityMover
 {	
 	[Export]
-	private float SPEED = 10f;
-	[Export]
-	private float JUMP_VELOCITY = 35f;
+	private float JUMP_VELOCITY = 30f;
     [Export]
-    private float DASH_POWER = 50f;
+    private float DASH_POWER = 5f;
 
     private PlayerEntity player;
     private PlayerInput input;
 	private Camera3D camera;
 
-    private Vector3 dashVector = Vector3.Zero;
-    private Vector3 jumpVector = Vector3.Zero;
-    private Vector3 moveVector = Vector3.Zero;
+    private Vector3 direction = Vector3.Zero;
+    private Vector3 velocity = Vector3.Zero;
+    private float verticalVelocity = 0;
+    private float fallGravity = 50f;
+    private float jumpGravity;
+    private float acceleration = 50;
+
+    private float jumpHeight = 1f;
+    private float apexDuration = 0.3f;
+
 
 	public override void _Ready()
 	{
         player = (PlayerEntity)GetParent();       
         input = (PlayerInput)GetNode("%Input"); 
+        jumpGravity = fallGravity;
         SetPhysicsProcess(GetMultiplayerAuthority() == 1);
         base._Ready();
 	}
     public override void _PhysicsProcess(double delta)
 	{		        
-		//Only Runs on Server       		 
+        Move((float)delta);
+        Rotate((float)delta);
+	}
+
+
+    public void Move(float delta)
+    {
         var controller = player.Controller;   
+        var playerSpeed = player.Status.GetCurrentSpeed();    
+
+        velocity.X = controller.IsOnFloor() ? playerSpeed * input.Direction.X : velocity.X;
+        velocity.Z = controller.IsOnFloor() ? playerSpeed * input.Direction.Z : velocity.Z;
+
         if(input.Jumping && controller.IsOnFloor())
 		{	
-			jumpVector.Y = JUMP_VELOCITY;
-            controller.Move(jumpVector);
+            velocity.Y = (2 * jumpHeight) / apexDuration;
+            jumpGravity = velocity.Y / apexDuration;
             player.Arsenal.TryInteruptCast();
             player.Arsenal.TryInteruptChanneling();
 		}
-		input.Jumping = false;
+		input.Jumping = false;               
         if(!controller.IsOnFloor())
         {           
-           Vector3 reverse = new Vector3(0f, -MD.Gravity, 0f);
-           jumpVector = jumpVector.Lerp(reverse, 0.1f); 
-           controller.Move(jumpVector);
-           player.Arsenal.TryInteruptCast();
-           player.Arsenal.TryInteruptChanneling();
-        }       
-         if(input.Dashing)
-        {
-            dashVector = controller.GlobalBasis.Z.Normalized() * DASH_POWER;
+            if(velocity.Y >= 0)
+            {
+                velocity.Y -= jumpGravity * delta;
+            }
+            else 
+            {
+                velocity.Y  -= fallGravity * delta;
+            }
         }
-        input.Dashing = false;  
-        if(dashVector.Length() > 0)
-        {
-            controller.Move(dashVector);
-            dashVector = dashVector.Lerp(Vector3.Zero, 0.1f);
-        }
-        var playerSpeed = player.Status.GetCurrentSpeed();     
-        moveVector.X = controller.IsOnFloor() ? input.Direction.X * playerSpeed : moveVector.X;
-		moveVector.Z = controller.IsOnFloor() ? input.Direction.Z * playerSpeed : moveVector.Z;
-        controller.Move(moveVector);        
+        direction = controller.IsOnFloor() ? input.Direction : direction;
+        controller.Velocity = controller.Velocity.Lerp(velocity, delta * acceleration);        
+    }
 
-		if(input.Direction.Length() > 0.2f)
+    public void Rotate(float delta)
+    {
+        var controller = player.Controller;   
+        if(input.Direction.Length() > 0.2f)
 		{           
             player.Arsenal.TryInteruptCast();
             player.Arsenal.TryInteruptChanneling();
 			Vector2 lookDirection = new Vector2(input.Direction.Z, input.Direction.X);
 			controller.Rotate(lookDirection);
 		}
-	}
+    }
+
+    public void Push(float delta)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Teleport()
+    {
+        throw new NotImplementedException();
+    }
 }

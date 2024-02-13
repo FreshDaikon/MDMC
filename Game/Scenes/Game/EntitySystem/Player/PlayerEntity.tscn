@@ -21,8 +21,7 @@ properties/2/path = NodePath(".:FriendlyTargetId")
 properties/2/spawn = true
 properties/2/replication_mode = 2
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_7gxjr"]
-radius = 0.2
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kjjmq"]
 
 [sub_resource type="Gradient" id="Gradient_eifaf"]
 offsets = PackedFloat32Array(0.37018, 0.624679, 0.650386, 0.66838)
@@ -66,6 +65,7 @@ unique_name_in_owner = true
 
 [node name="Rig" parent="." instance=ExtResource("6_wf2nq")]
 unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.65388, 0)
 
 [node name="Controller" parent="." instance=ExtResource("6_lhg4c")]
 unique_name_in_owner = true
@@ -73,7 +73,7 @@ collision_mask = 4
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Controller"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("CylinderShape3D_7gxjr")
+shape = SubResource("CapsuleShape3D_kjjmq")
 
 [node name="Decal" type="Decal" parent="Controller"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.29951, 0)

@@ -21,7 +21,7 @@
             "cwd": "${workspaceFolder}",
             "console": "externalTerminal",
             "stopAtEntry": false,
-            "args": ["--path", "${workspaceRoot}/Game", " --headless", "--gameserver", "--playfab" ]
+            "args": ["--path", "${workspaceRoot}/Game", " --headless", "--playfab" ]
         },
         {
             "name": "Client_1",
@@ -45,10 +45,11 @@
             "name": "Standalone",
             "type": "coreclr",
             "request": "launch",
+            "preLaunchTask": "build",
             "program": "${workspaceFolder}/.Engine/Godot.exe",
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
-            "args": ["--path", "${workspaceRoot}/Game", " -w", "--standalone"]
+            "args": ["--path", "${workspaceRoot}/Game", " -w", "--standalone", "--vscode"]
         }
     ],
     "compounds": [

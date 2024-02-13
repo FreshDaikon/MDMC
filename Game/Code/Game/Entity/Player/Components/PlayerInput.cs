@@ -3,6 +3,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Reflection.Metadata;
 using Godot;
+using Steamworks;
 
 /// <summary>
 /// Reads input of the player and sync it over the network.<br/>
@@ -33,11 +34,7 @@ public partial class PlayerInput : Node
     {
         player = (PlayerEntity)GetParent();
         camera = player.GetNode<PlayerCamera>("%Rig");       
-        synchronizer = GetNode<MultiplayerSynchronizer>("%Sync");
-        synchronizer.SetVisibilityFor(0, false);
-        synchronizer.SetVisibilityFor(1, true);
-        synchronizer.SetVisibilityFor(Multiplayer.GetUniqueId(), true);
-        base._Ready();
+        synchronizer = GetNode<MultiplayerSynchronizer>("%Sync");  
     }
     public override void _Process(double delta)
     {

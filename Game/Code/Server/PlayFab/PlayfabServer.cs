@@ -26,15 +26,7 @@ public partial class PlayfabServer : Node
 
     private void CheckCMD()
     {
-        var args = new Dictionary<string, string>();
-        foreach (var argument in OS.GetCmdlineArgs())
-        {
-            MD.Log(MD.Runtime.PlayfabServer, " ** ", "Arg is: " + argument);
-            string[] keyValue = argument.Split(" ");
-            keyValue[0] = keyValue[0].Replace("--", "");
-            MD.Log(MD.Runtime.PlayfabServer, " ** ", "Formatted: " + keyValue[0] + ", " + keyValue[1]);
-            args.Add(keyValue[0], keyValue.Length > 1 ? keyValue[1] : "");
-        }
+        var args = MD.GetArgs();
         if(args.ContainsKey("playfab"))
         {
             MD.Log(MD.Runtime.PlayfabServer, "", "Init Playfab Instance..");

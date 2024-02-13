@@ -15,6 +15,7 @@ public partial class UILandingPage : Control
     private OptionButton ArenaListOptions;
     private Button RequestGameButton;
     private Button JoinGameButton;
+    private Button JoinLocalServerButton;
     private Button StartServerButton;
     private Button HostHubButton;
     private Button ConnectWSButton;
@@ -32,16 +33,17 @@ public partial class UILandingPage : Control
         JoinGameButton = GetNode<Button>("%JoinGameButton");
         StartServerButton = GetNode<Button>("%StartServerButton");
         ConnectWSButton = GetNode<Button>("%ConnectWSButton");
-
+        JoinLocalServerButton = GetNode<Button>("%JoinLocalServerButton");
         //Setup Signals:
         RequestGameButton.Pressed += () => RequestGame();
         JoinGameButton.Pressed += () => JoinGame();
         ConnectWSButton.Pressed += () => ConnectWS();
+        //Local Setup:
         StartServerButton.Pressed += () => StartLocalServer();
-
+        JoinLocalServerButton.Pressed += () => JoinLocalServer();
         //Setup Extras
         var args = MD.GetArgs();
-        if(args.ContainsKey("localserver"))
+        if(args.ContainsKey("standalone"))
         {
             StartServerButton.Visible = true;
             StartServerButton.Disabled = false;
@@ -69,7 +71,6 @@ public partial class UILandingPage : Control
 
     public override void _Process(double delta)
     {
-
         bool hasConnnection = WSManager.Instance.State == MD.WSConnectionState.Open;
         WSConnectionLabel.Text = "WS Connnection :" + WSManager.Instance.State.ToString();
         JoinGameButton.Disabled = !hasConnnection && (JoinCodeEdit.Text == "");
@@ -103,6 +104,13 @@ public partial class UILandingPage : Control
     private void StartLocalServer()
     {
         ClientMultiplayerManager.Instance.StartLocalServer(_arenas[ArenaListOptions.Selected]);
+        ArenaManager.Instance.LoadArena(_arenas[ArenaListOptions.Selected].Id);
     }
-
+    private void JoinLocalServer()
+    {
+        ClientMultiplayerManager.Instance.SetData("127.0.0.1", 8080);
+        ClientMultiplayerManager.Instance.StartPeer(); 
+        // a bit weary here..
+        ClientManager.Instance.ToggleFrontend();
+    }
 }

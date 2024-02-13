@@ -51,7 +51,7 @@ public partial class PlayerCamera : SpringArm3D
 		RotationDegrees = new Vector3(camRotation.Y, camRotation.X, 0f);
 		SpringLength = Mathf.Clamp(SpringLength, 5f, 35f);	
         // Get Players Position:
-        var pos = new Vector3(player.Controller.Position.X, player.Controller.Position.Y + 2f, player.Controller.Position.Z);
-		Position = pos; 
+        var pos = new Vector3(player.Controller.Position.X, 3f, player.Controller.Position.Z);
+		Position = pos;//Position.Lerp(pos, 0.1f); 
 	}
 }

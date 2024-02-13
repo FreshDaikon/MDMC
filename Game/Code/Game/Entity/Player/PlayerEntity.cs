@@ -59,7 +59,7 @@ public partial class PlayerEntity : Entity
 		{
 			IsLocalPlayer = true;
             camera.GetCamera().Current = true;
-            PlayerHUD.Instance.activeCamera = camera.GetCamera();
+            //PlayerHUD.Instance.activeCamera = camera.GetCamera();
             mover.QueueFree();
 		}
         else if(Multiplayer.GetUniqueId() == 1)
