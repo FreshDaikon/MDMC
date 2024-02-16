@@ -1,14 +1,8 @@
-using System;
-using System.Data.Common;
-using System.Linq;
-using System.Reflection.Metadata;
 using Godot;
-using Steamworks;
+using Daikon.System;
 
-/// <summary>
-/// Reads input of the player and sync it over the network.<br/>
-/// Should be given MultiplayerAuth(LocalPlayer) on creation.<br/>
-/// </summary>
+namespace Daikon.Game;
+
 public partial class PlayerInput : Node
 {
     [Export]

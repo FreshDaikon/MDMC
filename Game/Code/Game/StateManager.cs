@@ -1,10 +1,9 @@
-using System.Text.RegularExpressions;
 using Godot;
 
-public partial class StateManager : Node
-{
+namespace Daikon.Game;
 
-    
+public partial class StateManager : Node
+{    
     public static StateManager Instance;
     public bool HasFocus = true;
 

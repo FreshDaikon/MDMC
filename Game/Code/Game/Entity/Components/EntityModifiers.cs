@@ -1,14 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Godot;
+using Daikon.System;
 
-/// <summary>
-/// The basis for Manipulating Entities spatially.<br/>
-/// It can and should only handle those things.<br/>
-/// *SERVER ONLY* <br/>
-/// </summary>
+namespace Daikon.Game;
+
 public partial class EntityModifiers : Node
 {
     [Export(PropertyHint.Dir)]

@@ -1,4 +1,7 @@
 using Godot;
+using Daikon.System; 
+
+namespace Daikon.Game;
 
 public partial class JumpTest : Skill
 {   

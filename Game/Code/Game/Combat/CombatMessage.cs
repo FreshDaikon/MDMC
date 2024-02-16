@@ -1,3 +1,6 @@
+using Daikon.System;
+
+namespace Daikon.Game;
 
 public class CombatMessage
 {

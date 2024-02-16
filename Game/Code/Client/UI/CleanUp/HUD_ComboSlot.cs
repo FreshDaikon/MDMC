@@ -1,6 +1,7 @@
 using Godot;
-using System;
-using System.Linq;
+using Daikon.Game;
+
+namespace Daikon.Client;
 
 public partial class HUD_ComboSlot : Control
 {

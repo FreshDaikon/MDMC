@@ -1,6 +1,8 @@
 using Godot;
-using System;
-using System.Runtime.InteropServices;
+using Daikon.Game;
+using Daikon.System;
+
+namespace Daikon.Client;
 
 public partial class HUD_SkillContainer : Control
 {

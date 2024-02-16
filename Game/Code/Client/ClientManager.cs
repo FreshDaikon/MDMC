@@ -1,10 +1,7 @@
 using Godot;
-using Steamworks;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Threading;
+using Daikon.System;
+
+namespace Daikon.Client;
 
 public partial class ClientManager : Node3D
 {	
@@ -39,6 +36,10 @@ public partial class ClientManager : Node3D
         GD.Print("Client Starting...");
         //Call when Ready:
         CallDeferred(nameof(InitClient));
+        
+        #if CLIENT
+        GD.Print("We are the client build!");
+        #endif
     }
 
     private void InitClient()

@@ -1,3 +1,6 @@
+
+namespace Daikon.Client;
+
 public class ConnectionEstablishedMessage 
 {
     public string WelcomeMessage { get;set; }

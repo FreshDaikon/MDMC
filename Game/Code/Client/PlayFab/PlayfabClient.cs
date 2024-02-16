@@ -1,13 +1,9 @@
 using Godot;
-using System;
 using PlayFab;
 using PlayFab.ClientModels;
-using PlayFab.MultiplayerModels;
-using System.Collections.Generic;
-using SmartFormat.Core.Parsing;
-using System.Reflection.Metadata;
-using PlayFab.DataModels;
-using PlayFab.AdminModels;
+using Daikon.System;
+
+namespace Daikon.Client.Playfab;
 
 public partial class PlayfabClient : Node
 {

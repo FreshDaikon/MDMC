@@ -1,4 +1,4 @@
-<Project Sdk="Godot.NET.Sdk/4.2.0">
+<Project Sdk="Godot.NET.Sdk/4.2.1">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net7.0</TargetFramework>
@@ -6,10 +6,17 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
   <ItemGroup>
+    <Content Remove="CLIENT\**" />
+    <Compile Remove="CLIENT\**" />
+    <EmbeddedResource Remove="CLIENT\**" />
+    <None Remove="CLIENT\**" />
+</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Game\DaikonGame.csproj" />
     <PackageReference Include="com.playfab.csharpgsdk" Version="0.11.210519" />
     <PackageReference Include="Facepunch.Steamworks" Version="2.3.3" />
     <PackageReference Include="LiteDB" Version="5.0.17" />
     <PackageReference Include="PlayFabAllSDK" Version="1.174.240119" />
     <PackageReference Include="SmartFormat.NET" Version="3.3.0" />
-  </ItemGroup>
+  </ItemGroup>  
 </Project>

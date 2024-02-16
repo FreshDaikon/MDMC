@@ -1,11 +1,8 @@
 using System;
 using Godot;
 
-/// <summary>
-/// Extends the basic Entity System + EntityData. <br>
-/// Should be handled by a MultiplayerSpawner (GameManager.SpawnPlayer())<br>
-/// Should be added to the entity list dynamically.<br>
-/// </summary>
+namespace Daikon.Game;
+
 public partial class PlayerEntity : Entity
 {
     public bool IsLocalPlayer = false;

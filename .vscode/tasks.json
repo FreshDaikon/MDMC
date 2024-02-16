@@ -6,12 +6,24 @@
 			"task": "build",
 			"group": {
 				"kind": "build",
-				"isDefault": true
+				"isDefault": true,			
 			},
 			"problemMatcher": [
-				"$msCompile"
-			],
-			"label": "build"
-		}
+				"$msCompile",
+			],			
+			"label": "buildServer",
+		},
+		{
+			"type": "dotnet",
+			"task": "build",
+			"group": {
+				"kind": "build",
+				"isDefault": true,
+			},
+			"problemMatcher": [
+				"$msCompile",
+			],			
+			"label": "buildClient"
+		}, 
 	]
 }

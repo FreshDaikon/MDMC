@@ -1,14 +1,14 @@
 [gd_scene load_steps=16 format=3 uid="uid://04nun7ayudyy"]
 
 [ext_resource type="Script" path="res://Code/Game/Arena/Arena.cs" id="1_1mb5o"]
-[ext_resource type="Script" path="res://Code/Commons/DataID.cs" id="2_5wus2"]
+[ext_resource type="Script" path="res://Code/System/DataID.cs" id="2_u81i6"]
 [ext_resource type="PackedScene" uid="uid://c3rdlqkf2jd7e" path="res://Assets/3D/Hero_Female_Base.glb" id="3_4es0r"]
 [ext_resource type="PackedScene" uid="uid://dbmg74fi1wc6k" path="res://Assets/3D/Hero_Male_Base.glb" id="4_0p4my"]
 [ext_resource type="PackedScene" uid="uid://cqhl1y0g5lq7x" path="res://Assets/3D/Heroes/Hero_Male_Base.blend" id="5_esgk8"]
 
-[sub_resource type="Resource" id="Resource_1ysff"]
-script = ExtResource("2_5wus2")
-Id = -316415308
+[sub_resource type="Resource" id="Resource_gja5r"]
+script = ExtResource("2_u81i6")
+Id = -1779247515
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tt0g8"]
 sky_top_color = Color(0.231373, 0.505882, 0.890196, 1)
@@ -63,7 +63,7 @@ height = 1.0
 
 [node name="ArenaName" type="Node3D"]
 script = ExtResource("1_1mb5o")
-ID = SubResource("Resource_1ysff")
+ID = SubResource("Resource_gja5r")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_e0a7j")

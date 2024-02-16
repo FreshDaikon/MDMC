@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Code/Game/Combat/ArsenalSystem/SkillContainer.cs" id="1_adsaq"]
 [ext_resource type="PackedScene" uid="uid://dguqhcrchvj7n" path="res://Scenes/Game/Combat/ArsenalSystem/SkillSlot.tscn" id="2_523rw"]
-[ext_resource type="Script" path="res://Code/Commons/DataID.cs" id="2_elc2r"]
+[ext_resource type="Script" path="res://Code/System/DataID.cs" id="2_elc2r"]
 [ext_resource type="Texture2D" uid="uid://coyetxtc5aald" path="res://Assets/UI/ArsenalSystem/SkillContainers/Warlocks_MK3.png" id="2_jyorp"]
 [ext_resource type="Script" path="res://Code/Game/Combat/Modifiers/StatMod.cs" id="4_e70nk"]
 

@@ -1,5 +1,8 @@
-using System;
 using Godot;
+using Daikon.Game;
+using Daikon.System;
+
+namespace Daikon.Client;
 
 public partial class ClientMultiplayerManager: Node
 {

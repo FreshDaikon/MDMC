@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://clfovbg7cevmv"]
 
-[ext_resource type="Script" path="res://Scenes/Client/UI/HUD/Elements/DamageNumber/DamageNumber.cs" id="1_q7qxf"]
+[ext_resource type="Script" path="res://Code/Client/UI/CleanUp/DamageNumber.cs" id="1_q7qxf"]
 [ext_resource type="FontFile" uid="uid://xv28cftjto52" path="res://Assets/UI/Fonts/twoweekendssans-regular.otf" id="2_gy811"]
 
 [sub_resource type="Animation" id="Animation_o075t"]

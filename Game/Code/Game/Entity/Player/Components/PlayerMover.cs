@@ -1,13 +1,8 @@
-using Godot;
-using MDMC.Game.Entity;
 using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
+using Godot;
 
-/// <summary>
-/// Player mover, reads parts of the playerinput to send Move commands to the entitycontroller.<br/>
-/// *ONLY SERVER* <br/>
-/// </summary>
+namespace Daikon.Game;
+
 public partial class PlayerMover : Node, IEntityMover
 {	
 	[Export]

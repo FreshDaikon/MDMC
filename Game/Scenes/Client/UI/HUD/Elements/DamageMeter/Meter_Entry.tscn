@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://dj2hy5o46q1b1"]
 
 [ext_resource type="FontFile" uid="uid://bc4wv1o6qdbo8" path="res://Assets/UI/Fonts/Helvete_extraBlack.ttf" id="1_1e5j5"]
-[ext_resource type="Script" path="res://Scenes/Client/UI/HUD/Elements/DamageMeter/DamageMeterEntry.cs" id="1_stdyy"]
+[ext_resource type="Script" path="res://Code/Client/UI/CleanUp/DamageMeterEntry.cs" id="1_stdyy"]
 [ext_resource type="FontFile" uid="uid://xv28cftjto52" path="res://Assets/UI/Fonts/twoweekendssans-regular.otf" id="2_2thcw"]
 
 [node name="Entry1" type="ColorRect" node_paths=PackedStringArray("playerColor", "playerName", "playerDPS", "playerTotal")]

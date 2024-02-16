@@ -1,5 +1,7 @@
 using Godot;
 
+namespace Daikon.System;
+
 public partial class Loader : Node
 {
     //Dependency Scenes:

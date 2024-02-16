@@ -1,9 +1,8 @@
 using Godot;
-using Microsoft.Playfab.Gaming.GSDK.CSharp;
-using System;
-using System.Linq;
-using System.Net;
-using System.Threading;
+using Daikon.Game;
+using Daikon.System;
+
+namespace Daikon.Server;
 
 public partial class ServerManager : Node3D
 {	
@@ -25,7 +24,10 @@ public partial class ServerManager : Node3D
             return;
         }
         Instance = this;        
-        GD.Print("Instance Cleared... ");        
+        GD.Print("Instance Cleared... ");    
+        #if SERVER
+        GD.Print("Fuck yeah it worked!");
+        #endif    
     }
 
     public override void _Process(double delta)

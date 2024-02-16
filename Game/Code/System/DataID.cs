@@ -1,6 +1,8 @@
 using Godot;
 using Godot.Collections;
 
+namespace Daikon.System;
+
 [Tool][GlobalClass]
 public partial class DataID : Resource
 {

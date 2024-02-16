@@ -1,15 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Godot;
-using MDMC.Game.Entity;
+using Daikon.System;
 
-/// <summary>
-/// The basis for Manipulating Entities spatially.<br/>
-/// It can and should only handle those things.<br/>
-/// *SERVER ONLY* <br/>
-/// </summary>
+namespace Daikon.Game;
+
 public partial class EntityController : CharacterBody3D
 {
     public List<Vector3> Forces = new List<Vector3>();
@@ -82,7 +76,6 @@ public partial class EntityController : CharacterBody3D
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void UpdateEntityState(int time, Vector3 postition, Vector3 rotation)
     {
-        MD.Log("Updating Entity State!");
         var newState = new EntityState()
         {
           TimeStamp = time,

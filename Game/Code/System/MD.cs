@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Godot;
 
+namespace Daikon.System;
 
 public static class MD
 {
@@ -139,7 +140,7 @@ public static class MD
 
     public static void Log(Runtime runtime, String sender, String message)
     {
-        GD.Print("(" + runtime.ToString() + ")[" + sender + "]@[ " + GameManager.Instance.ServerTick + " ]M:" + "[ " + message + " ]");
+        //GD.Print("(" + runtime.ToString() + ")[" + sender + "]@[ " + GameManager.Instance.ServerTick + " ]M:" + "[ " + message + " ]");
     }
 
     public static Dictionary<string, string> GetArgs()

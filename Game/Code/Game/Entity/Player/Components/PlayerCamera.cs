@@ -1,11 +1,7 @@
 using Godot;
-using Godot.Collections;
-using System;
 
-/// <summary>
-/// Handles the Player ingame-camera.<br/>
-/// *LOCAL CLIENT ONLY* <br/>
-/// </summary>
+namespace Daikon.Game;
+
 public partial class PlayerCamera : SpringArm3D
 {
     [Export]

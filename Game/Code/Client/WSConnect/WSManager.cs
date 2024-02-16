@@ -2,7 +2,10 @@ using Godot;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Daikon.Game;
+using Daikon.System;
 
+namespace Daikon.Client;
 
 public partial class WSManager : Node
 {

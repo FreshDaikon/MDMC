@@ -1,8 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Godot;
+using Daikon.System;
+
+namespace Daikon.Game;
 
 public partial class EntityStatus : Node
 {

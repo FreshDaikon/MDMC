@@ -194,10 +194,6 @@ SelectFriendlyUp={
 3d/default_linear_damp=0.0
 3d/default_angular_damp=0.0
 
-[playfab]
-
-title_id="5FDDE"
-
 [rendering]
 
 environment/glow/upscale_mode=0

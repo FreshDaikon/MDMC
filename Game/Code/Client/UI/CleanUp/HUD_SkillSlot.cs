@@ -1,5 +1,8 @@
 using Godot;
-using System;
+using Daikon.Game;
+using Daikon.System;
+
+namespace Daikon.Client;
 
 public partial class HUD_SkillSlot : Control
 {

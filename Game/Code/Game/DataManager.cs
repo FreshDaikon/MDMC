@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Godot;
+using Daikon.Game;
 
 public partial class DataManager : Node
 {

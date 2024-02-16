@@ -2,6 +2,8 @@ using System;
 using Godot;
 using Steamworks;
 
+namespace Daikon.Client;
+
 public partial class SteamManager : Node
 {
     public static SteamManager Instance;

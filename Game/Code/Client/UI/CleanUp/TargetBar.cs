@@ -1,4 +1,6 @@
-using Godot;
+using Godot; using Daikon.Game;
+
+namespace Daikon.Client;
 
 public partial class TargetBar : Control
 {

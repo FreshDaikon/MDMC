@@ -1,4 +1,7 @@
 using Godot;
+using Daikon.System;
+
+namespace Daikon.Game;
 
 [GlobalClass]
 public partial class StatMod : Resource

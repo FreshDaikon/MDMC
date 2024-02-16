@@ -1,7 +1,9 @@
-
-
 using System.Collections.Generic;
 using Godot;
+using Daikon.Game;
+using Daikon.System;
+
+namespace Daikon.Client;
 
 public partial class UILandingPage : Control
 {

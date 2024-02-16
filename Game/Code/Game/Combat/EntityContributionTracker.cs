@@ -1,4 +1,4 @@
-
+namespace Daikon.Game;
 
 public class EntityContributionTracker
 {

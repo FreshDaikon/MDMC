@@ -1,6 +1,7 @@
 using Godot;
-using Steamworks;
-using System;
+using Daikon.Game;
+
+namespace Daikon.Client;
 
 public partial class UIConnections : Control
 {

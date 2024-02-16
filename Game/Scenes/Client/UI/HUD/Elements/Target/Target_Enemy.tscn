@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dqc2ol81a8nmg"]
 
-[ext_resource type="Script" path="res://Scenes/Client/UI/HUD/Elements/Target/TargetBar.cs" id="1_h148d"]
+[ext_resource type="Script" path="res://Code/Client/UI/CleanUp/TargetBar.cs" id="1_h148d"]
 [ext_resource type="FontFile" uid="uid://dftj2ckdl3j7d" path="res://Assets/UI/Fonts/LibreFranklin-Black.ttf" id="1_kmuqc"]
 
 [node name="TargetEnemy" type="Control" node_paths=PackedStringArray("targetHealthBar", "targetName", "targetHealthPercent")]

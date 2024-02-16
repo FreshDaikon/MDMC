@@ -1,6 +1,8 @@
 using Godot;
-using System;
-using System.Linq;
+using Daikon.Game;
+using Daikon.System;
+
+namespace Daikon.Client;
 
 public partial class ChannelBar : Control
 {

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://d0fgtib258a7k"]
 
-[ext_resource type="Script" path="res://Scenes/Client/UI/HUD/Elements/DamageMeter/DamageMeter.cs" id="1_4qtdq"]
+[ext_resource type="Script" path="res://Code/Client/UI/CleanUp/DamageMeter.cs" id="1_4qtdq"]
 [ext_resource type="FontFile" uid="uid://xv28cftjto52" path="res://Assets/UI/Fonts/twoweekendssans-regular.otf" id="1_ti0a1"]
 
 [node name="DamageMeter" type="Control" node_paths=PackedStringArray("EntryList", "EntryContainer", "TotalLabel", "TypeLabel", "TimeLabel")]

@@ -1,6 +1,6 @@
-using System.Collections.Generic;
-using System.Formats.Asn1;
 using Godot;
+ 
+namespace Daikon.Game;
 
 public partial class Entity : Node3D
 {

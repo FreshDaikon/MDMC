@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://de5742ksrt2q4"]
 
-[ext_resource type="Script" path="res://Scenes/Client/UI/HUD/Arsenal/HUD_ComboSlot.cs" id="1_a5jas"]
+[ext_resource type="Script" path="res://Code/Client/UI/CleanUp/HUD_ComboSlot.cs" id="1_a5jas"]
 [ext_resource type="Texture2D" uid="uid://dnshiwotimgv1" path="res://Assets/UI/Core/Blur_Drop.png" id="1_kep6p"]
 [ext_resource type="Texture2D" uid="uid://cn7n8rp601m1f" path="res://Assets/UI/ArsenalSystem/Skill_Mask.png" id="2_5obel"]
 [ext_resource type="FontFile" uid="uid://q3aynbg5gvis" path="res://Assets/UI/Fonts/LibreFranklin-BlackItalic.ttf" id="3_knylw"]

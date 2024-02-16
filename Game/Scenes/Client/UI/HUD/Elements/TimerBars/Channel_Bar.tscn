@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://c3nva5iqe38aq"]
 
-[ext_resource type="Script" path="res://Scenes/Client/UI/HUD/Elements/TimerBars/ChannelBar.cs" id="1_bx7ki"]
+[ext_resource type="Script" path="res://Code/Client/UI/CleanUp/ChannelBar.cs" id="1_bx7ki"]
 [ext_resource type="FontFile" uid="uid://q3aynbg5gvis" path="res://Assets/UI/Fonts/LibreFranklin-BlackItalic.ttf" id="2_yixxx"]
 
 [sub_resource type="Animation" id="Animation_1214e"]

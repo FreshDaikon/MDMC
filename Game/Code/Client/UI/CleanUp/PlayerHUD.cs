@@ -1,6 +1,7 @@
 using Godot;
-using System;
-using System.Linq;
+using Daikon.Game;
+
+namespace Daikon.Client;
 
 public partial class PlayerHUD : Control
 {
@@ -8,7 +9,6 @@ public partial class PlayerHUD : Control
 	public static PlayerHUD Instance;
 
 	private PlayerEntity localPlayer;
-
 	// Labels :
 	[Export]
 	private Label idLabel;

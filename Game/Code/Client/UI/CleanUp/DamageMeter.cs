@@ -1,7 +1,10 @@
 using Godot;
 using System;
-using System.Diagnostics.Metrics;
 using System.Linq;
+using Daikon.Game;
+using Daikon.System;
+
+namespace Daikon.Client;
 
 public partial class DamageMeter : Control
 {

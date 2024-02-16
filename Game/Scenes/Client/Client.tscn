@@ -1,16 +1,16 @@
 [gd_scene load_steps=14 format=3 uid="uid://dpji27mmqwobu"]
 
 [ext_resource type="Script" path="res://Code/Client/ClientManager.cs" id="1_f104j"]
-[ext_resource type="Script" path="res://Code/System/GameManager.cs" id="2_0kdj7"]
 [ext_resource type="PackedScene" uid="uid://1bpfjjvvkhfn" path="res://Scenes/Client/UI/Frontend/LandingPage.tscn" id="2_2g20u"]
 [ext_resource type="PackedScene" uid="uid://ds72o2h662r4r" path="res://Scenes/Client/UI/HUD/HUD_Main.tscn" id="3_3lbq8"]
 [ext_resource type="PackedScene" uid="uid://bdoagm2ktwyfm" path="res://Scenes/Client/UI/Ingame/Ingame_Main.tscn" id="4_6g5te"]
-[ext_resource type="Script" path="res://Code/System/StateManager.cs" id="4_4630x"]
-[ext_resource type="Script" path="res://Code/System/DataManager.cs" id="5_wm4mv"]
+[ext_resource type="Script" path="res://Code/Game/DataManager.cs" id="5_kp3vg"]
+[ext_resource type="Script" path="res://Code/Game/GameManager.cs" id="6_gw0u7"]
 [ext_resource type="Script" path="res://Code/Game/Combat/CombatManager.cs" id="6_n41qi"]
 [ext_resource type="Script" path="res://Code/System/InputBuffer.cs" id="7_ubedu"]
 [ext_resource type="Script" path="res://Code/Game/Arena/ArenaManager.cs" id="9_a7vxa"]
 [ext_resource type="Script" path="res://Code/Client/WSConnect/WSManager.cs" id="9_n8sdg"]
+[ext_resource type="Script" path="res://Code/Game/StateManager.cs" id="9_u2a7f"]
 [ext_resource type="Script" path="res://Code/Client/Steam/SteamManager.cs" id="9_v17ox"]
 [ext_resource type="Script" path="res://Code/Client/Multiplayer/ClientMultiplayerManager.cs" id="13_pw8dm"]
 
@@ -25,14 +25,14 @@ ingamemenuScene = ExtResource("4_6g5te")
 [node name="Game" type="Node" parent="Managers"]
 
 [node name="DataManager" type="Node" parent="Managers/Game"]
-script = ExtResource("5_wm4mv")
+script = ExtResource("5_kp3vg")
 SkillContainersPath = "res://Data/Instances/SkillContainers"
 SkillsPath = "res://Data/Instances/Skills"
 ModifiersPath = "res://Data/Instances/Modifiers"
 ArenasPath = "res://Data/Instances/Arenas"
 
 [node name="GameManager" type="Node" parent="Managers/Game"]
-script = ExtResource("2_0kdj7")
+script = ExtResource("6_gw0u7")
 
 [node name="ArenaManager" type="Node" parent="Managers/Game"]
 script = ExtResource("9_a7vxa")
@@ -43,7 +43,7 @@ script = ExtResource("6_n41qi")
 [node name="Client" type="Node" parent="Managers"]
 
 [node name="StateManager" type="Node" parent="Managers/Client"]
-script = ExtResource("4_4630x")
+script = ExtResource("9_u2a7f")
 
 [node name="InputBuffer" type="Node" parent="Managers/Client"]
 script = ExtResource("7_ubedu")

@@ -6,6 +6,14 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
   <ItemGroup>
+    <Content Remove="SERVER\**" />
+    <Compile Remove="SERVER\**" />
+    <EmbeddedResource Remove="SERVER\**" />
+    <None Remove="SERVER\**" />
+</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Game\DaikonGame.csproj" />
+    <ProjectReference Include="..\System\DaikonSystem.csproj" />
     <PackageReference Include="com.playfab.csharpgsdk" Version="0.11.210519" />
     <PackageReference Include="Facepunch.Steamworks" Version="2.3.3" />
     <PackageReference Include="LiteDB" Version="5.0.17" />

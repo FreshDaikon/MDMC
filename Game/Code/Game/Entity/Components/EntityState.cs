@@ -1,6 +1,6 @@
 using Godot;
 
-namespace MDMC.Game.Entity;
+namespace Daikon.Game;
 
 public record EntityState
 {

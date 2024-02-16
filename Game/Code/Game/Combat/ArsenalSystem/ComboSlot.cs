@@ -1,5 +1,6 @@
 using Godot;
 
+namespace Daikon.Game;
 
 [Tool]
 [GlobalClass]

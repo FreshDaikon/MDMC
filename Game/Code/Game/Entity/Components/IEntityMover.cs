@@ -1,4 +1,4 @@
-namespace MDMC.Game.Entity;
+namespace Daikon.Game;
 
 public interface IEntityMover
 {
@@ -6,4 +6,4 @@ public interface IEntityMover
     void Rotate(float delta);
     void Push(float delta);
     void Teleport();
-}
+} 

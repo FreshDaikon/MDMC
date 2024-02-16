@@ -1,16 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using SmartFormat;
+using Daikon.System;
 
-/// <summary>
-/// The Basic Class for SkillContainer.
-/// Holds SkillSlots - should be loaded from disk and added to player Arsenals.
-/// General usage idea :
-///    use data to define various things, such as cooldown, types modifiers etc.
-/// </summary>
-/// 
+namespace Daikon.Game;
+
 public partial class SkillContainer : Node
 {
 

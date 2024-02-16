@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://cj1yyie770nrc"]
 
-[ext_resource type="Script" path="res://Scenes/Client/UI/HUD/Elements/TimerBars/CastBar.cs" id="1_k4gpv"]
+[ext_resource type="Script" path="res://Code/Client/UI/CleanUp/CastBar.cs" id="1_k4gpv"]
 [ext_resource type="FontFile" uid="uid://q3aynbg5gvis" path="res://Assets/UI/Fonts/LibreFranklin-BlackItalic.ttf" id="1_t4gwg"]
 
 [sub_resource type="Animation" id="Animation_tauhk"]

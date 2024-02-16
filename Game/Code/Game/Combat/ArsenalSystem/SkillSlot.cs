@@ -1,9 +1,8 @@
 using Godot;
+using Daikon.System;
 
-/// <summary>
-/// A skill slot should exist as a child of a SkillContainer.
-/// Should Never stand on its own - needs no ID.
-/// </summary>
+namespace Daikon.Game;
+
 public partial class SkillSlot : Node
 {
     //Serialized Properties:

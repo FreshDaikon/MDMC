@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Code/Game/Combat/ArsenalSystem/SkillContainer.cs" id="1_n2oex"]
 [ext_resource type="PackedScene" uid="uid://dguqhcrchvj7n" path="res://Scenes/Game/Combat/ArsenalSystem/SkillSlot.tscn" id="2_d0rd6"]
 [ext_resource type="Texture2D" uid="uid://dym22codkf6by" path="res://Assets/UI/ArsenalSystem/SkillContainers/Gallant_MK2.png" id="2_jgbjt"]
-[ext_resource type="Script" path="res://Code/Commons/DataID.cs" id="2_m4wo8"]
+[ext_resource type="Script" path="res://Code/System/DataID.cs" id="2_m4wo8"]
 [ext_resource type="Script" path="res://Code/Game/Combat/Modifiers/StatMod.cs" id="3_xq1jp"]
 
 [sub_resource type="Resource" id="Resource_beco5"]

@@ -1,15 +1,9 @@
-using System;
-using System.IO;
-using System.Linq;
 using Godot;
-using Godot.Collections;
 using SmartFormat;
-/// <summary>
-/// The Basic Class for Skills.
-/// Holds a number of actions, and executes each one when triggered.
-/// Should be MultiplayerSpawned on a SkillSlot.
-/// </summary>
-/// 
+using Daikon.System;
+
+namespace Daikon.Game;
+
 public partial class Skill : Node
 {
     //

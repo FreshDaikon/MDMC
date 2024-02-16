@@ -1,3 +1,6 @@
+
+namespace Daikon.Client;
+
 public enum OrchMessageType
 {
     ConnectionError = 1,

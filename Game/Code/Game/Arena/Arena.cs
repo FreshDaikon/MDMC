@@ -1,9 +1,9 @@
-
-
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using Godot;
+using Daikon.System;
+
+namespace Daikon.Game;
 
 public partial class Arena : Node3D
 {

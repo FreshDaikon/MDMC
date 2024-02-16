@@ -1,6 +1,7 @@
-using System.Linq;
 using Godot;
+using Daikon.System;
 
+namespace Daikon.Game;
 
 public partial class RealizationObject: Node3D
 {    
@@ -26,6 +27,9 @@ public partial class RealizationObject: Node3D
     public Vector3 _targetPosition;
     public Node3D _target;
     public float _startTime;
+
+    [Signal ]
+    public delegate void OnRealizationEndEventHandler();
 
     public override void _Ready()
     {
@@ -95,6 +99,7 @@ public partial class RealizationObject: Node3D
     public virtual void OnEndStart()
     {
         //Implement this in instances different from this one.
+        EmitSignal(nameof(OnRealizationEnd));
     }
     
     public virtual void Despawn(string animation)

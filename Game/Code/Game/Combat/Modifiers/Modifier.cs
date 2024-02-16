@@ -1,10 +1,8 @@
-
 using Godot;
+using Daikon.System;
 
-/// <summary>
-/// The Basic Class for Modifiers.
-/// </summary>
-/// 
+namespace Daikon.Game;
+
 public partial class Modifier : Node
 {
     // Exported Variables:

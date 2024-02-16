@@ -1,13 +1,13 @@
-
-
-
 using Godot;
+using Daikon.System;
+
+namespace Daikon.Game;
 
 public partial class DamageNumberRealization : RealizationObject
 {    
     public Color color;
     public int Value;
-    public MD.CombatMessageType Type;
+    public MD.CombatMessageType Type;    
 
     public override void Spawn(Vector3 worldPos)
     {
@@ -36,7 +36,7 @@ public partial class DamageNumberRealization : RealizationObject
 
     public override void OnEndStart()
     {        
-        PlayerHUD.Instance.SpawnDamageNumber(Value.ToString(), color, Position);
+        //PlayerHUD.Instance.SpawnDamageNumber(Value.ToString(), color, Position);
         base.OnEndStart();
     }
 }
