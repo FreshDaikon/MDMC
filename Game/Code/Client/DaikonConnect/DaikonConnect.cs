@@ -84,6 +84,7 @@ public partial class DaikonConnect: Node
         if(responseCode != 200)
         {
             MD.Log("daymn..we got : " + responseCode); 
+            return;
         }
         var json = UTF8Encoding.UTF8.GetString(body);
         var messageData = JsonConvert.DeserializeObject<AuthUserResponse>(json); 
@@ -96,6 +97,7 @@ public partial class DaikonConnect: Node
         if(responseCode != 200)
         {
             MD.Log("daymn..we got : " + responseCode); 
+            return;
         }
         var json = UTF8Encoding.UTF8.GetString(body);
         var messageData = JsonConvert.DeserializeObject<AuthUserResponse>(json); 
