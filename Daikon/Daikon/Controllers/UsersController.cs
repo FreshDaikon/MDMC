@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Daikon.Controllers;
 
 [ApiController]
-[Route("auth")]
 public class UsersController : ControllerBase
 {
     private readonly IAuthService _userService;
@@ -21,10 +20,11 @@ public class UsersController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet()]
+    [HttpGet("Auth")]
     public async Task<IActionResult> AuthUser(AuthUserRequest request)
     {
         var auth = await AuthUserWithSteam(request.SteamTicket);
+        _logger.LogInformation("Auth was requested:" + request.SteamTicket);
         if(auth)
         {
             var token = Guid.NewGuid();

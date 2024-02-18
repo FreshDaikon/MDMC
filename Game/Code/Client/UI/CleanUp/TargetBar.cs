@@ -28,6 +28,9 @@ public partial class TargetBar : Control
 
 	public override void _Process(double delta)
 	{	
+		if(ClientMultiplayerManager.Instance.GetStatus() != MultiplayerPeer.ConnectionStatus.Connected)
+			return;
+
 		if(localPlayer == null)
 		{			
 			localPlayer = ArenaManager.Instance.GetCurrentArena().GetPlayers().Find(p => p.Name == Multiplayer.GetUniqueId().ToString());

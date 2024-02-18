@@ -1,7 +1,7 @@
 using Godot;
 using System.Linq;
 using Daikon.Game;
-using Daikon.System;
+using Daikon.Helpers;
 
 namespace Daikon.Client;
 
@@ -40,9 +40,10 @@ public partial class DamageMeterEntry : ColorRect
 
     public override void _Process(double delta)
 	{
-		if(!CombatManager.Instance.IsInCombat)
+		if(ClientMultiplayerManager.Instance.GetStatus() != MultiplayerPeer.ConnectionStatus.Connected)
 			return;
-		
+		if(!CombatManager.Instance.IsInCombat)
+			return;		
 		var testEntity = ArenaManager.Instance.GetCurrentArena().GetEntities()
 			.Where(e => e is PlayerEntity)
 			.Cast<PlayerEntity>()

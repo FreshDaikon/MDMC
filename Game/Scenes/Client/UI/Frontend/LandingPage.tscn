@@ -136,6 +136,16 @@ layout_mode = 2
 text = "Join Local Server
 "
 
+[node name="Spacer_04" type="MarginContainer" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="JoinAnyLocalServer" type="Button" parent="Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Join Any Local Server
+"
+
 [node name="Spacer_03" type="MarginContainer" parent="Panel/VBoxContainer"]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2

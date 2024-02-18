@@ -1,6 +1,6 @@
 using Godot;
 using Daikon.Game;
-using Daikon.System;
+using Daikon.Helpers;
 
 namespace Daikon.Client;
 
@@ -68,8 +68,11 @@ public partial class HUD_SkillContainer : Control
 
 	private bool wasActivated = false;
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _PhysicsProcess(double delta)
+	public override void _Process(double delta)
 	{
+		if(ClientMultiplayerManager.Instance.GetStatus() != MultiplayerPeer.ConnectionStatus.Connected)
+			return;
+
 		var localPlayer = ArenaManager.Instance.GetCurrentArena().GetPlayers().Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
 		if(localPlayer == null)
 		{

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Godot;
 using Daikon.Game;
-using Daikon.System;
+using Daikon.Helpers;
 
 namespace Daikon.Client;
 
@@ -18,6 +18,7 @@ public partial class UILandingPage : Control
     private Button RequestGameButton;
     private Button JoinGameButton;
     private Button JoinLocalServerButton;
+    private Button JoinAnyLocalServerButton;
     private Button StartServerButton;
     private Button HostHubButton;
     private Button ConnectWSButton;
@@ -36,6 +37,8 @@ public partial class UILandingPage : Control
         StartServerButton = GetNode<Button>("%StartServerButton");
         ConnectWSButton = GetNode<Button>("%ConnectWSButton");
         JoinLocalServerButton = GetNode<Button>("%JoinLocalServerButton");
+        JoinAnyLocalServerButton = GetNode<Button>("%JoinAnyLocalServer");
+        
         //Setup Signals:
         RequestGameButton.Pressed += () => RequestGame();
         JoinGameButton.Pressed += () => JoinGame();
@@ -43,6 +46,7 @@ public partial class UILandingPage : Control
         //Local Setup:
         StartServerButton.Pressed += () => StartLocalServer();
         JoinLocalServerButton.Pressed += () => JoinLocalServer();
+        JoinAnyLocalServerButton.Pressed += () => JoinAnyLocalServer();
         //Setup Extras
         var args = MD.GetArgs();
         if(args.ContainsKey("standalone"))
@@ -75,6 +79,7 @@ public partial class UILandingPage : Control
     {
         bool hasConnnection = WSManager.Instance.State == MD.WSConnectionState.Open;
         WSConnectionLabel.Text = "WS Connnection :" + WSManager.Instance.State.ToString();
+        JoinLocalServerButton.Disabled = !ClientMultiplayerManager.Instance.HasLocalServer;
         JoinGameButton.Disabled = !hasConnnection && (JoinCodeEdit.Text == "");
         RequestGameButton.Disabled = !hasConnnection;
 
@@ -113,6 +118,17 @@ public partial class UILandingPage : Control
         ClientMultiplayerManager.Instance.SetData("127.0.0.1", 8080);
         ClientMultiplayerManager.Instance.StartPeer(); 
         // a bit weary here..
-        ClientManager.Instance.ToggleFrontend();
+        UIManager.Instance.TrySetUIState(UIManager.UIState.HUD);
+    }
+
+    private void JoinAnyLocalServer()
+    {
+        //Load the Arena:
+        ArenaManager.Instance.LoadArena(_arenas[ArenaListOptions.Selected].Id);
+        //Set up Multiplayer:
+        ClientMultiplayerManager.Instance.SetData("127.0.0.1", 8080);
+        ClientMultiplayerManager.Instance.StartPeer(); 
+        // a bit weary here..
+        UIManager.Instance.TrySetUIState(UIManager.UIState.HUD);
     }
 }

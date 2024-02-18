@@ -1,7 +1,7 @@
 using Godot;
 using System.Linq;
 using Daikon.Game;
-using Daikon.System;
+using Daikon.Helpers;
 
 namespace Daikon.Client;
 
@@ -26,6 +26,10 @@ public partial class RoleSpread : Control
 	private bool hasBeenSet = false;
 	public override void _Process(double delta)
 	{
+
+		if(ClientMultiplayerManager.Instance.GetStatus() != MultiplayerPeer.ConnectionStatus.Connected)
+			return;
+			
 		if(localPlayer == null)
 		{
 			localPlayer = ArenaManager.Instance.GetCurrentArena().GetPlayers().Find(p => p.Name == Multiplayer.GetUniqueId().ToString());

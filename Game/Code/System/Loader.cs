@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Daikon.System;
+namespace Daikon.Helpers;
 
 public partial class Loader : Node
 {

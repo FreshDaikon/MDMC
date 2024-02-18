@@ -1,7 +1,7 @@
 using Godot;
 using PlayFab;
 using PlayFab.ClientModels;
-using Daikon.System;
+using Daikon.Helpers;
 
 namespace Daikon.Client.Playfab;
 
@@ -20,6 +20,7 @@ public partial class PlayfabClient : Node
 		}
 		instance = this;
 		PlayFabSettings.staticSettings.TitleId = titleId;
+		LoginPlayer("rs", "rs");
 	}
 
 	public async void LoginPlayer(string username, string password) 

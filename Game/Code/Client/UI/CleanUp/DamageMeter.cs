@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Linq;
 using Daikon.Game;
-using Daikon.System;
+using Daikon.Helpers;
 
 namespace Daikon.Client;
 
@@ -35,6 +35,9 @@ public partial class DamageMeter : Control
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+		if(ClientMultiplayerManager.Instance.GetStatus() != MultiplayerPeer.ConnectionStatus.Connected)
+			return;
+
 		EntryContainer.Visible = CombatManager.Instance.IsInCombat;
 		if(!CombatManager.Instance.IsInCombat)
 			return;

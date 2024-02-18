@@ -1,17 +1,16 @@
-[gd_scene load_steps=14 format=3 uid="uid://dpji27mmqwobu"]
+[gd_scene load_steps=13 format=3 uid="uid://dpji27mmqwobu"]
 
 [ext_resource type="Script" path="res://Code/Client/ClientManager.cs" id="1_f104j"]
 [ext_resource type="PackedScene" uid="uid://1bpfjjvvkhfn" path="res://Scenes/Client/UI/Frontend/LandingPage.tscn" id="2_2g20u"]
 [ext_resource type="PackedScene" uid="uid://ds72o2h662r4r" path="res://Scenes/Client/UI/HUD/HUD_Main.tscn" id="3_3lbq8"]
 [ext_resource type="PackedScene" uid="uid://bdoagm2ktwyfm" path="res://Scenes/Client/UI/Ingame/Ingame_Main.tscn" id="4_6g5te"]
 [ext_resource type="Script" path="res://Code/Game/DataManager.cs" id="5_kp3vg"]
-[ext_resource type="Script" path="res://Code/Game/GameManager.cs" id="6_gw0u7"]
-[ext_resource type="Script" path="res://Code/Game/Combat/CombatManager.cs" id="6_n41qi"]
+[ext_resource type="Script" path="res://Code/Client/DaikonConnect/DaikonConnect.cs" id="7_jq341"]
 [ext_resource type="Script" path="res://Code/System/InputBuffer.cs" id="7_ubedu"]
 [ext_resource type="Script" path="res://Code/Game/Arena/ArenaManager.cs" id="9_a7vxa"]
-[ext_resource type="Script" path="res://Code/Client/WSConnect/WSManager.cs" id="9_n8sdg"]
 [ext_resource type="Script" path="res://Code/Game/StateManager.cs" id="9_u2a7f"]
 [ext_resource type="Script" path="res://Code/Client/Steam/SteamManager.cs" id="9_v17ox"]
+[ext_resource type="Script" path="res://Code/Client/UI/UIManager.cs" id="12_rn5ab"]
 [ext_resource type="Script" path="res://Code/Client/Multiplayer/ClientMultiplayerManager.cs" id="13_pw8dm"]
 
 [node name="Main" type="Node3D"]
@@ -31,16 +30,13 @@ SkillsPath = "res://Data/Instances/Skills"
 ModifiersPath = "res://Data/Instances/Modifiers"
 ArenasPath = "res://Data/Instances/Arenas"
 
-[node name="GameManager" type="Node" parent="Managers/Game"]
-script = ExtResource("6_gw0u7")
-
 [node name="ArenaManager" type="Node" parent="Managers/Game"]
 script = ExtResource("9_a7vxa")
 
-[node name="CombatManager" type="Node" parent="Managers/Game"]
-script = ExtResource("6_n41qi")
-
 [node name="Client" type="Node" parent="Managers"]
+
+[node name="DaikonConnect" type="Node" parent="Managers/Client"]
+script = ExtResource("7_jq341")
 
 [node name="StateManager" type="Node" parent="Managers/Client"]
 script = ExtResource("9_u2a7f")
@@ -51,22 +47,21 @@ script = ExtResource("7_ubedu")
 [node name="SteamManager" type="Node" parent="Managers/Client"]
 script = ExtResource("9_v17ox")
 
-[node name="WSManager" type="Node" parent="Managers/Client"]
-script = ExtResource("9_n8sdg")
-
 [node name="ClientMultiplayerManager" type="Node" parent="Managers/Client"]
 script = ExtResource("13_pw8dm")
 
-[node name="UIContainer" type="Node" parent="."]
+[node name="UIManager" type="Node" parent="Managers/Client"]
+script = ExtResource("12_rn5ab")
+frontendScene = ExtResource("2_2g20u")
+hudScene = ExtResource("3_3lbq8")
+ingamemenuScene = ExtResource("4_6g5te")
+
+[node name="UIContainer" type="Node" parent="Managers/Client/UIManager"]
 unique_name_in_owner = true
 
-[node name="HUDContainer" type="Node" parent="UIContainer"]
+[node name="TopUI" type="Node" parent="."]
 
-[node name="IngameContainer" type="Node" parent="UIContainer"]
-
-[node name="FrontendContainer" type="Node" parent="UIContainer"]
-
-[node name="Status" type="Control" parent="UIContainer"]
+[node name="Status" type="Control" parent="TopUI"]
 custom_minimum_size = Vector2(400, 48.325)
 layout_mode = 3
 anchors_preset = 3
@@ -80,7 +75,7 @@ offset_bottom = 0.324951
 grow_horizontal = 0
 grow_vertical = 0
 
-[node name="Panel" type="Panel" parent="UIContainer/Status"]
+[node name="Panel" type="Panel" parent="TopUI/Status"]
 modulate = Color(0, 0, 0, 0.313726)
 layout_mode = 1
 anchors_preset = 15
@@ -90,7 +85,7 @@ offset_top = 27.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Status" type="Label" parent="UIContainer/Status"]
+[node name="Status" type="Label" parent="TopUI/Status"]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0

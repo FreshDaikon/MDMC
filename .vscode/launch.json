@@ -45,7 +45,7 @@
             "name": "Standalone",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "buildClient",
+            "preLaunchTask": "buildStandalone",
             "program": "${workspaceFolder}/.Engine/Godot.exe",
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,

@@ -17,7 +17,7 @@
     <EmbeddedResource Remove="Code\Client\**" />
     <None Remove="Code\Client\**" />
   </ItemGroup>
-  <ItemGroup Condition="'$(DaikonTarget)' == 'Client'">
+  <ItemGroup Condition="'$(GodotFeatures)' == 'Client'">
     <Content Remove="Code\Server\**" />
     <Compile Remove="Code\Server\**" />
     <EmbeddedResource Remove="Code\Server\**" />

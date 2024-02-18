@@ -2,40 +2,65 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"type": "dotnet",
-			"task": "build",
+			"type": "process",
+			"command": "dotnet",
 			"group": {
 				"kind": "build",
 				"isDefault": true
 			},
+			"args": [
+				"build",
+				"${workspaceFolder}/Game/Mdmc.csproj",
+				"/p:DaikonTarget=Server"
+			],
+			"label": "buildServer",
 			"problemMatcher": [
 				"$msCompile"
 			],
-			"label": "buildServer"
 		},
 		{
-			"type": "dotnet",
-			"task": "build",
+			"type": "process",
+			"command": "dotnet",
 			"group": {
 				"kind": "build",
-				"isDefault": true
+				"isDefault": true, 
 			},
+			"args": [
+				"build",
+				"${workspaceFolder}/Game/Mdmc.csproj",
+				"/p:DaikonTarget=Client"
+			],
 			"problemMatcher": [
 				"$msCompile"
 			],
 			"label": "buildClient"
 		},
 		{
-			"label": "ExportTest",
-			"type": "shell",
-			"command": "${workspaceRoot}\\.Engine\\Godot.exe",
+			"type": "process",
+			"command": "dotnet",
+			"group": {
+				"kind": "build",
+				"isDefault": true, 
+			},
 			"args": [
-				"--path",
-				"${workspaceRoot}\\Game\\project.godot",
-				"--export",
-				"\"Server\"",
-				"${workspaceRoot}\\Game\\bin\\Server\\Server.exe"
-			]
-		}
+				"build",
+				"${workspaceFolder}/Game/Mdmc.csproj"
+			],
+			"label": "buildStandalone"
+		},
+		{
+			"type": "process",
+			"command": "dotnet",
+			"group": {
+				"kind": "build",
+				"isDefault": true, 
+			},
+			"args": [
+				"build",
+				"${workspaceFolder}\\Game\\Mdmc.csproj",
+				"/p:DaikonTarget=Server",
+			],
+			"label": "PublishMDMCServer"
+		},
 	]
 }

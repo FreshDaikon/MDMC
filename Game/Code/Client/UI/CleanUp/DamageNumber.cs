@@ -30,6 +30,8 @@ public partial class DamageNumber : Control
 	}
     public override void _PhysicsProcess(double delta)
     {
+		if(ClientMultiplayerManager.Instance.GetStatus() != MultiplayerPeer.ConnectionStatus.Connected)
+			return;
 		if(camera.IsPositionBehind(_worldPos))
 			return;
 		UIPos = camera.UnprojectPosition(_worldPos);

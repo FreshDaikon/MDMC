@@ -1,10 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://cot2lmy1em7xm"]
+[gd_scene load_steps=5 format=3 uid="uid://cot2lmy1em7xm"]
 
 [ext_resource type="Script" path="res://Code/Server/ServerManager.cs" id="1_pi4fx"]
 [ext_resource type="Script" path="res://Code/Game/DataManager.cs" id="2_85quu"]
 [ext_resource type="Script" path="res://Code/Server/PlayFab/PlayfabServer.cs" id="2_p2psv"]
-[ext_resource type="Script" path="res://Code/Game/GameManager.cs" id="3_vr3gt"]
-[ext_resource type="Script" path="res://Code/Game/Combat/CombatManager.cs" id="4_03lm5"]
 [ext_resource type="Script" path="res://Code/Game/Arena/ArenaManager.cs" id="6_wdpge"]
 
 [node name="Main" type="Node3D"]
@@ -23,14 +21,8 @@ SkillsPath = "res://Data/Instances/Skills"
 ModifiersPath = "res://Data/Instances/Modifiers"
 ArenasPath = "res://Data/Instances/Arenas"
 
-[node name="GameManager" type="Node" parent="Managers/Game"]
-script = ExtResource("3_vr3gt")
-
 [node name="ArenaManager" type="Node" parent="Managers/Game"]
 script = ExtResource("6_wdpge")
-
-[node name="CombatManager" type="Node" parent="Managers/Game"]
-script = ExtResource("4_03lm5")
 
 [node name="Server" type="Node" parent="Managers"]
 

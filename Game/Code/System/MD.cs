@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Godot;
 
-namespace Daikon.System;
+namespace Daikon.Helpers;
 
 public static class MD
 {

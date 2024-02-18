@@ -1,5 +1,7 @@
 using Godot;
-using Daikon.System;
+using Daikon.Helpers;
+using Daikon.Game;
+using Daikon.Client.Connect;
 
 namespace Daikon.Client;
 
@@ -7,8 +9,15 @@ public partial class ClientManager : Node3D
 {	
     //Singleton Instance: 
     public static ClientManager Instance;
-
     public MD.InputScheme CurrentInputScheme { get; private set; } 
+
+    public enum UIState
+    {
+        None,
+        Frontend,
+        Ingame,
+        HUD,
+    }
     //References & Denpendencies:
     // UI :
     [Export]
@@ -24,6 +33,7 @@ public partial class ClientManager : Node3D
     
     //Game Containers:
     private Node UIContainer;
+    public UIState CurrentUIState = UIState.None;
 
     public override void _Ready()
     {  
@@ -34,73 +44,48 @@ public partial class ClientManager : Node3D
         }
         Instance = this;
         GD.Print("Client Starting...");
-        //Call when Ready:
         CallDeferred(nameof(InitClient));
-        
-        #if CLIENT
-        GD.Print("We are the client build!");
-        #endif
+        //Call when Ready:
     }
 
     private void InitClient()
     {
         // Get References:
-        UIContainer = GetNode<Node>("%UIContainer");
-        
-        // Get Dependencies:
-        // Frontend
-        frontend = frontendScene.Instantiate<UILandingPage>();
-        // HUD
-        hud = hudScene.Instantiate<UIHUDMain>();
-        // Ingame 
-        ingameMenu = ingamemenuScene.Instantiate<UIIngameMenu>();
-        // Steam Init:
         if(SteamManager.Instance.InitSteam())
         {
             //Steam was success.
             // TODO : Implement Steam Things.
-        }
-        ToggleFrontend();
+        }        
+        UIManager.Instance.TrySetUIState(UIManager.UIState.Frontend);
+        test();
     }
 
-    public void ToggleHud()
+    public void test()
     {
-        Node hudContainer = UIContainer.GetNode("HUDContainer");
-        if(hudContainer.GetNodeOrNull(hud.Name.ToString()) != null)
-        {
-            hudContainer.RemoveChild(hud);
-        }
-        else
-        {
-            hudContainer.AddChild(hud);
-        }
+       DaikonConnect.Instance.AuthDaikon();
     }
 
-    public void ToggleFrontend()
+    public override void _ExitTree()
     {
-        Node frontendContainer = UIContainer.GetNode("FrontendContainer");
-        if(frontendContainer.GetNodeOrNull(frontend.Name.ToString()) != null)
+        //If We started a serve locally make sure to kill it.
+        if(ClientMultiplayerManager.Instance.LocalPid != -1)
         {
-            frontendContainer.RemoveChild(frontend);
+            var error = OS.Kill(ClientMultiplayerManager.Instance.LocalPid);
+            if(error != Error.Ok)
+            {
+                MD.Log("Could not kill Saved Server ID.");
+            }
         }
-        else
-        {
-            frontendContainer.AddChild(frontend);
-        }
+        base._ExitTree();
     }
 
-    public void ToggleIngameMenu()
+    public void ResetClient()
     {
-        Node ingameContainer = UIContainer.GetNode("IngameContainer");
-        if(ingameContainer.GetNodeOrNull(ingameMenu.Name.ToString()) != null) 
-        {
-            ingameContainer.RemoveChild(ingameMenu);
-        }
-        else 
-        {
-            ingameContainer.AddChild(ingameMenu);
-        }
+        ArenaManager.Instance.UnloadArena();
+        GameManager.Instance = null;
+        CombatManager.Instance = null;
     }
+
     public override void _PhysicsProcess(double delta)
     {
         if(Input.GetLastMouseVelocity().Length() > 0f)
@@ -111,6 +96,8 @@ public partial class ClientManager : Node3D
         {
             CurrentInputScheme = MD.InputScheme.GAMEPAD;
         }
-        base._PhysicsProcess(delta);
+        base._PhysicsProcess(delta);       
     }
+
+
 }

@@ -1,6 +1,6 @@
 using Godot;
 using Daikon.Game;
-using Daikon.System;
+using Daikon.Helpers;
 
 namespace Daikon.Client;
 
@@ -16,6 +16,14 @@ public partial class ClientMultiplayerManager: Node
     private bool _hasData = false;
     private bool _hasId = false;
 
+    public int LocalPid = -1;
+    public bool HasLocalServer = false;
+
+    [Signal]
+    public delegate void ConnectedToServerEventHandler();
+    [Signal]
+    public delegate void DisconnectedFromServerEventHandler();
+
     public override void _Ready()
     {
         if(Instance != null)
@@ -24,6 +32,8 @@ public partial class ClientMultiplayerManager: Node
             return;
         }
         Instance = this;
+        _clientPeer = new ENetMultiplayerPeer();
+       
     }
 
     public void SetData(string url, int port)
@@ -58,7 +68,6 @@ public partial class ClientMultiplayerManager: Node
         // Continue:
         Engine.MaxFps = 120;
         GD.Print("Prepare MP Client - connect to server...");
-        _clientPeer = new ENetMultiplayerPeer();
         var error = _clientPeer.CreateClient(_hostUrl, _hostPort);
         if(error != Error.Ok)
         {
@@ -68,20 +77,58 @@ public partial class ClientMultiplayerManager: Node
         else 
         {
             Multiplayer.MultiplayerPeer = _clientPeer;
+            Multiplayer.ServerDisconnected += () => StopPeer(); 
             GD.Print("Client Connected to Server! As : " + Multiplayer.MultiplayerPeer ); 
             return true;
         }
     }
 
-    public bool StopPeer()
+    public void StopPeer()
+    {
+        ClientManager.Instance.ResetClient();
+        MD.Log("Server was disconnected clear info..");
+        _clientPeer.Close();
+        GetTree().SetMultiplayer(MultiplayerApi.CreateDefaultInterface());
+        _hasData = false;
+        if(LocalPid != -1)
+        {
+            MD.Log("Server Connection was local - clear LocalData.");
+            LocalPid = -1;
+            HasLocalServer = false;
+        }
+    }
+
+    public void LeaveServer()
     {
         if(_clientPeer.GetConnectionStatus() == MultiplayerPeer.ConnectionStatus.Connected)
         {
+            MD.Log("Time to leave the server!");
             _clientPeer.Close();
             _hasData = false;
-            return true;
+            ClientManager.Instance.ResetClient();
+            GetTree().SetMultiplayer(MultiplayerApi.CreateDefaultInterface());
+            if(LocalPid != -1)
+            {
+                MD.Log("Server Connection was local - clear LocalData.");
+                LocalPid = -1;
+                HasLocalServer = false;
+            }
         }
-        return false;
+        else
+        {
+            MD.Log("Can't Leave Server becaues ther is no connection.");
+            return;
+        }
+    }
+
+    public MultiplayerPeer.ConnectionStatus GetStatus()
+    {
+        if(_clientPeer != null)
+        {
+            return _clientPeer.GetConnectionStatus();
+        }
+        else 
+            return MultiplayerPeer.ConnectionStatus.Disconnected;
     }
 
     // Only works with a local copy of the x86 - dont try this on retail distros.
@@ -96,7 +143,12 @@ public partial class ClientMultiplayerManager: Node
             GD.Print("Project path :" + projPath);
             path = path.Replace("Godot.exe", "Godot_console.exe");
             GD.Print("Exe Path:" + path);
-            OS.CreateProcess(path, new string[]{"--path", projPath,"--headless", "--gameserver", "--arena "+ arena.Id.ToString()}, true);
+            var pid = OS.CreateProcess(path, new string[]{"--path", projPath,"--headless", "--gameserver", "--arena "+ arena.Id.ToString()}, true);
+            if(pid != -1)
+            {
+                LocalPid = pid;
+                HasLocalServer = true;
+            }
         }
         else
         {

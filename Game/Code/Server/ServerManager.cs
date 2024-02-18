@@ -1,6 +1,6 @@
 using Godot;
 using Daikon.Game;
-using Daikon.System;
+using Daikon.Helpers;
 
 namespace Daikon.Server;
 
@@ -30,10 +30,30 @@ public partial class ServerManager : Node3D
         #endif    
     }
 
+    public override void _ExitTree()
+    {
+        
+        base._ExitTree();
+    }
+
+    public override void _Notification(int what)
+    {
+        if(what == NotificationWMCloseRequest)
+        {
+            foreach(var player in Multiplayer.GetPeers())
+            {
+                if(player != Multiplayer.GetUniqueId())
+                {
+                    peer.DisconnectPeer(player);
+                }
+            }
+            GetTree().Quit();
+        }
+    }
+
     public override void _Process(double delta)
     {
         var currentArena = ArenaManager.Instance.GetCurrentArena();
-
         if(currentArena != null)
         {
             if(currentArena.GetTimeLeft() <= 0)
