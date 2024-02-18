@@ -36,6 +36,7 @@ public class GamesController : ControllerBase
         var auth = _userService.ValidateToken(request.SessionToken);
         if(auth)
         {
+            _logger.LogInformation("Success in authing user - request new server");
             //TODO : add the playfab request :
             PlayFabSettings.staticSettings.TitleId= "";
             PlayFabSettings.staticSettings.DeveloperSecretKey =" ";

@@ -30,8 +30,6 @@ public partial class UIConnections : Control
 		JoinServerButton = GetNode<Button>("%JoinServer");
 		//Connect:
 		connectLocalButton.Pressed += () => ConnectLocal();
-		RequestServerButton.Pressed +=() => WSManager.Instance.RequestGame(arena);
-		JoinServerButton.Pressed += () => WSManager.Instance.JoinGame(JoinCode.Text);
 	}
 
     public override void _Process(double delta)

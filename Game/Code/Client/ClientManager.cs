@@ -57,14 +57,7 @@ public partial class ClientManager : Node3D
             // TODO : Implement Steam Things.
         }        
         UIManager.Instance.TrySetUIState(UIManager.UIState.Frontend);
-        test();
     }
-
-    public void test()
-    {
-       DaikonConnect.Instance.AuthDaikon();
-    }
-
     public override void _ExitTree()
     {
         //If We started a serve locally make sure to kill it.

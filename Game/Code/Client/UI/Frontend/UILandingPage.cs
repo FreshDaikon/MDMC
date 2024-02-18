@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Godot;
 using Daikon.Game;
 using Daikon.Helpers;
+using Daikon.Client.Connect;
 
 namespace Daikon.Client;
 
@@ -77,12 +78,7 @@ public partial class UILandingPage : Control
 
     public override void _Process(double delta)
     {
-        bool hasConnnection = WSManager.Instance.State == MD.WSConnectionState.Open;
-        WSConnectionLabel.Text = "WS Connnection :" + WSManager.Instance.State.ToString();
         JoinLocalServerButton.Disabled = !ClientMultiplayerManager.Instance.HasLocalServer;
-        JoinGameButton.Disabled = !hasConnnection && (JoinCodeEdit.Text == "");
-        RequestGameButton.Disabled = !hasConnnection;
-
         var gameId = ClientMultiplayerManager.Instance.GetId();
 
         GeneratedCodeEdit.Visible = gameId == "" ? false : true;
@@ -95,17 +91,17 @@ public partial class UILandingPage : Control
 
     private void RequestGame()
     {
-        WSManager.Instance.RequestGame(_arenas[ArenaListOptions.Selected]);
+        DaikonConnect.Instance.DaikonRequestGame(_arenas[ArenaListOptions.Selected].Id);
     }
 
     private void JoinGame()
     {
-        WSManager.Instance.JoinGame(JoinCodeEdit.Text);
+        //WSManager.Instance.JoinGame(JoinCodeEdit.Text);
     }
 
     private void ConnectWS()
     {        
-        WSManager.Instance.ConnectToOrchestrator();
+        DaikonConnect.Instance.DaikonAuth();
     }
 
     private void StartLocalServer()
