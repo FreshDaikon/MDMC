@@ -46,6 +46,7 @@ public partial class ClientManager : Node3D
     {
         // Get References:
         UIContainer = GetNode<Node>("%UIContainer");
+        
         // Get Dependencies:
         // Frontend
         frontend = frontendScene.Instantiate<UILandingPage>();
