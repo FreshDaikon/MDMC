@@ -6,24 +6,36 @@
 			"task": "build",
 			"group": {
 				"kind": "build",
-				"isDefault": true,			
+				"isDefault": true
 			},
 			"problemMatcher": [
-				"$msCompile",
-			],			
-			"label": "buildServer",
+				"$msCompile"
+			],
+			"label": "buildServer"
 		},
 		{
 			"type": "dotnet",
 			"task": "build",
 			"group": {
 				"kind": "build",
-				"isDefault": true,
+				"isDefault": true
 			},
 			"problemMatcher": [
-				"$msCompile",
-			],			
+				"$msCompile"
+			],
 			"label": "buildClient"
-		}, 
+		},
+		{
+			"label": "ExportTest",
+			"type": "shell",
+			"command": "${workspaceRoot}\\.Engine\\Godot.exe",
+			"args": [
+				"--path",
+				"${workspaceRoot}\\Game\\project.godot",
+				"--export",
+				"\"Server\"",
+				"${workspaceRoot}\\Game\\bin\\Server\\Server.exe"
+			]
+		}
 	]
 }

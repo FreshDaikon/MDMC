@@ -2,15 +2,7 @@
 # Visual Studio 2012
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Code", "Code", "{ECF5107E-707D-46C4-9AB2-F8C365C5E59D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaikonServer", "Code\Server\DaikonServer.csproj", "{763E28C1-A1A5-42D8-A92C-F12BFEFDECC5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaikonClient", "Code\Client\DaikonClient.csproj", "{032842BB-1654-436D-AA5E-C59FF0A459CD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaikonGame", "Code\Game\DaikonGame.csproj", "{C0492295-126D-42B6-903B-F5F85B735825}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaikonSystem", "Code\System\DaikonSystem.csproj", "{6C15C41C-4203-4792-83D5-3C2BE5A46AFA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mdmc", "Mdmc.csproj", "{729A78F3-6C52-45DB-A676-DE2989A94ECB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,38 +11,14 @@ Global
 		ExportRelease|Any CPU = ExportRelease|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{763E28C1-A1A5-42D8-A92C-F12BFEFDECC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{763E28C1-A1A5-42D8-A92C-F12BFEFDECC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{763E28C1-A1A5-42D8-A92C-F12BFEFDECC5}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
-		{763E28C1-A1A5-42D8-A92C-F12BFEFDECC5}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
-		{763E28C1-A1A5-42D8-A92C-F12BFEFDECC5}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
-		{763E28C1-A1A5-42D8-A92C-F12BFEFDECC5}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
-		{032842BB-1654-436D-AA5E-C59FF0A459CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{032842BB-1654-436D-AA5E-C59FF0A459CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{032842BB-1654-436D-AA5E-C59FF0A459CD}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
-		{032842BB-1654-436D-AA5E-C59FF0A459CD}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
-		{032842BB-1654-436D-AA5E-C59FF0A459CD}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
-		{032842BB-1654-436D-AA5E-C59FF0A459CD}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
-		{C0492295-126D-42B6-903B-F5F85B735825}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C0492295-126D-42B6-903B-F5F85B735825}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C0492295-126D-42B6-903B-F5F85B735825}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
-		{C0492295-126D-42B6-903B-F5F85B735825}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
-		{C0492295-126D-42B6-903B-F5F85B735825}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
-		{C0492295-126D-42B6-903B-F5F85B735825}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
-		{6C15C41C-4203-4792-83D5-3C2BE5A46AFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6C15C41C-4203-4792-83D5-3C2BE5A46AFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6C15C41C-4203-4792-83D5-3C2BE5A46AFA}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
-		{6C15C41C-4203-4792-83D5-3C2BE5A46AFA}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
-		{6C15C41C-4203-4792-83D5-3C2BE5A46AFA}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
-		{6C15C41C-4203-4792-83D5-3C2BE5A46AFA}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+		{729A78F3-6C52-45DB-A676-DE2989A94ECB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{729A78F3-6C52-45DB-A676-DE2989A94ECB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{729A78F3-6C52-45DB-A676-DE2989A94ECB}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
+		{729A78F3-6C52-45DB-A676-DE2989A94ECB}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
+		{729A78F3-6C52-45DB-A676-DE2989A94ECB}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
+		{729A78F3-6C52-45DB-A676-DE2989A94ECB}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{763E28C1-A1A5-42D8-A92C-F12BFEFDECC5} = {ECF5107E-707D-46C4-9AB2-F8C365C5E59D}
-		{032842BB-1654-436D-AA5E-C59FF0A459CD} = {ECF5107E-707D-46C4-9AB2-F8C365C5E59D}
-		{C0492295-126D-42B6-903B-F5F85B735825} = {ECF5107E-707D-46C4-9AB2-F8C365C5E59D}
-		{6C15C41C-4203-4792-83D5-3C2BE5A46AFA} = {ECF5107E-707D-46C4-9AB2-F8C365C5E59D}
 	EndGlobalSection
 EndGlobal

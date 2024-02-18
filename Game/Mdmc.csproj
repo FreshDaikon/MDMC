@@ -1,15 +1,26 @@
 <Project Sdk="Godot.NET.Sdk/4.2.1">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net7.0</TargetFramework>
-    <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'ios' ">net8.0</TargetFramework>
-    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <EnableDynamicLoading>true</EnableDynamicLoading>    
   </PropertyGroup>
   <ItemGroup>
+    <!-- Packages -->
     <PackageReference Include="com.playfab.csharpgsdk" Version="0.11.210519" />
     <PackageReference Include="Facepunch.Steamworks" Version="2.3.3" />
     <PackageReference Include="LiteDB" Version="5.0.17" />
     <PackageReference Include="PlayFabAllSDK" Version="1.174.240119" />
-    <PackageReference Include="SmartFormat.NET" Version="3.3.0" />
+    <PackageReference Include="SmartFormat.NET" Version="3.3.0" />    
   </ItemGroup>  
+  <ItemGroup Condition="'$(DaikonTarget)' == 'Server'">
+    <Content Remove="Code\Client\**" />
+    <Compile Remove="Code\Client\**" />
+    <EmbeddedResource Remove="Code\Client\**" />
+    <None Remove="Code\Client\**" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(DaikonTarget)' == 'Client'">
+    <Content Remove="Code\Server\**" />
+    <Compile Remove="Code\Server\**" />
+    <EmbeddedResource Remove="Code\Server\**" />
+    <None Remove="Code\Server\**" />
+  </ItemGroup>
 </Project>
