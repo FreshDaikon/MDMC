@@ -83,13 +83,14 @@ public class GamesController : ControllerBase
                             var sessionId = Guid.NewGuid();
                             var joinCode = GenerateJoinCode(10);
                             //
-                            var NewGame = new Game(){
-                                SessionId = sessionId.ToString(),   
+                            var NewGame = new Game
+                            {
+                                SessionId = sessionId.ToString(),
                                 JoinCode = joinCode,
                                 ServerHost = result.FQDN,
-                                ServerPort = result.Ports.First(port => port.Name == "GameServer").Num                                
+                                ServerPort = result.Ports.First(port => port.Name == "GameServer").Num,
+                                LastHeartBeat = DateTime.Now
                             };
-                            NewGame.LastHeartBeat = DateTime.Now;
                             _gameManager.AddGame(NewGame);
                             var response = new GameCreatedResponse(){
                                 JoinCode = joinCode, 

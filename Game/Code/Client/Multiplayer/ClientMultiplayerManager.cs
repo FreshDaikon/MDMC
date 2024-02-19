@@ -15,14 +15,19 @@ public partial class ClientMultiplayerManager: Node
     private string _gameId;
     private bool _hasData = false;
     private bool _hasId = false;
+    private MultiplayerPeer.ConnectionStatus _currentStatus;
 
     public int LocalPid = -1;
     public bool HasLocalServer = false;
+
+     
 
     [Signal]
     public delegate void ConnectedToServerEventHandler();
     [Signal]
     public delegate void DisconnectedFromServerEventHandler();
+    [Signal]
+    public delegate void ConnectingToServerEventHandler();
 
     public override void _Ready()
     {
@@ -34,6 +39,33 @@ public partial class ClientMultiplayerManager: Node
         Instance = this;
         _clientPeer = new ENetMultiplayerPeer();
        
+    }
+
+    public override void _Process(double delta)
+    {
+
+        if(_clientPeer != null)
+        {
+            var current = _clientPeer.GetConnectionStatus();
+            if(current != _currentStatus)
+            {
+                _currentStatus = current;
+                switch(_currentStatus)
+                {
+                    case MultiplayerPeer.ConnectionStatus.Disconnected:
+                        EmitSignal(SignalName.DisconnectedFromServer);
+                        break;
+                    case MultiplayerPeer.ConnectionStatus.Connecting:
+                        EmitSignal(SignalName.ConnectingToServer);
+                        break;
+                    case MultiplayerPeer.ConnectionStatus.Connected:
+                        EmitSignal(SignalName.ConnectedToServer);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 
     public void SetData(string url, int port)

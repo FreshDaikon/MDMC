@@ -61,6 +61,7 @@ public partial class UILandingPage : Control
             StartServerButton.Disabled = true;
         }         
         CallDeferred(nameof(GetArenaList));
+        CallDeferred(nameof(SetupNetworkListeners));
     }
 
     private void GetArenaList()
@@ -74,6 +75,18 @@ public partial class UILandingPage : Control
                 ArenaListOptions.AddItem(arena.ArenaName);
             }
         }
+    }
+
+    private void SetupNetworkListeners()
+    {
+        DaikonConnect.Instance.AuthSuccess += () => {
+            MD.Log("We got the auth responese over here!");
+        };
+        DaikonConnect.Instance.GameCreated += (serverhost, port, joincode) => {
+            MD.Log("We got a game Created over here!");
+        };
+        DaikonConnect.Instance.GameFound += (host, port) => {};
+        
     }
 
     public override void _Process(double delta)
