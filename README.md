@@ -27,6 +27,8 @@ RootFolder(MDMC)/.Engine/Godot_Console.exe</br>
 https://godotengine.org/download/windows/</br>
 
 Addionally, if the steam_api64.dll is missing from /Game/.. please download it and place it there.
+When making a build you will also need to copy the Steam dll into the output folder.
+In general Exporting/Making builds have become a bit of a chore, so better to not bother until we have proper CI/CD done.
 
 
 
