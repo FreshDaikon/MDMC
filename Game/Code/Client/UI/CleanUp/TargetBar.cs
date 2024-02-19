@@ -30,30 +30,27 @@ public partial class TargetBar : Control
 	{	
 		if(ClientMultiplayerManager.Instance.GetStatus() != MultiplayerPeer.ConnectionStatus.Connected)
 			return;
+		var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();
+		if(players == null)
+			return;
+		localPlayer = players.Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
+		if(localPlayer ==  null)
+			return;
 
-		if(localPlayer == null)
-		{			
-			localPlayer = ArenaManager.Instance.GetCurrentArena().GetPlayers().Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
+		var target = FriendlyBar ? localPlayer.CurrentFriendlyTarget : localPlayer.CurrentTarget;
+		if(target != null)
+		{
+			BarTarget = target;
+			Visible = true;
+			targetName.Text = target.EntityName;
+			var healthPercent = 100f * ((float)target.Status.CurrentHealth / (float)target.Status.MaxHealth);
+			targetHealthPercent.Text = healthPercent.ToString( healthPercent < 5f ? "0.00" : "0") + "%";
+			targetHealthBar.Size = new Vector2( BarSize * ((float)target.Status.CurrentHealth / (float)target.Status.MaxHealth) , targetHealthBar.Size.Y);
 		}
 		else
 		{
-			var target = FriendlyBar ? localPlayer.CurrentFriendlyTarget : localPlayer.CurrentTarget;
-			if(target != null)
-			{
-				BarTarget = target;
-				Visible = true;
-				targetName.Text = target.EntityName;
-				var healthPercent = 100f * ((float)target.Status.CurrentHealth / (float)target.Status.MaxHealth);
-				targetHealthPercent.Text = healthPercent.ToString( healthPercent < 5f ? "0.00" : "0") + "%";
-				targetHealthBar.Size = new Vector2( BarSize * ((float)target.Status.CurrentHealth / (float)target.Status.MaxHealth) , targetHealthBar.Size.Y);
-			}
-			else
-			{
-				Visible = false;
-			}
+			Visible = false;
 		}
-		
-
 	}
 	// TODO #8 : Make the UITarget a better system.
 	private void TryUpdateUITarget()

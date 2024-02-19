@@ -38,7 +38,6 @@ public partial class PlayerInput : Node
             return;
 
         HandleInputs();
-
         //Handle Debug:
         if(Input.IsKeyPressed(Key.F2))
         {
@@ -207,21 +206,26 @@ public partial class PlayerInput : Node
         {
             if(player.TargetId == -1)
             {
-                var target = ArenaManager.Instance.GetCurrentArena().GetEnemyEntities()[0];
-                if(target != null)
-                {
-                    player.TargetId = int.Parse(target.Name);
-                }
-                else
+                var enemies = ArenaManager.Instance.GetCurrentArena().GetEnemyEntities();
+                if(enemies == null)
                 {
                     player.TargetId = -1;
+                    return;
                 }
+                var target  = enemies[0];
+                player.TargetId = int.Parse(target.Name);                
             }
             else
             {                
+                var enemies = ArenaManager.Instance.GetCurrentArena().GetEnemyEntities();
+                if(enemies == null )
+                {
+                    player.TargetId = -1;
+                    return;
+                }
                 int index = ArenaManager.Instance.GetCurrentArena().GetEnemyIndex(player.TargetId) + (direction ? 1 : -1);
-                int newIndex = Mathf.Wrap(index, 0, ArenaManager.Instance.GetCurrentArena().GetEnemyEntities().Count);
-                player.TargetId = int.Parse(ArenaManager.Instance.GetCurrentArena().GetEnemyEntities()[newIndex].Name);
+                int newIndex = Mathf.Wrap(index, 0, enemies.Count);
+                player.TargetId = int.Parse(enemies[newIndex].Name);
             }
         }
     }
@@ -242,21 +246,26 @@ public partial class PlayerInput : Node
         {
             if(player.FriendlyTargetId == -1)
             {
-                var target = ArenaManager.Instance.GetCurrentArena().GetFriendlyEntities()[0];
-                if(target != null)
-                {
-                    player.FriendlyTargetId = int.Parse(target.Name);
-                }
-                else
+                var friends = ArenaManager.Instance.GetCurrentArena().GetFriendlyEntities();
+                if(friends == null)
                 {
                     player.FriendlyTargetId = -1;
+                    return;
                 }
+                var target = friends[0];
+                player.FriendlyTargetId = int.Parse(target.Name);                
             }
             else
             {                
+                var friends = ArenaManager.Instance.GetCurrentArena().GetFriendlyEntities();
+                if(friends == null)
+                {
+                    player.FriendlyTargetId = -1;
+                    return;
+                }
                 int index = ArenaManager.Instance.GetCurrentArena().GetFriendlyIndex(player.FriendlyTargetId) + (direction ? 1 : -1);
-                int newIndex = Mathf.Wrap(index, 0, ArenaManager.Instance.GetCurrentArena().GetFriendlyEntities().Count);
-                player.FriendlyTargetId = int.Parse(ArenaManager.Instance.GetCurrentArena().GetFriendlyEntities()[newIndex].Name);
+                int newIndex = Mathf.Wrap(index, 0, friends.Count);
+                player.FriendlyTargetId = int.Parse(friends[newIndex].Name);
             }
         }
     }

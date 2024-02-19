@@ -21,38 +21,37 @@ public partial class ChannelBar : Control
 	{
 		if(ClientMultiplayerManager.Instance.GetStatus() != MultiplayerPeer.ConnectionStatus.Connected)
 			return;
-		if(localPlayer == null)
+		var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();
+		if(players == null)
+			return;
+		localPlayer = players.Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
+		if(localPlayer ==  null)
+			return;
+
+		if(WeightedValue == -1f)
 		{
-			localPlayer = ArenaManager.Instance.GetCurrentArena().GetPlayers().Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
+			WeightedValue = localPlayer.Arsenal.GetWeightedTotal(localPlayer.Arsenal.GetArsenalSkillWeights());
+		}			
+		if(!animationPlayer.IsPlaying())
+		{
+			animationPlayer.Play("Channeling");
+		}
+		ChannelBarRect.Color = MD.GetPlayerColor(WeightedValue);
+		if(localPlayer.Arsenal.IsChanneling)
+		{
+			Visible = true;
+			var lapsed = GameManager.Instance.ServerTick - localPlayer.Arsenal.ChannelingStartTime;
+			if(lapsed <= 0f)
+			{
+				Visible = false;
+				return;
+			}
+			float left = ((float)lapsed / (float)localPlayer.Arsenal.ChannelingTime);
+			ChannelBarRect.Size = new Vector2(Mathf.Clamp(ChannelBarWidth * (1f - left), 0, ChannelBarWidth) , ChannelBarRect.Size.Y);
 		}
 		else
 		{
-			if(WeightedValue == -1f)
-			{
-				WeightedValue = localPlayer.Arsenal.GetWeightedTotal(localPlayer.Arsenal.GetArsenalSkillWeights());
-			}			
-			if(!animationPlayer.IsPlaying())
-			{
-				animationPlayer.Play("Channeling");
-			}
-			ChannelBarRect.Color = MD.GetPlayerColor(WeightedValue);
-			if(localPlayer.Arsenal.IsChanneling)
-			{
-				Visible = true;
-				var lapsed = GameManager.Instance.ServerTick - localPlayer.Arsenal.ChannelingStartTime;
-				if(lapsed <= 0f)
-				{
-					Visible = false;
-					return;
-				}
-				float left = ((float)lapsed / (float)localPlayer.Arsenal.ChannelingTime);
-				ChannelBarRect.Size = new Vector2(Mathf.Clamp(ChannelBarWidth * (1f - left), 0, ChannelBarWidth) , ChannelBarRect.Size.Y);
-			}
-			else
-			{
-				Visible = false;
-			}
-			
+			Visible = false;
 		}
 	}
 }

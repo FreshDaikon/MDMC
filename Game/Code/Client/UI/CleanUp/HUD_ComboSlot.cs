@@ -27,7 +27,10 @@ public partial class HUD_ComboSlot : Control
 			return;
 		if(localPlayer == null)
 		{
-			localPlayer = ArenaManager.Instance.GetCurrentArena().GetPlayers().Find(p => p.Name == Multiplayer.GetUniqueId().ToString());			
+			var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();
+			if(players == null)
+				return;
+			localPlayer = players.Find(p => p.Name == Multiplayer.GetUniqueId().ToString());			
 		}
 		else
 		{

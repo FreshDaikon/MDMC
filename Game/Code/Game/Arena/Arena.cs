@@ -104,7 +104,6 @@ public partial class Arena : Node3D
     }
     public int GetFriendlyIndex(int id)
     {
-        MD.Log("Id to find: " + id);
         if(EntityContainer.GetChildCount() == 0)
             return -1;
         var friends = EntityContainer.GetChildren()
@@ -127,6 +126,8 @@ public partial class Arena : Node3D
     }
     public List<PlayerEntity> GetPlayers()
     {
+        if(EntityContainer.GetChildren().Count == 0)
+            return null;
         var players = EntityContainer.GetChildren()
             .Where(child => child is PlayerEntity)
             .Cast<PlayerEntity>()
@@ -135,6 +136,8 @@ public partial class Arena : Node3D
     }
     public List<Entity> GetFriendlyEntities()
     {
+        if(EntityContainer.GetChildren().Count == 0)
+            return null;
         var entities = EntityContainer.GetChildren()
             .Where(child => child is Entity)
             .Cast<Entity>()
@@ -144,6 +147,8 @@ public partial class Arena : Node3D
     }
     public List<Entity> GetEnemyEntities()
     {
+        if(EntityContainer.GetChildren().Count == 0)
+            return null;
         var entities = EntityContainer.GetChildren()
             .Where(child => child is Entity)
             .Cast<Entity>()

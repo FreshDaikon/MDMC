@@ -29,6 +29,8 @@ public partial class PlayerCamera : SpringArm3D
 	{
 		if(!player.IsLocalPlayer || !StateManager.Instance.HasFocus)
 			return;
+
+		// Controller Control:
 		bool isZoom = false;
 		if (Input.IsActionPressed("Zoom"))
 		{
@@ -49,5 +51,34 @@ public partial class PlayerCamera : SpringArm3D
         // Get Players Position:
         var pos = new Vector3(player.Controller.Position.X, 3f, player.Controller.Position.Z);
 		Position = pos;//Position.Lerp(pos, 0.1f); 
+
+
+		//
 	}
+
+	private void HandleMouseCamera()
+	{
+		if(!player.IsLocalPlayer || !StateManager.Instance.HasFocus)
+			return;
+		
+	}
+
+    public override void _Input(InputEvent @event)
+    {
+		if(@event is InputEventMouseButton mouseEvent && mouseEvent.Pressed)
+		{
+			var current = SpringLength;
+			switch(mouseEvent.ButtonIndex)
+			{
+				case MouseButton.WheelUp:
+					current = Mathf.Clamp(current - 1f, 5f, 35f);
+					break;
+				case MouseButton.WheelDown:
+					current = Mathf.Clamp(current + 1f, 5f, 35f);
+					break;
+			}
+			SpringLength = current;
+		}
+		Mathf.Clamp(SpringLength, 5f, 35f);
+    }
 }

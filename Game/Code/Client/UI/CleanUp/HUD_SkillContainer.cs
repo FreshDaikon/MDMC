@@ -72,22 +72,16 @@ public partial class HUD_SkillContainer : Control
 	{
 		if(ClientMultiplayerManager.Instance.GetStatus() != MultiplayerPeer.ConnectionStatus.Connected)
 			return;
-
-		var localPlayer = ArenaManager.Instance.GetCurrentArena().GetPlayers().Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
-		if(localPlayer == null)
-		{
-			wasActivated = false;
+		var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();
+		if(players == null)
 			return;
-		}
-		else
-		{
-			if(wasActivated == false)
-			{
-				localPlayer.playerInput.ActivatorPressed += (container) => activatorPressed(container);
-				localPlayer.playerInput.ActivatorDepressed += (container) => activatorDepressed(container);
-				wasActivated = true;
-			}
-		}
+		var localPlayer = players.Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
+		if(localPlayer == null)
+			return;
+		
+		localPlayer.playerInput.ActivatorPressed += (container) => activatorPressed(container);
+		localPlayer.playerInput.ActivatorDepressed += (container) => activatorDepressed(container);
+
 		var container = localPlayer.Arsenal.GetSkillContainer(containerName);
 		if(container == null)
 		{
