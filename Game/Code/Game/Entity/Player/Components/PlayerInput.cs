@@ -176,8 +176,15 @@ public partial class PlayerInput : Node
         {
             Rpc(nameof(Dash));
         }  
-        Direction.X = Input.GetActionStrength("Move_Right") - Input.GetActionStrength("Move_Left");
-        Direction.Z = Input.GetActionStrength("Move_Down") - Input.GetActionStrength("Move_Up");
+        if(Input.IsActionPressed("MousePress") && Input.IsActionPressed("MouseLook") )
+        {
+            Direction = new Vector3(0f, 0f, -1f);
+        }
+        else
+        {
+            Direction.X = Input.GetActionStrength("Move_Right") - Input.GetActionStrength("Move_Left");
+            Direction.Z = Input.GetActionStrength("Move_Down") - Input.GetActionStrength("Move_Up");
+        }
         var camBasis = camera.GlobalTransform.Basis;
         var basis = camBasis.Rotated(camBasis.X, -camBasis.GetEuler().X);
         Direction = basis * Direction;

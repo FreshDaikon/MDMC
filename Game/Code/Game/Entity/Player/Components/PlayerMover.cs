@@ -74,7 +74,7 @@ public partial class PlayerMover : Node, IEntityMover
     public void Rotate(float delta)
     {
         var controller = player.Controller;   
-        if(input.Direction.Length() > 0.2f)
+        if(input.Direction.Length() > 0.0001f)
 		{           
             player.Arsenal.TryInteruptCast();
             player.Arsenal.TryInteruptChanneling();
@@ -85,11 +85,11 @@ public partial class PlayerMover : Node, IEntityMover
 
     public void Push(float delta)
     {
-        throw new NotImplementedException();
+        GD.Print("Push!!!");
     }
 
-    public void Teleport()
+    public void Teleport(Vector3 position)
     {
-        throw new NotImplementedException();
+        player.Controller.Position = position;
     }
 }

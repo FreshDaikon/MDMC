@@ -240,14 +240,7 @@ public partial class Skill : Node
             return true;
         else
         {
-            if(((GameManager.Instance.ServerTick - StartTime) / 1000f) < Cooldown)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return (GameManager.Instance.ServerTick - StartTime) / 1000f < Cooldown;
         }
     }
 
@@ -290,10 +283,6 @@ public partial class Skill : Node
         return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.INVALID_TARGET }; 
     }
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public virtual void SkillRealization(int value, int type)
-    {
-        // VALUE : value of the result of the skill (damage, heal etc value)
-        // TYPE : type of the result (DAMAGE, HEAL, etc)
-        //Here we do skill specific realizations:
-    }
+    public virtual void SkillRealization(int value, int type){}
+    
 }

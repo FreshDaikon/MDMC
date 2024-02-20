@@ -6,19 +6,29 @@ public partial class PlayerCamera : SpringArm3D
 {
     [Export]
 	private float sensitivity = 100f;
+	[Export]
+	private float mouseSensitivity = 0.3f;
     //Camera Values:    
-	private Vector2 camRotation = Vector2.Zero;
     // References:
 	private PlayerEntity player;
     private Camera3D camera;
+
+	private bool _isLookOn;
+	private Vector2 _desiredRotation = Vector2.Zero;
+	private Vector2 _direction = Vector2.Zero;
+	private bool _isPC = false;
+	private Vector2 _mouseMotion = Vector2.Zero;
+	private Vector2 _mousePosition = Vector2.Zero;
+	private Vector2 _storedPosition = Vector2.Zero;
+	private bool _firstPress = true;
 
 	public override void _Ready()
 	{	
 		player = (PlayerEntity)GetParent();
         camera = (Camera3D)GetNode("%Camera");
          //This Component is only useful on Local Clients       
-        camRotation.Y = -30f;
-		camRotation.X = 0f;
+        _desiredRotation.Y = -30f;
+		_desiredRotation.X = 0f;
 		TopLevel = true;
 	}
     public Camera3D GetCamera()
@@ -29,7 +39,6 @@ public partial class PlayerCamera : SpringArm3D
 	{
 		if(!player.IsLocalPlayer || !StateManager.Instance.HasFocus)
 			return;
-
 		// Controller Control:
 		bool isZoom = false;
 		if (Input.IsActionPressed("Zoom"))
@@ -37,34 +46,56 @@ public partial class PlayerCamera : SpringArm3D
 			isZoom = true;
 			SpringLength -= Input.GetActionStrength("Camera_Up") - Input.GetActionStrength("Camera_Down") * sensitivity * (float)delta;
 		}
-		Vector3 direction = Vector3.Zero;
-		direction.X = Input.GetActionStrength("Camera_Left") - Input.GetActionStrength("Camera_Right");
+		_direction.X = Input.GetActionStrength("Camera_Left") - Input.GetActionStrength("Camera_Right");
 		if (!isZoom)
-			direction.Y = Input.GetActionStrength("Camera_Up") - Input.GetActionStrength("Camera_Down");
+			_direction.Y = Input.GetActionStrength("Camera_Up") - Input.GetActionStrength("Camera_Down");
 		//Update Camera:
-		camRotation.Y += direction.Y * sensitivity * (float)delta;
-		camRotation.Y = Mathf.Clamp(camRotation.Y, -55f, 0f);
-		camRotation.X += direction.X * sensitivity * (float)delta;
-		camRotation.X = Mathf.Wrap(camRotation.X, 0f, 360f);
-		RotationDegrees = new Vector3(camRotation.Y, camRotation.X, 0f);
+		_desiredRotation.Y += _direction.Y * sensitivity * (float)delta;
+		_desiredRotation.Y = Mathf.Clamp(_desiredRotation.Y, -90f, 0f);
+		_desiredRotation.X += _direction.X * sensitivity * (float)delta;
+		_desiredRotation.X = Mathf.Wrap(_desiredRotation.X, 0f, 360f);
+
+		if(Input.IsActionPressed("MouseLook") || Input.IsActionPressed("MousePress"))
+		{
+			if(_firstPress)
+			{
+				_storedPosition = _mousePosition;
+				Input.MouseMode = Input.MouseModeEnum.Captured;
+				_firstPress = false;
+			}
+			_direction.X = -_mouseMotion.X * mouseSensitivity;
+			_direction.Y = -_mouseMotion.Y * mouseSensitivity;
+			_desiredRotation.Y += _direction.Y;
+			_desiredRotation.Y = Mathf.Clamp(_desiredRotation.Y, -90f, 0f);
+			_desiredRotation.X += _direction.X;
+			_desiredRotation.X = Mathf.Wrap(_desiredRotation.X, 0f, 360f);
+			_mouseMotion = Vector2.Zero;
+		}
+		else
+		{
+			if(!_firstPress)
+			{
+				_firstPress = true;
+				Input.MouseMode = Input.MouseModeEnum.Visible;
+				Input.WarpMouse(_storedPosition);
+			}
+		}
+		RotationDegrees = new Vector3(_desiredRotation.Y, _desiredRotation.X, 0f);
 		SpringLength = Mathf.Clamp(SpringLength, 5f, 35f);	
-        // Get Players Position:
-        var pos = new Vector3(player.Controller.Position.X, 3f, player.Controller.Position.Z);
+		var pos = new Vector3(player.Controller.Position.X, player.Controller.Position.Y + 2f, player.Controller.Position.Z);
 		Position = pos;//Position.Lerp(pos, 0.1f); 
-
-
-		//
-	}
-
-	private void HandleMouseCamera()
-	{
-		if(!player.IsLocalPlayer || !StateManager.Instance.HasFocus)
-			return;
+		camera.Fov = Mathf.Remap(SpringLength, 5f, 35f, 75f, 65f);
+		_direction = Vector2.Zero;
 		
 	}
 
     public override void _Input(InputEvent @event)
     {
+		if(@event is InputEventMouseMotion motionEvent)
+		{ 
+			_mousePosition = motionEvent.GlobalPosition;
+			_mouseMotion = motionEvent.Relative;
+		}
 		if(@event is InputEventMouseButton mouseEvent && mouseEvent.Pressed)
 		{
 			var current = SpringLength;

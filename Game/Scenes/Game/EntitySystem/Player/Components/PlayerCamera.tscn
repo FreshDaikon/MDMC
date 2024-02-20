@@ -8,3 +8,4 @@ script = ExtResource("1_evmce")
 
 [node name="Camera" type="Camera3D" parent="."]
 unique_name_in_owner = true
+fov = 50.0

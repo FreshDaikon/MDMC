@@ -1,3 +1,5 @@
+using Godot;
+
 namespace Daikon.Game;
 
 public interface IEntityMover
@@ -5,5 +7,5 @@ public interface IEntityMover
     void Move(float delta);
     void Rotate(float delta);
     void Push(float delta);
-    void Teleport();
+    void Teleport(Vector3 position);
 } 

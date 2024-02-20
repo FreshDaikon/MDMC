@@ -17,7 +17,7 @@ public partial class EntityController : CharacterBody3D
     [Export]
     public Vector3 SyncRotation;
 
-    private const int interpolationOffset = 100;
+    private const int interpolationOffset = 50;
     private List<EntityState> entityStatesBuffer = new();
     private EntityState lastState;
 
@@ -57,9 +57,10 @@ public partial class EntityController : CharacterBody3D
             var newPosition = entityStatesBuffer[0].Position.Lerp(entityStatesBuffer[1].Position, interpolationFactor);
             var newRotation = entityStatesBuffer[0].Rotation.Lerp(entityStatesBuffer[1].Rotation, interpolationFactor);
             Position = newPosition;
-            Rotation = newRotation;
+            Rotation = entityStatesBuffer[0].Rotation;
         } 
     }
+    
     public void Rotate(Vector2 direction)
     {
         if(!Multiplayer.IsServer())

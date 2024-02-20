@@ -13,11 +13,12 @@ script = ExtResource("2_u81i6")
 Id = -1779247515
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tt0g8"]
-sky_top_color = Color(0.231373, 0.505882, 0.890196, 1)
-sky_horizon_color = Color(0, 0.145098, 0.431373, 1)
-sky_curve = 0.261165
-ground_bottom_color = Color(0.470588, 0.364706, 0.364706, 1)
-ground_horizon_color = Color(0, 0.14902, 0.45098, 1)
+sky_top_color = Color(0.156863, 0.329412, 0.858824, 1)
+sky_horizon_color = Color(0.811765, 0.882353, 1, 1)
+sky_curve = 0.0609192
+ground_bottom_color = Color(0.694118, 0.803922, 1, 1)
+ground_horizon_color = Color(0.513726, 0.827451, 1, 1)
+ground_curve = 0.0857417
 sun_angle_max = 28.68
 
 [sub_resource type="Sky" id="Sky_nj8bo"]
@@ -29,7 +30,6 @@ background_color = Color(0.0941176, 0.803922, 0.870588, 1)
 background_energy_multiplier = 0.66
 sky = SubResource("Sky_nj8bo")
 ambient_light_source = 3
-ambient_light_color = Color(1, 0, 0, 1)
 ambient_light_energy = 16.0
 reflected_light_source = 2
 tonemap_mode = 3
@@ -39,14 +39,21 @@ sdfgi_enabled = true
 sdfgi_y_scale = 0
 glow_intensity = 1.0
 glow_bloom = 0.02
-fog_light_color = Color(0.368627, 0.101961, 0.0313726, 1)
-fog_light_energy = 0.5
-fog_density = 0.0525
-volumetric_fog_enabled = true
-volumetric_fog_density = 0.0022
+fog_enabled = true
+fog_light_color = Color(1, 1, 1, 1)
+fog_light_energy = 0.1
+fog_density = 0.0
+fog_aerial_perspective = 0.009
+fog_sky_affect = 0.0
+fog_height = 0.1
+fog_height_density = 0.4248
+volumetric_fog_density = 0.1702
+volumetric_fog_length = 5.0
+volumetric_fog_sky_affect = 0.0
+adjustment_enabled = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5y40w"]
-albedo_color = Color(0.133333, 0.192157, 0.258824, 1)
+albedo_color = Color(0.223529, 0.321569, 0.101961, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_uexrp"]
 
@@ -89,7 +96,6 @@ unique_name_in_owner = true
 [node name="Arena" type="Node3D" parent="."]
 unique_name_in_owner = true
 metadata/_edit_group_ = true
-metadata/_edit_lock_ = true
 
 [node name="ArenaMesh" type="StaticBody3D" parent="Arena"]
 collision_layer = 4
@@ -100,6 +106,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.99027, 0)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="Arena/ArenaMesh"]
 transform = Transform3D(47.187, 0, 0, 0, 1, 0, 0, 0, 41.9396, 0, -0.64447, 0)
+material_override = SubResource("StandardMaterial3D_5y40w")
+mesh = SubResource("BoxMesh_uexrp")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="Arena/ArenaMesh"]
+transform = Transform3D(47.187, 0, 0, 0, 274.378, 0, 0, 0, 41.9396, 0, -138.51, 0)
 material_override = SubResource("StandardMaterial3D_5y40w")
 mesh = SubResource("BoxMesh_uexrp")
 
