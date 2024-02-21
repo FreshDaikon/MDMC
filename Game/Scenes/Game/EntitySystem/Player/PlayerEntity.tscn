@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dkewiv4f333eh"]
+[gd_scene load_steps=17 format=3 uid="uid://dkewiv4f333eh"]
 
 [ext_resource type="Script" path="res://Code/Game/Entity/Player/PlayerEntity.cs" id="1_6j6p2"]
 [ext_resource type="PackedScene" uid="uid://g1ekudtsi5t0" path="res://Scenes/Game/EntitySystem/Player/Components/PlayerInput.tscn" id="3_1ru0t"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://uipio1vlxvl5" path="res://Scenes/Game/EntitySystem/Player/Components/PlayerCamera.tscn" id="6_wf2nq"]
 [ext_resource type="PackedScene" uid="uid://gtdhgpxhnebn" path="res://Scenes/Game/EntitySystem/Shared/EntityModifiers.tscn" id="7_wtkie"]
 [ext_resource type="PackedScene" uid="uid://cqhl1y0g5lq7x" path="res://Assets/3D/Heroes/Hero_Male_Base.blend" id="9_b3bqd"]
+[ext_resource type="Script" path="res://Code/Game/Entity/Player/Components/PlayerController.cs" id="9_ykwia"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_jddvm"]
 properties/0/path = NodePath(".:TargetId")
@@ -36,6 +37,13 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 1)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pvarx"]
+albedo_color = Color(1, 0, 0, 1)
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_qorjo"]
+
 [node name="PlayerEntity" type="Node3D"]
 script = ExtResource("1_6j6p2")
 targetable = true
@@ -48,7 +56,6 @@ replication_config = SubResource("SceneReplicationConfig_jddvm")
 
 [node name="EntityStatus" parent="." instance=ExtResource("3_ocq80")]
 unique_name_in_owner = true
-BaseSpeed = 10.0
 
 [node name="Arsenal" parent="." instance=ExtResource("3_sdwaw")]
 unique_name_in_owner = true
@@ -70,6 +77,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.65388, 0)
 [node name="Controller" parent="." instance=ExtResource("6_lhg4c")]
 unique_name_in_owner = true
 collision_mask = 4
+script = ExtResource("9_ykwia")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Controller"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -81,5 +89,10 @@ size = Vector3(2, 8.74156, 2)
 texture_albedo = SubResource("GradientTexture2D_hrlgr")
 
 [node name="Hero_Male_Base2" parent="Controller" instance=ExtResource("9_b3bqd")]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Controller"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0.0527783, 0)
+material_override = SubResource("StandardMaterial3D_pvarx")
+mesh = SubResource("SphereMesh_qorjo")
 
 [editable path="Controller/Hero_Male_Base2"]

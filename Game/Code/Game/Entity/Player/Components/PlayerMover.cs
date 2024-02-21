@@ -39,7 +39,6 @@ public partial class PlayerMover : Node, IEntityMover
         Rotate((float)delta);
 	}
 
-
     public void Move(float delta)
     {
         var controller = player.Controller;   
@@ -68,19 +67,15 @@ public partial class PlayerMover : Node, IEntityMover
             }
         }
         direction = controller.IsOnFloor() ? input.Direction : direction;
-        controller.Velocity = controller.Velocity.Lerp(velocity, delta * acceleration);        
+        controller.Velocity = velocity; //controller.Velocity.Lerp(velocity, delta * acceleration);        
     }
 
     public void Rotate(float delta)
     {
-        var controller = player.Controller;   
-        if(input.Direction.Length() > 0.0001f)
-		{           
-            player.Arsenal.TryInteruptCast();
-            player.Arsenal.TryInteruptChanneling();
-			Vector2 lookDirection = new Vector2(input.Direction.Z, input.Direction.X);
-			controller.Rotate(lookDirection);
-		}
+        if(Multiplayer.IsServer())
+        {
+            player.Controller.Rotation = input.Rotation;
+        }
     }
 
     public void Push(float delta)

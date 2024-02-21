@@ -51,11 +51,6 @@ public partial class ClientManager : Node3D
     private void InitClient()
     {
         // Get References:
-        if(SteamManager.Instance.InitSteam())
-        {
-            //Steam was success.
-            // TODO : Implement Steam Things.
-        }        
         UIManager.Instance.TrySetUIState(UIManager.UIState.Frontend);
     }
     public override void _ExitTree()

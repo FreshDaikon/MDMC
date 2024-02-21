@@ -57,6 +57,11 @@
             "name": "ServerClient",
             "configurations": ["Server", "Client_1", "Client_2"],
             "stopAll": true
+        },
+        {
+             "name": "StandaloneDuo",
+             "configurations": ["Standalone", "Client_1"],
+             "stopAll": true
         }
     ]
 }

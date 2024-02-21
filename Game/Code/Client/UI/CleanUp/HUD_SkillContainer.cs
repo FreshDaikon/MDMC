@@ -27,6 +27,8 @@ public partial class HUD_SkillContainer : Control
 
 	private AnimationPlayer animationPlayer;
 
+	private bool _playerUpdate = false;
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -76,12 +78,14 @@ public partial class HUD_SkillContainer : Control
 		if(players == null)
 			return;
 		var localPlayer = players.Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
-		if(localPlayer == null)
-			return;
-		
-		localPlayer.playerInput.ActivatorPressed += (container) => activatorPressed(container);
-		localPlayer.playerInput.ActivatorDepressed += (container) => activatorDepressed(container);
 
+		if(localPlayer !=  null && !_playerUpdate) 
+		{
+			localPlayer.playerInput.ActivatorPressed += (container) => activatorPressed(container);
+			localPlayer.playerInput.ActivatorDepressed += (container) => activatorDepressed(container);
+			_playerUpdate = true;
+		}
+		
 		var container = localPlayer.Arsenal.GetSkillContainer(containerName);
 		if(container == null)
 		{
@@ -91,7 +95,6 @@ public partial class HUD_SkillContainer : Control
 	}
 	private void activatorPressed(string container)
 	{
-		MD.Log("Event Gotten!");
 		if(container == containerName)
 		{
 			animationPlayer.Play("Active");

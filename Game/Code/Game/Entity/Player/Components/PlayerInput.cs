@@ -11,6 +11,8 @@ public partial class PlayerInput : Node
     public bool Dashing = false;
     [Export]
     public Vector3 Direction = Vector3.Zero;
+    [Export]
+    public Vector3 Rotation = Vector3.Zero;
     
      // References:
 	private PlayerEntity player;
@@ -30,6 +32,7 @@ public partial class PlayerInput : Node
         camera = player.GetNode<PlayerCamera>("%Rig");       
         synchronizer = GetNode<MultiplayerSynchronizer>("%Sync");  
     }
+
     public override void _Process(double delta)
     {
         if(GetMultiplayerAuthority() != Multiplayer.GetUniqueId())
@@ -38,11 +41,10 @@ public partial class PlayerInput : Node
             return;
 
         HandleInputs();
-        //Handle Debug:
         if(Input.IsKeyPressed(Key.F2))
         {
             //Let's Reset everything
-            Rpc(nameof(RequestReset));
+            RpcId(1, nameof(RequestReset));
         }
     }
 
@@ -112,26 +114,26 @@ public partial class PlayerInput : Node
                 EmitSignal(nameof(ActivatorDepressed), PlayerArsenal.ContainerNames.Right);
                 isActivator2Pressed = false;
             }
-        }     
+        }            
     }
 
     private void HandleSelection()
     {
         if(Input.IsActionJustPressed("SelectFriendlyDown"))
         {
-            Rpc(nameof(RequestFriendlyTargetChange), true);
+            RpcId(1, nameof(RequestFriendlyTargetChange), true);
         }
         if(Input.IsActionJustPressed("SelectFriendlyUp"))
         {
-            Rpc(nameof(RequestFriendlyTargetChange), false);
+            RpcId(1, nameof(RequestFriendlyTargetChange), false);
         }
         if(Input.IsActionJustPressed("SelectTargetDown"))
         {
-            Rpc(nameof(RequestEnemyTargetChange), true);
+            RpcId(1, nameof(RequestEnemyTargetChange), true);
         }
         if(Input.IsActionJustPressed("SelectTargetUp"))
         {
-            Rpc(nameof(RequestEnemyTargetChange), false);
+            RpcId(1, nameof(RequestEnemyTargetChange), false);
         }
     }
     private void HandleSkillActions(string ContainerName)
@@ -140,34 +142,35 @@ public partial class PlayerInput : Node
         {            
             if(InputBuffer.Instance.IsActionPressedBuffered("ActionButton1", 350f))
             {
-                Rpc(nameof(TryTriggerSkill), ContainerName, 0);
+                RpcId(1, nameof(TryTriggerSkill), ContainerName, 0);
             }
         }
         if(player.Arsenal.CanCast(ContainerName, 1).SUCCESS)
         {
             if(InputBuffer.Instance.IsActionPressedBuffered("ActionButton2", 350f))
             {
-                Rpc(nameof(TryTriggerSkill), ContainerName, 1);
+                RpcId(1, nameof(TryTriggerSkill), ContainerName, 1);
             }
         }
         if(player.Arsenal.CanCast(ContainerName, 2).SUCCESS)
         {
             if(InputBuffer.Instance.IsActionPressedBuffered("ActionButton3", 350f))
             {
-                Rpc(nameof(TryTriggerSkill), ContainerName, 2);
+                RpcId(1, nameof(TryTriggerSkill), ContainerName, 2);
             }
         }
         if(player.Arsenal.CanCast(ContainerName, 3).SUCCESS)
         {
             if(InputBuffer.Instance.IsActionPressedBuffered("ActionButton4", 350f))
             {
-                Rpc(nameof(TryTriggerSkill), ContainerName, 3);
+                RpcId(1, nameof(TryTriggerSkill), ContainerName, 3);
             }
         }
     }
 
     private void HandleMovement()
     {
+        Direction = Vector3.Zero;
         if(Input.IsActionJustPressed("Jump") && Activators() != true)
         {
             Rpc(nameof(Jump));
@@ -176,22 +179,44 @@ public partial class PlayerInput : Node
         {
             Rpc(nameof(Dash));
         }  
-        if(Input.IsActionPressed("MousePress") && Input.IsActionPressed("MouseLook") )
+
+        Direction.X = Input.GetActionStrength("Move_Right") - Input.GetActionStrength("Move_Left");
+        Direction.Z = Input.GetActionStrength("Move_Down") - Input.GetActionStrength("Move_Up");
+        
+        if(!Input.IsActionPressed("MousePress") && Input.IsActionPressed("MouseLook") && Direction.Length() <= 0f)
         {
-            Direction = new Vector3(0f, 0f, -1f);
+            var camBasis = camera.GlobalTransform.Basis;
+            var basis = camBasis.Rotated(camBasis.X, -camBasis.GetEuler().X);
+            var camDir = basis * new Vector3(0f, 0f, -1f);
+            UpdateRotation(camDir);
         }
-        else
+        else if(Input.IsActionPressed("MousePress") && Input.IsActionPressed("MouseLook") )
         {
-            Direction.X = Input.GetActionStrength("Move_Right") - Input.GetActionStrength("Move_Left");
-            Direction.Z = Input.GetActionStrength("Move_Down") - Input.GetActionStrength("Move_Up");
+            Direction = new Vector3(0f, 0f, -1f)
+            {
+                X = Input.GetActionStrength("Move_Right") - Input.GetActionStrength("Move_Left")
+            };
         }
-        var camBasis = camera.GlobalTransform.Basis;
-        var basis = camBasis.Rotated(camBasis.X, -camBasis.GetEuler().X);
-        Direction = basis * Direction;
-        if(Direction.LengthSquared() > 1.0f )
+        if(Direction.Length() > 0f)
         {
-            Direction = Direction.Normalized();
-        }
+            var camBasis = camera.GlobalTransform.Basis;
+            var basis = camBasis.Rotated(camBasis.X, -camBasis.GetEuler().X);
+            Direction = basis * Direction;
+            if(Direction.LengthSquared() > 1.0f )
+            {
+                Direction = Direction.Normalized();
+            }
+            UpdateRotation(Direction);
+        }        
+    }
+
+    private void UpdateRotation(Vector3 direction)
+    {
+        var controller = player.Controller;
+        Vector2 lookDirection = new Vector2(direction.Z, direction.X);
+        Vector3 rotation = new Vector3(0f, lookDirection.Angle(), 0f); 
+		controller.Rotation = rotation;
+        RpcId(1, nameof(SetRotation), rotation);    
     }
  
     //RPC Calls: 
@@ -204,6 +229,15 @@ public partial class PlayerInput : Node
     public void Dash()
     {        
         Dashing = true;
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.UnreliableOrdered)]
+    private void SetRotation(Vector3 rotation)
+    {
+        if(Multiplayer.IsServer())
+        {
+            Rotation = rotation;
+        }
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]

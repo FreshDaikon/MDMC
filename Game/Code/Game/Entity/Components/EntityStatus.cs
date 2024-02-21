@@ -56,7 +56,7 @@ public partial class EntityStatus : Node
         {
             // Multiplies in all directions - so 2 mods, 1.2f and 0.9 on 2.5f = 2.7f.
             modGCD *= mod.Value;
-        }
+        }        
         return modGCD;
     }
     public int InflictDamage(int amount)
