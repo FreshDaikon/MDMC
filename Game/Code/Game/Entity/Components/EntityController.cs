@@ -9,14 +9,6 @@ public partial class EntityController : CharacterBody3D
     public List<Vector3> Forces = new List<Vector3>();
     // Gravity Should Apply to all Entities:
     private float gravity = (float)ProjectSettings.GetSetting("physics/3d/default_gravity");
-    [Export]
-    private MultiplayerSynchronizer synchronizer;
-    private ulong lastUpdate = 0;
-    [Export]
-    public Vector3 SyncPosition; 
-    [Export]
-    public Vector3 SyncRotation;
-
     private const int interpolationOffset = 100;
     private List<EntityState> entityStatesBuffer = new();
     private EntityState lastState;
@@ -44,7 +36,7 @@ public partial class EntityController : CharacterBody3D
         }
         var safeTime = (int)GameManager.Instance.ServerTick;
         var renderTime = safeTime - interpolationOffset; 
-        if(entityStatesBuffer.Count > 1)
+        if(entityStatesBuffer.Count > 2)
         {
             while(entityStatesBuffer.Count > 2 && renderTime > entityStatesBuffer[2].TimeStamp)
             {

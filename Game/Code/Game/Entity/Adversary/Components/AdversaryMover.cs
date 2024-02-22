@@ -1,11 +1,9 @@
-
-
-using Daikon.Game;
 using Godot;
+
+namespace Daikon.Game;
 
 public partial class AdversaryMover : Node, IEntityMover
 {
-    
     private AdversaryEntity adversary;
 
     private Vector3 _direction = Vector3.Zero;
@@ -14,8 +12,8 @@ public partial class AdversaryMover : Node, IEntityMover
 
     public override void _Ready()
     {
-        adversary = GetParent<AdversaryEntity>();
         base._Ready();
+        adversary = GetParent<AdversaryEntity>();
     }
 
     public override void _PhysicsProcess(double delta)
@@ -31,6 +29,9 @@ public partial class AdversaryMover : Node, IEntityMover
 
     public void Move(float delta)
     {
+        if(!Multiplayer.IsServer())
+            return;
+            
         var controller = adversary.Controller;
         var speed = adversary.Status.GetCurrentSpeed();
 
@@ -39,7 +40,6 @@ public partial class AdversaryMover : Node, IEntityMover
         _velocity.Z = speed * _direction.Z;
 
         controller.Velocity = _velocity;
-
         _direction = Vector3.Zero;
     }
 

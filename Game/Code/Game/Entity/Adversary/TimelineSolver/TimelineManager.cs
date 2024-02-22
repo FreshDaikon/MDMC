@@ -19,6 +19,7 @@ public partial class TimelineManager : Node
     public override void _Ready()
     {
         behaviorPlayer = GetNode<AnimationPlayer>("%BehaviorPlayer");
+        entity = GetParent<AdversaryEntity>();
         phases = behaviorPlayer.GetAnimationList();
         GD.Print(phases);
         currentPhase = phases[0];
@@ -26,6 +27,8 @@ public partial class TimelineManager : Node
 
     public void Reset()
     {
+        if(!Multiplayer.IsServer()) 
+            return;
         if(!isEngaged)
             return;
         currentPhase = phases[0];
@@ -35,6 +38,8 @@ public partial class TimelineManager : Node
 
     public void Engage()
     {
+        if(!Multiplayer.IsServer()) 
+            return;
         if(isEngaged)
             return;
 
@@ -45,6 +50,8 @@ public partial class TimelineManager : Node
 
     public void TriggerNextPhase()
     {
+        if(!Multiplayer.IsServer()) 
+            return;
         currentPhase = phases[Array.IndexOf(phases, currentPhase) + 1];
         behaviorPlayer.Play(currentPhase);        
     }

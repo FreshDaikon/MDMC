@@ -1,6 +1,9 @@
 {
     "files.exclude": {
         "**/.godot":true,
+        ".godot/": true, 
+        "**/.tcn": true,
+        "**/.png": true,
         "**/.git": true,
         "**/.svn": true,
         "**/.hg": true,

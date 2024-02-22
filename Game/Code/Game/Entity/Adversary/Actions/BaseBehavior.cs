@@ -16,6 +16,8 @@ public partial class BaseBehavior : Node
 
     public override void _PhysicsProcess(double delta)
     {
+        if(!Multiplayer.IsServer()) 
+            return;
         if(ShouldProcess)
         {
             ProcessBehavior();
@@ -26,11 +28,15 @@ public partial class BaseBehavior : Node
 
     public void StartBehavior()
     {
+        if(!Multiplayer.IsServer()) 
+            return;
         ShouldProcess = true;
     }
 
     public void StopBehavior()
     {
+        if(!Multiplayer.IsServer()) 
+            return;
         ShouldProcess = false;
     }
 }

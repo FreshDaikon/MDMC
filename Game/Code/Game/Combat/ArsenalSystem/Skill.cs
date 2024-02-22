@@ -91,19 +91,24 @@ public partial class Skill : Node
 
     public override void _Ready()
     {
-        CallDeferred(nameof(InitSkill));
+        if(!Multiplayer.IsServer())
+        {
+            GameManager.Instance.ConnectionStarted += InitSkill;
+        }
     }
 
     private void InitSkill()
     {
-        MD.Log("Setting up skill dependencies");
         Player = GetParent().GetParent<SkillSlot>().Player;
-        MD.Log("Skill Player : " + Player.Name);
         if(!IsUniversalSkill)
         {
             SkillType = GetParent().GetParent<SkillSlot>().SlotSkillType;
         }
         ThreatMultiplier =  GetParent().GetParent<SkillSlot>().ThreatMultiplier;
+        if(Cooldown > 0f)
+        {
+            StartTime = (ulong)Mathf.Max((int)GameManager.Instance.ServerTick + (int)(Cooldown * 1000), 0);
+        }
     }
     public void Reset()
     {
@@ -118,7 +123,7 @@ public partial class Skill : Node
         if(!Multiplayer.IsServer())
             return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.NOT_SERVER };
 
-        if(!CheckCooldown())
+        if(IsOnCooldown())
         {
             return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.ON_COOLDOWN };
         }
@@ -237,13 +242,13 @@ public partial class Skill : Node
         }
     }
 
-    public bool CheckCooldown()
+    public bool IsOnCooldown()
     {
         if(Cooldown <= 0f)
-            return true;
+            return false;
         else
         {
-            return (GameManager.Instance.ServerTick - StartTime) / 1000f < Cooldown;
+            return (GameManager.Instance.ServerTick - StartTime) / 1000f <= Cooldown;
         }
     }
 

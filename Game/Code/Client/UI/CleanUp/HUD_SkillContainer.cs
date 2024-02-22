@@ -26,8 +26,9 @@ public partial class HUD_SkillContainer : Control
 	public HUD_ComboSlot Combo4;
 
 	private AnimationPlayer animationPlayer;
-
 	private bool _playerUpdate = false;
+
+	private bool isPlaying = false;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -79,11 +80,20 @@ public partial class HUD_SkillContainer : Control
 			return;
 		var localPlayer = players.Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
 
-		if(localPlayer !=  null && !_playerUpdate) 
+		if(localPlayer !=  null) 
 		{
-			localPlayer.playerInput.ActivatorPressed += (container) => activatorPressed(container);
-			localPlayer.playerInput.ActivatorDepressed += (container) => activatorDepressed(container);
-			_playerUpdate = true;
+			if(localPlayer.playerInput.isActivator1Pressed)
+				activatorPressed(PlayerArsenal.ContainerNames.Left);			
+			else
+				activatorDepressed(PlayerArsenal.ContainerNames.Left);			
+			if(localPlayer.playerInput.isActivator2Pressed)
+				activatorPressed(PlayerArsenal.ContainerNames.Right);
+			else
+				activatorDepressed(PlayerArsenal.ContainerNames.Right);
+			if(localPlayer.playerInput.isActivator3Pressed)
+				activatorPressed(PlayerArsenal.ContainerNames.Main);
+			else
+				activatorDepressed(PlayerArsenal.ContainerNames.Main);
 		}
 		
 		var container = localPlayer.Arsenal.GetSkillContainer(containerName);
@@ -97,14 +107,22 @@ public partial class HUD_SkillContainer : Control
 	{
 		if(container == containerName)
 		{
-			animationPlayer.Play("Active");
+			if(!isPlaying)
+			{ 
+				animationPlayer.Play("Active");
+				isPlaying = true;
+			}
 		}
 	}
 	private void activatorDepressed(string container)
 	{
 		if(container == containerName)
 		{
-			animationPlayer.Play("RESET");
+			if(isPlaying)
+			{ 
+				animationPlayer.Play("RESET");
+				isPlaying = false;
+			}
 		}
 	}
 

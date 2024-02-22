@@ -34,9 +34,10 @@ public partial class InputBuffer : Node
             InputEventKey keyEvent = (InputEventKey)@event;
             if(!keyEvent.Pressed || keyEvent.IsEcho())
             {
-               return; 
+                return; 
             } 
             var key = keyEvent.AsTextKeycode();
+            GD.Print("Key will be checked :" + key);
             if(!_keyboardStamps.ContainsKey(key))
             {
                 _keyboardStamps.Add(key, Time.GetTicksMsec());
@@ -64,14 +65,14 @@ public partial class InputBuffer : Node
         }
     }
 
-    public bool IsActionPressedBuffered(string action, float bufferWindow = 200f)
+    public bool IsActionPressedBuffered(string action)
     {
         foreach(InputEvent @event in InputMap.ActionGetEvents(action))
         {            
             if(@event is InputEventKey keyEvent && _keyboardStamps.ContainsKey(keyEvent.AsTextKeycode()))
             {
                 ulong stamp = _keyboardStamps[keyEvent.AsTextKeycode()];
-                if(Time.GetTicksMsec() - stamp < bufferWindow)
+                if(Time.GetTicksMsec() - stamp <= BufferWindow)
                 {
                     InvalidateAction(action);
                     return true;
@@ -80,7 +81,7 @@ public partial class InputBuffer : Node
             else if(@event is InputEventJoypadButton joyEvent && _joyStamps.ContainsKey(joyEvent.ButtonIndex.ToString()))
             {
                 ulong stamp = _joyStamps[joyEvent.ButtonIndex.ToString()];
-                if(Time.GetTicksMsec() - stamp < bufferWindow)
+                if(Time.GetTicksMsec() - stamp <= BufferWindow)
                 {
                     InvalidateAction(action);
                     return true;

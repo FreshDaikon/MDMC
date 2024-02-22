@@ -47,8 +47,7 @@ public partial class HUD_SkillSlot : Control
 			{
 				return;
 			}
-			//Color Background:
-			
+			//Color Background:			
 			CDTimer.Visible = skill.Cooldown > 0 && (skill.Cooldown - ((GameManager.Instance.ServerTick - skill.StartTime) / 1000f) > 0f);
 			Background.Color = skill.SkillType switch
 			{

@@ -14,7 +14,6 @@ public partial class EntityStatus : Node
     #endregion
     //----------------------------------------------------------
     #region HEALTH
-    [Export]
     public int CurrentHealth = 10000;
     [Export]
     public int MaxHealth = 10000;
@@ -47,7 +46,11 @@ public partial class EntityStatus : Node
 
     public override void _Ready()
     {
-        random = new RandomNumberGenerator();
+        if(Multiplayer.IsServer())
+        {
+            random = new RandomNumberGenerator();
+            CurrentHealth = MaxHealth;
+        }
         //Setup base values.
     }
 
@@ -111,6 +114,7 @@ public partial class EntityStatus : Node
         }
         MD.Log("I took :" + workingValue + " Damage!");
         EmitSignal(SignalName.DamageTaken, (float)workingValue);
+        Rpc(nameof(UpdateHealth), CurrentHealth);
         return workingValue;
     }
 
@@ -133,6 +137,7 @@ public partial class EntityStatus : Node
         }
         MD.Log("I Was Healed for :" + adjusted + " Health!");
         EmitSignal(SignalName.HealTaken, (float)adjusted);
+        Rpc(nameof(UpdateHealth), CurrentHealth);
         return adjusted;
     }
    
@@ -166,7 +171,7 @@ public partial class EntityStatus : Node
         if(mod.Category == MD.ModCategory.MAX_HEALTH)
         {
             MaxHealth += (int)mod.Value;
-        }
+        }        
     }
     public void RemoveStatMod(StatMod mod)
     {
@@ -175,10 +180,27 @@ public partial class EntityStatus : Node
         {
             MaxHealth -= (int)mod.Value;
         }
+        if(CurrentHealth > MaxHealth)
+        {
+            CurrentHealth = MaxHealth;
+            Rpc(nameof(UpdateHealth), CurrentHealth);
+        }
     }
 
     public void Reset()
     {
         CurrentHealth = MaxHealth;
+        Rpc(nameof(UpdateHealth), CurrentHealth);
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void UpdateHealth(int newHealth)
+    {
+        CurrentHealth = newHealth;
+    }
+
+    private void UpdateStatMods()
+    {
+
     }
 }

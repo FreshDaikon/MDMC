@@ -8,6 +8,8 @@ public partial class AdversaryEntity : Entity
 {
     [Export]
     private Node3D StartPosition;
+    [Export]
+    private float AggroRange = 5f;
 
     private TimelineManager manager;
     private AdversaryMover mover;
@@ -20,6 +22,8 @@ public partial class AdversaryEntity : Entity
 
     public override void _Ready()
     {
+        base._Ready();
+
         manager = GetNode<TimelineManager>("%TimeLineManager");
         mover = GetNode<AdversaryMover>("%Mover");
         damageTable = new Dictionary<Entity, float>();
@@ -31,25 +35,46 @@ public partial class AdversaryEntity : Entity
         adversaryStatus.ThreatInflicted += OnThreatTaken;
         adversaryStatus.HealTaken += (heal, entity) => {};
         adversaryStatus.KnockedOut += () => {};
-        base._Ready();
     }
+
+
+    public override void _PhysicsProcess(double delta)
+    {
+        if(!Multiplayer.IsServer()) 
+            return;
+        base._PhysicsProcess(delta);
+        if(!manager.IsEngaged)
+        {
+            CheckAggro();
+        }
+    }    
 
     private void CheckAggro()
     {
-        if(!manager.IsEngaged)
+        var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();
+        if(players != null)
         {
-            //TODO check for players in aggro range.
-            manager.Engage();
+            foreach(var player in players)
+            {
+                var distance = (player.Controller.Position - Controller.Position).Length();
+                if(distance <= AggroRange)
+                {
+                    manager.Engage();
+                    OnThreatTaken(500, player);
+                } 
+            }
         }
     }
 
     public void Defeat()
     {
-        //Implement defeat once all adversaries are dead.
+        //Implement victory once all adversaries are dead.
     }
 
-    public Entity GetThreat(int position)
+    public Entity GetThreatEntity(int position)
     {
+         if(threatTable.Count < position+1)
+            return null; 
         if(threatTable.Count > 0)
         {
             var list = threatTable.ToList();            
@@ -59,11 +84,28 @@ public partial class AdversaryEntity : Entity
         return null;
     }
 
+    public float GetThreatValue(int position)
+    {
+        if(threatTable.Count < position+1)
+            return 0f;        
+        if(threatTable.Count > 0)
+        {
+            var list = threatTable.ToList();            
+            list.Sort((x, y) => y.Value.CompareTo(x.Value));
+            return list[position].Value;
+        }
+        return 0f;
+    }
+
     private void OnDamageTaken(float damage, Entity entity)
     {
+        if(!manager.IsEngaged)
+        {
+            manager.Engage();
+        }
         if(damageTable.ContainsKey(entity))
         {
-            damageTable[entity] = damage;
+            damageTable[entity]  += damage;
         }
         else
         {
@@ -73,9 +115,13 @@ public partial class AdversaryEntity : Entity
 
     private void OnThreatTaken(float threat, Entity entity)
     {
+        if(!manager.IsEngaged)
+        {
+            manager.Engage();
+        }
         if(threatTable.ContainsKey(entity))
         {
-            threatTable[entity] = threat;
+            threatTable[entity] += threat;
         }
         else
         {

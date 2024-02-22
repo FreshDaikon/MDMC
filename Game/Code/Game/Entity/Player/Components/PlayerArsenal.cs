@@ -250,17 +250,17 @@ public partial class PlayerArsenal: Node
             result.result = MD.ActionResult.ERROR;
             return result;
         }
-        var CDCheck = skill.CheckCooldown();
-        if(!CDCheck)
-        {
+        if(skill.IsOnCooldown())
+        {            
             //MD.Log("Return because skill is on CD");
+            //MD.Log("Skill Start Time:" + skill.StartTime);
+            //MD.Log("Server Time :" + GameManager.Instance.ServerTick);
             result.result = MD.ActionResult.ON_COOLDOWN;
             return result;
         }
         var quickCheck = skill.CheckSkill();
         if(!quickCheck.SUCCESS)
         {
-            MD.Log("Return because skill check is not SUCESS");
             return result;
         }
         //If all else is ok, send back the good to go:

@@ -145,7 +145,7 @@ public partial class SkillContainer : Node
                                 MD.Log("We did trigger a combo!");
                                 NextComboSlot++;
                                 Rpc(nameof(SyncNextCombo), NextComboSlot);
-                                NextComboSlot = Mathf.Wrap(NextComboSlot, 0, ComboSlots.Length-1);
+                                NextComboSlot = Mathf.Wrap(NextComboSlot, 0, ComboSlots.Length);
                                 //Only apply the bonus if the skill is not a universal skill
                                 if(!skill.IsUniversalSkill)
                                 {

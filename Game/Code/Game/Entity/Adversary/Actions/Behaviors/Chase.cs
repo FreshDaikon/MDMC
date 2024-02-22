@@ -4,15 +4,28 @@ using Godot;
 namespace Daikon.Game;
 
 public partial class Chase: BaseBehavior
-{
+{   
+    [Export]
+    private float chaseDistance = 2f;
+    [Export]
+    private float chaseSpeed = 3f;
 
 
     public override void ProcessBehavior()
     {
-        GD.Print("Processing Chase And Hurt! aw yah!");
-        Manager.Entity.Mover.SetDirection(Vector3.Zero);
+        var topThreat = Manager.Entity.GetThreatEntity(0);
+        if(topThreat == null)
+        {
+            StopBehavior();
+            return;
+        }
+        var direction = topThreat.Controller.GlobalPosition - Manager.Entity.Controller.GlobalPosition;
+        float distance = direction.Length();
+        if(distance > chaseDistance)
+        {
+            Manager.Entity.Mover.SetDirection(direction.Normalized());
+        }
         base.ProcessBehavior();
-
     }
 }
  

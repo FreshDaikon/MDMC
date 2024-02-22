@@ -5,9 +5,14 @@ namespace Daikon.Game;
 public partial class GameManager : Node
 {
 
-    public static GameManager Instance;
-    
+    public static GameManager Instance;    
     private ulong _serverTick = 0;
+
+    private bool _firstTick = true;
+
+    [Signal]    
+    public delegate void ConnectionStartedEventHandler();
+
     public ulong ServerTick { 
         get {
             return _serverTick;
@@ -37,6 +42,11 @@ public partial class GameManager : Node
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void UpdateTick(ulong time)
     {
+        if(_firstTick)
+        {
+            EmitSignal(SignalName.ConnectionStarted);
+            _firstTick = false;
+        }
        _serverTick = time;
     }
 }

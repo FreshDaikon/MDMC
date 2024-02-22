@@ -20,20 +20,19 @@ public partial class PlayerInput : Node
     private MultiplayerSynchronizer synchronizer;
 
     [Signal]
-    public delegate void ActivatorPressedEventHandler(string containerName);
-    [Signal]
-    public delegate void ActivatorDepressedEventHandler(string containerName);
-    [Signal]
     public delegate void ActionButtonPressedEventHandler(string containerName, int slot);
+    
+    public bool isActivator1Pressed = false;
+    public bool isActivator2Pressed = false;
+    public bool isActivator3Pressed = false;
 
     public override void _Ready()
     {
         player = (PlayerEntity)GetParent();
         camera = player.GetNode<PlayerCamera>("%Rig");       
-        synchronizer = GetNode<MultiplayerSynchronizer>("%Sync");  
+        synchronizer = GetNode<MultiplayerSynchronizer>("%Sync"); 
     }
-
-    public override void _Process(double delta)
+    public override void _PhysicsProcess(double delta)
     {
         if(GetMultiplayerAuthority() != Multiplayer.GetUniqueId())
             return;
@@ -43,14 +42,12 @@ public partial class PlayerInput : Node
         HandleInputs();
         if(Input.IsKeyPressed(Key.F2))
         {
-            //Let's Reset everything
             RpcId(1, nameof(RequestReset));
         }
+
     }
 
-    private bool isActivator1Pressed = false;
-    private bool isActivator2Pressed = false;
-    private bool isActivator3Pressed = false;
+    
 
     private bool Activators()
     {
@@ -58,63 +55,28 @@ public partial class PlayerInput : Node
     }
 
     private void HandleInputs()
-    {
+    { 
+        isActivator1Pressed = false;
+        isActivator2Pressed = false;
+        isActivator3Pressed = false;
         HandleSelection();
-        HandleMovement();
+        HandleHotbars();
         if(Input.GetActionStrength("Activator1") > 0f && Input.GetActionStrength("Activator2") > 0f )
         {
-            if(!isActivator3Pressed)
-            {
-                EmitSignal(nameof(ActivatorPressed), PlayerArsenal.ContainerNames.Main);
-            }
             isActivator3Pressed = true;
-            //Handle Main:
             HandleSkillActions(PlayerArsenal.ContainerNames.Main);
         }
-        else
+        else if(Input.GetActionStrength("Activator1") > 0f && !isActivator3Pressed)
         {
-            if(isActivator3Pressed)
-            {
-                EmitSignal(nameof(ActivatorDepressed), PlayerArsenal.ContainerNames.Main);
-                isActivator3Pressed = false;
-            }
-        }
-        if(Input.GetActionStrength("Activator1") > 0f && !isActivator3Pressed)
-        {
-            if(!isActivator1Pressed)
-            {
-                EmitSignal(nameof(ActivatorPressed), PlayerArsenal.ContainerNames.Left);
-            }
             isActivator1Pressed = true;
-            //Handle Left:
             HandleSkillActions(PlayerArsenal.ContainerNames.Left);
         }
-        else
+        else if(Input.GetActionStrength("Activator2") > 0f && !isActivator3Pressed)
         {
-            if(isActivator1Pressed)
-            {
-                EmitSignal(nameof(ActivatorDepressed), PlayerArsenal.ContainerNames.Left);
-                isActivator1Pressed = false;
-            }
-        }
-        if(Input.GetActionStrength("Activator2") > 0f && !isActivator3Pressed)
-        {
-            if(!isActivator2Pressed)
-            {
-                EmitSignal(nameof(ActivatorPressed), PlayerArsenal.ContainerNames.Right);
-            }
             isActivator2Pressed = true;
-            //Handle Right:
             HandleSkillActions(PlayerArsenal.ContainerNames.Right);
         }
-        else
-        {
-            if(isActivator2Pressed)
-            {
-                EmitSignal(nameof(ActivatorDepressed), PlayerArsenal.ContainerNames.Right);
-                isActivator2Pressed = false;
-            }
-        }            
+        HandleMovement();
     }
 
     private void HandleSelection()
@@ -136,32 +98,122 @@ public partial class PlayerInput : Node
             RpcId(1, nameof(RequestEnemyTargetChange), false);
         }
     }
+
+    private void HandleHotbars()
+    {
+        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Main, 0).SUCCESS)
+        {
+            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar1"))
+            {
+                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Main, 0);
+            }
+        }
+        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Main, 1).SUCCESS)
+        {
+            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar2"))
+            {
+                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Main, 1);
+            }
+        }
+        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Main, 2).SUCCESS)
+        {
+            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar3"))
+            {
+                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Main, 2);
+            }
+        }
+        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Main, 3).SUCCESS)
+        {
+            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar4"))
+            {
+                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Main, 3);
+            }
+        }
+        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Right, 0).SUCCESS)
+        {
+            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar5"))
+            {
+                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Right, 0);
+            }
+        }
+        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Right, 1).SUCCESS)
+        {
+            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar6"))
+            {
+                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Right, 1);
+            }
+        }
+        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Right, 2).SUCCESS)
+        {
+            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar7"))
+            {
+                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Right, 2);
+            }
+        }
+        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Right, 3).SUCCESS)
+        {
+            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar8"))
+            {
+                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Right, 3);
+            }
+        }
+        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Left, 0).SUCCESS)
+        {
+            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar9"))
+            {
+                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Left, 0);
+            }
+        }
+        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Left, 1).SUCCESS)
+        {
+            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar10"))
+            {
+                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Left, 1);
+            }
+        }
+        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Left, 2).SUCCESS)
+        {
+            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar11"))
+            {
+                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Left, 2);
+            }
+        }
+        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Left, 3).SUCCESS)
+        {
+            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar12"))
+            {
+                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Left, 3);
+            }
+        }
+    }
+
+
     private void HandleSkillActions(string ContainerName)
     {
         if(player.Arsenal.CanCast(ContainerName, 0).SUCCESS)
-        {            
-            if(InputBuffer.Instance.IsActionPressedBuffered("ActionButton1", 350f))
+        {
+            if(InputBuffer.Instance.IsActionPressedBuffered("ActionButton1"))
             {
                 RpcId(1, nameof(TryTriggerSkill), ContainerName, 0);
             }
         }
         if(player.Arsenal.CanCast(ContainerName, 1).SUCCESS)
         {
-            if(InputBuffer.Instance.IsActionPressedBuffered("ActionButton2", 350f))
+            if(InputBuffer.Instance.IsActionPressedBuffered("ActionButton2"))
             {
                 RpcId(1, nameof(TryTriggerSkill), ContainerName, 1);
             }
-        }
+        }            
         if(player.Arsenal.CanCast(ContainerName, 2).SUCCESS)
         {
-            if(InputBuffer.Instance.IsActionPressedBuffered("ActionButton3", 350f))
+            if(InputBuffer.Instance.IsActionPressedBuffered("ActionButton3"))
             {
                 RpcId(1, nameof(TryTriggerSkill), ContainerName, 2);
             }
         }
         if(player.Arsenal.CanCast(ContainerName, 3).SUCCESS)
         {
-            if(InputBuffer.Instance.IsActionPressedBuffered("ActionButton4", 350f))
+            if(InputBuffer.Instance.IsActionPressedBuffered("ActionButton4"))
             {
                 RpcId(1, nameof(TryTriggerSkill), ContainerName, 3);
             }

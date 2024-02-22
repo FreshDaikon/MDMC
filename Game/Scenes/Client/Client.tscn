@@ -41,7 +41,7 @@ script = ExtResource("7_jq341")
 [node name="StateManager" type="Node" parent="Managers/Client"]
 script = ExtResource("9_u2a7f")
 
-[node name="InputBuffer" type="Node" parent="Managers/Client"]
+[node name="ActionBuffer" type="Node" parent="Managers/Client"]
 script = ExtResource("7_ubedu")
 
 [node name="SteamManager" type="Node" parent="Managers/Client"]
