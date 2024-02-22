@@ -1,4 +1,5 @@
 using System;
+using Daikon.Client;
 using Godot;
 
 namespace Daikon.Game;
@@ -56,8 +57,12 @@ public partial class PlayerEntity : Entity
 		{
 			IsLocalPlayer = true;
             camera.GetCamera().Current = true;
-            //PlayerHUD.Instance.activeCamera = camera.GetCamera();
+            UIHUDMain.Instance.activeCamera = camera.GetCamera();
+            GameManager.Instance.ConnectionStarted += () => {
+                RpcId(1, nameof(Reset));
+            };
             mover.QueueFree();
+
 		}
         else if(Multiplayer.GetUniqueId() == 1)
         {
@@ -79,6 +84,8 @@ public partial class PlayerEntity : Entity
         
         base._Process(delta);
     }
+    
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void Reset()
     {
         //Just reset arsenal for now:

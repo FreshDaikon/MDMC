@@ -58,8 +58,8 @@ public partial class RealizationObject: Node3D
             if(_target != null)
             {
                 var lapsedMult = Mathf.Max(1f, lapsed/Lifetime);
-                Position = Position.MoveToward(_target.Position, (Speed * lapsedMult) * (float)delta);
-                var distance = Position.DistanceSquaredTo(_target.Position);
+                Position = Position.MoveToward(_target.GlobalPosition, (Speed * lapsedMult) * (float)delta);
+                var distance = Position.DistanceSquaredTo(_target.GlobalPosition);
                 if(distance <= 0.01f )
                 {
                     OnEndStart();

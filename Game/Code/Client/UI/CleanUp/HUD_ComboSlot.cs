@@ -10,12 +10,12 @@ public partial class HUD_ComboSlot : Control
 	public int SlotIndex {get; set;}
 	
 	private Label ComboSlotLabel;
-	private ColorRect ComboGlowRect;
+	private TextureRect ComboGlowRect;
 	private PlayerEntity localPlayer;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		ComboGlowRect = GetNode<ColorRect>("%ComboGlow");
+		ComboGlowRect = GetNode<TextureRect>("%ComboGlow");
 		ComboSlotLabel = GetNode<Label>("%ComboNumber");
 		Visible = false;
 	}

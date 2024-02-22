@@ -43,8 +43,6 @@ public partial class TargetBar : Control
 			BarTarget = target;
 			Visible = true;
 			targetName.Text = target.EntityName;
-			GD.Print("Target Current Health :" + target.Status.CurrentHealth);
-			GD.Print("Target Max Health:" + target.Status.MaxHealth);
 			var healthPercent = 100f * ((float)target.Status.CurrentHealth / (float)target.Status.MaxHealth);
 			targetHealthPercent.Text = healthPercent.ToString( healthPercent < 5f ? "0.00" : "0") + "%";
 			targetHealthBar.Size = new Vector2( BarSize * ((float)target.Status.CurrentHealth / (float)target.Status.MaxHealth) , targetHealthBar.Size.Y);

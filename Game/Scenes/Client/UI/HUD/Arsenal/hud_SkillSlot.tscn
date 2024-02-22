@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cxax3of812334"]
+[gd_scene load_steps=14 format=3 uid="uid://cxax3of812334"]
 
 [ext_resource type="Script" path="res://Code/Client/UI/CleanUp/HUD_SkillSlot.cs" id="1_qsnqg"]
 [ext_resource type="Texture2D" uid="uid://cn7n8rp601m1f" path="res://Assets/UI/ArsenalSystem/Skill_Mask.png" id="2_u1ke1"]
@@ -7,12 +7,107 @@
 [ext_resource type="Texture2D" uid="uid://bvbvle8m8rqe5" path="res://Scenes/Client/UI/HUD/Arsenal/gcd_fill.tres" id="4_bdi82"]
 [ext_resource type="FontFile" uid="uid://bv4kqadqr0i2t" path="res://Assets/UI/Fonts/NotoSansJP-Medium.ttf" id="6_nqw6e"]
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_675ju"]
+blend_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_7hhmv"]
+blend_mode = 4
+
+[sub_resource type="Gradient" id="Gradient_f358c"]
+offsets = PackedFloat32Array(0.308448, 0.449902, 0.667976, 0.766208)
+colors = PackedColorArray(1, 0.937255, 0.631373, 0, 1, 0.937255, 0.631373, 0.584314, 1, 0.937255, 0.631373, 0.137255, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_hl7qb"]
+gradient = SubResource("Gradient_f358c")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="Animation" id="Animation_phmkt"]
+resource_name = "Trigger"
+length = 12.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Trigger:size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"update": 0,
+"values": []
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Trigger:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.0830471, 0.103346),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0.01, 0.01), Vector2(1, 1), Vector2(0.01, 0.01)]
+}
+
+[sub_resource type="Animation" id="Animation_1xx7d"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Trigger:size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(64, 64)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Trigger:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.01, 0.01)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qspk2"]
+_data = {
+"RESET": SubResource("Animation_1xx7d"),
+"Trigger": SubResource("Animation_phmkt")
+}
+
 [node name="SkillSlot" type="Control"]
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_qsnqg")
 gcdPath = "res://Scenes/Client/UI/HUD/Arsenal/gcd_fill.tres"
 ogcdPath = "res://Scenes/Client/UI/HUD/Arsenal/cd_fill.tres"
+
+[node name="OGCD" type="TextureProgressBar" parent="."]
+unique_name_in_owner = true
+material = SubResource("CanvasItemMaterial_675ju")
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -50.0
+offset_right = 50.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+value = 86.0
+fill_mode = 5
+texture_progress = ExtResource("4_bdi82")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 clip_children = 2
@@ -29,6 +124,7 @@ offset_bottom = 34.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_u1ke1")
+metadata/_edit_lock_ = true
 
 [node name="BG" type="ColorRect" parent="TextureRect"]
 unique_name_in_owner = true
@@ -80,6 +176,7 @@ metadata/_edit_lock_ = true
 
 [node name="GCD" type="TextureProgressBar" parent="SkillSlotMask"]
 unique_name_in_owner = true
+material = SubResource("CanvasItemMaterial_7hhmv")
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -95,25 +192,6 @@ grow_vertical = 2
 value = 77.0
 fill_mode = 5
 texture_progress = ExtResource("4_0wqda")
-metadata/_edit_lock_ = true
-
-[node name="OGCD" type="TextureProgressBar" parent="SkillSlotMask"]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -32.0
-offset_top = -32.0
-offset_right = 32.0
-offset_bottom = 32.0
-grow_horizontal = 2
-grow_vertical = 2
-value = 86.0
-fill_mode = 5
-texture_progress = ExtResource("4_bdi82")
 metadata/_edit_lock_ = true
 
 [node name="CDTimer" type="Label" parent="SkillSlotMask"]
@@ -138,3 +216,29 @@ text = "12
 "
 horizontal_alignment = 1
 vertical_alignment = 1
+metadata/_edit_lock_ = true
+
+[node name="Trigger" type="TextureRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.01, 0.01)
+pivot_offset = Vector2(32, 32)
+texture = SubResource("GradientTexture2D_hl7qb")
+expand_mode = 2
+
+[node name="TriggerPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_qspk2")
+}

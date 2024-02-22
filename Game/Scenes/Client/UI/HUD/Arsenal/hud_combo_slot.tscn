@@ -1,9 +1,20 @@
-[gd_scene load_steps=5 format=3 uid="uid://de5742ksrt2q4"]
+[gd_scene load_steps=7 format=3 uid="uid://de5742ksrt2q4"]
 
 [ext_resource type="Script" path="res://Code/Client/UI/CleanUp/HUD_ComboSlot.cs" id="1_a5jas"]
-[ext_resource type="Texture2D" uid="uid://dnshiwotimgv1" path="res://Assets/UI/Core/Blur_Drop.png" id="1_kep6p"]
 [ext_resource type="Texture2D" uid="uid://cn7n8rp601m1f" path="res://Assets/UI/ArsenalSystem/Skill_Mask.png" id="2_5obel"]
 [ext_resource type="FontFile" uid="uid://q3aynbg5gvis" path="res://Assets/UI/Fonts/LibreFranklin-BlackItalic.ttf" id="3_knylw"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_27l77"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_c2lnb"]
+offsets = PackedFloat32Array(0, 0.00196464, 0.56778, 0.59332)
+colors = PackedColorArray(1, 0.784314, 0.278431, 0.486647, 1, 0.784314, 0.278431, 1, 1, 0.729412, 0.278431, 0, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_1h3f0"]
+gradient = SubResource("Gradient_c2lnb")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
 
 [node name="ComboSlot" type="Control"]
 layout_mode = 3
@@ -14,26 +25,25 @@ offset_right = 10.0
 offset_bottom = -4.0
 script = ExtResource("1_a5jas")
 
-[node name="GlowMask" type="TextureRect" parent="."]
-modulate = Color(1, 0.815686, 0.309804, 1)
-clip_children = 1
-layout_mode = 0
-offset_left = -10.0
-offset_top = -10.0
-offset_right = 30.0
-offset_bottom = 30.0
-texture = ExtResource("1_kep6p")
-expand_mode = 1
-
-[node name="ComboGlow" type="ColorRect" parent="GlowMask"]
+[node name="ComboGlow" type="TextureRect" parent="."]
 unique_name_in_owner = true
+material = SubResource("CanvasItemMaterial_27l77")
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -50.0
+offset_right = 50.0
+offset_bottom = 50.0
 grow_horizontal = 2
 grow_vertical = 2
-metadata/_edit_lock_ = true
+scale = Vector2(0.5, 0.5)
+pivot_offset = Vector2(50, 50)
+texture = SubResource("GradientTexture2D_1h3f0")
+expand_mode = 2
 
 [node name="Blergh" type="TextureRect" parent="."]
 modulate = Color(0.333333, 0.482353, 0.486275, 1)

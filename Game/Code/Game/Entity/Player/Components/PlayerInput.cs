@@ -40,11 +40,6 @@ public partial class PlayerInput : Node
             return;
 
         HandleInputs();
-        if(Input.IsKeyPressed(Key.F2))
-        {
-            RpcId(1, nameof(RequestReset));
-        }
-
     }
 
     
@@ -98,9 +93,46 @@ public partial class PlayerInput : Node
             RpcId(1, nameof(RequestEnemyTargetChange), false);
         }
     }
-
     private void HandleHotbars()
     {
+        //Setup Triggers:
+        if(Input.IsActionJustPressed("Hotbar1"))
+        {
+            if(Input.IsKeyPressed(Key.Shift))
+                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Right, 0);
+            else if(Input.IsKeyPressed(Key.Ctrl))
+                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Left, 0);
+            else
+                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Main, 0);
+        }
+        if(Input.IsActionJustPressed("Hotbar2"))
+        {
+            if(Input.IsKeyPressed(Key.Shift))
+                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Right, 1);
+            else if(Input.IsKeyPressed(Key.Ctrl))
+                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Left, 1);
+            else
+                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Main, 1);
+        }
+        if(Input.IsActionJustPressed("Hotbar3"))
+        {
+            if(Input.IsKeyPressed(Key.Shift))
+                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Right, 2);
+            else if(Input.IsKeyPressed(Key.Ctrl))
+                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Left, 2);
+            else
+                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Main, 2);
+        }
+        if(Input.IsActionJustPressed("Hotbar4"))
+        {
+            if(Input.IsKeyPressed(Key.Shift))
+                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Right, 3);
+            else if(Input.IsKeyPressed(Key.Ctrl))
+                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Left, 3);
+            else
+                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Main, 3);
+        }
+
         if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Main, 0).SUCCESS)
         {
             if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar1"))
@@ -190,6 +222,23 @@ public partial class PlayerInput : Node
 
     private void HandleSkillActions(string ContainerName)
     {
+        //Setup Triggers:
+        if(Input.IsActionPressed("ActionButton1"))
+        {
+            EmitSignal(SignalName.ActionButtonPressed, ContainerName, 0);
+        }
+        if(Input.IsActionPressed("ActionButton2"))
+        {
+            EmitSignal(SignalName.ActionButtonPressed, ContainerName, 1);
+        }
+        if(Input.IsActionPressed("ActionButton3"))
+        {
+            EmitSignal(SignalName.ActionButtonPressed, ContainerName, 2);
+        }
+        if(Input.IsActionPressed("ActionButton4"))
+        {
+            EmitSignal(SignalName.ActionButtonPressed, ContainerName, 3);
+        }
         if(player.Arsenal.CanCast(ContainerName, 0).SUCCESS)
         {
             if(InputBuffer.Instance.IsActionPressedBuffered("ActionButton1"))
@@ -223,11 +272,11 @@ public partial class PlayerInput : Node
     private void HandleMovement()
     {
         Direction = Vector3.Zero;
-        if(Input.IsActionJustPressed("Jump") && Activators() != true)
+        if(Input.IsActionPressed("Jump") && Activators() != true)
         {
             Rpc(nameof(Jump));
         }     
-        if(Input.IsActionJustPressed("Dash") && Activators() != true)
+        if(Input.IsActionPressed("Dash") && Activators() != true)
         {
             Rpc(nameof(Dash));
         }  
@@ -320,15 +369,6 @@ public partial class PlayerInput : Node
                 int newIndex = Mathf.Wrap(index, 0, enemies.Count);
                 player.TargetId = int.Parse(enemies[newIndex].Name);
             }
-        }
-    }
-
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void RequestReset()
-    {
-        if(Multiplayer.IsServer())
-        {
-            player.Reset();
         }
     }
 

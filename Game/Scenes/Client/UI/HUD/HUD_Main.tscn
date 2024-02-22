@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://cj5m27jrog0rj" path="res://Scenes/Client/UI/HUD/Arsenal/hud_skill_container.tscn" id="7_55lo1"]
 [ext_resource type="FontFile" uid="uid://xv28cftjto52" path="res://Assets/UI/Fonts/twoweekendssans-regular.otf" id="8_aw1je"]
 
-[node name="HUD_Main" type="Control"]
+[node name="HUD_Main" type="Control" node_paths=PackedStringArray("dmgNumberContainer")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,6 +17,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_poobr")
+dmgNumberPath = "res://Scenes/Client/UI/HUD/Elements/DamageNumber/DamageNumber.tscn"
+dmgNumberContainer = NodePath("DmgNumberContainer")
 metadata/_edit_lock_ = true
 
 [node name="DmgNumberContainer" type="Control" parent="."]

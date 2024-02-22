@@ -5,9 +5,6 @@ namespace Daikon.Helpers;
 
 public partial class InputBuffer : Node
 {
-    [Export]
-    public float BufferWindow = 200f;
-
     public static InputBuffer Instance { get; private set; }
     private Dictionary<string, ulong> _keyboardStamps;
     private Dictionary<string, ulong> _joyStamps;
@@ -65,7 +62,7 @@ public partial class InputBuffer : Node
         }
     }
 
-    public bool IsActionPressedBuffered(string action)
+    public bool IsActionPressedBuffered(string action, float BufferWindow = 300)
     {
         foreach(InputEvent @event in InputMap.ActionGetEvents(action))
         {            

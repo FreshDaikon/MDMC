@@ -15,6 +15,8 @@ public partial class HUD_SkillSlot : Control
 	public string ogcdPath;
 	public TextureProgressBar GCDBar;
 	public TextureProgressBar OGCDBar;
+	public TextureRect Trigger;
+	public AnimationPlayer TriggerPlayer;
 	public Label CDTimer;
 	public ColorRect Background;	
 	private PlayerEntity localPlayer;
@@ -23,8 +25,10 @@ public partial class HUD_SkillSlot : Control
 	{
 		GCDBar = GetNode<TextureProgressBar>("%GCD");
 		OGCDBar = GetNode<TextureProgressBar>("%OGCD");
+		Trigger = GetNode<TextureRect>("%Trigger");
+		TriggerPlayer = GetNode<AnimationPlayer>("%TriggerPlayer");
 		Background = GetNode<ColorRect>("%BG");
-		CDTimer = GetNode<Label>("%CDTimer");
+		CDTimer = GetNode<Label>("%CDTimer");	
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -39,6 +43,10 @@ public partial class HUD_SkillSlot : Control
 			if(players == null)
 				return;
 			localPlayer = players.Find(p => p.Name == Multiplayer.GetUniqueId().ToString());			
+			if(localPlayer != null)
+			{
+				localPlayer.playerInput.ActionButtonPressed += (container, slot) => TriggerTrigger(container, slot); 
+			}
 		}
 		else
 		{
@@ -91,6 +99,15 @@ public partial class HUD_SkillSlot : Control
 				GCDBar.Value = 0;
 			}
 			
+		}
+	}
+
+	private void TriggerTrigger(string container, int slot)
+	{
+		if(container == ContainerName && slot == SkillSlot)
+		{
+			TriggerPlayer.Stop();
+			TriggerPlayer.Play("Trigger");
 		}
 	}
 }

@@ -18,7 +18,7 @@ public partial class DamageNumber : Control
 	{
 		var ran = new RandomNumberGenerator();
 		_worldPos = worldPos + new Vector3(ran.RandfRange(-0.6f, 0.6f), ran.RandfRange(-0.6f, 0.6f), ran.RandfRange(-0.6f, 0.6f));
-		camera = PlayerHUD.Instance.activeCamera;
+		camera = UIHUDMain.Instance.activeCamera;
 		UIPos = camera.UnprojectPosition(_worldPos);
 		label.Text = value;
 		label.AddThemeColorOverride("font_color", color);

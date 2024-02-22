@@ -1,5 +1,6 @@
 using Godot;
 using Daikon.Helpers;
+using Daikon.Client;
 
 namespace Daikon.Game;
 
@@ -23,6 +24,7 @@ public partial class DamageNumberRealization : RealizationObject
     }
     public override void SpawnWithTarget(Node3D target, Vector3 startPosition)
     {
+        GD.Print("Spawning with target!");
         base.SpawnWithTarget(target, startPosition);
         color = Type switch
         {
@@ -36,7 +38,6 @@ public partial class DamageNumberRealization : RealizationObject
 
     public override void OnEndStart()
     {        
-        //PlayerHUD.Instance.SpawnDamageNumber(Value.ToString(), color, Position);
-        base.OnEndStart();
+        UIHUDMain.Instance.SpawnDamageNumber(Value.ToString(), color, Position);
     }
 }
