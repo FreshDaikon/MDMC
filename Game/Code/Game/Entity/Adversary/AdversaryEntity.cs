@@ -43,6 +43,11 @@ public partial class AdversaryEntity : Entity
         }
     }
 
+    public void Defeat()
+    {
+        //Implement defeat once all adversaries are dead.
+    }
+
     public Entity GetThreat(int position)
     {
         if(threatTable.Count > 0)
@@ -81,8 +86,8 @@ public partial class AdversaryEntity : Entity
     public void Reset()
     {
         Status.Reset( );
-        threatTable = new Dictionary<Entity, float>();
-        damageTable = new Dictionary<Entity, float>();
+        threatTable.Clear();
+        damageTable.Clear();
         Controller.Teleport(StartPosition.Position);
     }
 }
