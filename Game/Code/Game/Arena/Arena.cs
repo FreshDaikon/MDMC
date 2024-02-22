@@ -99,6 +99,8 @@ public partial class Arena : Node3D
             .Cast<Entity>()
             .Where(e => e.Team == Entity.TeamType.Foe)
             .ToList();
+        if(enemies.Count == 0)
+            return -1;
         MD.Log("Index : " + enemies.IndexOf(enemies.Find(p => p.Name == id.ToString())));
         return enemies.IndexOf(enemies.Find(p => p.Name == id.ToString()));        
     }
@@ -111,6 +113,8 @@ public partial class Arena : Node3D
             .Cast<Entity>()
             .Where(e => e.Team == Entity.TeamType.Friend)
             .ToList();
+        if(friends.Count == 0)
+            return -1;
         MD.Log("Index : " + friends.IndexOf(friends.Find(p => p.Name == id.ToString())));
         return friends.IndexOf(friends.Find(p => p.Name == id.ToString())); 
     }
@@ -131,7 +135,9 @@ public partial class Arena : Node3D
         var players = EntityContainer.GetChildren()
             .Where(child => child is PlayerEntity)
             .Cast<PlayerEntity>()
-            .ToList();        
+            .ToList();     
+        if(players.Count == 0)
+            return null;   
         return players;
     }
     public List<Entity> GetFriendlyEntities()
@@ -143,6 +149,8 @@ public partial class Arena : Node3D
             .Cast<Entity>()
             .Where(e => e.Team == Entity.TeamType.Friend)
             .ToList();        
+        if(entities.Count == 0)
+            return null;
         return entities;
     }
     public List<Entity> GetEnemyEntities()
@@ -154,6 +162,8 @@ public partial class Arena : Node3D
             .Cast<Entity>()
             .Where(e => e.Team == Entity.TeamType.Foe)
             .ToList();        
+        if(entities.Count == 0)
+            return null;
         return entities;
     }
 }
