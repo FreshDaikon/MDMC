@@ -43,6 +43,8 @@ public partial class Skill : Node
     public float ChannelTime = 0f;
     [Export]
     public float TickRate = 1f;
+    [Export]
+    public float ThreatMultiplier = 1f;
 
     [ExportGroup("Standard Realizations")]
     [Export(PropertyHint.File)]
@@ -101,6 +103,7 @@ public partial class Skill : Node
         {
             SkillType = GetParent().GetParent<SkillSlot>().SlotSkillType;
         }
+        ThreatMultiplier =  GetParent().GetParent<SkillSlot>().ThreatMultiplier;
     }
     public void Reset()
     {

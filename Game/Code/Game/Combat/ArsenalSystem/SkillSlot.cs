@@ -11,6 +11,8 @@ public partial class SkillSlot : Node
     public MD.SkillType SlotSkillType { get; set; }
     [Export]
     public float PotencyMultiplier = 1.0f;
+    [Export]
+    public float ThreatMultiplier = 1.0f;
     [ExportGroup("System Properties")]
     [Export(PropertyHint.Dir)]
     private string skillsPath;

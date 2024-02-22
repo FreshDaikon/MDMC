@@ -70,7 +70,7 @@ top_radius = 20.0
 bottom_radius = 20.0
 height = 1.0
 
-[node name="ArenaName" type="Node3D"]
+[node name="TestArena" type="Node3D"]
 script = ExtResource("1_1mb5o")
 ID = SubResource("Resource_gja5r")
 

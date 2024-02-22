@@ -38,11 +38,6 @@ public partial class CombatManager: Node
 
     public void AddCombatMessage(CombatMessage message)
     {
-        if(!IsInCombat)
-        {
-            CombatStartTime = GameManager.Instance.ServerTick;
-            IsInCombat = true;
-        }
         UpdateEntityTracker(message);
         Messages.Add(message);
         Rpc(nameof(CombatMessageRelay), message.Caster, message.Target, message.Effect, message.Value, (int)message.MessageType );

@@ -36,6 +36,15 @@ public partial class EntityStatus : Node
     private RandomNumberGenerator random;
 
 
+    //Signals
+    [Signal]
+    public delegate void DamageTakenEventHandler(float damage, Entity entity);
+    [Signal]
+    public delegate void HealTakenEventHandler(float heal, Entity entity);
+    [Signal]
+    public delegate void KnockedOutEventHandler();
+
+
     public override void _Ready()
     {
         random = new RandomNumberGenerator();
@@ -59,7 +68,8 @@ public partial class EntityStatus : Node
         }        
         return modGCD;
     }
-    public int InflictDamage(int amount)
+    
+    public int InflictDamage(int amount, Entity entity)
     {
         var workingValue = amount;
         float variance = random.RandfRange(1.0f, 1.05f);
@@ -95,13 +105,16 @@ public partial class EntityStatus : Node
         if(CurrentHealth <= 0)
         {
             CurrentHealth = 0;
+            //TODO: knock out entity!
+            EmitSignal(SignalName.KnockedOut);
             MD.Log("Entity got knocked out!");
         }
         MD.Log("I took :" + workingValue + " Damage!");
+        EmitSignal(SignalName.DamageTaken, (float)workingValue);
         return workingValue;
     }
 
-    public int InflictHeal(int amount)
+    public int InflictHeal(int amount, Entity entity)
     {
         float variance = random.RandfRange(1f, 1.1f);
         amount = (int)(amount * variance);
@@ -119,6 +132,7 @@ public partial class EntityStatus : Node
             CurrentHealth = MaxHealth;
         }
         MD.Log("I Was Healed for :" + adjusted + " Health!");
+        EmitSignal(SignalName.HealTaken, (float)adjusted);
         return adjusted;
     }
    
@@ -161,5 +175,10 @@ public partial class EntityStatus : Node
         {
             MaxHealth -= (int)mod.Value;
         }
+    }
+
+    public void Reset()
+    {
+        CurrentHealth = MaxHealth;
     }
 }

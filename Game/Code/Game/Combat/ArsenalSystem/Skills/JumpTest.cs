@@ -11,8 +11,9 @@ public partial class JumpTest : Skill
         if(!Multiplayer.IsServer())
             return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.NOT_SERVER };
 
-        var target = Player.CurrentTarget.Status;
-        var dmgDone = target.InflictDamage(AdjustedPotency);
+        var target =  (AdversaryStatus)Player.CurrentTarget.Status;
+        var dmgDone = target.InflictDamage(AdjustedPotency, Player);
+        target.InflictThreat(dmgDone * ThreatMultiplier, Player);
         var message = new CombatMessage()
         {
             Caster = int.Parse(Player.Name),
