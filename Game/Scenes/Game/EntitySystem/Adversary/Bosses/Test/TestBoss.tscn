@@ -75,7 +75,7 @@ unique_name_in_owner = true
 [node name="EntityStatus" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("6_ahpdf")
-MaxHealth = 500000
+MaxHealth = 50000
 
 [node name="Controller" type="CharacterBody3D" parent="."]
 unique_name_in_owner = true

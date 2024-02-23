@@ -18,6 +18,9 @@ public partial class EntityStatus : Node
     [Export]
     public int MaxHealth = 10000;
     #endregion
+    #region SHIELD
+    public int CurrentShield = 10000;
+    #endregion
     //----------------------------------------------------------
     #region MITIGATION
     [Export]
@@ -104,6 +107,14 @@ public partial class EntityStatus : Node
             activeMits *= mod.Value;
         }
         workingValue = (int)(workingValue * activeMits);
+        if(CurrentShield > 0)
+        {
+            var stored = workingValue;
+            workingValue =  Mathf.Clamp( workingValue - CurrentShield, 0, workingValue);
+            MD.Log("New working Value is " + workingValue);
+            CurrentShield = Mathf.Clamp(CurrentShield - stored, 0, CurrentShield);
+            Rpc(nameof(UpdateShields), CurrentShield);
+        }
         CurrentHealth -= workingValue;
         if(CurrentHealth <= 0)
         {
@@ -139,6 +150,13 @@ public partial class EntityStatus : Node
         EmitSignal(SignalName.HealTaken, (float)adjusted);
         Rpc(nameof(UpdateHealth), CurrentHealth);
         return adjusted;
+    }
+
+    public int InflictShield(int amount, Entity entity)
+    {
+        CurrentShield += amount;
+        Rpc(nameof(UpdateShields), CurrentShield);
+        return CurrentShield;
     }
    
     public float GetCurrentSpeed()
@@ -197,6 +215,11 @@ public partial class EntityStatus : Node
     private void UpdateHealth(int newHealth)
     {
         CurrentHealth = newHealth;
+    }
+    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void UpdateShields(int newShield)
+    {
+        CurrentShield = newShield;
     }
 
     private void UpdateStatMods()

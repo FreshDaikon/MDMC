@@ -3,9 +3,9 @@
 [ext_resource type="Script" path="res://Code/Client/UI/HUD/UIHUDMain.cs" id="1_poobr"]
 [ext_resource type="PackedScene" uid="uid://d0fgtib258a7k" path="res://Scenes/Client/UI/HUD/Elements/DamageMeter/Damage_Meter.tscn" id="2_t5a6y"]
 [ext_resource type="PackedScene" uid="uid://cj1yyie770nrc" path="res://Scenes/Client/UI/HUD/Elements/TimerBars/Cast_Bar.tscn" id="3_27437"]
+[ext_resource type="PackedScene" uid="uid://c7ur3s0qe1nca" path="res://Scenes/Client/UI/HUD/UnitFrames/PartyFrame.tscn" id="3_iqjgc"]
+[ext_resource type="PackedScene" uid="uid://4nf73m4b57o1" path="res://Scenes/Client/UI/HUD/UnitFrames/EnemyList.tscn" id="4_4w6gs"]
 [ext_resource type="PackedScene" uid="uid://c3nva5iqe38aq" path="res://Scenes/Client/UI/HUD/Elements/TimerBars/Channel_Bar.tscn" id="4_cntgf"]
-[ext_resource type="PackedScene" uid="uid://cwh6awh6v5gr8" path="res://Scenes/Client/UI/HUD/Elements/Target/Target_Friendly.tscn" id="5_jsa1w"]
-[ext_resource type="PackedScene" uid="uid://dqc2ol81a8nmg" path="res://Scenes/Client/UI/HUD/Elements/Target/Target_Enemy.tscn" id="6_rd5gx"]
 [ext_resource type="PackedScene" uid="uid://cj5m27jrog0rj" path="res://Scenes/Client/UI/HUD/Arsenal/hud_skill_container.tscn" id="7_55lo1"]
 [ext_resource type="FontFile" uid="uid://xv28cftjto52" path="res://Assets/UI/Fonts/twoweekendssans-regular.otf" id="8_aw1je"]
 
@@ -41,6 +41,38 @@ offset_right = 10.0
 offset_bottom = -14.0
 grow_vertical = 0
 
+[node name="LeftCenter" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 15.0
+offset_top = -259.0
+offset_right = 55.0
+offset_bottom = -219.0
+grow_vertical = 2
+
+[node name="PartyFrame" parent="LeftCenter" instance=ExtResource("3_iqjgc")]
+layout_mode = 1
+
+[node name="RightCenter" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = -255.0
+offset_bottom = -215.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="EnemyList" parent="RightCenter" instance=ExtResource("4_4w6gs")]
+layout_mode = 1
+offset_left = -183.0
+offset_right = -183.0
+
 [node name="TopCenter" type="Control" parent="."]
 layout_mode = 1
 anchors_preset = 5
@@ -51,27 +83,6 @@ offset_top = 64.0
 offset_right = 5.0
 offset_bottom = 74.0
 grow_horizontal = 2
-
-[node name="TargetFriend" parent="TopCenter" instance=ExtResource("5_jsa1w")]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -205.0
-offset_top = -5.0
-offset_right = 145.0
-offset_bottom = -5.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="TargetEnemy" parent="TopCenter" instance=ExtResource("6_rd5gx")]
-layout_mode = 1
-offset_left = 200.0
-offset_top = 1.0
-offset_right = 200.0
-offset_bottom = 1.0
 
 [node name="CenterCenter" type="Control" parent="."]
 layout_mode = 1

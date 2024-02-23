@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://4nf73m4b57o1"]
+
+[ext_resource type="Script" path="res://Code/Client/UI/HUD/UnitFrames/UI_EnemyList.cs" id="1_gl2rs"]
+[ext_resource type="PackedScene" uid="uid://cplev7d1ykh7j" path="res://Scenes/Client/UI/HUD/UnitFrames/UnitFrame.tscn" id="2_2fg42"]
+
+[node name="EnemyList" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_gl2rs")
+UnitFrameAsset = ExtResource("2_2fg42")
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="Layout"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Enemies"
+horizontal_alignment = 2
+
+[node name="EnemyContainer" type="VBoxContainer" parent="Layout"]
+unique_name_in_owner = true
+layout_mode = 2

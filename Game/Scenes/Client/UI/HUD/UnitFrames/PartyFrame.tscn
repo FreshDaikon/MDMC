@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://c7ur3s0qe1nca"]
+
+[ext_resource type="PackedScene" uid="uid://cplev7d1ykh7j" path="res://Scenes/Client/UI/HUD/UnitFrames/UnitFrame.tscn" id="1_23ms4"]
+[ext_resource type="Script" path="res://Code/Client/UI/HUD/UnitFrames/UI_PartyFrame.cs" id="1_macan"]
+
+[node name="PartyFrame" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_macan")
+UnitFrameAsset = ExtResource("1_23ms4")
+
+[node name="OverallContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="OverallContainer"]
+layout_mode = 2
+text = "Party Members"
+
+[node name="PlayerContainer" type="VBoxContainer" parent="OverallContainer"]
+unique_name_in_owner = true
+layout_mode = 2
