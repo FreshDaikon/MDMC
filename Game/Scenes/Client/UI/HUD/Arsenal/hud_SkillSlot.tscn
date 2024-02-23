@@ -11,7 +11,7 @@
 blend_mode = 1
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_7hhmv"]
-blend_mode = 4
+blend_mode = 3
 
 [sub_resource type="Gradient" id="Gradient_f358c"]
 offsets = PackedFloat32Array(0.308448, 0.449902, 0.667976, 0.766208)
@@ -21,6 +21,33 @@ colors = PackedColorArray(1, 0.937255, 0.631373, 0, 1, 0.937255, 0.631373, 0.584
 gradient = SubResource("Gradient_f358c")
 fill = 1
 fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="Animation" id="Animation_1xx7d"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Trigger:size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(64, 64)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Trigger:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.01, 0.01)]
+}
 
 [sub_resource type="Animation" id="Animation_phmkt"]
 resource_name = "Trigger"
@@ -50,33 +77,6 @@ tracks/1/keys = {
 "values": [Vector2(0.01, 0.01), Vector2(1, 1), Vector2(0.01, 0.01)]
 }
 
-[sub_resource type="Animation" id="Animation_1xx7d"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Trigger:size")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(64, 64)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Trigger:scale")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0.01, 0.01)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_qspk2"]
 _data = {
 "RESET": SubResource("Animation_1xx7d"),
@@ -92,6 +92,7 @@ ogcdPath = "res://Scenes/Client/UI/HUD/Arsenal/cd_fill.tres"
 
 [node name="OGCD" type="TextureProgressBar" parent="."]
 unique_name_in_owner = true
+visible = false
 material = SubResource("CanvasItemMaterial_675ju")
 layout_mode = 1
 anchors_preset = 8
@@ -197,21 +198,21 @@ metadata/_edit_lock_ = true
 [node name="CDTimer" type="Label" parent="SkillSlotMask"]
 unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 8
+anchors_preset = 7
 anchor_left = 0.5
-anchor_top = 0.5
+anchor_top = 1.0
 anchor_right = 0.5
-anchor_bottom = 0.5
+anchor_bottom = 1.0
 offset_left = -30.0
-offset_top = -30.0
+offset_top = -41.78
 offset_right = 30.0
-offset_bottom = 30.0
+offset_bottom = 18.22
 grow_horizontal = 2
-grow_vertical = 2
+grow_vertical = 0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 4
 theme_override_fonts/font = ExtResource("6_nqw6e")
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 15
 text = "12
 "
 horizontal_alignment = 1

@@ -98,7 +98,6 @@ public partial class ClientMultiplayerManager: Node
         if(!_hasData)  
             return false;
         // Continue:
-        Engine.MaxFps = 120;
         GD.Print("Prepare MP Client - connect to server...");
         var error = _clientPeer.CreateClient(_hostUrl, _hostPort);
         if(error != Error.Ok)

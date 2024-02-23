@@ -71,20 +71,28 @@ public partial class HUD_SkillSlot : Control
 			if(skill.TimerType == MD.SkillTimerType.GCD)
 			{
 				var GCD = localPlayer.Arsenal.GetArsenalGCD();
-				var GCDStartTime = localPlayer.Arsenal.GCDStartTime;				
+				var GCDStartTime = localPlayer.Arsenal.GCDStartTime;		
+				var GCDLapsed = Mathf.Clamp((GameManager.Instance.ServerTick - GCDStartTime) / 1000f, 0, GCD);	
+				var GCDLeft = GCD - GCDLapsed;				
+				var GCDPercent = 100 - ((float)GCDLapsed / (float)GCD * 100f);
 
 				if(skill.Cooldown > 0f)
 				{
 					var CD = skill.Cooldown;
 					var CDStartTime = skill.StartTime;
-					var CDLapsed = (GameManager.Instance.ServerTick - CDStartTime) / 1000f;
+					var CDLapsed = Mathf.Clamp((GameManager.Instance.ServerTick - CDStartTime) / 1000f, 0, CD);
 					var CDPercent = 100 - ((float)CDLapsed / (float)CD * 100f);
+					var CDLeft = CD - CDLapsed;
 					CDTimer.Text = (skill.Cooldown - CDLapsed).ToString((skill.Cooldown - CDLapsed) < 5 ? "0.0" : "0");
-					OGCDBar.Value = CDPercent;
+					
+					var highest = CDLeft > GCDLeft ? CDPercent : GCDPercent;
+					GCDBar.Value = highest;
 				}
-				var GCDLapsed = (GameManager.Instance.ServerTick - GCDStartTime) / 1000f;					
-				var GCDPercent = 100 - ((float)GCDLapsed / (float)GCD * 100f);
-				GCDBar.Value = 100 - ((float)GCDLapsed / (float)GCD * 100f);
+				else
+				{
+					GCDBar.Value = 100 - ((float)GCDLapsed / (float)GCD * 100f);
+				}
+
 			}
 			else if(skill.TimerType == MD.SkillTimerType.OGCD)
 			{
