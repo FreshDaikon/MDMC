@@ -32,17 +32,14 @@ public partial class PlayerInput : Node
         camera = player.GetNode<PlayerCamera>("%Rig");       
         synchronizer = GetNode<MultiplayerSynchronizer>("%Sync"); 
     }
-    public override void _PhysicsProcess(double delta)
+    public override void _Process(double delta)
     {
         if(GetMultiplayerAuthority() != Multiplayer.GetUniqueId())
             return;
         if(!StateManager.Instance.HasFocus)
             return;
-
         HandleInputs();
-    }
-
-    
+    }    
 
     private bool Activators()
     {
@@ -272,11 +269,11 @@ public partial class PlayerInput : Node
     private void HandleMovement()
     {
         Direction = Vector3.Zero;
-        if(Input.IsActionPressed("Jump") && Activators() != true)
+        if(Input.IsActionJustPressed("Jump") && Activators() != true)
         {
             Rpc(nameof(Jump));
         }     
-        if(Input.IsActionPressed("Dash") && Activators() != true)
+        if(Input.IsActionJustPressed("Dash") && Activators() != true)
         {
             Rpc(nameof(Dash));
         }  

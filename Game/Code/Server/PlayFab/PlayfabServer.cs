@@ -67,11 +67,13 @@ public partial class PlayfabServer : Node
             return true;
         });
         GameserverSDK.RegisterShutdownCallback(() => {
+            GetTree().Root.PropagateNotification((int)NotificationWMCloseRequest);
             GetTree().Quit();
         }); 
         GameserverSDK.RegisterMaintenanceCallback((time) => {
             MD.Log(MD.Runtime.PlayfabServer, "", "Maintenance shutdown in : " + time.ToString());
             // Just shut down right now... whatever.
+            GetTree().Root.PropagateNotification((int)NotificationWMCloseRequest);
             GetTree().Quit();
         }); 
         IDictionary<string, string> config = GameserverSDK.getConfigSettings();
@@ -94,12 +96,14 @@ public partial class PlayfabServer : Node
                 else 
                 {
                     GameserverSDK.LogMessage("Server could not be started..shutdown");
+                    GetTree().Root.PropagateNotification((int)NotificationWMCloseRequest);
                     GetTree().Quit();
                 }
             }
             else
             {
                 GameserverSDK.LogMessage("Server could not be started..shutdown");
+                GetTree().Root.PropagateNotification((int)NotificationWMCloseRequest);
                 GetTree().Quit();
             }  
         }
@@ -115,6 +119,7 @@ public partial class PlayfabServer : Node
             else 
             {
                 GameserverSDK.LogMessage("Server could not be started..shutdown");
+                GetTree().Root.PropagateNotification((int)NotificationWMCloseRequest);
                 GetTree().Quit();
             }
         }

@@ -47,6 +47,7 @@ public partial class ServerManager : Node3D
                     peer.DisconnectPeer(player);
                 }
             }
+            GetTree().Root.PropagateNotification((int)NotificationWMCloseRequest);
             GetTree().Quit();
         }
     }
@@ -175,6 +176,7 @@ public partial class ServerManager : Node3D
         if(Multiplayer.GetPeers().Length <= 0)
         {
             MD.Log(MD.Runtime.Server, "*", "No Peers remaining after last disconnect - shutting down.");
+            GetTree().Root.PropagateNotification((int)NotificationWMCloseRequest);
             GetTree().Quit();
         }
 

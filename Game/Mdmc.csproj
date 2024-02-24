@@ -13,10 +13,6 @@
     <PackageReference Include="SmartFormat.NET" Version="3.3.0" />    
   </ItemGroup>  
   <ItemGroup Condition="'$(DaikonTarget)' == 'Server'">
-    <Content Remove="Code\Client\**" />
-    <Compile Remove="Code\Client\**" />
-    <EmbeddedResource Remove="Code\Client\**" />
-    <None Remove="Code\Client\**" />
   </ItemGroup>
   <ItemGroup Condition="'$(GodotFeatures)' == 'Client'">
     <Content Remove="Code\Server\**" />
