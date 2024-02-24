@@ -25,6 +25,13 @@ public partial class UI_PartyFrame : Control
 		if(players != null)
 		{
 			var playerFrames = PlayerContainer.GetChildren().Where(x => x is UI_UnitFrame).Cast<UI_UnitFrame>().ToList();		
+			foreach(UI_UnitFrame frame in playerFrames)
+            {
+                if(!players.Any(n => n == frame.GetEntity()))
+                {
+                    frame.QueueFree();
+                }
+            }
 			foreach(PlayerEntity player in players)
 			{
 				if(playerFrames.Any(e => e.GetEntity() == player))

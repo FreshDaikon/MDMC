@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://dkewiv4f333eh"]
+[gd_scene load_steps=18 format=3 uid="uid://dkewiv4f333eh"]
 
 [ext_resource type="Script" path="res://Code/Game/Entity/Player/PlayerEntity.cs" id="1_6j6p2"]
 [ext_resource type="PackedScene" uid="uid://g1ekudtsi5t0" path="res://Scenes/Game/EntitySystem/Player/Components/PlayerInput.tscn" id="3_1ru0t"]
@@ -43,6 +43,9 @@ emission_enabled = true
 emission = Color(1, 0, 0, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_qorjo"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_3rwg6"]
+viewport_path = NodePath("Controller/SubViewport")
 
 [node name="PlayerEntity" type="Node3D"]
 script = ExtResource("1_6j6p2")
@@ -94,5 +97,8 @@ texture_albedo = SubResource("GradientTexture2D_hrlgr")
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0.0527783, 0)
 material_override = SubResource("StandardMaterial3D_pvarx")
 mesh = SubResource("SphereMesh_qorjo")
+
+[node name="Sprite3D" type="Sprite3D" parent="Controller"]
+texture = SubResource("ViewportTexture_3rwg6")
 
 [editable path="Controller/Hero_Male_Base2"]

@@ -154,11 +154,12 @@ public partial class Skill : Node
         var check = CheckSkill();
         if(check.SUCCESS)
         {
+            GD.Print("Start Casting!");
             Rpc(nameof(RealizeCast));
             Player.Arsenal.StartCasting(this);
             startCastTime = GameManager.Instance.ServerTick;
             isCasting = true;
-            return new SkillResult(){ result = MD.ActionResult.CAST };
+            return new SkillResult(){SUCCESS = true, result = MD.ActionResult.CAST };
         }
         return check;        
     }
@@ -182,23 +183,30 @@ public partial class Skill : Node
     
     public void InteruptCast()
     {
-        isCasting = false;
-        Rpc(nameof(CancelRealization));        
+        GD.Print("try interupt casting.");
+        if(isCasting)
+        {
+            isCasting = false;        
+            Rpc(nameof(CancelRealization));        
+        }
     }
   
     public void InteruptChannel()
     {
-        Rpc(nameof(CancelRealization));
-        isChanneling = false;
-        ticks = 0;
-        lastLapse = 0;
+
+        if(isChanneling)
+        {
+            Rpc(nameof(CancelRealization));
+            isChanneling = false;
+            ticks = 0;
+            lastLapse = 0;
+        }
     }    
     
     public override void _PhysicsProcess(double delta)
     {
         if(!Multiplayer.IsServer())
             return;
-
         if(isCasting)
         {
             float lapsed = (GameManager.Instance.ServerTick - startCastTime) / 1000f;
@@ -210,7 +218,7 @@ public partial class Skill : Node
                 {
                     StartTime = GameManager.Instance.ServerTick;
                     Rpc(nameof(SyncCooldown), StartTime);
-                }
+                } 
                 var Result = TriggerResult();
                 Player.Arsenal.FinishCasting(Result);
             }
@@ -282,12 +290,12 @@ public partial class Skill : Node
     }    
     public virtual SkillResult TriggerResult()
     {
-        GD.PrintErr("Please Override this implementation! (sorry, cant do abstraction with nodes haha!)");
+        GD.PrintErr("Please Override this implementation!");
         return new SkillResult(){ SUCCESS = true, result = MD.ActionResult.CAST };
     }
     public virtual SkillResult CheckSkill()
     {
-        GD.PrintErr("Please Override this implementation! (sorry, cant do abstract haha!)");
+        GD.PrintErr("Please Override this implementation!");
         return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.INVALID_TARGET }; 
     }
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]

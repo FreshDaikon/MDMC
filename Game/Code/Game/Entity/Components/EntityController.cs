@@ -16,6 +16,8 @@ public partial class EntityController : CharacterBody3D
     public Vector3 SavedPosition;
     public Vector3 SavedRotation;
 
+    public float CurrentFactor = 1f;
+
     public override void _PhysicsProcess(double delta)
     {
         if(Multiplayer.IsServer())
@@ -25,9 +27,10 @@ public partial class EntityController : CharacterBody3D
         }        
         else
         {
-            UpdateController();           
+            UpdateController();       
         }
     }
+
     public virtual void UpdateController()
     {  
         if(GameManager.Instance.ServerTick == 0)
@@ -55,6 +58,7 @@ public partial class EntityController : CharacterBody3D
                 var newRotation = entityStatesBuffer[1].Rotation.Lerp(entityStatesBuffer[2].Rotation, interpolationFactor);
                 SavedPosition = newPosition;
                 SavedRotation = newRotation;
+                CurrentFactor = interpolationFactor;
                 UpdatePosition();
                 UpdateRotation();
             }
@@ -70,6 +74,7 @@ public partial class EntityController : CharacterBody3D
                 var positonDelta = (entityStatesBuffer[1].Position - entityStatesBuffer[0].Position);
                 var newPosition = entityStatesBuffer[1].Position + positonDelta * extrapolationFactor;
                 var newRotation = entityStatesBuffer[1].Rotation.Lerp(entityStatesBuffer[2].Rotation, extrapolationFactor);
+                CurrentFactor = extrapolationFactor;
                 SavedPosition = newPosition;
                 SavedPosition = newRotation;
                 UpdatePosition();

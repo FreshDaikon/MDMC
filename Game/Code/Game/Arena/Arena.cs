@@ -74,9 +74,6 @@ public partial class Arena : Node3D
         }
     }
 
-    //
-    // Fetch Various Entities:
-    //
     public Entity GetEntity(int id)
     {
         if(EntityContainer.GetChildCount() == 0)

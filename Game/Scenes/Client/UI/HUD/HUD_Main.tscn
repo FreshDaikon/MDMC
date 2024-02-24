@@ -1,7 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://ds72o2h662r4r"]
+[gd_scene load_steps=11 format=3 uid="uid://ds72o2h662r4r"]
 
 [ext_resource type="Script" path="res://Code/Client/UI/HUD/UIHUDMain.cs" id="1_poobr"]
 [ext_resource type="PackedScene" uid="uid://d0fgtib258a7k" path="res://Scenes/Client/UI/HUD/Elements/DamageMeter/Damage_Meter.tscn" id="2_t5a6y"]
+[ext_resource type="Script" path="res://Code/Client/UI/HUD/UnitFrames/UI_NamePlateContainer.cs" id="2_ybu6i"]
+[ext_resource type="PackedScene" uid="uid://sefh6iqsxxg4" path="res://Scenes/Client/UI/HUD/UnitFrames/NamePlate.tscn" id="3_8qyeu"]
 [ext_resource type="PackedScene" uid="uid://cj1yyie770nrc" path="res://Scenes/Client/UI/HUD/Elements/TimerBars/Cast_Bar.tscn" id="3_27437"]
 [ext_resource type="PackedScene" uid="uid://c7ur3s0qe1nca" path="res://Scenes/Client/UI/HUD/UnitFrames/PartyFrame.tscn" id="3_iqjgc"]
 [ext_resource type="PackedScene" uid="uid://4nf73m4b57o1" path="res://Scenes/Client/UI/HUD/UnitFrames/EnemyList.tscn" id="4_4w6gs"]
@@ -20,6 +22,16 @@ script = ExtResource("1_poobr")
 dmgNumberPath = "res://Scenes/Client/UI/HUD/Elements/DamageNumber/DamageNumber.tscn"
 dmgNumberContainer = NodePath("DmgNumberContainer")
 metadata/_edit_lock_ = true
+
+[node name="NamePlates" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_ybu6i")
+NameplateAsset = ExtResource("3_8qyeu")
 
 [node name="DmgNumberContainer" type="Control" parent="."]
 layout_mode = 1

@@ -1,0 +1,60 @@
+[gd_scene load_steps=5 format=3 uid="uid://sefh6iqsxxg4"]
+
+[ext_resource type="Script" path="res://Code/Client/UI/HUD/UnitFrames/UI_NamePlate.cs" id="1_5mepu"]
+[ext_resource type="FontFile" uid="uid://dd7g3rwq86uq5" path="res://Assets/UI/Fonts/LibreFranklin-Regular.ttf" id="1_044l2"]
+
+[sub_resource type="Gradient" id="Gradient_ax4l3"]
+offsets = PackedFloat32Array(0, 0.514735, 1)
+colors = PackedColorArray(0.321569, 0.321569, 0.321569, 1, 1, 1, 1, 1, 0.321569, 0.321569, 0.321569, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_gloqw"]
+gradient = SubResource("Gradient_ax4l3")
+fill_from = Vector2(0, 1)
+fill_to = Vector2(0, 0)
+
+[node name="NamePlate" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_5mepu")
+
+[node name="Anchor" type="Control" parent="."]
+anchors_preset = 0
+offset_left = -75.0
+offset_right = -74.0
+offset_bottom = 1.0
+
+[node name="frame" type="ColorRect" parent="Anchor"]
+layout_mode = 0
+offset_left = -1.0
+offset_top = -1.0
+offset_right = 151.0
+offset_bottom = 16.0
+color = Color(0, 0, 0, 1)
+
+[node name="BG" type="ColorRect" parent="Anchor"]
+layout_mode = 0
+offset_right = 150.0
+offset_bottom = 15.0
+color = Color(0, 0, 0, 1)
+
+[node name="HealthBar" type="TextureRect" parent="Anchor/BG"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 150.0
+offset_bottom = 15.0
+pivot_offset = Vector2(0, 75)
+texture = SubResource("GradientTexture2D_gloqw")
+expand_mode = 1
+
+[node name="Name" type="Label" parent="Anchor"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = -46.0
+offset_top = -22.0
+offset_right = 199.0
+offset_bottom = 1.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_044l2")
+theme_override_font_sizes/font_size = 18
+text = "Entity Name"
+horizontal_alignment = 1

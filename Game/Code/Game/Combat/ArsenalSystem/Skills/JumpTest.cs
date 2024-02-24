@@ -35,7 +35,6 @@ public partial class JumpTest : Skill
         var target = Player.CurrentTarget;
         if(target == null)
         { 
-            MD.Log("Target is null");
             return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.INVALID_TARGET };
         }
         return new SkillResult() { SUCCESS = true, result = MD.ActionResult.CAST };

@@ -15,16 +15,13 @@ public partial class Entity : Node3D
     private bool targetable = false;
     [Export]
     private TeamType team = TeamType.Neutral;    
-    
-    /// <summary>
-    /// Target ID System:
-    /// </summary>
     [ExportGroup("Sync Properties")]
     [Export]
-    public int TargetId = -1;
-  
+    public int TargetId = -1;  
     [Export]
     public string EntityName = "Unamed Entity";
+    [Export]
+    public float EntityHeight = 2f;
 
     // Internal Data:
     private EntityController controller;
