@@ -127,10 +127,10 @@ public partial class UILandingPage : Control
         ClientMultiplayerManager.Instance.SetData("127.0.0.1", 8080);
         ClientMultiplayerManager.Instance.StartPeer(); 
         // a bit weary here..
+        UIManager.Instance.TrySetUIState(UIManager.UIState.HUD);
         Multiplayer.ConnectedToServer += () => 
         {
             GameManager.Instance.StartGame(false);
-            UIManager.Instance.TrySetUIState(UIManager.UIState.HUD);
         };
     }
 
@@ -142,6 +142,10 @@ public partial class UILandingPage : Control
         ClientMultiplayerManager.Instance.SetData("127.0.0.1", 8080);
         ClientMultiplayerManager.Instance.StartPeer(); 
         // a bit weary here..
-        UIManager.Instance.TrySetUIState(UIManager.UIState.HUD);
+        Multiplayer.ConnectedToServer += () => 
+        {
+            GameManager.Instance.StartGame(false);
+            UIManager.Instance.TrySetUIState(UIManager.UIState.HUD);
+        };
     }
 }

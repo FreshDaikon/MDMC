@@ -56,18 +56,14 @@ public partial class GameManager : Node
         _isConnected = false;
     }
 
-    public ulong GetServerTime()
-    {
-        return _clock;
-    }
-    public ulong GetLatency()
-    {
-        return _latency;
-    }
-
     private ulong GetSystemTimeMsec()
     {
         return (ulong)(Time.GetUnixTimeFromSystem() * 1000); 
+    }
+
+    public bool IsGameRunning()
+    {
+        return _isConnected;
     }
 
     private void SyncServerTime()

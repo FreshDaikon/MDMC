@@ -47,8 +47,13 @@ public partial class UIHUDMain : Control
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		if(ClientMultiplayerManager.Instance.GetStatus() != MultiplayerPeer.ConnectionStatus.Connected)
-			return;			
+		if(!GameManager.Instance.IsGameRunning())
+		{
+			Visible = false;
+			return;
+		}
+
+		Visible = true;
 		fpsLabel.Text = Engine.GetFramesPerSecond().ToString();
 		if(localPlayer == null)
 		{
