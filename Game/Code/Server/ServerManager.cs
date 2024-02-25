@@ -111,6 +111,7 @@ public partial class ServerManager : Node3D
             {
                 //When done:
                 GD.Print("Server Started with Arena! Awaiting Clients..."); 
+                GameManager.Instance.StartGame(true);
                 return;
             }
             else 

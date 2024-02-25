@@ -58,7 +58,6 @@ public partial class EntityController : CharacterBody3D
                 var newRotation = entityStatesBuffer[1].Rotation.Lerp(entityStatesBuffer[2].Rotation, interpolationFactor);
                 SavedPosition = newPosition;
                 SavedRotation = newRotation;
-                CurrentFactor = interpolationFactor;
                 UpdatePosition();
                 UpdateRotation();
             }
@@ -71,12 +70,12 @@ public partial class EntityController : CharacterBody3D
                 {
                     return;
                 }
-                var positonDelta = (entityStatesBuffer[1].Position - entityStatesBuffer[0].Position);
+                var positonDelta = entityStatesBuffer[1].Position - entityStatesBuffer[0].Position;
+                var rotationDelta = entityStatesBuffer[1].Rotation - entityStatesBuffer[0].Rotation;                
                 var newPosition = entityStatesBuffer[1].Position + positonDelta * extrapolationFactor;
-                var newRotation = entityStatesBuffer[1].Rotation.Lerp(entityStatesBuffer[2].Rotation, extrapolationFactor);
-                CurrentFactor = extrapolationFactor;
+                var newRotation = entityStatesBuffer[1].Rotation + rotationDelta * extrapolationFactor;
                 SavedPosition = newPosition;
-                SavedPosition = newRotation;
+                SavedRotation = newRotation;
                 UpdatePosition();
                 UpdateRotation();
             }
