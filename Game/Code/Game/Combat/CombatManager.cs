@@ -12,7 +12,7 @@ public partial class CombatManager: Node
     public bool IsInCombat = false;
 
     //Combat Session Tracker:
-    private ulong CombatStartTime = 0;
+    private double CombatStartTime = 0;
 
 
     private List<EntityContributionTracker> damage = new List<EntityContributionTracker>();
@@ -30,10 +30,18 @@ public partial class CombatManager: Node
         Instance = this;
         base._Ready();
     }
+    public override void _ExitTree()
+    {
+		if(Instance == this )
+		{
+			Instance = null;
+		}
+        base._ExitTree();
+    }
 
     public void StartCombat()
     {
-        CombatStartTime = GameManager.Instance.ServerTick;
+        CombatStartTime = GameManager.Instance.GameClock;
     }
 
     public void AddCombatMessage(CombatMessage message)
@@ -49,7 +57,7 @@ public partial class CombatManager: Node
         MD.Log(" Got Combat Message ");
         if(!IsInCombat)
         {
-            CombatStartTime = GameManager.Instance.ServerTick;
+            CombatStartTime = GameManager.Instance.GameClock;
             IsInCombat = true;
         }
         var newMessage = new CombatMessage()
@@ -135,9 +143,9 @@ public partial class CombatManager: Node
         }
     }
 
-    public float GetTimeLapsed()
+    public double GetTimeLapsed()
     {
-        return (GameManager.Instance.ServerTick - CombatStartTime) / 1000f;
+        return GameManager.Instance.GameClock - CombatStartTime;
     }
 
     public float GetTotalValue(MD.CombatMessageType type)
@@ -154,13 +162,13 @@ public partial class CombatManager: Node
             return 0f;
         return list.Count == 0 ? 0 : list.Sum(x => x.TotalValue);
     }
-    public float GetTopVPS(MD.CombatMessageType type)
+    public double GetTopVPS(MD.CombatMessageType type)
     {
         var list = GetTracker(type);
         if(list.Count == 0)
             return 0f;
         var sum = list.Max(t => t.TotalValue);
-        var time = (GameManager.Instance.ServerTick - CombatStartTime) / 1000f;
+        var time = GameManager.Instance.GameClock - CombatStartTime;
         var dps = sum / time;
         return dps;
     }
@@ -171,7 +179,7 @@ public partial class CombatManager: Node
             return 0f;
         return list.Count == 0 ? 0 : list.Max(t => t.TotalValue);  
     }
-    public float GetEntityVPS(int id, MD.CombatMessageType type)
+    public double GetEntityVPS(int id, MD.CombatMessageType type)
     {
         var list = GetTracker(type);
         if(list.Count == 0)
@@ -180,7 +188,7 @@ public partial class CombatManager: Node
         if(tracker == null)
             return 0f;
         int sum = list.Find(t => t.Id == id).TotalValue;
-        var time = (GameManager.Instance.ServerTick - CombatStartTime) / 1000f;
+        var time = GameManager.Instance.GameClock - CombatStartTime;
         var dps = sum / time;
         return dps;
     }

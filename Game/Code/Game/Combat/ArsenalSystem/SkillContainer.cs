@@ -8,42 +8,20 @@ namespace Daikon.Game;
 
 public partial class SkillContainer : Node
 {
-
     //Serialized Properties:
     [ExportCategory("Serialzied Properties :")]
     [Export]
-    private string ContainerName = "Some Cool Armamentation!";
-    [Export(PropertyHint.MultilineText)]
-    private string ContainerDescription = "Format tags : {gcd}";    
-    [Export]
-    public Texture2D ContainerIcon;
-    
-    [Export]
     public ComboSlot[] ComboSlots {get; set;}
-    public int NextComboSlot = 0;
-    // Internal ID:
-
-    [Export]
-    private DataID ID;
-    public int Id
-    {
-        get { return ID.Id; }
-    }    
-    
-    // Useful Setters:
-    public PlayerEntity Player;
-    // Time Keeping:
-    [ExportGroup("Sync Properties")]
-    [Export]
-    public StatMod[] StatMods { get; set; }
+    public int NextComboSlot = 0;   
     //Internals:
+    public PlayerEntity Player;
+    public SkillContainerObject Data;
     private Node skillSlotContainer;
 
     public override void _Ready()
     {
         skillSlotContainer = GetNodeOrNull("%SkillSlots");        
         InitializeContainer(); 
-        MD.Log("SkillContainer Ready!");
         base._Ready();
     }    
 
@@ -60,25 +38,8 @@ public partial class SkillContainer : Node
         Player = GetParent().GetParent<PlayerArsenal>().Player;
         foreach(var slot in GetSkillSlots())
         {
-            MD.Log("Is Player ok? : " + (Player != null));
             slot.Player = Player;
         }
-        if(Multiplayer.GetUniqueId() != 1)
-            return;
-        
-        if(StatMods == null)
-            return;
-        foreach(var mod in StatMods)
-        {
-            Player.Status.AddStatMod(mod);
-        }
-    }
-
-    public string GetDescription()
-    {
-        var descData = new { };
-        var form = Smart.Format(ContainerDescription, descData);
-        return form;
     }
 
     public void SetSkill(int id, int slot)
@@ -191,15 +152,6 @@ public partial class SkillContainer : Node
     {
         NextComboSlot = index;
     }
-    public override void _ExitTree()
-    {
-        if(StatMods != null && StatMods.Length > 0)
-        {
-            foreach(var mod in StatMods)
-            {
-                Player.Status.RemoveStatMod(mod);
-            }
-        }
-        base._ExitTree();
-    }
+
+    
 }

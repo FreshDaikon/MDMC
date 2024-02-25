@@ -40,7 +40,7 @@ public partial class ChannelBar : Control
 		if(localPlayer.Arsenal.IsChanneling)
 		{
 			Visible = true;
-			var lapsed = GameManager.Instance.ServerTick - localPlayer.Arsenal.ChannelingStartTime;
+			var lapsed = GameManager.Instance.GameClock - localPlayer.Arsenal.ChannelingStartTime;
 			if(lapsed <= 0f)
 			{
 				Visible = false;

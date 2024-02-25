@@ -41,7 +41,7 @@ public partial class CastBar : Control
 		{
 			Visible = true;
 
-			var lapsed = GameManager.Instance.ServerTick - localPlayer.Arsenal.CastingStartTime;
+			var lapsed = GameManager.Instance.GameClock - localPlayer.Arsenal.CastingStartTime;
 			if(lapsed == 0)
 			{
 				Visible = false;

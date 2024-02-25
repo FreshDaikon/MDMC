@@ -22,9 +22,9 @@ public partial class DamageMeterEntry : ColorRect
 	public float EntryWidth;
 
 
-	private float oldDps;
+	private double oldDps;
 	private Tween barTween;
-	public float sortValue = 0f;
+	public double sortValue = 0f;
 
 	private float WeightedValue = -1f;
 
@@ -70,7 +70,7 @@ public partial class DamageMeterEntry : ColorRect
 			var vps = CombatManager.Instance.GetEntityVPS(EntryId, BarType);
 			var topVps = CombatManager.Instance.GetTopVPS(BarType);
 			sortValue = vps;			
-			playerDPS.Text = MD.FormatDisplayNumber(vps);
+			playerDPS.Text = MD.FormatDisplayNumber((float)vps);
 			playerTotal.Text = MD.FormatDisplayNumber(CombatManager.Instance.GetEntityValue(EntryId, BarType));	
 			if(vps > 0 && topVps > 0)
 			{

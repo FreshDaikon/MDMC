@@ -101,7 +101,7 @@ public partial class HUD_SkillContainer : Control
 		{
 			return;
 		}
-		containerIcon.Texture = container.ContainerIcon;
+		containerIcon.Texture = container.Data.Icon;
 	}
 	private void activatorPressed(string container)
 	{

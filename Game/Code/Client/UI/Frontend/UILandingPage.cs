@@ -24,7 +24,7 @@ public partial class UILandingPage : Control
     private Button HostHubButton;
     private Button ConnectWSButton;
 
-    private List<Arena> _arenas;
+    private List<ArenaObject> _arenas = new();
 
 
     public override void _Ready()
@@ -66,13 +66,13 @@ public partial class UILandingPage : Control
 
     private void GetArenaList()
     {
-        _arenas = DataManager.Instance.GetArenas();
+        _arenas = DataManager.Instance.GetAllArenas();
         GD.Print("Arenas to show: " + _arenas.Count);
         if(_arenas.Count > 0)
         {
-            foreach(Arena arena in _arenas)
+            foreach(ArenaObject arena in _arenas)
             {
-                ArenaListOptions.AddItem(arena.ArenaName);
+                ArenaListOptions.AddItem(arena.Name);
             }
         }
     }

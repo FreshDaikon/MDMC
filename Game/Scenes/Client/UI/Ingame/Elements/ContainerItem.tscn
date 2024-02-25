@@ -1,0 +1,46 @@
+[gd_scene load_steps=3 format=3 uid="uid://bigy6igqibv5v"]
+
+[ext_resource type="Texture2D" uid="uid://coyetxtc5aald" path="res://Assets/UI/ArsenalSystem/SkillContainers/Warlocks_MK3.png" id="1_w28es"]
+[ext_resource type="PackedScene" uid="uid://blou54k4vmy5m" path="res://Scenes/Client/UI/Ingame/Elements/SkillItem.tscn" id="2_4uyn7"]
+
+[node name="ContainerItem" type="Control"]
+custom_minimum_size = Vector2(200, 250)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Container" type="Control" parent="."]
+custom_minimum_size = Vector2(150, 150)
+anchors_preset = 0
+offset_right = 150.0
+offset_bottom = 150.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Container"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TextureRect" type="TextureRect" parent="Container/VBoxContainer"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+texture = ExtResource("1_w28es")
+expand_mode = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Container/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="SkillItem" parent="Container/VBoxContainer/HBoxContainer" instance=ExtResource("2_4uyn7")]
+layout_mode = 2
+
+[node name="SkillItem2" parent="Container/VBoxContainer/HBoxContainer" instance=ExtResource("2_4uyn7")]
+layout_mode = 2
+
+[node name="SkillItem3" parent="Container/VBoxContainer/HBoxContainer" instance=ExtResource("2_4uyn7")]
+layout_mode = 2
+
+[node name="SkillItem4" parent="Container/VBoxContainer/HBoxContainer" instance=ExtResource("2_4uyn7")]
+layout_mode = 2

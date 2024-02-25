@@ -1,3 +1,4 @@
+using Daikon.Client;
 using Godot;
 
 namespace Daikon.Game;
@@ -39,6 +40,8 @@ public partial class PlayerCamera : SpringArm3D
 	{
 		if(!player.IsLocalPlayer || !StateManager.Instance.HasFocus)
 			return;
+		if(UIManager.Instance.GetCurrentState() != UIManager.UIState.HUD)
+            return;
 		// Controller Control:
 		bool isZoom = false;
 		if (Input.IsActionPressed("Zoom"))

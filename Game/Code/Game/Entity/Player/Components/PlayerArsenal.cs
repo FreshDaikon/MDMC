@@ -1,6 +1,7 @@
 using System.Linq;
 using Godot;
 using Daikon.Helpers;
+using System.Collections.Generic;
 
 namespace Daikon.Game;
 
@@ -12,47 +13,109 @@ public partial class PlayerArsenal: Node
         public static string Left { get { return "Left"; }}
         public static string Right { get { return "Right"; }}
     }
-    [Export(PropertyHint.Dir)]
-    private string skillContainersPath;    
     private Node skillContainers ;
-    private MultiplayerSpawner spawner;
     public PlayerEntity Player;
 
     [ExportGroup("Sync Properties")]
     public bool IsCasting = false;
-    public ulong CastingStartTime;
-    public ulong CastingTime;
+    public double CastingStartTime;
+    public double CastingTime;
     public bool IsChanneling = false;
-    public ulong ChannelingStartTime;
-    public ulong ChannelingTime;
+    public double ChannelingStartTime;
+    public double ChannelingTime;
     public Skill CastingSkill;
     public Skill ChannelingSkill;
     public float GCD = 2.5f;
-    public ulong GCDStartTime = 0;
+    public double GCDStartTime = 0;
 
+    //Lest the fuckery become too much
+    bool hasBeenInit = false;
+    bool hasBeenInitLocal = false;
 
     #region Godot 
     public override void _Ready()
     {
-        spawner = GetNode<MultiplayerSpawner>("%Spawner");
         skillContainers = GetNode("%SkillContainers");
         Player = GetParent<PlayerEntity>();
-        GetArsenalPaths();
-        if(Multiplayer.GetUniqueId() == 1)
-        {
-            MD.Log("Since we are the Server, we can add the containers here");
-            CallDeferred(nameof(DEBUG_InitialSetup));    
-        }       
-        // To Start Reset Style.
         base._Ready();
     }
+
+    public override void _Process(double delta)
+    {
+        if(!hasBeenInitLocal)
+        {
+            if(GameManager.Instance.IsGameRunning())
+            {
+                if(Multiplayer.IsServer())
+                    return;
+                GD.Print("Ask the server to sync us pretty please!");
+                RpcId(1, nameof(RequestStartupSync));
+                hasBeenInitLocal = true;
+            }
+        }
+    }
+
     #endregion
 
     #region Setup:
+
+    private void SetupDebug()
+    {
+        var containers = DataManager.Instance.GetAllSkillContainers();
+        var skills = DataManager.Instance.GetAllSkills();
+        var names = new string[]{"Main", "Left", "Right"};
+        foreach(var name in names)
+        {
+            var firstContainer = containers[0];
+            GD.Print("Set Container : " + firstContainer.Name + " To Container: " + name);
+            var firstSkill = skills[0];
+            SetSkillContainer(firstContainer.Id, name);
+            Rpc(nameof(SyncSkillContainer), firstContainer.Id, name);
+            
+            SetSkill(firstSkill.Id, name, 0);
+            SetSkill(firstSkill.Id, name, 1);
+            SetSkill(firstSkill.Id, name, 2);
+            SetSkill(firstSkill.Id, name, 3);
+
+            Rpc(nameof(SyncSkill), firstSkill.Id, name, 0);
+            Rpc(nameof(SyncSkill), firstSkill.Id, name, 1);
+            Rpc(nameof(SyncSkill), firstSkill.Id, name, 2);
+            Rpc(nameof(SyncSkill), firstSkill.Id, name, 3);
+         }
+         hasBeenInit = true;
+    }  
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void RequestStartupSync()
+    {
+        if(hasBeenInit)
+        {
+            if(skillContainers.GetChildCount() > 0)
+            {
+                var containers = skillContainers.GetChildren()
+                    .Where(c => c is SkillContainer)
+                    .Cast<SkillContainer>()
+                    .ToList();
+                foreach(var container in containers)
+                {                    
+                    Rpc(nameof(SyncSkillContainer), container.Data.Id, container.Name);
+                    Rpc(nameof(SyncSkill), container.Data.Id, container.Name, 0);
+                    Rpc(nameof(SyncSkill), container.Data.Id, container.Name, 1);
+                    Rpc(nameof(SyncSkill), container.Data.Id, container.Name, 2);
+                    Rpc(nameof(SyncSkill), container.Data.Id, container.Name, 3);
+                }
+            }
+        }
+        else
+        {
+            SetupDebug();
+        }
+    }
+
     public void ResetArsenal()
     {
         var modGCD = Player.Status.GetGCDModifier();
-        GCDStartTime = GameManager.Instance.ServerTick - (ulong)(modGCD * 1000f);
+        GCDStartTime = GameManager.Instance.GameClock - modGCD;
         Rpc(nameof(SyncGCD), GCDStartTime);
         IsCasting = false;
         IsChanneling = false;
@@ -72,22 +135,6 @@ public partial class PlayerArsenal: Node
                 container.ResetContainer();
             }
         }
-    }
-
-    private void GetArsenalPaths()
-    {
-        using var dir = DirAccess.Open(skillContainersPath);
-        if(dir != null)
-        {
-            dir.ListDirBegin();
-            string file = dir.GetNext();
-            while(file != "")
-            {
-                spawner.AddSpawnableScene(skillContainersPath + "/" + file.Replace(".remap", ""));
-                file = dir.GetNext();
-            }
-            dir.ListDirEnd();
-        }     
     }
 
     public SkillContainer GetSkillContainer(string containerName)
@@ -112,7 +159,7 @@ public partial class PlayerArsenal: Node
 
     public void SetSkillContainer(int id, string containerName)
     {
-        var newContainer = DataManager.Instance.GetSkillContainer(id);
+        var newContainer = DataManager.Instance.GetSkillContainerInstance(id);
         if(newContainer == null)
         {
             MD.Log("Skill Container with ID: " + id + " does not exist.");
@@ -139,6 +186,19 @@ public partial class PlayerArsenal: Node
         newContainer.Name = containerName;
         skillContainers.AddChild(newContainer);
     }
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SyncSkillContainer(int id, string containerName)
+    {
+        GD.Print("Adding skillContaineri on client");
+        SetSkillContainer(id, containerName);
+    }
+    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SyncSkill(int id, string containerName, int slot)
+    {
+        GD.Print("Adding skill on client");
+        SetSkill(id, containerName, slot);
+    }
     
     public Skill GetSkill(string containerName, int slot)
     {
@@ -157,29 +217,12 @@ public partial class PlayerArsenal: Node
         {
             container.SetSkill(id, slot);
         }
+        else
+        {
+            GD.Print("Container was null... bullockes!");
+        }
     }
     #endregion
-
-    // TODO : Remove this !
-    private void DEBUG_InitialSetup()
-    {
-        MD.Log("DEBUG_InitialSetup");
-        SetSkillContainer(-525528611, ContainerNames.Main);
-        SetSkillContainer(-557544443, ContainerNames.Left);
-        SetSkillContainer(462203807, ContainerNames.Right);
-        SetSkill(1156137064, ContainerNames.Main, 0);        
-        SetSkill(1156137064, ContainerNames.Main, 1);        
-        SetSkill(1156137064, ContainerNames.Main, 2);        
-        SetSkill(1156137064, ContainerNames.Main, 3);   
-        SetSkill(1156137064, ContainerNames.Left, 0);        
-        SetSkill(1156137064, ContainerNames.Left, 1);        
-        SetSkill(1156137064, ContainerNames.Left, 2);        
-        SetSkill(1156137064, ContainerNames.Left, 3); 
-        SetSkill(1156137064, ContainerNames.Right, 0);        
-        SetSkill(1156137064, ContainerNames.Right, 1);        
-        SetSkill(1156137064, ContainerNames.Right, 2);        
-        SetSkill(1156137064, ContainerNames.Right, 3); 
-    } 
     
     #region SERVER_CALLS
 
@@ -201,7 +244,7 @@ public partial class PlayerArsenal: Node
                 MD.Log("Try Trigger OGCD Skill:");
                 return container.TriggerSkill(index);
             }            
-            var lapsed = (GameManager.Instance.ServerTick - GCDStartTime) / 1000f;
+            var lapsed = GameManager.Instance.GameClock - GCDStartTime;
             var modGCD = Player.Status.GetGCDModifier(); 
             MD.Log("Lapsed: " + lapsed + " GCD: " + modGCD);
             if(lapsed < modGCD)
@@ -214,8 +257,8 @@ public partial class PlayerArsenal: Node
                 if(result.SUCCESS)
                 {
                     MD.Log("We triggered and it was success.");
-                    Rpc(nameof(SyncGCD), GameManager.Instance.ServerTick);
-                    GCDStartTime = GameManager.Instance.ServerTick;
+                    Rpc(nameof(SyncGCD), GameManager.Instance.GameClock);
+                    GCDStartTime = GameManager.Instance.GameClock;
                     return result;
                 }
                 else
@@ -233,11 +276,11 @@ public partial class PlayerArsenal: Node
         IsCasting = true;
         if(caster.TimerType == MD.SkillTimerType.GCD)
         {
-            GCDStartTime = GameManager.Instance.ServerTick;
-            Rpc(nameof(SyncGCD), GameManager.Instance.ServerTick);
+            GCDStartTime = GameManager.Instance.GameClock;
+            Rpc(nameof(SyncGCD), GameManager.Instance.GameClock);
         }
-        CastingStartTime = GameManager.Instance.ServerTick;
-        CastingTime = (ulong)(caster.CastTime * 1000f);
+        CastingStartTime = GameManager.Instance.GameClock;
+        CastingTime = caster.CastTime;
         Rpc(nameof(SyncCasting), IsCasting, CastingStartTime, CastingTime);
         CastingSkill = caster;
     }
@@ -247,11 +290,11 @@ public partial class PlayerArsenal: Node
         IsChanneling = true;
         if(caster.TimerType == MD.SkillTimerType.GCD)
         {
-            GCDStartTime = GameManager.Instance.ServerTick;
-            Rpc(nameof(SyncGCD), GameManager.Instance.ServerTick);
+            GCDStartTime = GameManager.Instance.GameClock;
+            Rpc(nameof(SyncGCD), GameManager.Instance.GameClock);
         }
-        ChannelingStartTime = GameManager.Instance.ServerTick;
-        ChannelingTime = (ulong)(caster.ChannelTime * 1000f);
+        ChannelingStartTime = GameManager.Instance.GameClock;
+        ChannelingTime = caster.ChannelTime;
         Rpc(nameof(SyncChanneling), IsChanneling, ChannelingStartTime, ChannelingTime);
         ChannelingSkill = caster;
     }
@@ -280,7 +323,7 @@ public partial class PlayerArsenal: Node
             if(CastingSkill.TimerType == MD.SkillTimerType.GCD)
             { 
                 GD.Print("Reset GCD!");
-                GCDStartTime = GCDStartTime - (ulong)(Player.Status.GetGCDModifier() * 1000f);
+                GCDStartTime = GCDStartTime - Player.Status.GetGCDModifier();
                 Rpc(nameof(SyncGCD), GCDStartTime);
             }
             CastingSkill.InteruptCast();
@@ -308,20 +351,20 @@ public partial class PlayerArsenal: Node
 
     #region RPC_CALLS
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void SyncGCD(ulong time)
+    public void SyncGCD(double time)
     {
-        MD.Log("Syncing Arsenal GCD Start Time to: " + time + ", Current time is : " + GameManager.Instance.ServerTick );
+        MD.Log("Syncing Arsenal GCD Start Time to: " + time + ", Current time is : " + GameManager.Instance.GameClock );
         GCDStartTime = time;
     }
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void SyncCasting(bool casting, ulong start, ulong time)
+    public void SyncCasting(bool casting, double start, double time)
     {
         IsCasting = casting;
         CastingStartTime = start;
         CastingTime = time;
     }
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void SyncChanneling(bool channeling, ulong start, ulong time)
+    public void SyncChanneling(bool channeling, double start, double time)
     {
         IsChanneling = channeling;
         ChannelingStartTime = start;
@@ -334,46 +377,35 @@ public partial class PlayerArsenal: Node
     public SkillResult CanCast(string containerName, int index)
     {
         var result = new SkillResult() { SUCCESS = false, result= MD.ActionResult.ERROR };
-        //Check Arsenal:
         if(IsCasting)
         {
-            //MD.Log("Return because we are casting");
             result.result = MD.ActionResult.IS_CASTING;
             return result;
         }
         if(IsChanneling)
         {
-            //MD.Log("Return because we are channeling");
             result.result = MD.ActionResult.IS_CHANNELING;
             return result;
         }
         if(IsArsenalOnCD())
         {
-            //MD.Log("Return because we are on Arsenal CD");
             result.result = MD.ActionResult.ON_COOLDOWN;
             return result;
         }  
-        // Try Container:
         var container = GetSkillContainer(containerName);
         if(container == null)
         {
-            //MD.Log("Return because container is null");
             result.result = MD.ActionResult.ERROR;
             return result;
         }
-        //Finally Try Skill (TODO implement OGCD and Cooldown)
         var skill = container.GetSkill(index);
         if(skill == null)
         {
-            //MD.Log("Return because skill is null");
             result.result = MD.ActionResult.ERROR;
             return result;
         }
         if(skill.IsOnCooldown())
         {            
-            //MD.Log("Return because skill is on CD");
-            //MD.Log("Skill Start Time:" + skill.StartTime);
-            //MD.Log("Server Time :" + GameManager.Instance.ServerTick);
             result.result = MD.ActionResult.ON_COOLDOWN;
             return result;
         }
@@ -382,8 +414,6 @@ public partial class PlayerArsenal: Node
         {
             return result;
         }
-        //If all else is ok, send back the good to go:
-        //MD.Log("Return because we are good to go");
         result.SUCCESS = true;
         result.result = MD.ActionResult.CAST;
         return result;
@@ -392,7 +422,7 @@ public partial class PlayerArsenal: Node
 
     public bool IsArsenalOnCD()
     {
-        var lapsed = (GameManager.Instance.ServerTick - GCDStartTime) / 1000f;
+        var lapsed = GameManager.Instance.GameClock - GCDStartTime;
         var modGCD = Player.Status.GetGCDModifier();
         if(lapsed < modGCD)
         {

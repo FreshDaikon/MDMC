@@ -17,6 +17,7 @@ public partial class UIHUDMain : Control
 	private Control dmgNumberContainer;
 
 	private Label fpsLabel;
+	private Label latencyLabel;
 	public Camera3D activeCamera;
 	public Entity LocalPlayerUITarget;
 
@@ -31,9 +32,19 @@ public partial class UIHUDMain : Control
 		dmgNumberResource = (PackedScene)ResourceLoader.Load(dmgNumberPath);
 		Visible = false;
 		fpsLabel = GetNode<Label>("%FPS");
+		latencyLabel = GetNode<Label>("%Latency");
 	}
 
-	public void SpawnDamageNumber(string value, Color color, Vector3 worldPos)
+    public override void _ExitTree()
+    {
+		if(Instance == this )
+		{
+			Instance = null;
+		}
+        base._ExitTree();
+    }
+
+    public void SpawnDamageNumber(string value, Color color, Vector3 worldPos)
 	{		
 		var inst = (DamageNumber)dmgNumberResource.Instantiate();
 		dmgNumberContainer.AddChild(inst);
@@ -52,9 +63,9 @@ public partial class UIHUDMain : Control
 			Visible = false;
 			return;
 		}
-
 		Visible = true;
-		fpsLabel.Text = Engine.GetFramesPerSecond().ToString();
+		fpsLabel.Text = "FPS [ " + Engine.GetFramesPerSecond().ToString() +" ]";
+		latencyLabel.Text = "Latency  [ " + (GameManager.Instance.GetLatency() * 1000).ToString("0.00") + " ms ]";
 		if(localPlayer == null)
 		{
             var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();

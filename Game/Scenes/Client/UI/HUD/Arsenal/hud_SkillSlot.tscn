@@ -87,8 +87,6 @@ _data = {
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_qsnqg")
-gcdPath = "res://Scenes/Client/UI/HUD/Arsenal/gcd_fill.tres"
-ogcdPath = "res://Scenes/Client/UI/HUD/Arsenal/cd_fill.tres"
 
 [node name="OGCD" type="TextureProgressBar" parent="."]
 unique_name_in_owner = true

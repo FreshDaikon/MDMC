@@ -163,7 +163,7 @@ public partial class ClientMultiplayerManager: Node
     }
 
     // Only works with a local copy of the x86 - dont try this on retail distros.
-    public void StartLocalServer(Arena arena)
+    public void StartLocalServer(ArenaObject arena)
     {
         var args = MD.GetArgs();
         var path = OS.GetExecutablePath();

@@ -34,7 +34,6 @@ public partial class InputBuffer : Node
                 return; 
             } 
             var key = keyEvent.AsTextKeycode();
-            GD.Print("Key will be checked :" + key);
             if(!_keyboardStamps.ContainsKey(key))
             {
                 _keyboardStamps.Add(key, Time.GetTicksMsec());

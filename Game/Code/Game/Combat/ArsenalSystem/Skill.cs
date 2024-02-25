@@ -6,44 +6,17 @@ namespace Daikon.Game;
 
 public partial class Skill : Node
 {
-    //
-    // Serialized Properties:
-    //
-    [Export]
-    public Texture2D Icon;
-    [Export]
-    public string SkillName = "Some Skill Name";
-    [Export(PropertyHint.MultilineText)]
-    public string SkillDescription = "Usable Tags : {potency}, {type}";    
-    
-    // Up for Debate atm:
-    //
-    [ExportGroup("Skill Options:")]
-    [Export]
     public bool IsUniversalSkill = false;
-    [Export]
     public MD.SkillTimerType TimerType;
-    [Export]
     public int BasePotency = 100;
     public int AdjustedPotency = 100;
-    [Export]
     public float Range = 10f;
-    [Export]
     public float Cooldown = 1f;
-    [ExportCategory("Action Type")]
-    [Export]
     public MD.SkillActionType ActionType;
-    [ExportCategory("Casting Skill")]
-    [Export]
     public bool CanMove = false;
-    [Export]
     public float CastTime = 0f;
-    [ExportCategory("Channeling SKill")]
-    [Export]
     public float ChannelTime = 0f;
-    [Export]
     public float TickRate = 1f;
-    [Export]
     public float ThreatMultiplier = 1f;
 
     [ExportGroup("Standard Realizations")]
@@ -55,51 +28,30 @@ public partial class Skill : Node
     public string RealizeSkillPath;
 
     //Class Internals:
+    public SkillObject Data;
     public RealizationObject CurrentRealization;
     public MD.SkillType SkillType;
     public PlayerEntity Player;
-    public ulong StartTime;
+    public double StartTime;
 
-    // Internal ID for Loading
-    [ExportGroup("Internal")]
-    [Export]
-    private DataID ID;
-    public int Id
-    {
-        get { return ID.Id; }
-    }
     // Internal Time Keeping.
     private bool isCasting;
-    private ulong startCastTime;
+    private double startCastTime;
     private bool isChanneling;
-    private ulong startChannelTime;
+    private double startChannelTime;
     //Time Keeping continued:
     private int lastLapse = 0;
     private int ticks = 0;
 
-    public string GetDescription()
-    {
-        var descData = new { 
-            potency = BasePotency.ToString(), 
-            category = SkillType.ToString(),
-            timer = TimerType.ToString()
-        };
-        var form = Smart.Format(SkillDescription, descData);
-        return form;
-    }
-
-
     public override void _Ready()
     {
-        if(!Multiplayer.IsServer())
-        {
-            GameManager.Instance.ConnectionStarted += InitSkill;
-        }
     }
 
-    private void InitSkill()
+    public void InitSkill()
     {
+        GD.Print("init skill from players side!");
         Player = GetParent().GetParent<SkillSlot>().Player;
+        GD.Print("Is player null? :" + Player == null);
         if(!IsUniversalSkill)
         {
             SkillType = GetParent().GetParent<SkillSlot>().SlotSkillType;
@@ -107,7 +59,7 @@ public partial class Skill : Node
         ThreatMultiplier =  GetParent().GetParent<SkillSlot>().ThreatMultiplier;
         if(Cooldown > 0f)
         {
-            StartTime = (ulong)Mathf.Max((int)GameManager.Instance.ServerTick + (int)(Cooldown * 1000), 0);
+            StartTime = Mathf.Max(GameManager.Instance.GameClock + Cooldown, 0);
         }
     }
     public void Reset()
@@ -115,7 +67,7 @@ public partial class Skill : Node
         isCasting = false;
         isChanneling = false;
         lastLapse = 0;
-        StartTime = GameManager.Instance.ServerTick - (ulong)(Cooldown * 1000f);
+        StartTime = GameManager.Instance.GameClock - (Cooldown);
         Rpc(nameof(SyncCooldown), StartTime);
     }
     public SkillResult TriggerSkill()
@@ -142,7 +94,7 @@ public partial class Skill : Node
         }
         if(Cooldown > 0f)
         {
-            StartTime = GameManager.Instance.ServerTick;
+            StartTime = GameManager.Instance.GameClock;
             Rpc(nameof(SyncCooldown), StartTime);
         }
         Rpc(nameof(RealizeFinished));
@@ -157,7 +109,7 @@ public partial class Skill : Node
             GD.Print("Start Casting!");
             Rpc(nameof(RealizeCast));
             Player.Arsenal.StartCasting(this);
-            startCastTime = GameManager.Instance.ServerTick;
+            startCastTime = GameManager.Instance.GameClock;
             isCasting = true;
             return new SkillResult(){SUCCESS = true, result = MD.ActionResult.CAST };
         }
@@ -174,7 +126,7 @@ public partial class Skill : Node
             Player.Arsenal.StartChanneling(this);
             ticks = 0;
             lastLapse = 0;
-            startChannelTime = GameManager.Instance.ServerTick;
+            startChannelTime = GameManager.Instance.GameClock;
             isChanneling = true;
             return new SkillResult(){ result = MD.ActionResult.CAST };            
         }
@@ -193,7 +145,6 @@ public partial class Skill : Node
   
     public void InteruptChannel()
     {
-
         if(isChanneling)
         {
             Rpc(nameof(CancelRealization));
@@ -209,14 +160,14 @@ public partial class Skill : Node
             return;
         if(isCasting)
         {
-            float lapsed = (GameManager.Instance.ServerTick - startCastTime) / 1000f;
+            double lapsed = GameManager.Instance.GameClock - startCastTime;
             if(lapsed > CastTime)
             {
                 Rpc(nameof(RealizeFinished));
                 isCasting = false;
                 if(Cooldown > 0f)
                 {
-                    StartTime = GameManager.Instance.ServerTick;
+                    StartTime = GameManager.Instance.GameClock;
                     Rpc(nameof(SyncCooldown), StartTime);
                 } 
                 var Result = TriggerResult();
@@ -225,8 +176,8 @@ public partial class Skill : Node
         }
         if(isChanneling)
         {
-            float lapsed = (GameManager.Instance.ServerTick - startChannelTime) / 1000f;
-            float scaled = lapsed * TickRate;
+            double lapsed = GameManager.Instance.GameClock - startChannelTime;
+            double scaled = lapsed * TickRate;
             if((int)scaled > lastLapse)
             {
                 ticks += 1;
@@ -238,7 +189,7 @@ public partial class Skill : Node
             {
                 if(Cooldown > 0f)
                 {
-                    StartTime = GameManager.Instance.ServerTick;
+                    StartTime = GameManager.Instance.GameClock;
                     Rpc(nameof(SyncCooldown), StartTime);
                 }
                 Rpc(nameof(RealizeFinished));
@@ -256,12 +207,12 @@ public partial class Skill : Node
             return false;
         else
         {
-            return (GameManager.Instance.ServerTick - StartTime) / 1000f <= Cooldown;
+            return (GameManager.Instance.GameClock - StartTime) <= Cooldown;
         }
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void SyncCooldown(ulong time)
+    public void SyncCooldown(double time)
     {
         StartTime = time;
     }
@@ -293,6 +244,7 @@ public partial class Skill : Node
         GD.PrintErr("Please Override this implementation!");
         return new SkillResult(){ SUCCESS = true, result = MD.ActionResult.CAST };
     }
+
     public virtual SkillResult CheckSkill()
     {
         GD.PrintErr("Please Override this implementation!");

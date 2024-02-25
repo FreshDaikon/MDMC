@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://bdoagm2ktwyfm"]
+[gd_scene load_steps=4 format=3 uid="uid://bdoagm2ktwyfm"]
 
 [ext_resource type="Script" path="res://Code/Client/UI/Ingame/UIIngameMenu.cs" id="1_liaj1"]
+[ext_resource type="FontFile" uid="uid://q3aynbg5gvis" path="res://Assets/UI/Fonts/LibreFranklin-BlackItalic.ttf" id="2_3fmrh"]
+[ext_resource type="PackedScene" uid="uid://bigy6igqibv5v" path="res://Scenes/Client/UI/Ingame/Elements/ContainerItem.tscn" id="3_xcj4n"]
 
 [node name="IngameMain" type="Control"]
 layout_mode = 3
@@ -10,42 +12,126 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_liaj1")
+metadata/_edit_lock_ = true
 
-[node name="Panel" type="Panel" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 30
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="Loadout" type="Panel" parent="HBoxContainer"]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Loadout"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -144.5
-offset_top = -246.0
-offset_right = 144.5
-offset_bottom = 246.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 25
 
-[node name="DisconnectButton" type="Button" parent="VBoxContainer"]
-unique_name_in_owner = true
+[node name="LoadoutHolder" type="VBoxContainer" parent="HBoxContainer/Loadout/MarginContainer"]
 layout_mode = 2
-text = "Disconnect"
+theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="."]
+[node name="LoadoutHeader" type="Label" parent="HBoxContainer/Loadout/MarginContainer/LoadoutHolder"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_3fmrh")
+theme_override_font_sizes/font_size = 34
+text = "Player Loadout:"
+horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Loadout/MarginContainer/LoadoutHolder"]
+custom_minimum_size = Vector2(0, 55)
+layout_mode = 2
+
+[node name="HeaderMain" type="Label" parent="HBoxContainer/Loadout/MarginContainer/LoadoutHolder"]
+layout_mode = 2
+text = "Main"
+horizontal_alignment = 1
+
+[node name="ContainerItem" parent="HBoxContainer/Loadout/MarginContainer/LoadoutHolder" instance=ExtResource("3_xcj4n")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="HeaderRight" type="Label" parent="HBoxContainer/Loadout/MarginContainer/LoadoutHolder"]
+layout_mode = 2
+text = "Right"
+horizontal_alignment = 1
+
+[node name="ContainerItem2" parent="HBoxContainer/Loadout/MarginContainer/LoadoutHolder" instance=ExtResource("3_xcj4n")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="HeaderLeft" type="Label" parent="HBoxContainer/Loadout/MarginContainer/LoadoutHolder"]
+layout_mode = 2
+text = "Left
+"
+horizontal_alignment = 1
+
+[node name="ContainerItem3" parent="HBoxContainer/Loadout/MarginContainer/LoadoutHolder" instance=ExtResource("3_xcj4n")]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="ItemSelector" type="Panel" parent="HBoxContainer"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/ItemSelector"]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -53.5
-offset_top = 100.0
-offset_right = 53.5
-offset_bottom = 123.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
-text = "Ingame Menu"
+grow_vertical = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 25
+
+[node name="LoadoutHolder" type="VBoxContainer" parent="HBoxContainer/ItemSelector/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LoadoutHeader" type="Label" parent="HBoxContainer/ItemSelector/MarginContainer/LoadoutHolder"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_3fmrh")
+theme_override_font_sizes/font_size = 34
+text = "Available Items:"
+
+[node name="ItemDetails" type="Panel" parent="HBoxContainer"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/ItemDetails"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 25
+
+[node name="LoadoutHolder" type="VBoxContainer" parent="HBoxContainer/ItemDetails/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LoadoutHeader" type="Label" parent="HBoxContainer/ItemDetails/MarginContainer/LoadoutHolder"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_3fmrh")
+theme_override_font_sizes/font_size = 34
+text = "Details"

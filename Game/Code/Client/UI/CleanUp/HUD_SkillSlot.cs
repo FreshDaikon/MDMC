@@ -8,11 +8,6 @@ public partial class HUD_SkillSlot : Control
 {
 	public int SkillSlot;
 	public string ContainerName;
-
-	[Export(PropertyHint.File)]
-	public string gcdPath;
-	[Export(PropertyHint.File)]
-	public string ogcdPath;
 	public TextureProgressBar GCDBar;
 	public TextureProgressBar OGCDBar;
 	public TextureRect Trigger;
@@ -45,7 +40,7 @@ public partial class HUD_SkillSlot : Control
 			localPlayer = players.Find(p => p.Name == Multiplayer.GetUniqueId().ToString());			
 			if(localPlayer != null)
 			{
-				localPlayer.playerInput.ActionButtonPressed += (container, slot) => TriggerTrigger(container, slot); 
+				localPlayer.playerInput.ActionButtonPressed += TriggerTrigger; 
 			}
 		}
 		else
@@ -56,7 +51,7 @@ public partial class HUD_SkillSlot : Control
 				return;
 			}
 			//Color Background:			
-			CDTimer.Visible = skill.Cooldown > 0 && (skill.Cooldown - ((GameManager.Instance.ServerTick - skill.StartTime) / 1000f) > 0f);
+			CDTimer.Visible = skill.Cooldown > 0 && (skill.Cooldown - (GameManager.Instance.GameClock - skill.StartTime) > 0f);
 			Background.Color = skill.SkillType switch
 			{
 				MD.SkillType.TANK => new Color("#734ecf"),
@@ -72,7 +67,7 @@ public partial class HUD_SkillSlot : Control
 			{
 				var GCD = localPlayer.Arsenal.GetArsenalGCD();
 				var GCDStartTime = localPlayer.Arsenal.GCDStartTime;		
-				var GCDLapsed = Mathf.Clamp((GameManager.Instance.ServerTick - GCDStartTime) / 1000f, 0, GCD);	
+				var GCDLapsed = Mathf.Clamp(GameManager.Instance.GameClock - GCDStartTime, 0, GCD);	
 				var GCDLeft = GCD - GCDLapsed;				
 				var GCDPercent = 100 - ((float)GCDLapsed / (float)GCD * 100f);
 
@@ -80,8 +75,8 @@ public partial class HUD_SkillSlot : Control
 				{
 					var CD = skill.Cooldown;
 					var CDStartTime = skill.StartTime;
-					var CDLapsed = Mathf.Clamp((GameManager.Instance.ServerTick - CDStartTime) / 1000f, 0, CD);
-					var CDPercent = 100 - ((float)CDLapsed / (float)CD * 100f);
+					var CDLapsed = Mathf.Clamp(GameManager.Instance.GameClock - CDStartTime, 0, CD);
+					var CDPercent = 100 - CDLapsed / CD * 100f;
 					var CDLeft = CD - CDLapsed;
 					CDTimer.Text = (skill.Cooldown - CDLapsed).ToString((skill.Cooldown - CDLapsed) < 5 ? "0.0" : "0");
 					
@@ -90,15 +85,14 @@ public partial class HUD_SkillSlot : Control
 				}
 				else
 				{
-					GCDBar.Value = 100 - ((float)GCDLapsed / (float)GCD * 100f);
+					GCDBar.Value = 100 - (GCDLapsed / GCD * 100f);
 				}
 
 			}
 			else if(skill.TimerType == MD.SkillTimerType.OGCD)
 			{
-
 				var startTime = skill.StartTime;
-				var lapsed = (GameManager.Instance.ServerTick - startTime) / 1000f;
+				var lapsed = GameManager.Instance.GameClock - startTime;
 				CDTimer.Text = (skill.Cooldown - lapsed).ToString((skill.Cooldown - lapsed) < 5 ? "0.0" : "0");
 				GCDBar.Value = 100 - ((float)lapsed / (float)skill.Cooldown * 100f);
 			}

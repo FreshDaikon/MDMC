@@ -7,29 +7,21 @@ namespace Daikon.Game;
 
 public partial class Arena : Node3D
 {
-    [Export]
-    private DataID ID;
-    public int Id
-    {
-        get { return ID.Id; }
-    }
-
-    [Export]
-    public string ArenaName = "Some Cool Arena.";
+    public ArenaObject Data;
     [Export]
     public float ArenaDuration = 120f;
     //containers:
     private Node3D EntityContainer;
     public Node3D RealizationPool;
     //How Long has the arena been going in minutes:
-    private ulong _startTime;
-    private float _lapsed;
+    private double _startTime;
+    private double _lapsed;
 
     public override void _Ready()
     {
         if(Multiplayer.IsServer())
         {
-            _startTime = GameManager.Instance.ServerTick;
+            _startTime = GameManager.Instance.GameClock;
             Rpc(nameof(SyncStartTime), _startTime);
         }
         EntityContainer = GetNode<Node3D>("%EntityContainer");
@@ -38,14 +30,13 @@ public partial class Arena : Node3D
 
     public override void _Process(double delta)
     {
-        _lapsed = (GameManager.Instance.ServerTick - _startTime) / 60000f;
+        _lapsed = (GameManager.Instance.GameClock - _startTime) / 60f;
     }
 
-    public float GetTimeLeft()
+    public double GetTimeLeft()
     {
         return Mathf.Clamp(ArenaDuration - _lapsed, 0, ArenaDuration);
     }
-
 
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]  
     public void SyncStartTime(ulong time)

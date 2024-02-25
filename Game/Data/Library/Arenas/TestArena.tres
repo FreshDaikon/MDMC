@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ArenaObject" load_steps=5 format=3 uid="uid://dlxy8sbioh3i"]
+
+[ext_resource type="Script" path="res://Code/Game/Data/ArenaObject.cs" id="1_2w0of"]
+[ext_resource type="Script" path="res://Code/System/DataID.cs" id="1_f6jms"]
+[ext_resource type="PackedScene" uid="uid://04nun7ayudyy" path="res://Data/Instances/Arenas/TestArena.tscn" id="2_scp4v"]
+
+[sub_resource type="Resource" id="Resource_u2gje"]
+script = ExtResource("1_f6jms")
+Id = -2009199945
+
+[resource]
+script = ExtResource("1_2w0of")
+ID = SubResource("Resource_u2gje")
+Scene = ExtResource("2_scp4v")
+Name = "Basic Gym"
+Description = "It's the test scene!"

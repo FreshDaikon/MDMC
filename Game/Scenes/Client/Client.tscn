@@ -25,10 +25,7 @@ ingamemenuScene = ExtResource("4_6g5te")
 
 [node name="DataManager" type="Node" parent="Managers/Game"]
 script = ExtResource("5_kp3vg")
-SkillContainersPath = "res://Data/Instances/SkillContainers"
-SkillsPath = "res://Data/Instances/Skills"
-ModifiersPath = "res://Data/Instances/Modifiers"
-ArenasPath = "res://Data/Instances/Arenas"
+LibraryPath = "res://Data/Library"
 
 [node name="ArenaManager" type="Node" parent="Managers/Game"]
 script = ExtResource("9_a7vxa")

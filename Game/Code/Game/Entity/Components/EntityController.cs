@@ -7,23 +7,20 @@ namespace Daikon.Game;
 public partial class EntityController : CharacterBody3D
 {
     public List<Vector3> Forces = new List<Vector3>();
-    // Gravity Should Apply to all Entities:
     private float gravity = (float)ProjectSettings.GetSetting("physics/3d/default_gravity");
-    private const int interpolationOffset = 100;
+    private const double interpolationOffset = 0.1;
     private List<EntityState> entityStatesBuffer = new();
     private EntityState lastState;
 
     public Vector3 SavedPosition;
     public Vector3 SavedRotation;
 
-    public float CurrentFactor = 1f;
-
     public override void _PhysicsProcess(double delta)
     {
         if(Multiplayer.IsServer())
         {
             MoveAndSlide();
-            Rpc(nameof(UpdateEntityState),  (int)GameManager.Instance.ServerTick, Position, Rotation);
+            Rpc(nameof(UpdateEntityState), GameManager.Instance.GameClock, Position, Rotation);
         }        
         else
         {
@@ -33,11 +30,11 @@ public partial class EntityController : CharacterBody3D
 
     public virtual void UpdateController()
     {  
-        if(GameManager.Instance.ServerTick == 0)
+        if(GameManager.Instance.GameClock == 0)
         { 
             return;
         }
-        var safeTime = (int)GameManager.Instance.ServerTick;
+        var safeTime = GameManager.Instance.GameClock;
         var renderTime = safeTime - interpolationOffset; 
         if(entityStatesBuffer.Count > 2)
         {
@@ -106,7 +103,7 @@ public partial class EntityController : CharacterBody3D
     }
     //RPC Calls:
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void UpdateEntityState(int time, Vector3 postition, Vector3 rotation)
+    private void UpdateEntityState(double time, Vector3 postition, Vector3 rotation)
     {
         var newState = new EntityState()
         {

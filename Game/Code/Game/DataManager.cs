@@ -1,28 +1,16 @@
 using System.Collections.Generic;
 using Godot;
 using Daikon.Game;
+using System.Linq;
+using System.IO;
 
 public partial class DataManager : Node
 {
     public static DataManager Instance;
 
-    [Export]
-    private string SkillContainersPath;
-    [Export]
-    private string SkillsPath;
-    [Export]
-    private string ModifiersPath;
-    [Export]
-    private string ArenasPath;
-
-    //Keep Listing:
-    private List<SkillContainer> skillContainers;
-    private List<Skill> skills;
-    private List<Modifier> modifiers;
-    private List<Arena> arenas;
-
-    // id and path...
-    private Dictionary<int, PackedScene> ArenaLookup;
+    [Export(PropertyHint.Dir)]
+    private string LibraryPath;
+    private List<DataObject> library;
 
     public override void _Ready()
     {
@@ -31,138 +19,119 @@ public partial class DataManager : Node
             Free();
         }
         Instance = this;
-        SetupModifiers();
-        SetupSkillContainers();
-        SetupSkills();
-        SetupArenas();
+        library = new List<DataObject>();
+        SetupLibrary();
     }
 
-    private void SetupModifiers()
+    private void SetupLibrary()
     {
-        modifiers = new List<Modifier>();
-        using var dir = DirAccess.Open(ModifiersPath);
+        GetObjectsInDirectory(LibraryPath);
+        GD.Print(
+            "Finished filling up library! =>  Library Items:");
+        library.ForEach(x => { GD.Print(
+            "---------------------------      Library item: " + x.Name ); });
+    }
+
+    private void GetObjectsInDirectory(string path)
+    {
+        var dir = DirAccess.Open(path);
         if(dir != null)
         {
             dir.ListDirBegin();
             string file = dir.GetNext();
             while(file != "")
             {
-                var res = (PackedScene)ResourceLoader.Load(ModifiersPath + "/" + file.Replace(".remap", ""));
-                var instance = (Modifier)res.Instantiate();
-                modifiers.Add(instance);
-                file = dir.GetNext();
-            }
-            dir.ListDirEnd();
-        }
-    }
-    private void SetupSkillContainers()
-    {
-        skillContainers = new List<SkillContainer>();
-        using var dir = DirAccess.Open(SkillContainersPath);
-        if(dir != null)
-        {
-            dir.ListDirBegin();
-            string file = dir.GetNext();
-            while(file != "")
-            {
-                var res = (PackedScene)ResourceLoader.Load(SkillContainersPath + "/" + file.Replace(".remap", ""));
-                var instance = (SkillContainer)res.Instantiate();   
-                skillContainers.Add(instance);
-                file = dir.GetNext();
+                if(dir.CurrentIsDir())
+                {
+                    GetObjectsInDirectory(path + "/" + file);
+                    file = dir.GetNext();
+                }
+                else
+                {
+                    var res = ResourceLoader.Load(path + "/" + file.Replace(".remap", ""));
+                    library.Add((DataObject)res);
+                    file = dir.GetNext();
+                }
             }
             dir.ListDirEnd();
         }
     }
 
-    private void SetupSkills()
+    // Skills:
+    public List<SkillObject> GetAllSkills()
     {
-        skills = new List<Skill>();
-        using var dir = DirAccess.Open(SkillsPath);
-        if(dir != null)
-        {
-            dir.ListDirBegin();
-            string file = dir.GetNext();
-            while(file != "")
-            {
-                var res = (PackedScene)ResourceLoader.Load(SkillsPath + "/" + file.Replace(".remap", ""));
-                var instance = (Skill)res.Instantiate();
-                skills.Add(instance);
-                file = dir.GetNext();
-            }
-            dir.ListDirEnd();
-        }
-    }
-
-    private void SetupArenas()
-    {
-        GD.Print("Setting up arenas..");
-        arenas = new List<Arena>();
-        ArenaLookup = new Dictionary<int, PackedScene>();
-        using var dir = DirAccess.Open(ArenasPath);
-
-        if(dir != null)
-        {
-            dir.ListDirBegin();
-            string file = dir.GetNext();
-            while(file != "")
-            {
-                GD.Print("DataManager Adding Arena :");
-                var res = (PackedScene)ResourceLoader.Load(ArenasPath + "/" + file.Replace(".remap", ""));
-                var instance = (Arena)res.Instantiate();
-                var id = instance.Id;
-                ArenaLookup.Add(id, res);
-                instance.QueueFree();
-                file = dir.GetNext();
-            }
-            dir.ListDirEnd();
-        }
-    }
-    public Modifier GetModifier(int id)
-    {
-        var mod = modifiers.Find(a => a.Id == id);
-        return mod == null ? null : (Modifier)mod.Duplicate();
-    }
-    public List<SkillContainer> GetSkillContainers()
-    {
-        return skillContainers;
-    }
-    public List<Skill> GetSkills()
-    {
+        var skills = library.Where(skill => skill is SkillObject).Cast<SkillObject>().ToList();
         return skills;
     }
-    public SkillContainer GetSkillContainer(int id)
+
+    public SkillObject GetSkill(int id)
     {
-        var container = skillContainers.Find(a => a.Id == id);
-        return container == null ? null : (SkillContainer)container.Duplicate();
-    }
-    public Skill GetSkill(int id)
-    {
-        var skill = skills.Find(a => a.Id == id);
-        return skill == null ? null : (Skill)skill.Duplicate();
-    }    
-    public Arena GetArena(int id)
-    {
-        PackedScene scene;
-        if(ArenaLookup.TryGetValue(id, out scene))
-        {
-            return scene.Instantiate<Arena>();
-        }
-        else
-        {
-            return null;
-        }
+        var skill = GetAllSkills().Find(s => s.Id == id);
+        return skill;
     }
 
-    public List<Arena> GetArenas()
+    public Skill GetSkillInstance(int id)
     {
-        List<Arena> arenas = new List<Arena>();
-        var scenes = ArenaLookup.Values;
-        foreach(PackedScene scene in scenes)
-        {
-            var instance = scene.Instantiate<Arena>();
-            arenas.Add(instance);
-        }
+        var skill = GetAllSkills().Find(s => s.Id == id);
+        var instance = skill.GetSkill();
+        return instance;
+    }
+
+    public List<ArenaObject> GetAllArenas()
+    {
+        var arenas = library.Where(arena => arena is ArenaObject).Cast<ArenaObject>().ToList();
         return arenas;
+    }
+    
+    public ArenaObject GetArena(int id)
+    {
+        var arena = GetAllArenas().Find(s => s.Id == id);
+        return arena;
+    }
+
+    public Arena GetArenaInstance(int id)
+    {
+        var arena = GetAllArenas().Find(a => a.Id == id);
+        var instance = arena.GetArena();
+        return instance;
+    }
+
+    public List<SkillContainerObject> GetAllSkillContainers()
+    {
+        var skillContainers = library.Where(container => container is SkillContainerObject).Cast<SkillContainerObject>().ToList();
+        return skillContainers;
+    }
+
+    public SkillContainerObject GetSkillContainer(int id)
+    {
+        var container = GetAllSkillContainers().Find(s => s.Id == id);
+        return container;
+    }
+
+    public SkillContainer GetSkillContainerInstance(int id)
+    {
+        var container = GetAllSkillContainers().Find(s => s.Id == id);
+        var instance = container.GetSkillContainer();
+        return instance;
+    }
+
+    public List<ModifierObject> GetAllModifiers()
+    {
+        var modifiers = library.Where(mod => mod is ModifierObject).Cast<ModifierObject>().ToList();
+        return modifiers;
+    }
+
+    public ModifierObject GetModifier(int id)
+    {
+        var mod = GetAllModifiers().Find(m => m.Id == id);
+        return mod;
+    }
+
+    public Modifier GetModifierInstance(int id)
+    {
+        var mod = GetAllModifiers().Find(m => m.Id == id);
+        var instance = mod.GetModifier();
+        return instance;
     }
 
     public Modifier GetModifierFromPath(string path)

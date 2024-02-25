@@ -23,7 +23,8 @@ public static class MD
         INVALID_TARGET,
         INSUFFICIENT_RESOURCE,
         NOT_SERVER,
-        ERROR
+        ERROR,
+        INVALID_SETUP
     }
     public enum InputScheme
     {

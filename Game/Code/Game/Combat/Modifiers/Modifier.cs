@@ -25,19 +25,13 @@ public partial class Modifier : Node
     [Export]
     public int MaxStacks = 1;
     [Export]
-    private ulong startTime;    
+    private double startTime;    
     [Export]
-    public float TimeRemaining = -1f;
+    public double TimeRemaining = -1f;
 
     [Export]
     public StatMod[] StatMods { get; set; }
-
-    [Export]
-    private DataID ID;
-    public int Id
-    {
-        get { return ID.Id; }
-    } 
+    public ModifierObject Data;
 
     //Time Keeping continued:
     private int lastLapse = 0;
@@ -45,16 +39,17 @@ public partial class Modifier : Node
 
     // Entity to which this mod is attached:
     public EntityStatus targetStatus;
-
     private NodePath ModActionsPath;
     private NodePath ModModsPath;
 
+    //Entity who applied this modifier:
+    
 
     public override void _Ready()
     {
         if(!IsPermanent)
         {
-            startTime = GameManager.Instance.ServerTick;            
+            startTime = GameManager.Instance.GameClock;            
         }          
         if(Multiplayer.GetUniqueId() == 1)
         {
@@ -71,11 +66,11 @@ public partial class Modifier : Node
         {   
             if(IsPermanent)
                 return;
-            float lapsed = (GameManager.Instance.ServerTick - startTime) / 1000f;       
+            double lapsed = (GameManager.Instance.GameClock - startTime);       
             TimeRemaining = Duration - lapsed;     
             if(IsTicked)
             {
-                float scaled = lapsed * TickRate;
+                double scaled = lapsed * TickRate;
                 if((int)scaled > lastLapse)
                 {
                     ticks += 1;
@@ -92,7 +87,7 @@ public partial class Modifier : Node
         else
         {
             //This is just for Client Side Stuff:
-            float lapsed = (GameManager.Instance.ServerTick - startTime) / 1000f;            
+            double lapsed = GameManager.Instance.GameClock - startTime;            
         }
     }
     public override void _ExitTree()
@@ -104,7 +99,7 @@ public partial class Modifier : Node
         base._ExitTree();
     }
     
-    public float GetTimeRemaining()
+    public double GetTimeRemaining()
     {
         if(IsPermanent)
         {
@@ -112,7 +107,7 @@ public partial class Modifier : Node
         }
         else
         {
-            var lapsed = (GameManager.Instance.ServerTick - startTime) / 1000f;
+            var lapsed = GameManager.Instance.GameClock - startTime;
             var remaining = Mathf.Clamp(Duration - lapsed, 0, Duration);
             return remaining / Duration;
         }

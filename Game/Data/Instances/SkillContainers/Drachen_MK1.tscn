@@ -1,11 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://c7cpyo2qxinvj"]
+[gd_scene load_steps=7 format=3 uid="uid://c7cpyo2qxinvj"]
 
 [ext_resource type="Script" path="res://Code/Game/Combat/ArsenalSystem/SkillContainer.cs" id="1_mmgbo"]
-[ext_resource type="Texture2D" uid="uid://d1g6ehxjt0nof" path="res://Assets/UI/ArsenalSystem/SkillContainers/Drachen_MK1.png" id="2_7uj71"]
 [ext_resource type="PackedScene" uid="uid://dguqhcrchvj7n" path="res://Scenes/Game/Combat/ArsenalSystem/SkillSlot.tscn" id="2_13mie"]
 [ext_resource type="Script" path="res://Code/Game/Combat/ArsenalSystem/ComboSlot.cs" id="3_trlxi"]
-[ext_resource type="Script" path="res://Code/System/DataID.cs" id="3_vbij5"]
-[ext_resource type="Script" path="res://Code/Game/Combat/Modifiers/StatMod.cs" id="4_20jmv"]
 
 [sub_resource type="Resource" id="Resource_nuax0"]
 script = ExtResource("3_trlxi")
@@ -25,31 +22,9 @@ ComboSlotIndex = 1
 ComboPotecyBonus = 2.0
 FailurePotencyPenalty = 0.7
 
-[sub_resource type="Resource" id="Resource_lne6g"]
-script = ExtResource("3_vbij5")
-Id = 462203807
-
-[sub_resource type="Resource" id="Resource_xqqfo"]
-script = ExtResource("4_20jmv")
-Category = 5
-Value = 0.1
-Name = "The soul of Dragoon"
-
 [node name="ContainerName" type="Node"]
 script = ExtResource("1_mmgbo")
-ContainerName = "Drachen MK1"
-ContainerDescription = "The Drachen MK1 is a damage focused Armament.
-Offers little utility in exchange for high damage and a average GCD.
-Having this equipped increase all damage by 10%
-GCD : 2.5 seconds
-Skill Slot 1 : DPS, 1.5x dmg.
-Skill Slot 2 : DPS, 1.5x dmg.
-Skill Slot 3 : DPS, 1.5x dmg.
-Skill Slot 4 : DPS, 1.5x dmg."
-ContainerIcon = ExtResource("2_7uj71")
 ComboSlots = Array[Object]([SubResource("Resource_nuax0"), SubResource("Resource_ybvqb"), SubResource("Resource_3tgaa")])
-ID = SubResource("Resource_lne6g")
-StatMods = Array[Object]([SubResource("Resource_xqqfo")])
 
 [node name="SkillSlots" type="Node" parent="."]
 unique_name_in_owner = true

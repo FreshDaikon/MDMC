@@ -29,7 +29,7 @@ public partial class EntityModifiers : Node
     {
         if(mod != null)
         {
-            var existingMod = modContainer.GetChildren().Where(m => m is Modifier).Cast<Modifier>().ToList().Find( m => m.Id == mod.Id);
+            var existingMod = modContainer.GetChildren().Where(m => m is Modifier).Cast<Modifier>().ToList().Find( m => m.Data.Id == mod.Data.Id);
             if(existingMod != null)
             {
                 if(!existingMod.CanStack)

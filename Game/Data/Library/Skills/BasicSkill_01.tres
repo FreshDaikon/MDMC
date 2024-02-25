@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="SkillObject" load_steps=6 format=3 uid="uid://8ulfsm6khl0s"]
+
+[ext_resource type="Script" path="res://Code/System/DataID.cs" id="1_2sqob"]
+[ext_resource type="Script" path="res://Code/Game/Data/SkillObject.cs" id="1_gu08a"]
+[ext_resource type="Texture2D" uid="uid://do6mkfdyxlvf5" path="res://Assets/UI/ArsenalSystem/Skills/FlubberSkill_DEBUGF.png" id="2_p5xq3"]
+[ext_resource type="PackedScene" uid="uid://4pu7tudmtow7" path="res://Data/Instances/Skills/BasicPotency.tscn" id="3_scqhh"]
+
+[sub_resource type="Resource" id="Resource_63klu"]
+script = ExtResource("1_2sqob")
+Id = 800990631
+
+[resource]
+script = ExtResource("1_gu08a")
+IsUniversalSkill = false
+TimerType = 0
+BasePotency = 10000
+Range = 10.0
+Cooldown = 0.0
+ActionType = 0
+CanMove = false
+CastTime = 0.0
+ChannelTime = 0.0
+TickRate = 1.0
+ThreatMultiplier = 1.0
+RealizeCastPath = ""
+RealizeFinishedPath = ""
+RealizeSkillPath = ""
+ID = SubResource("Resource_63klu")
+Scene = ExtResource("3_scqhh")
+Name = "Basic Skill"
+Description = "Some Skill!"
+Image = ExtResource("2_p5xq3")
+Icon = ExtResource("2_p5xq3")

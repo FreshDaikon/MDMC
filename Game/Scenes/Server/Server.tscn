@@ -16,10 +16,7 @@ sackManEntityPath = "res://Scenes/Game/Bosses/SackMan.tscn"
 
 [node name="DataManager" type="Node" parent="Managers/Game"]
 script = ExtResource("2_85quu")
-SkillContainersPath = "res://Data/Instances/SkillContainers"
-SkillsPath = "res://Data/Instances/Skills"
-ModifiersPath = "res://Data/Instances/Modifiers"
-ArenasPath = "res://Data/Instances/Arenas"
+LibraryPath = "res://Data/Library"
 
 [node name="ArenaManager" type="Node" parent="Managers/Game"]
 script = ExtResource("6_wdpge")

@@ -6,14 +6,12 @@ namespace Daikon.Game;
 
 public partial class GameManager : Node
 {
-
     public static GameManager Instance;    
-
     private bool _isConnected = false;
-    private ulong _serverTick = 0;
-    private ulong _clock = 0;
-    private ulong _latency = 0;
-    private ulong _deltaLatency = 0;
+    private double _serverTick = 0;
+    private double _clock = 0;
+    private double _latency = 0;
+    private double _deltaLatency = 0;
     private double _decimalCollector = 0; 
     private bool _shitCheck = false;
 
@@ -31,10 +29,19 @@ public partial class GameManager : Node
             return;
         }
         Instance = this;        
-        _clock = GetSystemTimeMsec();
+        _clock = GetSystemTime();
     }
 
-    public ulong ServerTick
+    public override void _ExitTree()
+    {
+		if(Instance == this )
+		{
+			Instance = null;
+		}
+        base._ExitTree();
+    }
+
+    public double GameClock
     {
         get { return _clock;}    
     }
@@ -56,9 +63,14 @@ public partial class GameManager : Node
         _isConnected = false;
     }
 
-    private ulong GetSystemTimeMsec()
+    private double GetSystemTime()
     {
-        return (ulong)(Time.GetUnixTimeFromSystem() * 1000); 
+        return Time.GetUnixTimeFromSystem(); 
+    }
+
+    public double GetLatency()
+    {
+        return _latency;
     }
 
     public bool IsGameRunning()
@@ -68,37 +80,37 @@ public partial class GameManager : Node
 
     private void SyncServerTime()
     {
-        RpcId(1, nameof(FetchServerTime), GetSystemTimeMsec());
+        RpcId(1, nameof(FetchServerTime), GetSystemTime());
         Timer latencyTicker = new Timer
         {
             WaitTime = 0.5,
             Autostart = true
         };
         latencyTicker.Timeout += () => {
-            RpcId(1, nameof(DetermineLatency), GetSystemTimeMsec()); 
+            RpcId(1, nameof(DetermineLatency), GetSystemTime()); 
         };
         AddChild(latencyTicker);
     }        
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void FetchServerTime(ulong clientTime)
+    private void FetchServerTime(double clientTime)
     {
         if(!Multiplayer.IsServer())
             return;
         var peer = Multiplayer.GetRemoteSenderId();
-        RpcId(peer, nameof(ReturnServerTime), GetSystemTimeMsec(), clientTime);
+        RpcId(peer, nameof(ReturnServerTime), GetSystemTime(), clientTime);
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode =  MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void ReturnServerTime(ulong serverTime, ulong clientTime)
+    private void ReturnServerTime(double serverTime, double clientTime)
     {
         EmitSignal(SignalName.ConnectionStarted);
         _isConnected = true;
-        var latency = (GetSystemTimeMsec() - clientTime) / 2;
-        _clock = (serverTime + latency);
+        var latency = (GetSystemTime() - clientTime) / 2;
+        _clock = serverTime + latency;
     }
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void DetermineLatency(ulong clientTime)
+    private void DetermineLatency(double clientTime)
     {
         if(!Multiplayer.IsServer())
             return;
@@ -107,44 +119,32 @@ public partial class GameManager : Node
     }
     
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode =  MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void ReturnLatency(ulong clientTime)
+    private void ReturnLatency(double clientTime)
     {
-        GD.Print("Updating Latency..");
-        _latencyList.Add((GetSystemTimeMsec() - clientTime) / 2);
+        _latencyList.Add((GetSystemTime() - clientTime) / 2);
         if(_latencyList.Count == 9)
         {
             _latencyList.Sort();
             var middle = _latencyList[4];
-            GD.Print("Latency List:");
-            _latencyList.ForEach(x => { GD.Print(x); });
-            var noExtremes = _latencyList.Where(x => x <= (middle * 2) && x <= 20);
+            var noExtremes = _latencyList.Where(x => x <= (middle * 2) && x <= 0.02);
             var average = _latencyList.Average();
-            _deltaLatency = (ulong)(average - _latency);
-            _latency = (ulong)average;
-            GD.Print("Latency: " + _latency );
+            _deltaLatency = average - _latency;
+            _latency = average;
             _latencyList.Clear();
         }
     }
-
     public override void _PhysicsProcess(double delta)
     {
         if(_isConnected)
         {
             if(Multiplayer.IsServer())
             {
-                _clock = GetSystemTimeMsec();
+                _clock = GetSystemTime();
             }
             else
             {
-                //GD.Print("yes very cool..");
-                _clock += (ulong)(delta*1000) + _deltaLatency;
+                _clock += delta + _deltaLatency;
                 _deltaLatency = 0;
-                _decimalCollector += (delta * 1000) - (int)(delta * 1000);
-                if(_decimalCollector >= 1)
-                {
-                    _clock += 1;
-                    _decimalCollector -= 1;
-                }
             }
         }
     }

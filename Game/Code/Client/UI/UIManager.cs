@@ -34,16 +34,45 @@ public partial class UIManager : Node
         UIContainer = GetNode("%UIContainer");
     }
 
+    public override void _ExitTree()
+    {
+		if(Instance == this )
+		{
+			Instance = null;
+		}
+        base._ExitTree();
+    }
+
     public override void _PhysicsProcess(double delta)
     {
-        if(Input.IsActionJustPressed("OpenMenu"))
+
+        if(Input.IsActionJustPressed("Start"))
         {
-            TrySetUIState(UIState.Frontend);
+            if(_currentState == UIState.HUD)
+            {
+                TrySetUIState(UIState.Frontend);
+            }
+            else
+            {
+                TrySetUIState(UIState.HUD);
+            }
         }
-        if(Input.IsActionJustPressed("OpenConfig") && _currentState != UIState.Ingame)
+        if(Input.IsActionJustPressed("Select"))
         {
-            TrySetUIState(UIState.Ingame);
+            if(_currentState == UIState.HUD)
+            {
+                TrySetUIState(UIState.Ingame);
+            }
+            else
+            {
+                TrySetUIState(UIState.HUD);
+            }
         }        
+    }
+
+    public UIState GetCurrentState()
+    {
+        return _currentState;
     }
 
     public void TrySetUIState(UIState state)
@@ -92,5 +121,4 @@ public partial class UIManager : Node
             }
         }
     }
-
 }

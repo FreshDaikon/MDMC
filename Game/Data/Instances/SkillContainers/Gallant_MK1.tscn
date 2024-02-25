@@ -1,40 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://cga4pk7goqxb2"]
+[gd_scene load_steps=3 format=3 uid="uid://cga4pk7goqxb2"]
 
 [ext_resource type="Script" path="res://Code/Game/Combat/ArsenalSystem/SkillContainer.cs" id="1_pdulq"]
-[ext_resource type="Texture2D" uid="uid://dym22codkf6by" path="res://Assets/UI/ArsenalSystem/SkillContainers/Gallant_MK2.png" id="2_4xsrj"]
 [ext_resource type="PackedScene" uid="uid://dguqhcrchvj7n" path="res://Scenes/Game/Combat/ArsenalSystem/SkillSlot.tscn" id="2_lx6bl"]
-[ext_resource type="Script" path="res://Code/System/DataID.cs" id="3_v6xm2"]
-[ext_resource type="Script" path="res://Code/Game/Combat/Modifiers/StatMod.cs" id="4_w6xfl"]
-
-[sub_resource type="Resource" id="Resource_6w2lu"]
-script = ExtResource("3_v6xm2")
-Id = -525528611
-
-[sub_resource type="Resource" id="Resource_ryrx2"]
-script = ExtResource("4_w6xfl")
-Category = 1
-Value = 20000.0
-Name = "Soul of the Bulwark"
-
-[sub_resource type="Resource" id="Resource_3uul3"]
-script = ExtResource("4_w6xfl")
-Category = 2
-Value = 10.0
-Name = "Spite of the Heavens"
-
-[sub_resource type="Resource" id="Resource_qjqcg"]
-script = ExtResource("4_w6xfl")
-Category = 3
-Value = 0.2
-Name = "Shield of Faith"
 
 [node name="Gallant_MK1" type="Node"]
 script = ExtResource("1_pdulq")
-ContainerName = "Gallant MK1"
-ContainerDescription = "The Gallant is a defensive powerhouse of an armament. Providing bonus mitigation and max HP. GCD is rather fast, but the damage multiplier is rather low."
-ContainerIcon = ExtResource("2_4xsrj")
-ID = SubResource("Resource_6w2lu")
-StatMods = Array[Object]([SubResource("Resource_ryrx2"), SubResource("Resource_3uul3"), SubResource("Resource_qjqcg")])
 
 [node name="SkillSlots" type="Node" parent="."]
 unique_name_in_owner = true

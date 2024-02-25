@@ -5,10 +5,5 @@
 [node name="PlayerArsenal" type="Node"]
 script = ExtResource("1_5xy5g")
 
-[node name="Spawner" type="MultiplayerSpawner" parent="."]
-unique_name_in_owner = true
-spawn_path = NodePath("../SkillContainers")
-spawn_limit = 8
-
 [node name="SkillContainers" type="Node" parent="."]
 unique_name_in_owner = true

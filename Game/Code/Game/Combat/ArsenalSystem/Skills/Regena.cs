@@ -14,11 +14,9 @@ public partial class Regena : Skill
     public override void _Ready()
     {        
         //Slightly Messy Setup:
-        var temp = (PackedScene)ResourceLoader.Load(ModifierPath);
-        var instance = temp.Instantiate<Modifier>();
-        modId = instance.Id;
-        instance.QueueFree();
-        base._Ready();
+        var data = (ModifierObject)ResourceLoader.Load(ModifierPath);
+        modId = data.Id;
+        data.Free();
     }
 
     public override SkillResult TriggerResult()
@@ -27,7 +25,7 @@ public partial class Regena : Skill
             return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.NOT_SERVER };
 
         var target = Player.CurrentTarget;
-        var mod = DataManager.Instance.GetModifier(modId);
+        var mod = DataManager.Instance.GetModifierInstance(modId);
         if(mod != null)
         {
             var result = target.Modifiers.AddModifier(mod);

@@ -59,7 +59,6 @@ unique_name_in_owner = true
 
 [node name="Arsenal" parent="." instance=ExtResource("3_sdwaw")]
 unique_name_in_owner = true
-skillContainersPath = "res://Data/Instances/SkillContainers"
 
 [node name="Input" parent="." instance=ExtResource("3_1ru0t")]
 unique_name_in_owner = true

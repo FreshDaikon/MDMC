@@ -1,5 +1,6 @@
 using Godot;
 using Daikon.Helpers;
+using Daikon.Client;
 
 namespace Daikon.Game;
 
@@ -17,7 +18,6 @@ public partial class PlayerInput : Node
      // References:
 	private PlayerEntity player;
     private PlayerCamera camera;
-    private MultiplayerSynchronizer synchronizer;
 
     [Signal]
     public delegate void ActionButtonPressedEventHandler(string containerName, int slot);
@@ -30,13 +30,14 @@ public partial class PlayerInput : Node
     {
         player = (PlayerEntity)GetParent();
         camera = player.GetNode<PlayerCamera>("%Rig");       
-        synchronizer = GetNode<MultiplayerSynchronizer>("%Sync"); 
     }
     public override void _Process(double delta)
     {
         if(GetMultiplayerAuthority() != Multiplayer.GetUniqueId())
             return;
         if(!StateManager.Instance.HasFocus)
+            return;
+        if(UIManager.Instance.GetCurrentState() != UIManager.UIState.HUD)
             return;
         HandleInputs();
     }    
@@ -45,7 +46,6 @@ public partial class PlayerInput : Node
     {
         return isActivator1Pressed || isActivator2Pressed || isActivator3Pressed;
     }
-
     private void HandleInputs()
     { 
         isActivator1Pressed = false;
@@ -306,6 +306,7 @@ public partial class PlayerInput : Node
             }
             UpdateRotation(Direction);
         }        
+        RpcId(1, nameof(SyncDirection), Direction);   
     }
 
     private void UpdateRotation(Vector3 direction)
@@ -314,7 +315,7 @@ public partial class PlayerInput : Node
         Vector2 lookDirection = new Vector2(direction.Z, direction.X);
         Vector3 rotation = new Vector3(0f, lookDirection.Angle(), 0f); 
 		controller.Rotation = rotation;
-        RpcId(1, nameof(SetRotation), rotation);    
+        RpcId(1, nameof(SyncRotation), rotation);    
     }
  
     //RPC Calls: 
@@ -330,7 +331,16 @@ public partial class PlayerInput : Node
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.UnreliableOrdered)]
-    private void SetRotation(Vector3 rotation)
+    private void SyncDirection(Vector3 direction)
+    {
+        if(Multiplayer.IsServer())
+        {
+            Direction = direction;
+        }
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.UnreliableOrdered)]
+    private void SyncRotation(Vector3 rotation)
     {
         if(Multiplayer.IsServer())
         {

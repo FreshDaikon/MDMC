@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="SkillContainerObject" load_steps=6 format=3 uid="uid://boo7aj6yl6pro"]
+
+[ext_resource type="Script" path="res://Code/Game/Data/SkillContainerObject.cs" id="1_r3rd8"]
+[ext_resource type="Script" path="res://Code/System/DataID.cs" id="1_tmxy5"]
+[ext_resource type="PackedScene" uid="uid://c7cpyo2qxinvj" path="res://Data/Instances/SkillContainers/Drachen_MK1.tscn" id="2_nvadd"]
+[ext_resource type="Texture2D" uid="uid://d1g6ehxjt0nof" path="res://Assets/UI/ArsenalSystem/SkillContainers/Drachen_MK1.png" id="2_o1cbd"]
+
+[sub_resource type="Resource" id="Resource_mu73m"]
+script = ExtResource("1_tmxy5")
+Id = 139960828
+
+[resource]
+script = ExtResource("1_r3rd8")
+ID = SubResource("Resource_mu73m")
+Scene = ExtResource("2_nvadd")
+Name = "Drachen MK1"
+Description = "Some Object Description."
+Icon = ExtResource("2_o1cbd")
