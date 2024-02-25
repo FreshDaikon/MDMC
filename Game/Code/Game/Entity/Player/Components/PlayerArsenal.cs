@@ -246,7 +246,6 @@ public partial class PlayerArsenal: Node
             }            
             var lapsed = GameManager.Instance.GameClock - GCDStartTime;
             var modGCD = Player.Status.GetGCDModifier(); 
-            MD.Log("Lapsed: " + lapsed + " GCD: " + modGCD);
             if(lapsed < modGCD)
             {
                 return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.ON_COOLDOWN };
@@ -353,7 +352,6 @@ public partial class PlayerArsenal: Node
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void SyncGCD(double time)
     {
-        MD.Log("Syncing Arsenal GCD Start Time to: " + time + ", Current time is : " + GameManager.Instance.GameClock );
         GCDStartTime = time;
     }
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]

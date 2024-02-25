@@ -47,7 +47,7 @@ public partial class CastBar : Control
 				Visible = false;
 				return;
 			}
-			float left = ((float)lapsed / (float)localPlayer.Arsenal.CastingTime);
+			float left = (float)(lapsed / localPlayer.Arsenal.CastingTime);
 			CastBarRect.Size = new Vector2(Mathf.Clamp(CastBarWidth * left, 0, CastBarWidth) , CastBarRect.Size.Y);
 		}
 		else

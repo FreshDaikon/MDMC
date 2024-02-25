@@ -143,6 +143,10 @@ public partial class SinglePotency : Skill
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public override void SkillRealization(int value, int type)
     {
-        // Implement logic here
+        DamageNumberRealization realization = (DamageNumberRealization)DataManager.Instance.GetRealizationObjectFromPath(RealizeSkillPath);
+        realization.Value = value;
+        realization.Type = (MD.CombatMessageType)type;
+        realization.SpawnWithTarget(Player.CurrentTarget.Controller, Player.Controller.Position);
+        base.SkillRealization(value, type);
     }
 }
