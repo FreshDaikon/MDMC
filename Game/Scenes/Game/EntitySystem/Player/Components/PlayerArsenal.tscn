@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://c5m53oj4o6moe"]
 
-[ext_resource type="Script" path="res://Code/Game/Entity/Player/Components/PlayerArsenal.cs" id="1_5xy5g"]
+[ext_resource type="Script" path="res://Code/Game/Combat/ArsenalSystem/PlayerArsenal.cs" id="1_5xy5g"]
 
 [node name="PlayerArsenal" type="Node"]
 script = ExtResource("1_5xy5g")

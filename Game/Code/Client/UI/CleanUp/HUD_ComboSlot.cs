@@ -37,14 +37,14 @@ public partial class HUD_ComboSlot : Control
 			SkillContainer container = localPlayer.Arsenal.GetSkillContainer(ContainerName);			
 			if(container == null)
 				return;
-			if(container.ComboSlots == null)
+			if(container.SkillSlots == null)
 				return;			
-			for(int i = 0; i < container.ComboSlots.Length; i++)
+			for(int i = 0; i < container.SkillSlots.Length; i++)
 			{
-				ComboSlot current = container.ComboSlots[i];
+				SkillSlotData current = container.SkillSlots[i];
 				if(current.ComboSlotIndex == SlotIndex)
 				{
-					Visible = true;
+					Visible = current.IsComboSlot;
 					ComboSlotLabel.Text = (i+1).ToString();
 					if(container.NextComboSlot == i)
 					{

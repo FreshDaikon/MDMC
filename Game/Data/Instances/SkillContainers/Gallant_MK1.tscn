@@ -1,22 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://cga4pk7goqxb2"]
+[gd_scene load_steps=2 format=3 uid="uid://ctoahu7lv15l7"]
 
 [ext_resource type="Script" path="res://Code/Game/Combat/ArsenalSystem/SkillContainer.cs" id="1_pdulq"]
-[ext_resource type="PackedScene" uid="uid://dguqhcrchvj7n" path="res://Scenes/Game/Combat/ArsenalSystem/SkillSlot.tscn" id="2_lx6bl"]
 
 [node name="Gallant_MK1" type="Node"]
 script = ExtResource("1_pdulq")
 
-[node name="SkillSlots" type="Node" parent="."]
+[node name="Skills" type="Node" parent="."]
 unique_name_in_owner = true
-
-[node name="SkillSlot1" parent="SkillSlots" instance=ExtResource("2_lx6bl")]
-PotencyMultiplier = 0.5
-
-[node name="SkillSlot2" parent="SkillSlots" instance=ExtResource("2_lx6bl")]
-PotencyMultiplier = 0.5
-
-[node name="SkillSlot3" parent="SkillSlots" instance=ExtResource("2_lx6bl")]
-SlotSkillType = 2
-
-[node name="SkillSlot4" parent="SkillSlots" instance=ExtResource("2_lx6bl")]
-SlotSkillType = 1

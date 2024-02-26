@@ -19,6 +19,8 @@ public partial class Skill : Node
     public float TickRate = 1f;
     public float ThreatMultiplier = 1f;
 
+    public int AssignedSlot = -1;
+
     [ExportGroup("Standard Realizations")]
     [Export(PropertyHint.File)]
     public string RealizeCastPath;
@@ -49,14 +51,6 @@ public partial class Skill : Node
 
     public void InitSkill()
     {
-        GD.Print("init skill from players side!");
-        Player = GetParent().GetParent<SkillSlot>().Player;
-        GD.Print("Is player null? :" + Player == null);
-        if(!IsUniversalSkill)
-        {
-            SkillType = GetParent().GetParent<SkillSlot>().SlotSkillType;
-        }
-        ThreatMultiplier =  GetParent().GetParent<SkillSlot>().ThreatMultiplier;
         if(Cooldown > 0f)
         {
             StartTime = Mathf.Max(GameManager.Instance.GameClock + Cooldown, 0);
@@ -67,7 +61,7 @@ public partial class Skill : Node
         isCasting = false;
         isChanneling = false;
         lastLapse = 0;
-        StartTime = GameManager.Instance.GameClock - (Cooldown);
+        StartTime = GameManager.Instance.GameClock - Cooldown;
         Rpc(nameof(SyncCooldown), StartTime);
     }
     public SkillResult TriggerSkill()

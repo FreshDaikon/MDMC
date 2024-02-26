@@ -10,7 +10,7 @@
             "cwd": "${workspaceFolder}",
             "console": "externalTerminal",
             "stopAtEntry": false,
-            "args": ["--path", "${workspaceRoot}/Game", " --headless", "--gameserver", "--arena -1779247515"  ]
+            "args": ["--path", "${workspaceRoot}/Game", " --headless", "--gameserver", "--arena -2009199945"  ]
         },
         {
             "name": "PlayfabServer",
@@ -55,7 +55,7 @@
     "compounds": [
         {
             "name": "ServerClient",
-            "configurations": ["Server", "Client_1", "Client_2"],
+            "configurations": ["Server", "Client_1"],
             "stopAll": true
         },
         {

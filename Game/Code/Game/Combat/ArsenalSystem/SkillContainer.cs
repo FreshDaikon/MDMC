@@ -8,141 +8,157 @@ namespace Daikon.Game;
 
 public partial class SkillContainer : Node
 {
-    //Serialized Properties:
-    [ExportCategory("Serialzied Properties :")]
-    [Export]
-    public ComboSlot[] ComboSlots {get; set;}
+    public SkillSlotData[] SkillSlots;
+    public List<ModifierObject> BuffsGranted;
+
     public int NextComboSlot = 0;   
     //Internals:
     public PlayerEntity Player;
     public SkillContainerObject Data;
+    private Node SkillHolder;
     private Node skillSlotContainer;
 
     public override void _Ready()
     {
-        skillSlotContainer = GetNodeOrNull("%SkillSlots");        
+        SkillHolder = GetNodeOrNull("%Skills");        
         InitializeContainer(); 
         base._Ready();
     }    
 
+    public void CleanUp()
+    {
+        foreach(var buff in BuffsGranted)
+        {
+            var match = Player.Modifiers.GetModifiers().Find(m => m.Data.Id == buff.Id);
+            if(match != null)
+            {
+                match.QueueFree();
+            }
+        }
+    }
+
     public void ResetContainer()
     {        
         NextComboSlot = 0;
+        /**
+        TODO : reset skills:
         foreach(var slot in GetSkillSlots())
         {
             slot.ResetSkill();
         }
+        **/
     }
     public void InitializeContainer()
     {
         Player = GetParent().GetParent<PlayerArsenal>().Player;
-        foreach(var slot in GetSkillSlots())
+        if(Multiplayer.IsServer())
         {
-            slot.Player = Player;
+            foreach(var buff in BuffsGranted)
+            {
+                var mod = DataManager.Instance.GetModifierInstance(buff.Id);
+                var result = Player.Modifiers.AddModifier(mod);
+            }
         }
     }
 
     public void SetSkill(int id, int slot)
     {        
-        var skillSlot = (SkillSlot)skillSlotContainer.GetChild(slot);    
-        skillSlot.SetSkill(id);
+        var newSkill = DataManager.Instance.GetSkillInstance(id);
+        if(newSkill == null)
+        {
+            return;
+        }
+        if(SkillHolder.GetChildCount() > 0)
+        {
+            var current = SkillHolder.GetChildren().Where(s => s is Skill).Cast<Skill>().ToList().Find(x => x.AssignedSlot == slot);
+            current?.Free();
+        }
+        // Get SkillSlot Data:
+        var slotData = SkillSlots[slot];
+
+        newSkill.AssignedSlot = slot;
+        newSkill.Name = "Skill_" + slot;
+        newSkill.SkillType = slotData.SlotSkillType;
+        newSkill.Player = Player == null ? null : Player;
+        if(!newSkill.IsUniversalSkill)
+        {
+            newSkill.AdjustedPotency = (int)(newSkill.BasePotency * slotData.PotencyMultiplier);
+        }             
+        SkillHolder.AddChild(newSkill);
+        newSkill.InitSkill();  
     }
 
-    public List<SkillSlot> GetSkillSlots()
+    public Skill GetSkill(int slot)
     {
-        if(skillSlotContainer.GetChildCount() == 0)
-            return null;
-        return skillSlotContainer.GetChildren().Where(x => x is SkillSlot).Cast<SkillSlot>().ToList();
-    }
-
-    public Skill GetSkill(int index)
-    {
-        if(GetSkillSlots() != null)
+        if(SkillHolder.GetChildCount() > 0)
         {
-            return GetSkillSlots()[index].GetSkill();
+            var current = SkillHolder.GetChildren().Where(s => s is Skill).Cast<Skill>().ToList().Find(x => x.AssignedSlot == slot);
+            return current;
         }
-        else 
-        {
-            return null;
-        }
+        return null;
     }
 
     public bool IsSkillOGCD(int slot)
     {
-        var skillSlot = GetSkillSlots()[slot];
-        if(skillSlot != null)
+        var skill = GetSkill(slot);
+        if(skill !=  null)
         {
-            var skill = skillSlot.GetSkill();
-            if(skill != null)
-            {
-                if(skill.TimerType == MD.SkillTimerType.OGCD)
-                {
-                    return true;
-                }
-            }
+            return skill.TimerType == MD.SkillTimerType.OGCD;
         }
         return false;
     }
 
     public SkillResult TriggerSkill(int slot)
     {
-        // Check for various things related to the contianer.
-        var skillSlot = GetSkillSlots()[slot];
-        if(skillSlot != null)
+        var skill = GetSkill(slot);
+        if(skill != null)
         {
-            var skill = skillSlot.GetSkill();
-            if(skill != null)
+            var ComboSlots = SkillSlots.Where(x => x.IsComboSlot).ToList();
+            if(ComboSlots != null)
             {
-                if(ComboSlots != null)
+                if(ComboSlots.Count > 0)
                 {
-                    if(ComboSlots.Length > 0)
+                    var slotFind = ComboSlots.Find(x => x.ComboSlotIndex == slot);
+                    if(slotFind != null)
                     {
-                        var slotList = ComboSlots.ToList().Cast<ComboSlot>().ToList();
-                        var slotFind = slotList.Find(x => x.ComboSlotIndex == slot);
-                        if(slotFind != null)
+                        if(ComboSlots.IndexOf(slotFind) == NextComboSlot)
                         {
-                            if(slotList.IndexOf(slotFind) == NextComboSlot)
+                            NextComboSlot++;
+                            Rpc(nameof(SyncNextCombo), NextComboSlot);
+                            NextComboSlot = Mathf.Wrap(NextComboSlot, 0, ComboSlots.Count);
+                            if(!skill.IsUniversalSkill)
                             {
-                                MD.Log("We did trigger a combo!");
-                                NextComboSlot++;
-                                Rpc(nameof(SyncNextCombo), NextComboSlot);
-                                NextComboSlot = Mathf.Wrap(NextComboSlot, 0, ComboSlots.Length);
-                                //Only apply the bonus if the skill is not a universal skill
-                                if(!skill.IsUniversalSkill)
-                                {
-                                    int oldPotency = skill.AdjustedPotency;
-                                    skill.AdjustedPotency = (int)(skill.AdjustedPotency * slotFind.ComboPotecyBonus);
-                                    var adjustedSkillResult = skillSlot.TriggerSkill();  
-                                    skill.AdjustedPotency = oldPotency;
-                                    return adjustedSkillResult;
-
-                                }   
-                                var skillResult = skillSlot.TriggerSkill();                                          
-                                return skillResult;
-                            }
-                            else
-                            {
-                                MD.Log("We failed the combo!");
-                                NextComboSlot = 0;
-                                Rpc(nameof(SyncNextCombo), NextComboSlot);
                                 int oldPotency = skill.AdjustedPotency;
-                                skill.AdjustedPotency = (int)(skill.AdjustedPotency * slotFind.FailurePotencyPenalty);
-                                var skillResult = skillSlot.TriggerSkill();
+                                skill.AdjustedPotency = (int)(skill.AdjustedPotency * slotFind.ComboPotecyBonus);
+                                var adjustedSkillResult = skill.TriggerSkill();  
                                 skill.AdjustedPotency = oldPotency;
-                                return skillResult;
-                            }
+                                return adjustedSkillResult;
+
+                            }   
+                            var skillResult = skill.TriggerSkill();                                          
+                            return skillResult;
                         }
                         else
                         {
-                            //trigger skill normally at no penalty
-                            return skillSlot.TriggerSkill();
+                            MD.Log("We failed the combo!");
+                            NextComboSlot = 0;
+                            Rpc(nameof(SyncNextCombo), NextComboSlot);
+                            int oldPotency = skill.AdjustedPotency;
+                            skill.AdjustedPotency = (int)(skill.AdjustedPotency * slotFind.FailurePotencyPenalty);
+                            var skillResult = skill.TriggerSkill();
+                            skill.AdjustedPotency = oldPotency;
+                            return skillResult;
                         }
-
                     }
-                }                
-                return skillSlot.TriggerSkill();
-            }
-            return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.ERROR };
+                    else
+                    {
+                        //trigger skill normally at no penalty
+                        return skill.TriggerSkill();
+                    }
+
+                }
+            }                
+            return skill.TriggerSkill();
         }
         return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.ERROR };
     }
@@ -151,7 +167,5 @@ public partial class SkillContainer : Node
     private void SyncNextCombo(int index)
     {
         NextComboSlot = index;
-    }
-
-    
+    }    
 }

@@ -167,19 +167,16 @@ public partial class PlayerArsenal: Node
         }
         if(skillContainers.GetChildCount() > 0)
         {
-            var containers = skillContainers.GetChildren()
+            var container = skillContainers.GetChildren()
                 .Where(c => c is SkillContainer)
                 .Cast<SkillContainer>()
-                .ToList();
-
-            foreach(var container in containers)
+                .ToList()
+                .Find(c => c.Name == containerName);
+            if(container != null)
             {
-                if(container.Name == containerName)
-                {
-                    MD.Log("Removing container: " + containerName);
-                    container.QueueFree();
-                }
-            }
+                container.CleanUp();
+                container.QueueFree();
+            }            
         }
         // Replace it with the new one:
         MD.Log("Adding container: " + containerName);
@@ -447,10 +444,10 @@ public partial class PlayerArsenal: Node
 
             foreach(var container in containers)
             {                
-                var skillSlots = container.GetSkillSlots();
+                var skillSlots = container.SkillSlots.ToList();
                 foreach(var slot in skillSlots)
                 {
-                    var skill = slot.GetSkill();
+                    var skill = container.GetSkill(skillSlots.IndexOf(slot));
                     if(skill == null || skill.IsUniversalSkill)
                     {
                         weights[0] += 0.333f;

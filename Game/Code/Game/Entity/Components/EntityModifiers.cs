@@ -7,21 +7,15 @@ namespace Daikon.Game;
 
 public partial class EntityModifiers : Node
 {
-    [Export(PropertyHint.Dir)]
-    private string modsPath;
-    //Spawner:
-    private MultiplayerSpawner modSpawner;
     //Container:
     private Node modContainer;
-    private Entity owner;
+    private Entity entity;
 
     public override void _Ready()
     {        
 		SetProcess(GetMultiplayerAuthority() == 1);
-        modSpawner = GetNode<MultiplayerSpawner>("%ModSpawner");
         modContainer = GetNode("%Mods");
-        owner = GetParent<Entity>();
-        GetModifierPaths();
+        entity = GetParent<Entity>();
         base._Ready();
     }
 
@@ -34,7 +28,6 @@ public partial class EntityModifiers : Node
             {
                 if(!existingMod.CanStack)
                 {
-                    MD.Log("This Mod doesn't stack!");
                     return new SkillResult() { SUCCESS= false, result = MD.ActionResult.CANT_STACK };
                 }             
                 else
@@ -43,7 +36,7 @@ public partial class EntityModifiers : Node
                     {
                         existingMod.Stacks += 1;
                         mod.Name = "MOD_" + modContainer.GetChildCount();
-                        mod.targetStatus = owner.Status;
+                        mod.targetStatus = entity.Status;
                         modContainer.AddChild(mod);
                         return new SkillResult() { SUCCESS = true, result = MD.ActionResult.CAST };
                     }
@@ -53,7 +46,7 @@ public partial class EntityModifiers : Node
             else
             {
                 mod.Name = "MOD_" + modContainer.GetChildCount();
-                mod.targetStatus = owner.Status;
+                mod.targetStatus = entity.Status;
                 modContainer.AddChild(mod);
                 return new SkillResult() { SUCCESS = true, result = MD.ActionResult.CAST }; 
             }            
@@ -71,22 +64,5 @@ public partial class EntityModifiers : Node
             .Cast<Modifier>()
             .ToList();        
         return mods;
-    }
-
-    private void GetModifierPaths()
-    {
-        using var dir = DirAccess.Open(modsPath);
-        if(dir != null)
-        {
-            MD.Log("Adding spawnable paths to ModifierSpawner");
-            dir.ListDirBegin();
-            string file = dir.GetNext();
-            while(file != "")
-            {
-                modSpawner.AddSpawnableScene(modsPath + "/" + file.Replace(".remap", ""));
-                file = dir.GetNext();
-            }
-            dir.ListDirEnd();
-        }        
     }
 }

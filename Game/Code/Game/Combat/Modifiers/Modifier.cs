@@ -1,36 +1,41 @@
 using Godot;
 using Daikon.Helpers;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Daikon.Game;
 
 public partial class Modifier : Node
 {
-    // Exported Variables:
-    [Export]
-    public Texture2D Icon;
-    [Export]
-    public string ModifierName = "";
-    [Export]
+    public enum ModTags
+    {
+        Hot,
+        Dot,
+        Shield,
+        Buff,
+        Debuff,
+        MoveSpeed,
+        GCDSpeed,
+        DamageDone,
+        DamageTaken,
+        Mitigation,
+        HealPower,
+    }
+    // Runtime Variables:
     public bool IsPermanent = false;
-    [Export]
     public float Duration = 5f;
-    [Export]
     public bool IsTicked = false;
-    [Export(PropertyHint.Range, "1, 3")]
     public float TickRate = 1f;
-    [Export]
     public bool CanStack = false;
-    [Export]
-    public int Stacks = 1;
-    [Export]
     public int MaxStacks = 1;
-    [Export]
-    private double startTime;    
-    [Export]
-    public double TimeRemaining = -1f;
+    public double ModifierValue = 0; // This is very specific per mod!
 
-    [Export]
-    public StatMod[] StatMods { get; set; }
+    // Synced Properties:
+    public int Stacks = 1;
+    private double startTime;    
+    public double TimeRemaining = -1f;
+    public List<ModTags> Tags = new List<ModTags>();
+
     public ModifierObject Data;
 
     //Time Keeping continued:
@@ -39,26 +44,25 @@ public partial class Modifier : Node
 
     // Entity to which this mod is attached:
     public EntityStatus targetStatus;
-    private NodePath ModActionsPath;
-    private NodePath ModModsPath;
-
-    //Entity who applied this modifier:
-    
-
+    //Entity who applied this modifier:   
     public override void _Ready()
     {
         if(!IsPermanent)
         {
-            startTime = GameManager.Instance.GameClock;            
-        }          
-        if(Multiplayer.GetUniqueId() == 1)
-        {
-            foreach(var mod in StatMods)
+            if(Multiplayer.IsServer())
             {
-                targetStatus.AddStatMod(mod);
+                startTime = GameManager.Instance.GameClock;       
+                Stacks = 1;     
+                Rpc(nameof(SyncStartTime), startTime);
             }
-        }
+        }          
         base._Ready();
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SyncStartTime(double time)
+    {
+        startTime = time;
     }
     public override void _PhysicsProcess(double delta)
     {
@@ -66,7 +70,7 @@ public partial class Modifier : Node
         {   
             if(IsPermanent)
                 return;
-            double lapsed = (GameManager.Instance.GameClock - startTime);       
+            double lapsed = GameManager.Instance.GameClock - startTime;       
             TimeRemaining = Duration - lapsed;     
             if(IsTicked)
             {
@@ -84,19 +88,6 @@ public partial class Modifier : Node
                 QueueFree();
             }
         }        
-        else
-        {
-            //This is just for Client Side Stuff:
-            double lapsed = GameManager.Instance.GameClock - startTime;            
-        }
-    }
-    public override void _ExitTree()
-    {
-        if(Multiplayer.GetUniqueId() == 1)
-        {
-            RemoveStatMods();
-        }
-        base._ExitTree();
     }
     
     public double GetTimeRemaining()
@@ -110,14 +101,6 @@ public partial class Modifier : Node
             var lapsed = GameManager.Instance.GameClock - startTime;
             var remaining = Mathf.Clamp(Duration - lapsed, 0, Duration);
             return remaining / Duration;
-        }
-    }
-    public void RemoveStatMods()
-    {
-        foreach(var mod in StatMods)
-        {
-            MD.Log("Removing Mod : " + mod.Name);
-            targetStatus.RemoveStatMod(mod);
         }
     }
     public virtual void Tick()

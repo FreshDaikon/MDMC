@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using Daikon.Helpers;
+using System.Runtime.Intrinsics.Arm;
 
 namespace Daikon.Game;
 
@@ -34,9 +35,9 @@ public partial class EntityStatus : Node
     public float DamageMultiplier = 1.0f;
     #endregion
 
-    private List<StatMod> StatMods = new List<StatMod>();
     private RandomNumberGenerator random;
-
+    private Entity entity;
+    private EntityModifiers modifiers;
 
     //Signals
     [Signal]
@@ -55,6 +56,8 @@ public partial class EntityStatus : Node
             CurrentHealth = MaxHealth;
         }
         //Setup base values.
+        entity = GetParent<Entity>();
+        modifiers = entity.GetNode<EntityModifiers>("%EntityModifiers");
     }
 
     public override void _PhysicsProcess(double delta)
@@ -67,11 +70,11 @@ public partial class EntityStatus : Node
     public float GetGCDModifier(float baseGCD = 2.5f)
     {    
         var modGCD = baseGCD;    
-        foreach(var mod in StatMods.Where(m => m.Category == MD.ModCategory.GCD).ToList())
+        var mods = modifiers.GetModifiers();
+        if(mods != null)
         {
-            // Multiplies in all directions - so 2 mods, 1.2f and 0.9 on 2.5f = 2.7f.
-            modGCD *= mod.Value;
-        }        
+            //modGCD *= (float)mods.Where(m => m.Types.Contains(Modifier.ModTypes.GCDSpeed)).ToList().Sum(x => x.ModifierValue);
+        }
         return modGCD;
     }
     
@@ -84,27 +87,36 @@ public partial class EntityStatus : Node
         var weakness = 1f;
         // Damage Recieved will be a additive weakness modifier. (add up all the mods, and multiply the total by the damage)
         // For example : 2 mods, 1.2 and 1.4 = 1.6 * damage. (60% more damage taken)
-        foreach(var mod in StatMods.Where(m => m.Category == MD.ModCategory.DAMAGE_RECIEVED))
+        var mods = modifiers.GetModifiers();
+        if(mods != null)
         {
-            weakness += mod.Value;
+            weakness += (float)mods.Where(m => 
+                m.Tags.Contains(Modifier.ModTags.Debuff) && m.Tags.Contains(Modifier.ModTags.DamageTaken))
+                .ToList()
+                .Sum(x => x.ModifierValue);
         }
         workingValue = (int)(workingValue * weakness);
         
         // Base mits will add up all the mods, and subtract the total from the damage.
         // For example : 2 mods, 0.4 and 0.4 = 0.8 * damage. (20% less damage taken).
         var baseMit = 0f;
-        foreach(var mod in StatMods.Where(m => m.Category == MD.ModCategory.BASE_MITS))
+        if(mods != null)
         {
-            baseMit += mod.Value;
         }
         workingValue = (int)(workingValue - workingValue * baseMit);
 
         // Active Mitigation will be a multiplicative modifier. (multiply all the mods together, and subtract the total from the damage)
         // For example : 2 mods, 0.8 and 0.95 = 0.76 * damage. (24% less damage taken).
         var activeMits = 1f;
-        foreach(var mod in StatMods.Where(m => m.Category == MD.ModCategory.ACTIVE_MITS))
-        {
-            activeMits *= mod.Value;
+        if(mods != null)
+        { 
+            /**
+            baseMit += (float)mods.Where(m => 
+                m.Types.Contains(Modifier.ModTypes.Buff) && m.Types.Contains(Modifier.ModTypes.DamageTaken))
+                .ToList()
+                .Select(v => v.ModifierValue)
+                .ToList()
+                .Aggregate((x, y) => x * y); **/
         }
         workingValue = (int)(workingValue * activeMits);
         if(CurrentShield > 0)
@@ -135,9 +147,13 @@ public partial class EntityStatus : Node
         amount = (int)(amount * variance);
 
         var healMods = 1f;
-        foreach(var mod in StatMods.Where(m => m.Category == MD.ModCategory.HEAL_RECIEVED))
+        var mods = modifiers.GetModifiers();
+        if(mods != null)
         {
-            healMods += mod.Value;
+            healMods += (float)mods.Where(m => 
+                m.Tags.Contains(Modifier.ModTags.Buff) && m.Tags.Contains(Modifier.ModTags.HealPower))
+                .ToList()
+                .Sum(x => x.ModifierValue);
         }        
         int adjusted = (int)(amount * healMods);
 
@@ -164,9 +180,14 @@ public partial class EntityStatus : Node
         var speed = BaseSpeed;
         // Flat values expected, so just add them up.
         // For example : 2 mods, 10 and 20 = BaseSpeed + 30 = 35.
-        foreach(var mod in StatMods.Where(m => m.Category == MD.ModCategory.SPEED).ToList())
+        // Can be negative - so get both buffs and debuffs!
+        var mods = modifiers.GetModifiers();
+        if(mods != null)
         {
-            speed += mod.Value;
+            speed += (float)mods.Where(m => 
+                m.Tags.Contains(Modifier.ModTags.MoveSpeed))
+                .ToList()
+                .Sum(x => x.ModifierValue);
         }
         return speed;
     }
@@ -174,43 +195,20 @@ public partial class EntityStatus : Node
     public float GetDamageMultiplier()
     {
         var damage = DamageMultiplier;
-        var baseDamage = 1f;
-        foreach(var mod in StatMods.Where(m => m.Category == MD.ModCategory.DAMAGE_DONE).ToList())
+       // var baseDamage = 1f;
+        var mods = modifiers.GetModifiers();
+        if(mods != null)
         {
-            baseDamage *= mod.Value;
+
         }
         MD.Log("Damage Multiplier is :" + damage + "!"); 
         return damage;
     }
-    //For Setting up Stat Mods:
-    public void AddStatMod(StatMod mod)
-    {
-        StatMods.Add(mod);
-        if(mod.Category == MD.ModCategory.MAX_HEALTH)
-        {
-            MaxHealth += (int)mod.Value;
-        }        
-    }
-    public void RemoveStatMod(StatMod mod)
-    {
-        StatMods.Remove(mod);
-        if(mod.Category == MD.ModCategory.MAX_HEALTH)
-        {
-            MaxHealth -= (int)mod.Value;
-        }
-        if(CurrentHealth > MaxHealth)
-        {
-            CurrentHealth = MaxHealth;
-            Rpc(nameof(UpdateHealth), CurrentHealth);
-        }
-    }
-
     public void Reset()
     {
         CurrentHealth = MaxHealth;
         Rpc(nameof(UpdateHealth), CurrentHealth);
     }
-
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void UpdateHealth(int newHealth)
     {
@@ -220,10 +218,5 @@ public partial class EntityStatus : Node
     private void UpdateShields(int newShield)
     {
         CurrentShield = newShield;
-    }
-
-    private void UpdateStatMods()
-    {
-
     }
 }
