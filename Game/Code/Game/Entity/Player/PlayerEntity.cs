@@ -57,7 +57,6 @@ public partial class PlayerEntity : Entity
 		{
 			IsLocalPlayer = true;
             camera.GetCamera().Current = true;
-            UIHUDMain.Instance.activeCamera = camera.GetCamera();
             GameManager.Instance.ConnectionStarted += () => {
                 RpcId(1, nameof(Reset));
             };

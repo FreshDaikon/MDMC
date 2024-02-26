@@ -12,9 +12,6 @@ properties/1/replication_mode = 2
 
 [node name="BaseModifier" type="Node"]
 script = ExtResource("1_wwi4a")
-ModifierName = "It tickles!"
-IsTicked = true
-types = Array[int]([0, 3])
 
 [node name="ModSync" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_i3asn")

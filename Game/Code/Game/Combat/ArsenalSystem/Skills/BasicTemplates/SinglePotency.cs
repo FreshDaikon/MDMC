@@ -105,7 +105,7 @@ public partial class SinglePotency : Skill
             };
             case MD.SkillType.HEAL:
             {
-                var target = Player.CurrentTarget;
+                var target = Player.CurrentFriendlyTarget;
                 if(target == null)
                     return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.INVALID_TARGET};
                 var status = target.Status;
@@ -143,10 +143,9 @@ public partial class SinglePotency : Skill
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public override void SkillRealization(int value, int type)
     {
-        DamageNumberRealization realization = (DamageNumberRealization)DataManager.Instance.GetRealizationObjectFromPath(RealizeSkillPath);
-        realization.Value = value;
-        realization.Type = (MD.CombatMessageType)type;
-        realization.SpawnWithTarget(Player.CurrentTarget.Controller, Player.Controller.Position);
-        base.SkillRealization(value, type);
+        var realization = RealizeOnSkill.GetRealization();
+        // We Expect this realization to be the damage number one so pass the extra data
+        var damageNumberInfo = new { Value = value, Type = type};
+        realization.Spawn(Player.Controller.GlobalPosition, Player.CurrentTarget.Controller, 10f, 2f, damageNumberInfo);
     }
 }

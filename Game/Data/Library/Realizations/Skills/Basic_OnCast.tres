@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="RealizationObject" load_steps=5 format=3 uid="uid://bgteofumif0r7"]
+
+[ext_resource type="Script" path="res://Code/System/DataID.cs" id="1_3hbte"]
+[ext_resource type="Script" path="res://Code/Game/Data/RealizationObject.cs" id="1_kqwi1"]
+[ext_resource type="PackedScene" uid="uid://da8lo0ouug0so" path="res://Data/Instances/Realizations/BigIMpact.tscn" id="2_1eab4"]
+
+[sub_resource type="Resource" id="Resource_80r5n"]
+script = ExtResource("1_3hbte")
+Id = -1022528918
+
+[resource]
+script = ExtResource("1_kqwi1")
+ID = SubResource("Resource_80r5n")
+Scene = ExtResource("2_1eab4")
+Name = "Some Object."
+Description = "Some Object Description."

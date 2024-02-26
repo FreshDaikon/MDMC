@@ -29,11 +29,7 @@ public partial class SkillContainer : Node
     {
         foreach(var buff in BuffsGranted)
         {
-            var match = Player.Modifiers.GetModifiers().Find(m => m.Data.Id == buff.Id);
-            if(match != null)
-            {
-                match.QueueFree();
-            }
+            Player.Modifiers.RemoveModifier(buff.Id);
         }
     }
 

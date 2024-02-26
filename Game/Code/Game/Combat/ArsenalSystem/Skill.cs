@@ -6,6 +6,7 @@ namespace Daikon.Game;
 
 public partial class Skill : Node
 {
+    // Runtime Data:
     public bool IsUniversalSkill = false;
     public MD.SkillTimerType TimerType;
     public int BasePotency = 100;
@@ -18,20 +19,16 @@ public partial class Skill : Node
     public float ChannelTime = 0f;
     public float TickRate = 1f;
     public float ThreatMultiplier = 1f;
-
+    // Maintinece:
     public int AssignedSlot = -1;
-
-    [ExportGroup("Standard Realizations")]
-    [Export(PropertyHint.File)]
-    public string RealizeCastPath;
-    [Export(PropertyHint.File)]
-    public string RealizeFinishedPath;
-    [Export(PropertyHint.File)]
-    public string RealizeSkillPath;
+    // Realizations 
+    public RealizationObject RealizeOnCast;
+    public RealizationObject RealizeOnFinish;    
+    public RealizationObject RealizeOnSkill;
 
     //Class Internals:
     public SkillObject Data;
-    public RealizationObject CurrentRealization;
+    public Realization CurrentRealization;
     public MD.SkillType SkillType;
     public PlayerEntity Player;
     public double StartTime;
@@ -44,10 +41,6 @@ public partial class Skill : Node
     //Time Keeping continued:
     private int lastLapse = 0;
     private int ticks = 0;
-
-    public override void _Ready()
-    {
-    }
 
     public void InitSkill()
     {
@@ -223,15 +216,15 @@ public partial class Skill : Node
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void RealizeCast()
     {
-        RealizationObject realization = DataManager.Instance.GetRealizationObjectFromPath(RealizeCastPath);
-        realization.Spawn(Player.Controller.Position);
+        var realization = RealizeOnCast.GetRealization();
+        realization.Spawn(Player.Controller.GlobalPosition, 2f);
         CurrentRealization = realization;
     }
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void RealizeFinished()
     {       
-        RealizationObject realization = DataManager.Instance.GetRealizationObjectFromPath(RealizeFinishedPath);
-        realization.Spawn(Player.Controller.Position);
+        var realization = RealizeOnFinish.GetRealization();
+        realization.Spawn(Player.Controller.Position, 2f);
     }    
     public virtual SkillResult TriggerResult()
     {
@@ -244,7 +237,9 @@ public partial class Skill : Node
         GD.PrintErr("Please Override this implementation!");
         return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.INVALID_TARGET }; 
     }
+
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public virtual void SkillRealization(int value, int type){}
+    public virtual void SkillRealization(int value, int type)
+    {    }
     
 }

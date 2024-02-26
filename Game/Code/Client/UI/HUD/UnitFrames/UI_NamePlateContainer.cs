@@ -35,7 +35,7 @@ public partial class UI_NamePlateContainer : Control
 				newEntry.InitializeFrame(entity);
 			}
             var unsorted = GetChildren().Where(x => x is UI_NamePlate).Cast<UI_NamePlate>().ToList();
-            var camera = UIHUDMain.Instance.activeCamera;
+            var camera = GetViewport().GetCamera3D();
             if(camera == null)
             {
                 return;

@@ -18,7 +18,6 @@ public partial class UIHUDMain : Control
 
 	private Label fpsLabel;
 	private Label latencyLabel;
-	public Camera3D activeCamera;
 	public Entity LocalPlayerUITarget;
 
 	public override void _Ready()

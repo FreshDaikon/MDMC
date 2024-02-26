@@ -18,7 +18,7 @@ public partial class DamageNumber : Control
 	{
 		var ran = new RandomNumberGenerator();
 		_worldPos = worldPos + new Vector3(ran.RandfRange(-0.6f, 0.6f), ran.RandfRange(-0.6f, 0.6f), ran.RandfRange(-0.6f, 0.6f));
-		camera = UIHUDMain.Instance.activeCamera;
+		camera = GetViewport().GetCamera3D();
 		UIPos = camera.UnprojectPosition(_worldPos);
 		label.Text = value;
 		label.AddThemeColorOverride("font_color", color);
@@ -30,8 +30,12 @@ public partial class DamageNumber : Control
 	}
     public override void _PhysicsProcess(double delta)
     {
-		if(ClientMultiplayerManager.Instance.GetStatus() != MultiplayerPeer.ConnectionStatus.Connected)
+		if(!GameManager.Instance.IsGameRunning())
 			return;
+		if(camera == null)
+		{
+				return;
+		}
 		if(camera.IsPositionBehind(_worldPos))
 			return;
 		UIPos = camera.UnprojectPosition(_worldPos);

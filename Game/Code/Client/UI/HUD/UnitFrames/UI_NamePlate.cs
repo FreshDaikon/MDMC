@@ -41,12 +41,7 @@ public partial class UI_NamePlate : Control
         {
             QueueFree();
         }
-        if(_camera == null)
-        {
-            _camera = UIHUDMain.Instance.activeCamera;
-            if(_camera == null)
-                return;
-        }
+        _camera = GetViewport().GetCamera3D();
         var entityPos = _entity.Controller.GlobalPosition;
         Visible = !_camera.IsPositionBehind(entityPos);
         NameLabel.Text = _entity.EntityName;

@@ -1,11 +1,22 @@
-[gd_scene load_steps=10 format=3 uid="uid://da8lo0ouug0so"]
+[gd_scene load_steps=8 format=3 uid="uid://da8lo0ouug0so"]
 
-[ext_resource type="Script" path="res://Code/Game/Realization/RealizationObject.cs" id="1_ugqg6"]
-[ext_resource type="Script" path="res://Code/System/DataID.cs" id="2_3h1yc"]
+[ext_resource type="Script" path="res://Code/Game/Realization/Realization.cs" id="1_ll310"]
 
-[sub_resource type="Resource" id="Resource_sibgp"]
-script = ExtResource("2_3h1yc")
-Id = 1292499604
+[sub_resource type="Animation" id="Animation_057b6"]
+resource_name = "End"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Effects/MeshInstance3D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.5),
+"transitions": PackedFloat32Array(0.5, 0.5, 1),
+"update": 0,
+"values": [Vector3(1, 1, 1), Vector3(2, 2, 2), Vector3(0.001, 0.001, 0.001)]
+}
 
 [sub_resource type="Animation" id="Animation_kgxne"]
 length = 0.001
@@ -51,22 +62,6 @@ tracks/0/keys = {
 "values": [Vector3(0, 0, 0), Vector3(0, 0.443812, 0), Vector3(0, -0.504, 0), Vector3(0, 0, 0)]
 }
 
-[sub_resource type="Animation" id="Animation_057b6"]
-resource_name = "End"
-length = 0.5
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Effects/MeshInstance3D:scale")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.3, 0.5),
-"transitions": PackedFloat32Array(0.5, 0.5, 1),
-"update": 0,
-"values": [Vector3(1, 1, 1), Vector3(2, 2, 2), Vector3(0.001, 0.001, 0.001)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_0g3ar"]
 _data = {
 "End": SubResource("Animation_057b6"),
@@ -80,15 +75,12 @@ _data = {
 transparency = 1
 albedo_color = Color(0.8, 0, 0.8, 1)
 
-[node name="BasicImpact" type="Node3D" node_paths=PackedStringArray("animationPlayer")]
+[node name="BasicImpact" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00105095, 0.00285125, -0.00127983)
-script = ExtResource("1_ugqg6")
-Lifetime = 1.1
-animationPlayer = NodePath("AnimationPlayer")
-realizationMode = 2
-ID = SubResource("Resource_sibgp")
+script = ExtResource("1_ll310")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="RealizationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
 libraries = {
 "": SubResource("AnimationLibrary_0g3ar")
 }

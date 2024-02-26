@@ -29,21 +29,21 @@ public partial class Modifier : Node
     public bool CanStack = false;
     public int MaxStacks = 1;
     public double ModifierValue = 0; // This is very specific per mod!
+    public List<ModTags> Tags = new List<ModTags>();
 
     // Synced Properties:
     public int Stacks = 1;
     private double startTime;    
     public double TimeRemaining = -1f;
-    public List<ModTags> Tags = new List<ModTags>();
 
     public ModifierObject Data;
-
     //Time Keeping continued:
     private int lastLapse = 0;
     private int ticks = 0;
 
     // Entity to which this mod is attached:
     public EntityStatus targetStatus;
+    public Entity entity;
     //Entity who applied this modifier:   
     public override void _Ready()
     {
@@ -56,7 +56,6 @@ public partial class Modifier : Node
                 Rpc(nameof(SyncStartTime), startTime);
             }
         }          
-        base._Ready();
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -66,7 +65,7 @@ public partial class Modifier : Node
     }
     public override void _PhysicsProcess(double delta)
     {
-        if(Multiplayer.GetUniqueId() == 1)
+        if(Multiplayer.IsServer())
         {   
             if(IsPermanent)
                 return;
@@ -85,7 +84,7 @@ public partial class Modifier : Node
             if(lapsed > Duration)
             {
                 MD.Log(" Total Ticks : " + ticks );
-                QueueFree();
+                entity.Modifiers.RemoveModifier(Data.Id);
             }
         }        
     }

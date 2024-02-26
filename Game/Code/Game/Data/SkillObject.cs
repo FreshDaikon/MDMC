@@ -32,13 +32,14 @@ public partial class SkillObject : DataObject
     public float TickRate = 1f;
     [Export]
     public float ThreatMultiplier = 1f;
-    [ExportGroup("Standard Realizations")]
-    [Export(PropertyHint.File)]
-    public string RealizeCastPath;
-    [Export(PropertyHint.File)]
-    public string RealizeFinishedPath;
-    [Export(PropertyHint.File)]
-    public string RealizeSkillPath;
+
+    [ExportGroup("Skill Realizations")]
+    [Export]
+    public RealizationObject RealizeOnCast;
+    [Export]
+    public RealizationObject RealizeOnFinish;    
+    [Export]
+    public RealizationObject RealizeOnSkill;
 
     public Skill GetSkill()
     {
@@ -55,7 +56,11 @@ public partial class SkillObject : DataObject
         instance.ChannelTime = ChannelTime;
         instance.TickRate = TickRate;
         instance.ThreatMultiplier = ThreatMultiplier;
-        // Finally pass it back:
+        // Setup Realizations :
+        instance.RealizeOnCast = RealizeOnCast;
+        instance.RealizeOnFinish = RealizeOnFinish;
+        instance.RealizeOnSkill = RealizeOnSkill;
+        // Finally pass it back :
         return instance;
     }
 

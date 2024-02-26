@@ -4,36 +4,31 @@ using Daikon.Client;
 
 namespace Daikon.Game;
 
-public partial class DamageNumberRealization : RealizationObject
+public partial class DamageNumberRealization : Realization
 {    
     public Color color;
     public int Value;
-    public MD.CombatMessageType Type;    
 
-    public override void Spawn(Vector3 worldPos)
+    public override void ResolveExtraData()
     {
-        base.Spawn(worldPos);
-        color = Type switch
+        if(ExtraData == null)
         {
-            MD.CombatMessageType.DAMAGE => new Color("#cfc148"),
-            MD.CombatMessageType.HEAL => new Color("#7fbf3f"),
-            MD.CombatMessageType.ENMITY => new Color("#4da6c9"),
-            MD.CombatMessageType.EFFECT => new Color("#9f38c2"),
-            _ => new Color(),
-        };
-    }
-    public override void SpawnWithTarget(Node3D target, Vector3 startPosition)
-    {
-        GD.Print("Spawning with target!");
-        base.SpawnWithTarget(target, startPosition);
-        color = Type switch
+            GD.PushError("Damage number realizatio expects extra data! in the form { Color : '#somecolor', Value: 123 }");
+            Kill();
+        }
+        else
         {
-            MD.CombatMessageType.DAMAGE => new Color("#cfc148"),
-            MD.CombatMessageType.HEAL => new Color("#7fbf3f"),
-            MD.CombatMessageType.ENMITY => new Color("#4da6c9"),
-            MD.CombatMessageType.EFFECT => new Color("#9f38c2"),
-            _ => new Color(),
-        };
+            int type = ExtraData.Type; 
+            color = (MD.CombatMessageType)type switch
+            {
+                MD.CombatMessageType.DAMAGE => new Color("#cfc148"),
+                MD.CombatMessageType.HEAL => new Color("#7fbf3f"),
+                MD.CombatMessageType.ENMITY => new Color("#4da6c9"),
+                MD.CombatMessageType.EFFECT => new Color("#9f38c2"),
+                _ => new Color(),
+            };
+            Value = ExtraData.Value;            
+        }
     }
 
     public override void OnEndStart()

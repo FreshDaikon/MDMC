@@ -35,9 +35,10 @@ public partial class EntityModifiers : Node
                     if(existingMod.Stacks < existingMod.MaxStacks)
                     {
                         existingMod.Stacks += 1;
-                        mod.Name = "MOD_" + modContainer.GetChildCount();
-                        mod.targetStatus = entity.Status;
+                        mod.Name = "mod_" + mod.Data.Id;
+                        mod.entity = entity;
                         modContainer.AddChild(mod);
+                        Rpc(nameof(SyncMod), mod.Data.Id, true);
                         return new SkillResult() { SUCCESS = true, result = MD.ActionResult.CAST };
                     }
                     return new SkillResult() { SUCCESS = false, result = MD.ActionResult.MAX_STACKS};                    
@@ -45,9 +46,10 @@ public partial class EntityModifiers : Node
             }
             else
             {
-                mod.Name = "MOD_" + modContainer.GetChildCount();
-                mod.targetStatus = entity.Status;
+                mod.Name = "mod_" + mod.Data.Id;
+                mod.entity = entity;
                 modContainer.AddChild(mod);
+                Rpc(nameof(SyncMod), mod.Data.Id, true);
                 return new SkillResult() { SUCCESS = true, result = MD.ActionResult.CAST }; 
             }            
         }
@@ -57,6 +59,40 @@ public partial class EntityModifiers : Node
             return new SkillResult() { SUCCESS = false, result = MD.ActionResult.ERROR };            
         }
     }
+
+    public void RemoveModifier(int id)
+    {
+        var existingMod = modContainer.GetChildren().Where(m => m is Modifier).Cast<Modifier>().ToList().Find( m => m.Data.Id == id);
+        if(existingMod != null)
+        {
+            existingMod.QueueFree();
+            Rpc(nameof(SyncMod), id, false);
+        }
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SyncMod(int id, bool add)
+    {
+        if(add)
+        {
+            var newMod = DataManager.Instance.GetModifierInstance(id);
+            if(newMod != null)
+            {
+                newMod.Name = "mod_" + id;
+                newMod.entity = entity;
+                modContainer.AddChild(newMod);
+            }
+        }
+        else
+        {
+            var existingMod = modContainer.GetChildren().Where(m => m is Modifier).Cast<Modifier>().ToList().Find( m => m.Data.Id == id);
+            if(existingMod != null)
+            {
+                existingMod.QueueFree();
+            }
+        }
+    }
+
     public List<Modifier> GetModifiers()
     {
         var mods = modContainer.GetChildren()

@@ -20,7 +20,7 @@ public partial class EntityStatus : Node
     public int MaxHealth = 10000;
     #endregion
     #region SHIELD
-    public int CurrentShield = 10000;
+    public int CurrentShield = 10;
     #endregion
     //----------------------------------------------------------
     #region MITIGATION

@@ -29,7 +29,7 @@ ThreatMultiplier = 1.0
 IsComboSlot = true
 ComboSlotIndex = 0
 ComboPotecyBonus = 1.2
-FailurePotencyPenalty = 0.0
+FailurePotencyPenalty = 0.8
 
 [sub_resource type="Resource" id="Resource_0jnoq"]
 script = ExtResource("5_3qt1y")

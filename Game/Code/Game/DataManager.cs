@@ -134,16 +134,23 @@ public partial class DataManager : Node
         return instance;
     }
 
-    public Modifier GetModifierFromPath(string path)
+    public List<RealizationObject> GetAllRealizations()
     {
-        var res = (PackedScene)ResourceLoader.Load(path.Replace(".remap", ""));
-        var mod = (Modifier)res.Instantiate();
-        return mod;
+        var realizations = library.Where(r => r is RealizationObject).Cast<RealizationObject>().ToList();
+        return realizations;
     }
-    public RealizationObject GetRealizationObjectFromPath(string path)
+
+    public RealizationObject GetRealization(int id)
     {
-        var res = (PackedScene)ResourceLoader.Load(path.Replace(".remap", ""));
-        var obj = res.Instantiate<RealizationObject>();
-        return obj;
+        var real = GetAllRealizations().Find(r => r.Id == id);
+        return real;
     }
+
+    public Realization GetRealizationInstance(int id)
+    {
+        var real = GetAllRealizations().Find(r => r.Id == id);
+        var instance = real.GetRealization();
+        return instance;
+    }
+
 }
