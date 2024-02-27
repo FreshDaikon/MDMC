@@ -20,6 +20,10 @@ public partial class UI_EnemyList : Control
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+		if(!GameManager.Instance.IsGameRunning())
+			return;
+		//////////////////////////////////////////
+		
 		var enemies = ArenaManager.Instance.GetCurrentArena().GetEnemyEntities();
 		if(enemies != null)
 		{

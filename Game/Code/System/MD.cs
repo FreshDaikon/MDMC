@@ -142,16 +142,6 @@ public static class MD
 
     public static float Gravity = (float)ProjectSettings.GetSetting("physics/3d/default_gravity");
 
-    public static void Log(string message)
-    {
-        GD.Print("[Generic]_" + "_[ " + message + " ]");
-    }
-
-    public static void Log(Runtime runtime, String sender, String message)
-    {
-        //GD.Print("(" + runtime.ToString() + ")[" + sender + "]@[ " + GameManager.Instance.ServerTick + " ]M:" + "[ " + message + " ]");
-    }
-
     public static Dictionary<string, string> GetArgs()
     {
         var args = new Dictionary<string, string>();        

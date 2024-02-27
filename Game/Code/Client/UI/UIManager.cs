@@ -77,20 +77,20 @@ public partial class UIManager : Node
 
     public void TrySetUIState(UIState state)
     {
-        MD.Log("Got request to change UI state [ Change to :" + state.ToString());
+        GD.Print("Got request to change UI state [ Change to :" + state.ToString());
         if(state == _currentState)
         {
-            MD.Log("State was already the active one - skip!");
+            GD.Print("State was already the active one - skip!");
             //Don't do anything - return some error.
             return;
         }
         else
         {
-            MD.Log("Set new state:");
+            GD.Print("Set new state:");
             _currentState = state;
             if(UIContainer.GetChildCount() > 0)
             {
-                MD.Log("Remove old UI..");
+                GD.Print("Remove old UI..");
                 foreach(var ui in UIContainer.GetChildren())
                 {
                     ui.QueueFree();
@@ -99,17 +99,17 @@ public partial class UIManager : Node
             switch(state)
             {
                 case UIState.Ingame:
-                    MD.Log("Add Ingame Menu..");
+                    GD.Print("Add Ingame Menu..");
                     var ingame = ingamemenuScene.Instantiate();
                     UIContainer.AddChild(ingame);
                     break;
                 case UIState.Frontend:
-                    MD.Log("Add Frontend..");
+                    GD.Print("Add Frontend..");
                     var frontend = frontendScene.Instantiate(); 
                     UIContainer.AddChild(frontend);
                     break;
                 case UIState.HUD:
-                    MD.Log("Add HUD..");
+                    GD.Print("Add HUD..");
                     var hud = hudScene.Instantiate();
                     UIContainer.AddChild(hud);
                     break;

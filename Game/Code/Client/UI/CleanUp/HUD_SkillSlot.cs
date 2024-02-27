@@ -29,9 +29,10 @@ public partial class HUD_SkillSlot : Control
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		//if(GetTree().Get;
-		if(ClientMultiplayerManager.Instance.GetStatus() != MultiplayerPeer.ConnectionStatus.Connected)
+		if(!GameManager.Instance.IsGameRunning())
 			return;
+		//////////////////////////////////////////
+		
 		if(localPlayer == null)
 		{
 			var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();

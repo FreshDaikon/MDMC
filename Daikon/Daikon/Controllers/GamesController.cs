@@ -37,7 +37,6 @@ public class GamesController : ControllerBase
         if(auth)
         {
             _logger.LogInformation("Success in authing user - request new server");
-            //TODO : add the playfab request :
             PlayFabSettings.staticSettings.TitleId= "5FDDE";
             PlayFabSettings.staticSettings.DeveloperSecretKey ="SJBDAIQS9GIDTBCKM3K5FXXFYAHM9Z6QEB8R1Z9BFSUOEN39OR";
             var pfToken = await PlayFabAuthenticationAPI.GetEntityTokenAsync(new PlayFab.AuthenticationModels.GetEntityTokenRequest());
@@ -63,6 +62,7 @@ public class GamesController : ControllerBase
                     {
                         var latest = buildIds.Result.BuildSummaries[0].BuildId;
                         var SessionId = Guid.NewGuid().ToString();
+                        _logger.Log(LogLevel.Information, "The requested arena was : " + request.Arena);
                         var Server = await PlayFabMultiplayerAPI.RequestMultiplayerServerAsync(new PlayFab.MultiplayerModels.RequestMultiplayerServerRequest()
                         {
                             BuildId = latest,

@@ -123,7 +123,7 @@ public partial class EntityStatus : Node
         {
             var stored = workingValue;
             workingValue =  Mathf.Clamp( workingValue - CurrentShield, 0, workingValue);
-            MD.Log("New working Value is " + workingValue);
+            GD.Print("New working Value is " + workingValue);
             CurrentShield = Mathf.Clamp(CurrentShield - stored, 0, CurrentShield);
             Rpc(nameof(UpdateShields), CurrentShield);
         }
@@ -133,9 +133,9 @@ public partial class EntityStatus : Node
             CurrentHealth = 0;
             //TODO: knock out entity!
             EmitSignal(SignalName.KnockedOut);
-            MD.Log("Entity got knocked out!");
+            GD.Print("Entity got knocked out!");
         }
-        MD.Log("I took :" + workingValue + " Damage!");
+        GD.Print("I took :" + workingValue + " Damage!");
         EmitSignal(SignalName.DamageTaken, (float)workingValue);
         Rpc(nameof(UpdateHealth), CurrentHealth);
         return workingValue;
@@ -162,7 +162,7 @@ public partial class EntityStatus : Node
         {
             CurrentHealth = MaxHealth;
         }
-        MD.Log("I Was Healed for :" + adjusted + " Health!");
+        GD.Print("I Was Healed for :" + adjusted + " Health!");
         EmitSignal(SignalName.HealTaken, (float)adjusted);
         Rpc(nameof(UpdateHealth), CurrentHealth);
         return adjusted;
@@ -201,7 +201,7 @@ public partial class EntityStatus : Node
         {
 
         }
-        MD.Log("Damage Multiplier is :" + damage + "!"); 
+        GD.Print("Damage Multiplier is :" + damage + "!"); 
         return damage;
     }
     public void Reset()

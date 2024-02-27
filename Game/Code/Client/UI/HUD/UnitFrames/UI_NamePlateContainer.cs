@@ -12,6 +12,10 @@ public partial class UI_NamePlateContainer : Control
 
 	public override void _PhysicsProcess(double delta)
 	{
+		if(!GameManager.Instance.IsGameRunning())
+			return;
+		//////////////////////////////////////////
+		
 		var entities = ArenaManager.Instance.GetCurrentArena().GetEntities();
 		if(entities != null)
 		{  

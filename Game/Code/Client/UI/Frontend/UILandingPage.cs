@@ -80,10 +80,10 @@ public partial class UILandingPage : Control
     private void SetupNetworkListeners()
     {
         DaikonConnect.Instance.AuthSuccess += () => {
-            MD.Log("We got the auth responese over here!");
+            GD.Print("We got the auth responese over here!");
         };
         DaikonConnect.Instance.GameCreated += (serverhost, port, joincode) => {
-            MD.Log("We got a game Created over here!");
+            GD.Print("We got a game Created over here!");
             JoinCodeEdit.Text = joincode;
             ArenaManager.Instance.LoadArena(_arenas[ArenaListOptions.Selected].Id);
             ClientMultiplayerManager.Instance.SetData(serverhost, port);

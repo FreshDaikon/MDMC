@@ -1,0 +1,7 @@
+GET  http://localhost:5000/Clean
+Content-Type: application/json
+
+{
+    "Key" : "smick",
+    "Repo" : "daikon1"
+}

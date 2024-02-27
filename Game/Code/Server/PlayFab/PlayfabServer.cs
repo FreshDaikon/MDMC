@@ -31,34 +31,33 @@ public partial class PlayfabServer : Node
         var args = MD.GetArgs();
         if(args.ContainsKey("playfab"))
         {
-            MD.Log(MD.Runtime.PlayfabServer, "", "Init Playfab Instance..");
+            GD.Print("Init Playfab Instance..");
             Running = true;
             StartAsPlayfabInstance();
             return;
         }
         else if(args.ContainsKey("arena"))
         {
-            MD.Log(MD.Runtime.PlayfabServer, "", "Init Local Server with arena..");
+            GD.Print("Init Local Server with arena..");
             var arena = args["arena"];
             ServerManager.Instance.StartAsStandaloneServer(8080, 8, arena);
         }
         else
         {
-            MD.Log(MD.Runtime.PlayfabServer, "", "Init Local Server Without Arena..");
+            GD.Print("Init Local Server Without Arena..");
             ServerManager.Instance.StartAsStandaloneServer(8080, 8);
         }
     }
 
     private void StartAsPlayfabInstance()
     {
-        //Start GameServer:
         try
         {
             GameserverSDK.Start();
         }
         catch (GSDKInitializationException initEx)
         {
-            GD.Print("Cannot start GSDK. Please make sure the MockAgent is running. ", false);
+            GD.Print("Cannot start GSDK. Please make sure the MPAgent is running. ", false);
             GD.Print($"Got Exception: {initEx.ToString()}", false);
             return;
         }   
@@ -71,7 +70,7 @@ public partial class PlayfabServer : Node
             GetTree().Quit();
         }); 
         GameserverSDK.RegisterMaintenanceCallback((time) => {
-            MD.Log(MD.Runtime.PlayfabServer, "", "Maintenance shutdown in : " + time.ToString());
+            GD.Print("Maintenance shutdown in : " + time.ToString());
             // Just shut down right now... whatever.
             GetTree().Root.PropagateNotification((int)NotificationWMCloseRequest);
             GetTree().Quit();
@@ -80,17 +79,18 @@ public partial class PlayfabServer : Node
         int listeningPort = 8080;
         if(config?.ContainsKey(ListeningPortKey) == true)
         {
+            GD.Print("Parse that port!");
             listeningPort = int.Parse(config[ListeningPortKey]);
         }
-        string cookie;
-        if(config.TryGetValue(GameserverSDK.SessionCookieKey, out cookie))
+        if(config.TryGetValue(GameserverSDK.SessionCookieKey, out var cookie))
         {
-            MD.Log(MD.Runtime.PlayfabServer, "", "Start Playfab on [ " + listeningPort + " ]");
+            GD.Print("Start Playfab on [ " + listeningPort + " ]");
+            GD.Print("Session Cookie was: " + cookie);
             if(ServerManager.Instance.StartAsPlayfabServer(cookie, listeningPort, 8))
             {
                 if(GameserverSDK.ReadyForPlayers())
                 {
-                    MD.Log(MD.Runtime.PlayfabServer, "", "Server Success!");
+                    GD.Print(MD.Runtime.PlayfabServer, "", "Server Success!");
                     return;
                 }
                 else 
@@ -109,11 +109,11 @@ public partial class PlayfabServer : Node
         }
         else
         {
-            MD.Log(MD.Runtime.PlayfabServer, "", "Start Playfab on [ " + listeningPort + " ]");
+            GD.Print("Start Playfab on [ " + listeningPort + " ]");
             ServerManager.Instance.StartAsPlayfabServer("-1", listeningPort, 8);
             if(GameserverSDK.ReadyForPlayers())
             {
-                MD.Log(MD.Runtime.PlayfabServer, "", "Server Success!");
+                GD.Print("Server Success!");
                 return;
             }
             else 

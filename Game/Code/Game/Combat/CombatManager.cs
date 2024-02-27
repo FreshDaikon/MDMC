@@ -54,7 +54,7 @@ public partial class CombatManager: Node
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void CombatMessageRelay(int caster, int target, string effect, int value, int messageType)
     {
-        MD.Log(" Got Combat Message ");
+        GD.Print(" Got Combat Message ");
         if(!IsInCombat)
         {
             CombatStartTime = GameManager.Instance.GameClock;

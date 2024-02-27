@@ -137,7 +137,7 @@ public partial class SkillContainer : Node
                         }
                         else
                         {
-                            MD.Log("We failed the combo!");
+                            GD.Print("We failed the combo!");
                             NextComboSlot = 0;
                             Rpc(nameof(SyncNextCombo), NextComboSlot);
                             int oldPotency = skill.AdjustedPotency;

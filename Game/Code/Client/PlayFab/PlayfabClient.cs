@@ -25,7 +25,7 @@ public partial class PlayfabClient : Node
 
 	public async void LoginPlayer(string username, string password) 
 	{
-		MD.Log("Trying to login player...");
+		GD.Print("Trying to login player...");
 		// TODO : change to use steam...
 		LoginWithCustomIDRequest request = new LoginWithCustomIDRequest
 		{
@@ -42,12 +42,12 @@ public partial class PlayfabClient : Node
 		
 		if(apiError != null)
 		{
-			MD.Log("Login failed - let's have a look");
-			MD.Log(PlayFabUtil.GenerateErrorReport(apiError));
+			GD.Print("Login failed - let's have a look");
+			GD.Print(PlayFabUtil.GenerateErrorReport(apiError));
 		}
 		else if(apiResult != null)
 		{
-			MD.Log("Login sucess!");
+			GD.Print("Login sucess!");
 			var auth = apiResult.AuthenticationContext.ClientSessionTicket;			
 			var wasCreated = apiResult.NewlyCreated;		
 			

@@ -40,8 +40,11 @@ public partial class DamageMeterEntry : ColorRect
 
     public override void _Process(double delta)
 	{
-		if(ClientMultiplayerManager.Instance.GetStatus() != MultiplayerPeer.ConnectionStatus.Connected)
+		if(!GameManager.Instance.IsGameRunning())
 			return;
+		//////////////////////////////////////////
+		
+		
 		if(!CombatManager.Instance.IsInCombat)
 			return;		
 		var testEntity = ArenaManager.Instance.GetCurrentArena().GetEntities()

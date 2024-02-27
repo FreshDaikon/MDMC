@@ -49,7 +49,6 @@ public partial class ServerManager : Node3D
         {
             if(currentArena.GetTimeLeft() <= 0)
             {
-                MD.Log(MD.Runtime.Server, "ServerManager", "Arena Time is up! - Closing Down..");
                 foreach(var player in Multiplayer.GetPeers())
                 {
                     if(player != Multiplayer.GetUniqueId())
@@ -119,10 +118,10 @@ public partial class ServerManager : Node3D
 
     public bool StartAsPlayfabServer(string cookie, int port, int maxPlayers)
     {
-        Engine.MaxFps = 60;
+        GD.Print("Session Cookie " + cookie);
+        Engine.MaxFps = 60; 
         Multiplayer.PeerConnected += PeerConnected;
         Multiplayer.PeerDisconnected += PeerDisconnected;
-        MD.Log(MD.Runtime.Server, "", cookie);
         peer = new ENetMultiplayerPeer();
         var error = peer.CreateServer(port, maxPlayers);   
         if(error != Error.Ok)
@@ -135,6 +134,7 @@ public partial class ServerManager : Node3D
         {
             //Arena Setup:
             int id = int.Parse(cookie);
+            GD.Print(id);
             if(ArenaManager.Instance.LoadArena(id))
             {
                 //When done:
@@ -149,7 +149,7 @@ public partial class ServerManager : Node3D
         }
         else
         {
-            GD.Print("Server Started! Awaiting Clients..."); 
+            GD.Print("Server Started but failed to make an arena! Awaiting Clients..."); 
             return true;
         }
     }
@@ -157,16 +157,13 @@ public partial class ServerManager : Node3D
     // SIGNALS:
     private void PeerDisconnected(long id)
     {
-        MD.Log(MD.Runtime.Server, "","Player Disconnected...");
         var arena = ArenaManager.Instance.GetCurrentArena();
         if(arena != null)
         {
             arena.RemovePlayerEntity ((int)id);
         }
-        MD.Log(MD.Runtime.Server, "Remaining Peers: ", Multiplayer.GetPeers().Length.ToString());
         if(Multiplayer.GetPeers().Length <= 0)
         {
-            MD.Log(MD.Runtime.Server, "*", "No Peers remaining after last disconnect - shutting down.");
             GetTree().Root.PropagateNotification((int)NotificationWMCloseRequest);
             GetTree().Quit();
         }
@@ -174,7 +171,6 @@ public partial class ServerManager : Node3D
     }
     private void PeerConnected(long id)
     {
-        MD.Log(MD.Runtime.Server, "","Player Connnected...");
         if(ArenaManager.Instance.HasArena())
         {   
             var arena = ArenaManager.Instance.GetCurrentArena();
@@ -183,7 +179,6 @@ public partial class ServerManager : Node3D
         }
         else 
         {
-            MD.Log(MD.Runtime.Server, "","Could not add player - arena is null.. Disconnect Player:");
             peer.DisconnectPeer((int)id);
         }
     }

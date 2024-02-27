@@ -170,7 +170,7 @@ public partial class Skill : Node
                 ticks += 1;
                 lastLapse = (int)scaled;        
                 var Tick = TriggerResult();
-                MD.Log("Channel Skill Tick : " + Tick.result );
+                GD.Print("Channel Skill Tick : " + Tick.result );
             }
             if(lapsed > ChannelTime)
             {

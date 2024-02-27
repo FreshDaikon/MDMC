@@ -28,8 +28,10 @@ public partial class TargetBar : Control
 
 	public override void _Process(double delta)
 	{	
-		if(ClientMultiplayerManager.Instance.GetStatus() != MultiplayerPeer.ConnectionStatus.Connected)
+		if(!GameManager.Instance.IsGameRunning())
 			return;
+		//////////////////////////////////////////
+		
 		var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();
 		if(players == null)
 			return;

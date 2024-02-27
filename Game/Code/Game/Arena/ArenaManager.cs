@@ -44,11 +44,10 @@ public partial class ArenaManager : Node
 
     public bool LoadArena(int id)
     {
-        MD.Log(MD.Runtime.GAME, "ArenaManager", "id to load is :" + id);
+        GD.Print("ArenaManager id to load is : " + id);
         var arena = DataManager.Instance.GetArenaInstance(id);
         if(arena != null)
         {
-            MD.Log(MD.Runtime.GAME, "ArenaManager.cs", "Loading Arena...");
             ArenaContainer.AddChild(arena);
             currentArena = arena;
             return true;
@@ -68,7 +67,7 @@ public partial class ArenaManager : Node
         }
         else
         {
-            MD.Log("No Arena to unload..");
+            GD.Print("No Arena to unload..");
         }
     }
 }

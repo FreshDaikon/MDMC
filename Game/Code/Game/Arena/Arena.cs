@@ -79,7 +79,7 @@ public partial class Arena : Node3D
     }
     public int GetEnemyIndex(int id)
     {
-        MD.Log("Id to find: " + id);
+        GD.Print("Id to find: " + id);
         if(EntityContainer.GetChildCount() == 0)
             return -1;
         var enemies = EntityContainer.GetChildren()
@@ -89,7 +89,7 @@ public partial class Arena : Node3D
             .ToList();
         if(enemies.Count == 0)
             return -1;
-        MD.Log("Index : " + enemies.IndexOf(enemies.Find(p => p.Name == id.ToString())));
+        GD.Print("Index : " + enemies.IndexOf(enemies.Find(p => p.Name == id.ToString())));
         return enemies.IndexOf(enemies.Find(p => p.Name == id.ToString()));        
     }
     public int GetFriendlyIndex(int id)
@@ -103,7 +103,7 @@ public partial class Arena : Node3D
             .ToList();
         if(friends.Count == 0)
             return -1;
-        MD.Log("Index : " + friends.IndexOf(friends.Find(p => p.Name == id.ToString())));
+        GD.Print("Index : " + friends.IndexOf(friends.Find(p => p.Name == id.ToString())));
         return friends.IndexOf(friends.Find(p => p.Name == id.ToString())); 
     }
     public List<Entity> GetEntities()

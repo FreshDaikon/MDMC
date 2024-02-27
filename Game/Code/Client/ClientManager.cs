@@ -61,7 +61,7 @@ public partial class ClientManager : Node3D
             var error = OS.Kill(ClientMultiplayerManager.Instance.LocalPid);
             if(error != Error.Ok)
             {
-                MD.Log("Could not kill Saved Server ID.");
+                GD.Print("Could not kill Saved Server ID.");
             }
         }
         base._ExitTree();

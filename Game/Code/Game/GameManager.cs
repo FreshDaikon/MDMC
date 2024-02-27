@@ -23,7 +23,7 @@ public partial class GameManager : Node
     {  
         if(Instance != null)
         {
-            Free();
+            QueueFree();
             return;
         }
         Instance = this;        
@@ -118,10 +118,8 @@ public partial class GameManager : Node
         {
             _latencyList.Sort();
             var middle = _latencyList[3];
-            //var noExtremes = _latencyList.Where(x => x <= (middle * 2));
             var average = _latencyList.Average();
             _deltaLatency = average - _latency;
-            GD.Print(_deltaLatency);
             _latency = average;
             _latencyList.Clear();
         }

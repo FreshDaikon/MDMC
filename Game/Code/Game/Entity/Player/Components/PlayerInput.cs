@@ -412,6 +412,6 @@ public partial class PlayerInput : Node
     private void TryTriggerSkill(int containerSlot, int slot)
     {
         var result = player.Arsenal.TriggerSkill((MD.ContainerSlot)containerSlot, slot);
-        MD.Log("Skill Trigger result [ " + "Success : " + result.SUCCESS + " , Reasons : " + result.result);
+        GD.Print("Skill Trigger result [ " + "Success : " + result.SUCCESS + " , Reasons : " + result.result);
     }
 }

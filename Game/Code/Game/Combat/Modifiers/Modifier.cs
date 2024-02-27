@@ -83,7 +83,7 @@ public partial class Modifier : Node
             }            
             if(lapsed > Duration)
             {
-                MD.Log(" Total Ticks : " + ticks );
+                GD.Print(" Total Ticks : " + ticks );
                 entity.Modifiers.RemoveModifier(Data.Id);
             }
         }        

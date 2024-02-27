@@ -26,9 +26,9 @@ public partial class RoleSpread : Control
 	private bool hasBeenSet = false;
 	public override void _Process(double delta)
 	{
-
-		if(ClientMultiplayerManager.Instance.GetStatus() != MultiplayerPeer.ConnectionStatus.Connected)
+		if(!GameManager.Instance.IsGameRunning())
 			return;
+		//////////////////////////////////////////
 			
 		if(localPlayer == null)
 		{

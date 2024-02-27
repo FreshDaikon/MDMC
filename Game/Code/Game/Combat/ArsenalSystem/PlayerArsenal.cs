@@ -155,7 +155,7 @@ public partial class PlayerArsenal: Node
         var newContainer = DataManager.Instance.GetSkillContainerInstance(id);
         if(newContainer == null)
         {
-            MD.Log("Skill Container with ID: " + id + " does not exist.");
+            GD.Print("Skill Container with ID: " + id + " does not exist.");
             return;
         }
         if(GetChildCount() > 0)
@@ -224,7 +224,7 @@ public partial class PlayerArsenal: Node
             }
             if(container.IsSkillOGCD(index))
             {
-                MD.Log("Try Trigger OGCD Skill:");
+                GD.Print("Try Trigger OGCD Skill:");
                 return container.TriggerSkill(index);
             }            
             var lapsed = GameManager.Instance.GameClock - GCDStartTime;
@@ -238,14 +238,14 @@ public partial class PlayerArsenal: Node
                 var result = container.TriggerSkill(index);
                 if(result.SUCCESS)
                 {
-                    MD.Log("We triggered and it was success.");
+                    GD.Print("We triggered and it was success.");
                     Rpc(nameof(SyncGCD), GameManager.Instance.GameClock);
                     GCDStartTime = GameManager.Instance.GameClock;
                     return result;
                 }
                 else
                 {
-                    MD.Log("We triggered, but it was not success");
+                    GD.Print("We triggered, but it was not success");
                     return result;
                 }
             }      
@@ -283,7 +283,7 @@ public partial class PlayerArsenal: Node
 
     public void FinishCasting(SkillResult result)
     {
-        MD.Log("Skill result after channeling:" + result.result);
+        GD.Print("Skill result after channeling:" + result.result);
         CastingSkill = null;
         IsCasting = false;
         Rpc(nameof(SyncCasting), IsCasting, CastingStartTime, CastingTime);
@@ -291,7 +291,7 @@ public partial class PlayerArsenal: Node
 
     public void FinishChanneling(SkillResult result)
     {
-        MD.Log("Skill result after channeling:" + result.result);
+        GD.Print("Skill result after channeling:" + result.result);
         ChannelingSkill = null;
         IsChanneling = false;
         Rpc(nameof(SyncChanneling), IsChanneling, ChannelingStartTime, ChannelingTime);

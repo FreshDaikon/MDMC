@@ -67,7 +67,7 @@ public partial class DaikonConnect: Node
         authRequest.RequestCompleted += (result, responseCode, headers, body) => {
             if(responseCode != 200)
             {
-                MD.Log("Respones was not 200 OK -  [" + responseCode + "]"); 
+                GD.Print("Respones was not 200 OK -  [" + responseCode + "]"); 
                 CleanUp(authRequest);
                 return;
             }
@@ -85,7 +85,7 @@ public partial class DaikonConnect: Node
 
     public void DaikonRequestGame(int ArenaId)
     {
-        GD.Print("Let's try to get a game!");
+        GD.Print("Let's try to get a game! give the ID:" + ArenaId + "my regards!");
         if(SessionToken == Guid.Empty)
         {
             // We need a valid token to proceed!
@@ -96,7 +96,7 @@ public partial class DaikonConnect: Node
         gameRequest.RequestCompleted += (result, responseCode, headers, body) => {
             if(responseCode != 200)
             {
-                MD.Log("Respones was not 200 OK -  [" + responseCode + "]"); 
+                GD.Print("Respones was not 200 OK -  [" + responseCode + "]"); 
                 CleanUp(gameRequest);
                 return;
             }
@@ -124,7 +124,7 @@ public partial class DaikonConnect: Node
         joinRequest.RequestCompleted += (result, responseCode, headers, body) => {
             if(responseCode != 200)
             {
-                MD.Log("Respones was not 200 OK -  [" + responseCode + "]"); 
+                GD.Print("Respones was not 200 OK -  [" + responseCode + "]"); 
                 CleanUp(joinRequest);
                 return;
             }

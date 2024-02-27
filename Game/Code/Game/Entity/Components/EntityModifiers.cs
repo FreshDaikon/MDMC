@@ -57,7 +57,7 @@ public partial class EntityModifiers : Node
         }
         else
         {
-            MD.Log("Could not add mod...");
+            GD.Print("Could not add mod...");
             return new SkillResult() { SUCCESS = false, result = MD.ActionResult.ERROR };            
         }
     }

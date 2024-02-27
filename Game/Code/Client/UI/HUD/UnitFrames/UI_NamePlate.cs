@@ -39,7 +39,7 @@ public partial class UI_NamePlate : Control
     {
         if(_entity == null)
         {
-            QueueFree();
+            CallDeferred(nameof(QueueFree));
         }
         _camera = GetViewport().GetCamera3D();
         var entityPos = _entity.Controller.GlobalPosition;

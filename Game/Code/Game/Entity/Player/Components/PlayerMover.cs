@@ -39,7 +39,7 @@ public partial class PlayerMover : Node, IEntityMover
     public void Move(float delta)
     {
         var controller = player.Controller;   
-        var playerSpeed = 5f; //player.Status.GetCurrentSpeed();    
+        var playerSpeed = player.Status.GetCurrentSpeed();    
 
         velocity.X = controller.IsOnFloor() ? playerSpeed * input.Direction.X : velocity.X;
         velocity.Z = controller.IsOnFloor() ? playerSpeed * input.Direction.Z : velocity.Z;

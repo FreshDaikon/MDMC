@@ -86,9 +86,9 @@ public partial class UI_UnitFrame : Control
 			ShieldBar.Visible = currentShield > 0f;
 			var shieldClip = Mathf.Clamp((currentShield + currentHealth) - 1f, 0f, 2f);
 			BarBG.Size = BarSize;
-			HealthBar.Size = HealthBar.Size.Lerp(new Vector2(BarSize.X * currentHealth, BarSize.Y), (float)delta * ChangeSpeed);
-			ShieldBar.Size = ShieldBar.Size.Lerp(new Vector2(BarSize.X * currentShield, BarSize.Y), (float)delta * ChangeSpeed); 
-			ShieldBar.Position = ShieldBar.Position.Lerp(HealthBar.Position + new Vector2(HealthBar.Size.X - (BarSize.X * shieldClip), 0f), (float)delta * ChangeSpeed);
+			HealthBar.Size = new Vector2(BarSize.X * currentHealth, BarSize.Y);
+			ShieldBar.Size = new Vector2(BarSize.X * currentShield, BarSize.Y); 
+			ShieldBar.Position = HealthBar.Position + new Vector2(HealthBar.Size.X - (BarSize.X * shieldClip), 0f);
 		}
 	}
 }
