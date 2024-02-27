@@ -61,13 +61,13 @@ public class GamesController : ControllerBase
                     if(buildIds.Result.BuildSummaries.Count > 0)
                     {
                         var latest = buildIds.Result.BuildSummaries[0].BuildId;
-                        var SessionId = Guid.NewGuid().ToString();
+                        var _sessionId = Guid.NewGuid().ToString();
                         _logger.Log(LogLevel.Information, "The requested arena was : " + request.Arena);
                         var Server = await PlayFabMultiplayerAPI.RequestMultiplayerServerAsync(new PlayFab.MultiplayerModels.RequestMultiplayerServerRequest()
                         {
                             BuildId = latest,
                             PreferredRegions = new[] {"NorthEurope"}.ToList(),
-                            SessionId = SessionId,
+                            SessionId = _sessionId,
                             SessionCookie = request.Arena
                         });
                         // We Could Not get a Server:
@@ -80,12 +80,11 @@ public class GamesController : ControllerBase
                         else
                         {
                             var result = Server.Result;
-                            var sessionId = Guid.NewGuid();
                             var joinCode = GenerateJoinCode(10);
                             //
                             var NewGame = new Game
                             {
-                                SessionId = sessionId.ToString(),
+                                SessionId = _sessionId.ToString(),
                                 JoinCode = joinCode,
                                 ServerHost = result.FQDN,
                                 ServerPort = result.Ports.First(port => port.Name == "GameServer").Num,
@@ -109,12 +108,14 @@ public class GamesController : ControllerBase
     [HttpGet("join")]
     public IActionResult JoinGame(JoinGameRequest request)
     {
+        _logger.Log(LogLevel.Information, "Let's try and auth first.");
         var auth = _userService.ValidateToken(request.SessionToken);
         if(auth)
         {
             var game = _gameManager.GetGame(request.JoinCode);
             if(game != null)
             {
+                _logger.Log(LogLevel.Information, "Game Found!");
                 var response = new GameFoundReponse()
                 {
                     ServerHost = game.ServerHost,
@@ -122,6 +123,8 @@ public class GamesController : ControllerBase
                 };
                 return Ok(response);
             }
+            _logger.Log(LogLevel.Information, "We could not find the requested game."); 
+            return NoContent();
         }
         return NoContent();
     }

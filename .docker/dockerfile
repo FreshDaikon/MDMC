@@ -12,4 +12,5 @@ RUN chmod +x Server/Server.x86_64
 WORKDIR /Server
 
 EXPOSE 8080/udp
+
 ENTRYPOINT [ "./Server.x86_64", "--headless", "--playfab"]

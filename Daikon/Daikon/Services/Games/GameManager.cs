@@ -16,7 +16,7 @@ public class GameManager : IGameManager
         foreach(var game in GameList )
         {
             TimeSpan duration = new TimeSpan(game.LastHeartBeat.Ticks - DateTime.Now.Ticks);
-            if(duration.TotalMinutes > 2)
+            if(duration.TotalMinutes > 30)
             {
                 GameList.Remove(game);                
             }
@@ -32,11 +32,11 @@ public class GameManager : IGameManager
         }
     }
 
-    public Game? GetGame(string session)
+    public Game? GetGame(string joinCode)
     {
         if(GameList.Count > 0)
         {
-            var game = GameList.Find(g => g.SessionId == session);
+            var game = GameList.Find(g => g.JoinCode == joinCode);
             return game; 
         }
         return null;

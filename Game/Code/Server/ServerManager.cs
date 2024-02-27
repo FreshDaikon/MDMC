@@ -61,36 +61,20 @@ public partial class ServerManager : Node3D
         base._Process(delta);
     }
 
-    public void StartAsStandaloneServer(int port, int maxPlayers)
+    public void StartServer(int port, int maxPlayers, string arena)
     {
-        Engine.MaxFps = 60;
-        GD.Print("Starting Server...");
-        //Connect Signals:
-        Multiplayer.PeerConnected += PeerConnected;
-        Multiplayer.PeerDisconnected += PeerDisconnected; 
-        peer = new ENetMultiplayerPeer();
-        var error = peer.CreateServer(port, maxPlayers);   
-        if(error != Error.Ok)
-        {
-            GD.Print("Can't Host : " + error.ToString());
-            return;
-        }
-        Multiplayer.MultiplayerPeer = peer;   
-        GD.Print("Server Started! Awaiting Clients...");        
-    }
-
-    public void StartAsStandaloneServer(int port, int maxPlayers, string arena)
-    {
-        Engine.MaxFps = 60;
+        Engine.MaxFps = 30;
         Multiplayer.PeerConnected += PeerConnected;
         Multiplayer.PeerDisconnected += PeerDisconnected;
         peer = new ENetMultiplayerPeer();
         var error = peer.CreateServer(port, maxPlayers);   
+        
         if(error != Error.Ok)
         {
             GD.Print("Can't Host : " + error.ToString());
             return;
         }
+        
         Multiplayer.MultiplayerPeer = peer;   
         if(arena != "-1")
         {
@@ -113,44 +97,6 @@ public partial class ServerManager : Node3D
         {
             GD.Print("Server Started WITHOUT Arena!! Awaiting Clients..."); 
             return;
-        }
-    }
-
-    public bool StartAsPlayfabServer(string cookie, int port, int maxPlayers)
-    {
-        GD.Print("Session Cookie " + cookie);
-        Engine.MaxFps = 60; 
-        Multiplayer.PeerConnected += PeerConnected;
-        Multiplayer.PeerDisconnected += PeerDisconnected;
-        peer = new ENetMultiplayerPeer();
-        var error = peer.CreateServer(port, maxPlayers);   
-        if(error != Error.Ok)
-        {
-            GD.Print("Can't Host : " + error.ToString());
-            return false;
-        }
-        Multiplayer.MultiplayerPeer = peer;   
-        if(cookie != "-1")
-        {
-            //Arena Setup:
-            int id = int.Parse(cookie);
-            GD.Print(id);
-            if(ArenaManager.Instance.LoadArena(id))
-            {
-                //When done:
-                GD.Print("Server Started! Awaiting Clients..."); 
-                return true;
-            }
-            else 
-            {
-                GD.Print("Could Not Load Arena - abort!"); 
-                return false;
-            }
-        }
-        else
-        {
-            GD.Print("Server Started but failed to make an arena! Awaiting Clients..."); 
-            return true;
         }
     }
 

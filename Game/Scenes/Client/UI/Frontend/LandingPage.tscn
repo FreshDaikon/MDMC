@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://1bpfjjvvkhfn"]
+[gd_scene load_steps=5 format=3 uid="uid://1bpfjjvvkhfn"]
 
 [ext_resource type="Script" path="res://Code/Client/UI/Frontend/UILandingPage.cs" id="1_p3haa"]
 [ext_resource type="FontFile" uid="uid://xv28cftjto52" path="res://Assets/UI/Fonts/twoweekendssans-regular.otf" id="1_pfx35"]
 [ext_resource type="PackedScene" uid="uid://drwf23ju3cmju" path="res://Scenes/Client/UI/Frontend/Components/MDMC_Title.tscn" id="2_cqgh0"]
+[ext_resource type="FontFile" uid="uid://q3aynbg5gvis" path="res://Assets/UI/Fonts/LibreFranklin-BlackItalic.ttf" id="4_0a1n2"]
 
 [node name="Base" type="Control"]
 layout_mode = 3
@@ -106,15 +107,17 @@ unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "Input  Join Code"
 
-[node name="GeneratedCodeEdit" type="LineEdit" parent="Panel/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-placeholder_text = "Generated..."
-
 [node name="JoinGameButton" type="Button" parent="Panel/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Join Game"
+
+[node name="StartGameButton" type="Button" parent="Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_0a1n2")
+theme_override_font_sizes/font_size = 32
+text = "START GAME"
 
 [node name="Spacer_02" type="MarginContainer" parent="Panel/VBoxContainer"]
 custom_minimum_size = Vector2(0, 100)
@@ -130,20 +133,10 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Start Local Server"
 
-[node name="JoinLocalServerButton" type="Button" parent="Panel/VBoxContainer"]
+[node name="JoinLocal" type="Button" parent="Panel/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Join Local Server
-"
-
-[node name="Spacer_04" type="MarginContainer" parent="Panel/VBoxContainer"]
-custom_minimum_size = Vector2(0, 50)
-layout_mode = 2
-
-[node name="JoinAnyLocalServer" type="Button" parent="Panel/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Join Any Local Server
 "
 
 [node name="Spacer_03" type="MarginContainer" parent="Panel/VBoxContainer"]
