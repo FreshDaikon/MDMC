@@ -24,16 +24,6 @@ public partial class ServerManager : Node3D
             return;
         }
         Instance = this;        
-        GD.Print("Instance Cleared... ");    
-        #if SERVER
-        GD.Print("Fuck yeah it worked!");
-        #endif    
-    }
-
-    public override void _ExitTree()
-    {
-        
-        base._ExitTree();
     }
 
     public override void _Notification(int what)
@@ -74,7 +64,7 @@ public partial class ServerManager : Node3D
 
     public void StartAsStandaloneServer(int port, int maxPlayers)
     {
-        Engine.MaxFps = 12;
+        Engine.MaxFps = 60;
         GD.Print("Starting Server...");
         //Connect Signals:
         Multiplayer.PeerConnected += PeerConnected;

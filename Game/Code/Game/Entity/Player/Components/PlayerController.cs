@@ -8,13 +8,19 @@ public partial class PlayerController : EntityController
 
     public override void _Ready()
     {
-        base._Ready();
         player = (PlayerEntity)GetParent();
     }
 
     public override void UpdatePosition()
     {
-       Position = SavedPosition;
+        if(!player.IsLocalPlayer)
+        {
+            Position = SavedPosition;
+        }
+        else if((Position - SavedPosition).Length() > 2)
+        {
+            Position = SavedPosition;
+        }
 
     }
     public override void UpdateRotation()

@@ -24,6 +24,7 @@ public partial class EntityController : CharacterBody3D
         }        
         else
         {
+            MoveAndSlide();
             UpdateController();       
         }
     }
@@ -34,8 +35,7 @@ public partial class EntityController : CharacterBody3D
         { 
             return;
         }
-        var safeTime = GameManager.Instance.GameClock;
-        var renderTime = safeTime - interpolationOffset; 
+        var renderTime = GameManager.Instance.GameClock - interpolationOffset;//safeTime - GameManager.Instance.GetLatency(); 
         if(entityStatesBuffer.Count > 2)
         {
             while(entityStatesBuffer.Count > 2 && renderTime > entityStatesBuffer[2].TimeStamp)
@@ -102,7 +102,7 @@ public partial class EntityController : CharacterBody3D
         Position = destination;
     }
     //RPC Calls:
-    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.UnreliableOrdered, TransferChannel = 10)]
     private void UpdateEntityState(double time, Vector3 postition, Vector3 rotation)
     {
         var newState = new EntityState()

@@ -19,18 +19,15 @@ public partial class PlayerMover : Node, IEntityMover
     private float verticalVelocity = 0;
     private float fallGravity = 50f;
     private float jumpGravity;
-    private float acceleration = 50;
 
     private float jumpHeight = 1f;
     private float apexDuration = 0.3f;
-
 
 	public override void _Ready()
 	{
         player = (PlayerEntity)GetParent();       
         input = (PlayerInput)GetNode("%Input"); 
         jumpGravity = fallGravity;
-        SetPhysicsProcess(GetMultiplayerAuthority() == 1);
         base._Ready();
 	}
     public override void _PhysicsProcess(double delta)
@@ -42,7 +39,7 @@ public partial class PlayerMover : Node, IEntityMover
     public void Move(float delta)
     {
         var controller = player.Controller;   
-        var playerSpeed = player.Status.GetCurrentSpeed();    
+        var playerSpeed = 5f; //player.Status.GetCurrentSpeed();    
 
         velocity.X = controller.IsOnFloor() ? playerSpeed * input.Direction.X : velocity.X;
         velocity.Z = controller.IsOnFloor() ? playerSpeed * input.Direction.Z : velocity.Z;

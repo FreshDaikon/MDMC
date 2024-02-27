@@ -11,7 +11,7 @@ namespace Daikon.Client.Connect;
 public partial class DaikonConnect: Node
 {
     public static DaikonConnect Instance;   
-    private string baseLocal = "http://localhost:5000";
+    private string baseLocal = "http://127.0.0.1:5000";
     private string baseRemote = "http://194.163.183.217:5000";
     private string baseActual = "";
 
@@ -85,6 +85,7 @@ public partial class DaikonConnect: Node
 
     public void DaikonRequestGame(int ArenaId)
     {
+        GD.Print("Let's try to get a game!");
         if(SessionToken == Guid.Empty)
         {
             // We need a valid token to proceed!
@@ -147,6 +148,7 @@ public partial class DaikonConnect: Node
         var json = UTF8Encoding.UTF8.GetString(body);
         var messageData = JsonConvert.DeserializeObject<AuthUserResponse>(json); 
         GD.Print(messageData);        
+        GD.Print("We good to go!");
         SessionToken = messageData.SessionToken;
         EmitSignal(SignalName.AuthSuccess);
     }

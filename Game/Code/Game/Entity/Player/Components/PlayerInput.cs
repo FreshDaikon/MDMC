@@ -10,9 +10,7 @@ public partial class PlayerInput : Node
     public bool Jumping = false;
     [Export]
     public bool Dashing = false;
-    [Export]
     public Vector3 Direction = Vector3.Zero;
-    [Export]
     public Vector3 Rotation = Vector3.Zero;
     
      // References:

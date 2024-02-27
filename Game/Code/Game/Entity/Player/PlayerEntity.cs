@@ -60,7 +60,7 @@ public partial class PlayerEntity : Entity
             GameManager.Instance.ConnectionStarted += () => {
                 RpcId(1, nameof(Reset));
             };
-            mover.QueueFree();
+            //mover.QueueFree();
 
 		}
         else if(Multiplayer.GetUniqueId() == 1)

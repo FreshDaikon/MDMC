@@ -1,0 +1,18 @@
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
+WORKDIR /Daikon
+
+# Copy everything
+COPY . ./
+# Restore as distinct layers
+WORKDIR /Daikon/Daikon
+RUN dotnet restore
+# Build and publish a release
+RUN dotnet publish -c Release -o out
+
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:7.0
+WORKDIR /Daikon
+EXPOSE 5000/udp
+EXPOSE 5000/tcp
+COPY --from=build-env Daikon/Daikon/bin/Release/net7.0 .
+ENTRYPOINT ["dotnet", "Daikon.dll"]

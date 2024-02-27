@@ -21,6 +21,8 @@ public partial class EntityModifiers : Node
 
     public SkillResult AddModifier(Modifier mod)
     {
+        if(!Multiplayer.IsServer())
+            return new SkillResult() { SUCCESS = false, result = MD.ActionResult.ERROR }; ;
         if(mod != null)
         {
             var existingMod = modContainer.GetChildren().Where(m => m is Modifier).Cast<Modifier>().ToList().Find( m => m.Data.Id == mod.Data.Id);
@@ -66,7 +68,10 @@ public partial class EntityModifiers : Node
         if(existingMod != null)
         {
             existingMod.QueueFree();
-            Rpc(nameof(SyncMod), id, false);
+            if(Multiplayer.IsServer())
+            {  
+                Rpc(nameof(SyncMod), id, false);
+            }
         }
     }
 

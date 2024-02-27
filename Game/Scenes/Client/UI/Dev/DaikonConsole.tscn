@@ -1,0 +1,40 @@
+[gd_scene load_steps=3 format=3 uid="uid://btsip2wrsmsfv"]
+
+[ext_resource type="FontFile" uid="uid://b7pwahdycnina" path="res://Assets/UI/Fonts/FiraMonoNerdFontPropo-Medium.otf" id="1_eh1lf"]
+
+[sub_resource type="CodeHighlighter" id="CodeHighlighter_kstpp"]
+number_color = Color(0.172549, 0.560784, 0.458824, 1)
+symbol_color = Color(0.729412, 0.470588, 0.133333, 1)
+function_color = Color(0.541176, 0.611765, 0.231373, 1)
+member_variable_color = Color(0.309804, 0.592157, 0.839216, 1)
+
+[node name="DaikonConsole" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CodeEdit" type="CodeEdit" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_eh1lf")
+placeholder_text = "...."
+editable = false
+scroll_smooth = true
+minimap_draw = true
+syntax_highlighter = SubResource("CodeHighlighter_kstpp")
+gutters_draw_line_numbers = true

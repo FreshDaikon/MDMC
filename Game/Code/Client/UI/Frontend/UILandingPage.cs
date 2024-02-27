@@ -84,6 +84,9 @@ public partial class UILandingPage : Control
         };
         DaikonConnect.Instance.GameCreated += (serverhost, port, joincode) => {
             MD.Log("We got a game Created over here!");
+            JoinCodeEdit.Text = joincode;
+            ArenaManager.Instance.LoadArena(_arenas[ArenaListOptions.Selected].Id);
+            ClientMultiplayerManager.Instance.SetData(serverhost, port);
         };
         DaikonConnect.Instance.GameFound += (host, port) => {};
         
@@ -109,11 +112,12 @@ public partial class UILandingPage : Control
 
     private void JoinGame()
     {
-        //WSManager.Instance.JoinGame(JoinCodeEdit.Text);
+        ClientMultiplayerManager.Instance.StartPeer();
     }
 
     private void ConnectWS()
     {        
+        DaikonConnect.Instance.SetToLocalHost();
         DaikonConnect.Instance.DaikonAuth();
     }
 
