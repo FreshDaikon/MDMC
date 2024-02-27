@@ -53,10 +53,12 @@ public partial class PlayerEntity : Entity
         mover = GetNode<PlayerMover>("%Mover");
         //Make Sure the Input Component is owned by the client peer.
         input.SetMultiplayerAuthority(Int32.Parse(Name), true);
+        
         if(Multiplayer.GetUniqueId() == Int32.Parse(Name))
 		{
 			IsLocalPlayer = true;
             camera.GetCamera().Current = true;
+            
             GameManager.Instance.ConnectionStarted += () => {
                 RpcId(1, nameof(Reset));
             };

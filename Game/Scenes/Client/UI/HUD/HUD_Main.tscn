@@ -144,7 +144,7 @@ offset_left = -200.0
 offset_top = -120.0
 offset_right = -200.0
 offset_bottom = -120.0
-containerName = "Left"
+containerSlot = 2
 Activators = PackedStringArray("Activator1")
 
 [node name="RIGHT" parent="BottomCenter" instance=ExtResource("7_55lo1")]
@@ -152,7 +152,7 @@ offset_left = 200.0
 offset_top = -120.0
 offset_right = 200.0
 offset_bottom = -120.0
-containerName = "Right"
+containerSlot = 1
 Activators = PackedStringArray("Activator2")
 
 [node name="FPS" type="Label" parent="."]

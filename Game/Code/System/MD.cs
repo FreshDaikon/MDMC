@@ -57,6 +57,14 @@ public static class MD
         CAST,
         CHANNEL
     }
+
+    public enum ContainerSlot
+    {
+        Main,
+        Right,
+        Left
+    }
+
     public enum ModCategory
     {
         // Speed of the entity (movement speed)

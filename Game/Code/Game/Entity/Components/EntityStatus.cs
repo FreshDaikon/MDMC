@@ -67,7 +67,7 @@ public partial class EntityStatus : Node
     }
 
     //Bah, this is only really relevant for player entities.
-    public float GetGCDModifier(float baseGCD = 2.5f)
+    public float GetGCDModifier(float baseGCD = 1.5f)
     {    
         var modGCD = baseGCD;    
         var mods = modifiers.GetModifiers();

@@ -9,9 +9,11 @@ public partial class EntityController : CharacterBody3D
     public List<Vector3> Forces = new List<Vector3>();
     private float gravity = (float)ProjectSettings.GetSetting("physics/3d/default_gravity");
     private const double interpolationOffset = 0.1;
-    private List<EntityState> entityStatesBuffer = new();
-    private EntityState lastState;
 
+    private List<EntityState> entityStatesBuffer = new();
+    
+    private EntityState lastState;
+    private EntityState lastLocalState;
     public Vector3 SavedPosition;
     public Vector3 SavedRotation;
 
@@ -31,11 +33,11 @@ public partial class EntityController : CharacterBody3D
 
     public virtual void UpdateController()
     {  
-        if(GameManager.Instance.GameClock == 0)
+        if(!GameManager.Instance.IsGameRunning())
         { 
             return;
-        }
-        var renderTime = GameManager.Instance.GameClock - interpolationOffset;//safeTime - GameManager.Instance.GetLatency(); 
+        }        
+        var renderTime = GameManager.Instance.GameClock - interpolationOffset;
         if(entityStatesBuffer.Count > 2)
         {
             while(entityStatesBuffer.Count > 2 && renderTime > entityStatesBuffer[2].TimeStamp)

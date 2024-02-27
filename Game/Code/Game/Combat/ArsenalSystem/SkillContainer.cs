@@ -11,6 +11,7 @@ public partial class SkillContainer : Node
     public SkillSlotData[] SkillSlots;
     public List<ModifierObject> BuffsGranted;
 
+    public MD.ContainerSlot AssignedSlot = 0;
     public int NextComboSlot = 0;   
     //Internals:
     public PlayerEntity Player;
@@ -46,7 +47,7 @@ public partial class SkillContainer : Node
     }
     public void InitializeContainer()
     {
-        Player = GetParent().GetParent<PlayerArsenal>().Player;
+        Player = GetParent<PlayerArsenal>().Player;
         if(Multiplayer.IsServer())
         {
             foreach(var buff in BuffsGranted)

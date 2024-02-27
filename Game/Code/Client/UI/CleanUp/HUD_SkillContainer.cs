@@ -7,7 +7,7 @@ namespace Daikon.Client;
 public partial class HUD_SkillContainer : Control
 {
 	[Export]
-	private string containerName;
+	private MD.ContainerSlot containerSlot;
 
 	[Export]
 	private string[] Activators { get; set; }
@@ -44,28 +44,27 @@ public partial class HUD_SkillContainer : Control
 		containerIcon = GetNode<TextureRect>("%ContainerIcon");
 		animationPlayer = GetNode<AnimationPlayer>("%AnimationPlayer");
 		//Set Skills Up:	
-		MD.Log("Container Name : " + containerName);
+		MD.Log("Container Name : " + containerSlot);
 		CallDeferred(nameof(SetupSkillSlots));	
 	}
 	public void SetupSkillSlots()
 	{
-		Slot1.ContainerName = containerName;
+		Slot1.ContainerName = containerSlot;
 		Slot1.SkillSlot = 0;
-		Slot2.ContainerName = containerName;
+		Slot2.ContainerName = containerSlot;
 		Slot2.SkillSlot = 1;
-		Slot3.ContainerName = containerName;
+		Slot3.ContainerName = containerSlot;
 		Slot3.SkillSlot = 2;
-		Slot4.ContainerName = containerName;
+		Slot4.ContainerName = containerSlot;
 		Slot4.SkillSlot = 3;
-
 		//ComboSlots:
-		Combo1.ContainerName = containerName;
+		Combo1.ContainerName = containerSlot;
 		Combo1.SlotIndex = 0;
-		Combo2.ContainerName = containerName;
+		Combo2.ContainerName = containerSlot;
 		Combo2.SlotIndex = 1;
-		Combo3.ContainerName = containerName;
+		Combo3.ContainerName = containerSlot;
 		Combo3.SlotIndex = 2;
-		Combo4.ContainerName = containerName;
+		Combo4.ContainerName = containerSlot;
 		Combo4.SlotIndex = 3;
 	}
 
@@ -83,29 +82,29 @@ public partial class HUD_SkillContainer : Control
 		if(localPlayer !=  null) 
 		{
 			if(localPlayer.playerInput.isActivator1Pressed)
-				activatorPressed(PlayerArsenal.ContainerNames.Left);			
+				activatorPressed(MD.ContainerSlot.Left);			
 			else
-				activatorDepressed(PlayerArsenal.ContainerNames.Left);			
+				activatorDepressed(MD.ContainerSlot.Left);			
 			if(localPlayer.playerInput.isActivator2Pressed)
-				activatorPressed(PlayerArsenal.ContainerNames.Right);
+				activatorPressed(MD.ContainerSlot.Right);
 			else
-				activatorDepressed(PlayerArsenal.ContainerNames.Right);
+				activatorDepressed(MD.ContainerSlot.Right);
 			if(localPlayer.playerInput.isActivator3Pressed)
-				activatorPressed(PlayerArsenal.ContainerNames.Main);
+				activatorPressed(MD.ContainerSlot.Main);
 			else
-				activatorDepressed(PlayerArsenal.ContainerNames.Main);
+				activatorDepressed(MD.ContainerSlot.Main);
 		}
 		
-		var container = localPlayer.Arsenal.GetSkillContainer(containerName);
+		var container = localPlayer.Arsenal.GetSkillContainer(containerSlot);
 		if(container == null)
 		{
 			return;
 		}
 		containerIcon.Texture = container.Data.Icon;
 	}
-	private void activatorPressed(string container)
+	private void activatorPressed(MD.ContainerSlot container)
 	{
-		if(container == containerName)
+		if(container == containerSlot)
 		{
 			if(!isPlaying)
 			{ 
@@ -114,9 +113,9 @@ public partial class HUD_SkillContainer : Control
 			}
 		}
 	}
-	private void activatorDepressed(string container)
+	private void activatorDepressed(MD.ContainerSlot container)
 	{
-		if(container == containerName)
+		if(container == containerSlot)
 		{
 			if(isPlaying)
 			{ 

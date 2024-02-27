@@ -2,6 +2,7 @@ using System.Linq;
 using Godot;
 using Daikon.Helpers;
 using System.Collections.Generic;
+using System;
 
 namespace Daikon.Game;
 
@@ -13,11 +14,10 @@ public partial class PlayerArsenal: Node
         public static string Left { get { return "Left"; }}
         public static string Right { get { return "Right"; }}
     }
-    private Node skillContainers ;
     public PlayerEntity Player;
 
-    [ExportGroup("Sync Properties")]
     public bool IsCasting = false;
+
     public double CastingStartTime;
     public double CastingTime;
     public bool IsChanneling = false;
@@ -35,9 +35,8 @@ public partial class PlayerArsenal: Node
     #region Godot 
     public override void _Ready()
     {
-        skillContainers = GetNode("%SkillContainers");
+        //skillContainers = GetNode("%SkillContainers");
         Player = GetParent<PlayerEntity>();
-        base._Ready();
     }
 
     public override void _Process(double delta)
@@ -63,24 +62,27 @@ public partial class PlayerArsenal: Node
     {
         var containers = DataManager.Instance.GetAllSkillContainers();
         var skills = DataManager.Instance.GetAllSkills();
-        var names = new string[]{"Main", "Left", "Right"};
-        foreach(var name in names)
+        var slots = new MD.ContainerSlot[]{
+            MD.ContainerSlot.Main, 
+            MD.ContainerSlot.Right,
+            MD.ContainerSlot.Left};
+        foreach(var slot in slots)
         {
             var firstContainer = containers[0];
-            GD.Print("Set Container : " + firstContainer.Name + " To Container: " + name);
+            GD.Print("Set Container : " + firstContainer.Name + " To Container: " + slot);
             var firstSkill = skills[0];
-            SetSkillContainer(firstContainer.Id, name);
-            Rpc(nameof(SyncSkillContainer), firstContainer.Id, name);
+            SetSkillContainer(firstContainer.Id, slot);
+            Rpc(nameof(SyncSkillContainer), firstContainer.Id, (int)slot);
             
-            SetSkill(firstSkill.Id, name, 0);
-            SetSkill(firstSkill.Id, name, 1);
-            SetSkill(firstSkill.Id, name, 2);
-            SetSkill(firstSkill.Id, name, 3);
+            SetSkill(firstSkill.Id, slot, 0);
+            SetSkill(firstSkill.Id, slot, 1);
+            SetSkill(firstSkill.Id, slot, 2);
+            SetSkill(firstSkill.Id, slot, 3);
 
-            Rpc(nameof(SyncSkill), firstSkill.Id, name, 0);
-            Rpc(nameof(SyncSkill), firstSkill.Id, name, 1);
-            Rpc(nameof(SyncSkill), firstSkill.Id, name, 2);
-            Rpc(nameof(SyncSkill), firstSkill.Id, name, 3);
+            Rpc(nameof(SyncSkill), firstSkill.Id, (int)slot, 0);
+            Rpc(nameof(SyncSkill), firstSkill.Id, (int)slot, 1);
+            Rpc(nameof(SyncSkill), firstSkill.Id, (int)slot, 2);
+            Rpc(nameof(SyncSkill), firstSkill.Id, (int)slot, 3);
          }
          hasBeenInit = true;
     }  
@@ -88,21 +90,22 @@ public partial class PlayerArsenal: Node
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void RequestStartupSync()
     {
+        var requester = Multiplayer.GetRemoteSenderId();
         if(hasBeenInit)
         {
-            if(skillContainers.GetChildCount() > 0)
+            if(GetChildCount() > 0)
             {
-                var containers = skillContainers.GetChildren()
+                var containers = GetChildren()
                     .Where(c => c is SkillContainer)
                     .Cast<SkillContainer>()
                     .ToList();
                 foreach(var container in containers)
                 {                    
-                    Rpc(nameof(SyncSkillContainer), container.Data.Id, container.Name);
-                    Rpc(nameof(SyncSkill), container.Data.Id, container.Name, 0);
-                    Rpc(nameof(SyncSkill), container.Data.Id, container.Name, 1);
-                    Rpc(nameof(SyncSkill), container.Data.Id, container.Name, 2);
-                    Rpc(nameof(SyncSkill), container.Data.Id, container.Name, 3);
+                    RpcId(requester, nameof(SyncSkillContainer), container.Data.Id, (int)container.AssignedSlot);
+                    RpcId(requester,nameof(SyncSkill), container.GetSkill(0).Data.Id, (int)container.AssignedSlot, 0);
+                    RpcId(requester,nameof(SyncSkill), container.GetSkill(1).Data.Id, (int)container.AssignedSlot, 1);
+                    RpcId(requester,nameof(SyncSkill), container.GetSkill(2).Data.Id, (int)container.AssignedSlot, 2);
+                    RpcId(requester,nameof(SyncSkill), container.GetSkill(3).Data.Id, (int)container.AssignedSlot, 3);
                 }
             }
         }
@@ -123,9 +126,9 @@ public partial class PlayerArsenal: Node
         ChannelingSkill = null;
 
         //Reset Skills:
-        if(skillContainers.GetChildCount() > 0)
+        if(GetChildCount() > 0)
         {
-            var containers = skillContainers.GetChildren()
+            var containers = GetChildren()
                 .Where(c => c is SkillContainer)
                 .Cast<SkillContainer>()
                 .ToList();
@@ -137,27 +140,17 @@ public partial class PlayerArsenal: Node
         }
     }
 
-    public SkillContainer GetSkillContainer(string containerName)
+    public SkillContainer GetSkillContainer(MD.ContainerSlot containerSlot)
     {
-        if(skillContainers.GetChildCount() > 0)
+        if(GetChildCount() > 0)
         {
-            var containers = skillContainers.GetChildren()
-                .Where(c => c is SkillContainer)
-                .Cast<SkillContainer>()
-                .ToList();
-
-            foreach(var container in containers)
-            {
-                if(container.Name == containerName)
-                {
-                    return container;
-                }
-            }
+            var container = GetChildren().Where(s => s is SkillContainer).Cast<SkillContainer>().ToList().Find(x => x.AssignedSlot == containerSlot);
+            return container;
         }
         return null;
     }
 
-    public void SetSkillContainer(int id, string containerName)
+    public void SetSkillContainer(int id, MD.ContainerSlot containerSlot) 
     {
         var newContainer = DataManager.Instance.GetSkillContainerInstance(id);
         if(newContainer == null)
@@ -165,41 +158,34 @@ public partial class PlayerArsenal: Node
             MD.Log("Skill Container with ID: " + id + " does not exist.");
             return;
         }
-        if(skillContainers.GetChildCount() > 0)
+        if(GetChildCount() > 0)
         {
-            var container = skillContainers.GetChildren()
-                .Where(c => c is SkillContainer)
-                .Cast<SkillContainer>()
-                .ToList()
-                .Find(c => c.Name == containerName);
-            if(container != null)
-            {
-                container.CleanUp();
-                container.QueueFree();
-            }            
+            var current = GetChildren().Where(s => s is SkillContainer).Cast<SkillContainer>().ToList().Find(x => x.AssignedSlot == containerSlot);
+            current?.Free();
         }
         // Replace it with the new one:
-        MD.Log("Adding container: " + containerName);
-        newContainer.Name = containerName;
-        skillContainers.AddChild(newContainer);
+        newContainer.Name = containerSlot.ToString();
+        newContainer.AssignedSlot = containerSlot;
+        AddChild(newContainer); 
+        GD.Print(newContainer.Name); 
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void SyncSkillContainer(int id, string containerName)
+    private void SyncSkillContainer(int id, int containerSlot)
     {
-        GD.Print("Adding skillContaineri on client");
-        SetSkillContainer(id, containerName);
+        GD.Print("Adding skillContainer on client for " + containerSlot);
+        SetSkillContainer(id, (MD.ContainerSlot)containerSlot);
     }
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void SyncSkill(int id, string containerName, int slot)
+    private void SyncSkill(int id, int containerSlot, int slot)
     {
         GD.Print("Adding skill on client");
-        SetSkill(id, containerName, slot);
+        SetSkill(id, (MD.ContainerSlot)containerSlot, slot);
     }
     
-    public Skill GetSkill(string containerName, int slot)
+    public Skill GetSkill(MD.ContainerSlot containerSlot, int slot)
     {
-        var container = GetSkillContainer(containerName);
+        var container = GetSkillContainer(containerSlot);
         if(container != null)
         {
             return container.GetSkill(slot);
@@ -207,9 +193,9 @@ public partial class PlayerArsenal: Node
         return null;
     }
 
-    public void SetSkill(int id, string containerName, int slot)
+    public void SetSkill(int id, MD.ContainerSlot containerSlot, int slot)
     {
-        var container = GetSkillContainer(containerName);
+        var container = GetSkillContainer(containerSlot);
         if(container != null)
         {
             container.SetSkill(id, slot);
@@ -223,9 +209,9 @@ public partial class PlayerArsenal: Node
     
     #region SERVER_CALLS
 
-    public SkillResult TriggerSkill(string containerName, int index)
+    public SkillResult TriggerSkill(MD.ContainerSlot containerSlot, int index)
     { 
-        var container = GetSkillContainer(containerName);
+        var container = GetSkillContainer(containerSlot);
         if(container != null)
         {
             if(IsCasting)
@@ -301,7 +287,6 @@ public partial class PlayerArsenal: Node
         CastingSkill = null;
         IsCasting = false;
         Rpc(nameof(SyncCasting), IsCasting, CastingStartTime, CastingTime);
-
     }
 
     public void FinishChanneling(SkillResult result)
@@ -318,7 +303,6 @@ public partial class PlayerArsenal: Node
         {
             if(CastingSkill.TimerType == MD.SkillTimerType.GCD)
             { 
-                GD.Print("Reset GCD!");
                 GCDStartTime = GCDStartTime - Player.Status.GetGCDModifier();
                 Rpc(nameof(SyncGCD), GCDStartTime);
             }
@@ -369,7 +353,7 @@ public partial class PlayerArsenal: Node
 
     #region Utility
     // Various utility functions for both Server And Client:
-    public SkillResult CanCast(string containerName, int index)
+    public SkillResult CanCast(MD.ContainerSlot containerSlot, int index)
     {
         var result = new SkillResult() { SUCCESS = false, result= MD.ActionResult.ERROR };
         if(IsCasting)
@@ -387,7 +371,7 @@ public partial class PlayerArsenal: Node
             result.result = MD.ActionResult.ON_COOLDOWN;
             return result;
         }  
-        var container = GetSkillContainer(containerName);
+        var container = GetSkillContainer(containerSlot);
         if(container == null)
         {
             result.result = MD.ActionResult.ERROR;
@@ -435,9 +419,9 @@ public partial class PlayerArsenal: Node
     public float[] GetArsenalSkillWeights()
     {
         float[] weights = new float[3];
-        if(skillContainers.GetChildCount() > 0)
+        if(GetChildCount() > 0)
         {
-            var containers = skillContainers.GetChildren()
+            var containers = GetChildren()
                 .Where(c => c is SkillContainer)
                 .Cast<SkillContainer>()
                 .ToList();

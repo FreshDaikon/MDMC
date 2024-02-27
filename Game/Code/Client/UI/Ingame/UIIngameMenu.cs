@@ -1,4 +1,5 @@
 using Daikon.Game;
+using Daikon.Helpers;
 using Godot;
 
 namespace Daikon.Client;
@@ -28,9 +29,9 @@ public partial class UIIngameMenu: Control
         var localPlayer = players.Find(p => p.Name == Multiplayer.GetUniqueId().ToString());			
         if(localPlayer != null)
         {
-            mainContainer = localPlayer.Arsenal.GetSkillContainer(PlayerArsenal.ContainerNames.Main);
-            leftContainer = localPlayer.Arsenal.GetSkillContainer(PlayerArsenal.ContainerNames.Left);
-            rightContainer = localPlayer.Arsenal.GetSkillContainer(PlayerArsenal.ContainerNames.Right);
+            mainContainer = localPlayer.Arsenal.GetSkillContainer(MD.ContainerSlot.Main);
+            leftContainer = localPlayer.Arsenal.GetSkillContainer(MD.ContainerSlot.Left);
+            rightContainer = localPlayer.Arsenal.GetSkillContainer(MD.ContainerSlot.Right);
         }
 
     }

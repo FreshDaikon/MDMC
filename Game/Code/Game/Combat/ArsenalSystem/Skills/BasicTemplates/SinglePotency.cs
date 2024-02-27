@@ -79,6 +79,7 @@ public partial class SinglePotency : Skill
     {
         if(Player == null)
         {
+            GD.Print("Yah player not init on this fucker..");
             return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.ERROR };
         }
         if(IsUniversalSkill)

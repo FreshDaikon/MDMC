@@ -4,12 +4,6 @@
 
 [node name="EntityModifiers" type="Node"]
 script = ExtResource("1_p4ak5")
-modsPath = "res://Data/Instances/Modifiers"
-
-[node name="ModSpawner" type="MultiplayerSpawner" parent="."]
-unique_name_in_owner = true
-spawn_path = NodePath("../Mods")
-spawn_limit = 42
 
 [node name="Mods" type="Node" parent="."]
 unique_name_in_owner = true

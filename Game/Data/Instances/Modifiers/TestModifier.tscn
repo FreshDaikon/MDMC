@@ -1,17 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://ds6ma2gsofavc"]
+[gd_scene load_steps=2 format=3 uid="uid://ds6ma2gsofavc"]
 
 [ext_resource type="Script" path="res://Code/Game/Combat/Modifiers/Modifier.cs" id="1_wwi4a"]
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_i3asn"]
-properties/0/path = NodePath(".:startTime")
-properties/0/spawn = true
-properties/0/replication_mode = 2
-properties/1/path = NodePath(".:Stacks")
-properties/1/spawn = true
-properties/1/replication_mode = 2
-
 [node name="BaseModifier" type="Node"]
 script = ExtResource("1_wwi4a")
-
-[node name="ModSync" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_i3asn")

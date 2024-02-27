@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://Code/Game/Entity/Player/PlayerEntity.cs" id="1_6j6p2"]
 [ext_resource type="PackedScene" uid="uid://g1ekudtsi5t0" path="res://Scenes/Game/EntitySystem/Player/Components/PlayerInput.tscn" id="3_1ru0t"]
+[ext_resource type="Script" path="res://Code/Game/Combat/ArsenalSystem/PlayerArsenal.cs" id="3_bqwwm"]
 [ext_resource type="PackedScene" uid="uid://blkuj16g1jd1w" path="res://Scenes/Game/EntitySystem/Shared/EntityStatus.tscn" id="3_ocq80"]
-[ext_resource type="PackedScene" uid="uid://c5m53oj4o6moe" path="res://Scenes/Game/EntitySystem/Player/Components/PlayerArsenal.tscn" id="3_sdwaw"]
 [ext_resource type="PackedScene" uid="uid://15d4rwkfy0ii" path="res://Scenes/Game/EntitySystem/Player/Components/PlayerMover.tscn" id="6_7ov6x"]
 [ext_resource type="PackedScene" uid="uid://bc6rhldsgpesr" path="res://Scenes/Game/EntitySystem/Shared/EntityController.tscn" id="6_lhg4c"]
 [ext_resource type="PackedScene" uid="uid://uipio1vlxvl5" path="res://Scenes/Game/EntitySystem/Player/Components/PlayerCamera.tscn" id="6_wf2nq"]
@@ -57,8 +57,9 @@ replication_config = SubResource("SceneReplicationConfig_jddvm")
 [node name="EntityStatus" parent="." instance=ExtResource("3_ocq80")]
 unique_name_in_owner = true
 
-[node name="Arsenal" parent="." instance=ExtResource("3_sdwaw")]
+[node name="Arsenal" type="Node" parent="."]
 unique_name_in_owner = true
+script = ExtResource("3_bqwwm")
 
 [node name="Input" parent="." instance=ExtResource("3_1ru0t")]
 unique_name_in_owner = true

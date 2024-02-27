@@ -78,6 +78,5 @@ public partial class Entity : Node3D
         controller = (EntityController)GetNode("%Controller");
         modifiers = GetNode<EntityModifiers>("%EntityModifiers");
         status = GetNodeOrNull<EntityStatus>("%EntityStatus");
-        base._Ready();
     }
 }

@@ -7,7 +7,7 @@ namespace Daikon.Client;
 public partial class HUD_SkillSlot : Control
 {
 	public int SkillSlot;
-	public string ContainerName;
+	public MD.ContainerSlot ContainerName;
 	public TextureProgressBar GCDBar;
 	public TextureProgressBar OGCDBar;
 	public TextureRect Trigger;
@@ -104,9 +104,9 @@ public partial class HUD_SkillSlot : Control
 		}
 	}
 
-	private void TriggerTrigger(string container, int slot)
+	private void TriggerTrigger(int container, int slot)
 	{
-		if(container == ContainerName && slot == SkillSlot)
+		if((MD.ContainerSlot)container == ContainerName && slot == SkillSlot)
 		{
 			TriggerPlayer.Stop();
 			TriggerPlayer.Play("Trigger");

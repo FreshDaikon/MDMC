@@ -51,7 +51,6 @@ _data = {
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_3uhms")
-containerName = "Main"
 
 [node name="DropShadow" type="TextureRect" parent="."]
 layout_mode = 1

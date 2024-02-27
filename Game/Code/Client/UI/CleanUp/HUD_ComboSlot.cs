@@ -1,12 +1,12 @@
 using Godot;
 using Daikon.Game;
+using Daikon.Helpers;
 
 namespace Daikon.Client;
 
 public partial class HUD_ComboSlot : Control
 {
-
-	public string ContainerName;
+	public MD.ContainerSlot ContainerName;
 	public int SlotIndex {get; set;}
 	
 	private Label ComboSlotLabel;

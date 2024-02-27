@@ -4,6 +4,3 @@
 
 [node name="PlayerArsenal" type="Node"]
 script = ExtResource("1_5xy5g")
-
-[node name="SkillContainers" type="Node" parent="."]
-unique_name_in_owner = true

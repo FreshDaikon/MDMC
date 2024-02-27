@@ -18,7 +18,7 @@ public partial class PlayerInput : Node
     private PlayerCamera camera;
 
     [Signal]
-    public delegate void ActionButtonPressedEventHandler(string containerName, int slot);
+    public delegate void ActionButtonPressedEventHandler(int containerSlot, int slot);
     
     public bool isActivator1Pressed = false;
     public bool isActivator2Pressed = false;
@@ -54,17 +54,17 @@ public partial class PlayerInput : Node
         if(Input.GetActionStrength("Activator1") > 0f && Input.GetActionStrength("Activator2") > 0f )
         {
             isActivator3Pressed = true;
-            HandleSkillActions(PlayerArsenal.ContainerNames.Main);
+            HandleSkillActions(MD.ContainerSlot.Main);
         }
         else if(Input.GetActionStrength("Activator1") > 0f && !isActivator3Pressed)
         {
             isActivator1Pressed = true;
-            HandleSkillActions(PlayerArsenal.ContainerNames.Left);
+            HandleSkillActions(MD.ContainerSlot.Left);
         }
         else if(Input.GetActionStrength("Activator2") > 0f && !isActivator3Pressed)
         {
             isActivator2Pressed = true;
-            HandleSkillActions(PlayerArsenal.ContainerNames.Right);
+            HandleSkillActions(MD.ContainerSlot.Right);
         }
         HandleMovement();
     }
@@ -94,172 +94,172 @@ public partial class PlayerInput : Node
         if(Input.IsActionJustPressed("Hotbar1"))
         {
             if(Input.IsKeyPressed(Key.Shift))
-                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Right, 0);
+                EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Right, 0);
             else if(Input.IsKeyPressed(Key.Ctrl))
-                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Left, 0);
+                EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Left, 0);
             else
-                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Main, 0);
+                EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Main, 0);
         }
         if(Input.IsActionJustPressed("Hotbar2"))
         {
             if(Input.IsKeyPressed(Key.Shift))
-                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Right, 1);
+                EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Right, 1);
             else if(Input.IsKeyPressed(Key.Ctrl))
-                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Left, 1);
+                EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Left, 1);
             else
-                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Main, 1);
+                EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Main, 1);
         }
         if(Input.IsActionJustPressed("Hotbar3"))
         {
             if(Input.IsKeyPressed(Key.Shift))
-                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Right, 2);
+                EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Right, 2);
             else if(Input.IsKeyPressed(Key.Ctrl))
-                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Left, 2);
+                EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Left, 2);
             else
-                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Main, 2);
+                EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Main, 2);
         }
         if(Input.IsActionJustPressed("Hotbar4"))
         {
             if(Input.IsKeyPressed(Key.Shift))
-                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Right, 3);
+                EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Right, 3);
             else if(Input.IsKeyPressed(Key.Ctrl))
-                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Left, 3);
+                EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Left, 3);
             else
-                EmitSignal(SignalName.ActionButtonPressed, PlayerArsenal.ContainerNames.Main, 3);
+                EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Main, 3);
         }
 
-        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Main, 0).SUCCESS)
+        if(player.Arsenal.CanCast(MD.ContainerSlot.Main, 0).SUCCESS)
         {
             if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar1"))
             {
-                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Main, 0);
+                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Main, 0);
             }
         }
-        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Main, 1).SUCCESS)
+        if(player.Arsenal.CanCast(MD.ContainerSlot.Main, 1).SUCCESS)
         {
             if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar2"))
             {
-                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Main, 1);
+                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Main, 1);
             }
         }
-        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Main, 2).SUCCESS)
+        if(player.Arsenal.CanCast(MD.ContainerSlot.Main, 2).SUCCESS)
         {
             if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar3"))
             {
-                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Main, 2);
+                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Main, 2);
             }
         }
-        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Main, 3).SUCCESS)
+        if(player.Arsenal.CanCast(MD.ContainerSlot.Main, 3).SUCCESS)
         {
             if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar4"))
             {
-                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Main, 3);
+                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Main, 3);
             }
         }
-        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Right, 0).SUCCESS)
+        if(player.Arsenal.CanCast(MD.ContainerSlot.Right, 0).SUCCESS)
         {
             if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar5"))
             {
-                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Right, 0);
+                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Right, 0);
             }
         }
-        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Right, 1).SUCCESS)
+        if(player.Arsenal.CanCast(MD.ContainerSlot.Right, 1).SUCCESS)
         {
             if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar6"))
             {
-                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Right, 1);
+                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Right, 1);
             }
         }
-        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Right, 2).SUCCESS)
+        if(player.Arsenal.CanCast(MD.ContainerSlot.Right, 2).SUCCESS)
         {
             if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar7"))
             {
-                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Right, 2);
+                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Right, 2);
             }
         }
-        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Right, 3).SUCCESS)
+        if(player.Arsenal.CanCast(MD.ContainerSlot.Right, 3).SUCCESS)
         {
             if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar8"))
             {
-                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Right, 3);
+                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Right, 3);
             }
         }
-        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Left, 0).SUCCESS)
+        if(player.Arsenal.CanCast(MD.ContainerSlot.Left, 0).SUCCESS)
         {
             if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar9"))
             {
-                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Left, 0);
+                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Left, 0);
             }
         }
-        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Left, 1).SUCCESS)
+        if(player.Arsenal.CanCast(MD.ContainerSlot.Left, 1).SUCCESS)
         {
             if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar10"))
             {
-                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Left, 1);
+                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Left, 1);
             }
         }
-        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Left, 2).SUCCESS)
+        if(player.Arsenal.CanCast(MD.ContainerSlot.Left, 2).SUCCESS)
         {
             if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar11"))
             {
-                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Left, 2);
+                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Left, 2);
             }
         }
-        if(player.Arsenal.CanCast(PlayerArsenal.ContainerNames.Left, 3).SUCCESS)
+        if(player.Arsenal.CanCast(MD.ContainerSlot.Left, 3).SUCCESS)
         {
             if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar12"))
             {
-                RpcId(1, nameof(TryTriggerSkill), PlayerArsenal.ContainerNames.Left, 3);
+                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Left, 3);
             }
         }
     }
 
 
-    private void HandleSkillActions(string ContainerName)
+    private void HandleSkillActions(MD.ContainerSlot containerSlot)
     {
         //Setup Triggers:
         if(Input.IsActionPressed("ActionButton1"))
         {
-            EmitSignal(SignalName.ActionButtonPressed, ContainerName, 0);
+            EmitSignal(SignalName.ActionButtonPressed, (int)containerSlot, 0);
         }
         if(Input.IsActionPressed("ActionButton2"))
         {
-            EmitSignal(SignalName.ActionButtonPressed, ContainerName, 1);
+            EmitSignal(SignalName.ActionButtonPressed, (int)containerSlot, 1);
         }
         if(Input.IsActionPressed("ActionButton3"))
         {
-            EmitSignal(SignalName.ActionButtonPressed, ContainerName, 2);
+            EmitSignal(SignalName.ActionButtonPressed, (int)containerSlot, 2);
         }
         if(Input.IsActionPressed("ActionButton4"))
         {
-            EmitSignal(SignalName.ActionButtonPressed, ContainerName, 3);
+            EmitSignal(SignalName.ActionButtonPressed, (int)containerSlot, 3);
         }
-        if(player.Arsenal.CanCast(ContainerName, 0).SUCCESS)
+        if(player.Arsenal.CanCast(containerSlot, 0).SUCCESS)
         {
             if(InputBuffer.Instance.IsActionPressedBuffered("ActionButton1"))
             {
-                RpcId(1, nameof(TryTriggerSkill), ContainerName, 0);
+                RpcId(1, nameof(TryTriggerSkill), (int)containerSlot, 0);
             }
         }
-        if(player.Arsenal.CanCast(ContainerName, 1).SUCCESS)
+        if(player.Arsenal.CanCast(containerSlot, 1).SUCCESS)
         {
             if(InputBuffer.Instance.IsActionPressedBuffered("ActionButton2"))
             {
-                RpcId(1, nameof(TryTriggerSkill), ContainerName, 1);
+                RpcId(1, nameof(TryTriggerSkill), (int)containerSlot, 1);
             }
         }            
-        if(player.Arsenal.CanCast(ContainerName, 2).SUCCESS)
+        if(player.Arsenal.CanCast(containerSlot, 2).SUCCESS)
         {
             if(InputBuffer.Instance.IsActionPressedBuffered("ActionButton3"))
             {
-                RpcId(1, nameof(TryTriggerSkill), ContainerName, 2);
+                RpcId(1, nameof(TryTriggerSkill), (int)containerSlot, 2);
             }
         }
-        if(player.Arsenal.CanCast(ContainerName, 3).SUCCESS)
+        if(player.Arsenal.CanCast(containerSlot, 3).SUCCESS)
         {
             if(InputBuffer.Instance.IsActionPressedBuffered("ActionButton4"))
             {
-                RpcId(1, nameof(TryTriggerSkill), ContainerName, 3);
+                RpcId(1, nameof(TryTriggerSkill), (int)containerSlot, 3);
             }
         }
     }
@@ -409,9 +409,9 @@ public partial class PlayerInput : Node
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void TryTriggerSkill(string containerName, int slot)
+    private void TryTriggerSkill(int containerSlot, int slot)
     {
-        var result = player.Arsenal.TriggerSkill(containerName, slot);
+        var result = player.Arsenal.TriggerSkill((MD.ContainerSlot)containerSlot, slot);
         MD.Log("Skill Trigger result [ " + "Success : " + result.SUCCESS + " , Reasons : " + result.result);
     }
 }
