@@ -39,6 +39,8 @@ public partial class EntityStatus : Node
     private Entity entity;
     private EntityModifiers modifiers;
 
+    public bool IsKnockedOut = false;
+
     //Signals
     [Signal]
     public delegate void DamageTakenEventHandler(float damage, Entity entity);
@@ -80,6 +82,8 @@ public partial class EntityStatus : Node
     
     public int InflictDamage(int amount, Entity entity)
     {
+        if(IsKnockedOut || CurrentHealth == 0)
+            return 0;
         var workingValue = amount;
         float variance = random.RandfRange(1.0f, 1.05f);
         workingValue = (int)(workingValue * variance);
@@ -125,24 +129,28 @@ public partial class EntityStatus : Node
             workingValue =  Mathf.Clamp( workingValue - CurrentShield, 0, workingValue);
             GD.Print("New working Value is " + workingValue);
             CurrentShield = Mathf.Clamp(CurrentShield - stored, 0, CurrentShield);
-            Rpc(nameof(UpdateShields), CurrentShield);
+            Rpc(nameof(SyncShields), CurrentShield);
         }
         CurrentHealth -= workingValue;
         if(CurrentHealth <= 0)
         {
             CurrentHealth = 0;
-            //TODO: knock out entity!
+            IsKnockedOut = true;
             EmitSignal(SignalName.KnockedOut);
-            GD.Print("Entity got knocked out!");
+            Rpc(nameof(SyncHealth), CurrentHealth);
+            return 0;            
         }
         GD.Print("I took :" + workingValue + " Damage!");
         EmitSignal(SignalName.DamageTaken, (float)workingValue);
-        Rpc(nameof(UpdateHealth), CurrentHealth);
+        Rpc(nameof(SyncHealth), CurrentHealth);
         return workingValue;
     }
 
     public int InflictHeal(int amount, Entity entity)
     {
+        if(IsKnockedOut)
+            return 0;
+
         float variance = random.RandfRange(1f, 1.1f);
         amount = (int)(amount * variance);
 
@@ -164,14 +172,15 @@ public partial class EntityStatus : Node
         }
         GD.Print("I Was Healed for :" + adjusted + " Health!");
         EmitSignal(SignalName.HealTaken, (float)adjusted);
-        Rpc(nameof(UpdateHealth), CurrentHealth);
+
+        Rpc(nameof(SyncHealth), CurrentHealth);
         return adjusted;
     }
 
     public int InflictShield(int amount, Entity entity)
     {
         CurrentShield += amount;
-        Rpc(nameof(UpdateShields), CurrentShield);
+        Rpc(nameof(SyncShields), CurrentShield);
         return CurrentShield;
     }
    
@@ -204,18 +213,23 @@ public partial class EntityStatus : Node
         GD.Print("Damage Multiplier is :" + damage + "!"); 
         return damage;
     }
+
     public void Reset()
     {
         CurrentHealth = MaxHealth;
-        Rpc(nameof(UpdateHealth), CurrentHealth);
+        IsKnockedOut = false;
+        Rpc(nameof(SyncHealth), CurrentHealth);
     }
+
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void UpdateHealth(int newHealth)
+    private void SyncHealth(int newHealth)
     {
+        GD.Print("Health was updated to :" + newHealth);
         CurrentHealth = newHealth;
+        IsKnockedOut = CurrentHealth <= 0;
     }
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void UpdateShields(int newShield)
+    private void SyncShields(int newShield)
     {
         CurrentShield = newShield;
     }

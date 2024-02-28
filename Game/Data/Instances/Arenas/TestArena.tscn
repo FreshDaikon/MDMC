@@ -1,17 +1,12 @@
-[gd_scene load_steps=19 format=3 uid="uid://04nun7ayudyy"]
+[gd_scene load_steps=17 format=3 uid="uid://04nun7ayudyy"]
 
 [ext_resource type="Script" path="res://Code/Game/Arena/Arena.cs" id="1_1mb5o"]
-[ext_resource type="Script" path="res://Code/System/DataID.cs" id="2_u81i6"]
 [ext_resource type="PackedScene" uid="uid://c3rdlqkf2jd7e" path="res://Assets/3D/Hero_Female_Base.glb" id="3_4es0r"]
 [ext_resource type="Script" path="res://Code/Game/Combat/CombatManager.cs" id="3_xg5fo"]
 [ext_resource type="PackedScene" uid="uid://dbmg74fi1wc6k" path="res://Assets/3D/Hero_Male_Base.glb" id="4_0p4my"]
 [ext_resource type="Script" path="res://Code/Game/GameManager.cs" id="4_3qdsl"]
 [ext_resource type="PackedScene" uid="uid://mqy1fcnfwrjp" path="res://Scenes/Game/EntitySystem/Adversary/Bosses/Test/TestBoss.tscn" id="5_atyi8"]
 [ext_resource type="PackedScene" uid="uid://cqhl1y0g5lq7x" path="res://Assets/3D/Heroes/Hero_Male_Base.blend" id="5_esgk8"]
-
-[sub_resource type="Resource" id="Resource_gja5r"]
-script = ExtResource("2_u81i6")
-Id = -1779247515
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tt0g8"]
 sky_top_color = Color(0.156863, 0.329412, 0.858824, 1)
@@ -71,9 +66,9 @@ top_radius = 20.0
 bottom_radius = 20.0
 height = 1.0
 
-[node name="TestArena" type="Node3D"]
+[node name="TestArena" type="Node3D" node_paths=PackedStringArray("PlayerStartPositions")]
 script = ExtResource("1_1mb5o")
-ID = SubResource("Resource_gja5r")
+PlayerStartPositions = [NodePath("Arena/PlayerSpawns/1"), NodePath("Arena/PlayerSpawns/4"), NodePath("Arena/PlayerSpawns/5"), NodePath("Arena/PlayerSpawns/2"), NodePath("Arena/PlayerSpawns/3")]
 
 [node name="Managers" type="Node" parent="."]
 
@@ -94,61 +89,95 @@ spawn_limit = 8
 [node name="EntityContainer" type="Node3D" parent="."]
 unique_name_in_owner = true
 
-[node name="99" parent="EntityContainer" instance=ExtResource("5_atyi8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.366731, -10)
+[node name="99" parent="EntityContainer" node_paths=PackedStringArray("StartPosition") instance=ExtResource("5_atyi8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.366731, -15)
+StartPosition = NodePath("Start")
+
+[node name="Start" type="Node3D" parent="EntityContainer/99"]
+
+[node name="100" parent="EntityContainer" node_paths=PackedStringArray("StartPosition") instance=ExtResource("5_atyi8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.93801, 0.366731, -15)
+StartPosition = NodePath("Start")
+
+[node name="Start" type="Node3D" parent="EntityContainer/100"]
+
+[node name="101" parent="EntityContainer" node_paths=PackedStringArray("StartPosition") instance=ExtResource("5_atyi8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.05757, 0.366731, -15)
+StartPosition = NodePath("Start")
+
+[node name="Start" type="Node3D" parent="EntityContainer/101"]
 
 [node name="Arena" type="Node3D" parent="."]
 unique_name_in_owner = true
 metadata/_edit_group_ = true
 
-[node name="ArenaMesh" type="StaticBody3D" parent="Arena"]
+[node name="Enviroment" type="Node3D" parent="Arena"]
+
+[node name="ArenaMesh" type="StaticBody3D" parent="Arena/Enviroment"]
 collision_layer = 4
 collision_mask = 7
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Arena/ArenaMesh"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Arena/Enviroment/ArenaMesh"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.99027, 0)
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Arena/ArenaMesh"]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Arena/Enviroment/ArenaMesh"]
 transform = Transform3D(47.187, 0, 0, 0, 1, 0, 0, 0, 41.9396, 0, -0.64447, 0)
 material_override = SubResource("StandardMaterial3D_5y40w")
 mesh = SubResource("BoxMesh_uexrp")
 
-[node name="MeshInstance3D5" type="MeshInstance3D" parent="Arena/ArenaMesh"]
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="Arena/Enviroment/ArenaMesh"]
 transform = Transform3D(47.187, 0, 0, 0, 274.378, 0, 0, 0, 41.9396, 0, -138.51, 0)
 material_override = SubResource("StandardMaterial3D_5y40w")
 mesh = SubResource("BoxMesh_uexrp")
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="Arena/ArenaMesh"]
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Arena/Enviroment/ArenaMesh"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.560022, 0)
 shape = SubResource("BoxShape3D_fnwy2")
 
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="Arena/ArenaMesh"]
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Arena/Enviroment/ArenaMesh"]
 transform = Transform3D(8.92048, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.201727, -13.1924)
 mesh = SubResource("BoxMesh_bxdhf")
 
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="Arena/ArenaMesh"]
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="Arena/Enviroment/ArenaMesh"]
 transform = Transform3D(8.92048, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.201727, 13.2444)
 mesh = SubResource("BoxMesh_bxdhf")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Arena/ArenaMesh"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Arena/Enviroment/ArenaMesh"]
 transform = Transform3D(1.00623, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 layers = 4
 material_override = SubResource("StandardMaterial3D_1vy03")
 mesh = SubResource("CylinderMesh_gg4ma")
-skeleton = NodePath("../..")
+skeleton = NodePath("../../..")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Arena"]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Arena/Enviroment"]
 transform = Transform3D(0.443692, 0.66945, -0.595797, -0.0510172, 0.682609, 0.729001, 0.894726, -0.293056, 0.337022, 0, 18, 0)
 shadow_enabled = true
 
-[node name="Hero_Female_Base" parent="Arena" instance=ExtResource("3_4es0r")]
+[node name="Hero_Female_Base" parent="Arena/Enviroment" instance=ExtResource("3_4es0r")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.8938, -0.118534, 20.5807)
 
-[node name="Hero_Male_Base" parent="Arena" instance=ExtResource("4_0p4my")]
+[node name="Hero_Male_Base" parent="Arena/Enviroment" instance=ExtResource("4_0p4my")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.6114, -0.126356, 20.6214)
 
-[node name="Hero_Male_Base2" parent="Arena" instance=ExtResource("5_esgk8")]
+[node name="Hero_Male_Base2" parent="Arena/Enviroment" instance=ExtResource("5_esgk8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.0716, 0, 20.7283)
+
+[node name="PlayerSpawns" type="Node3D" parent="Arena"]
+
+[node name="1" type="Node3D" parent="Arena/PlayerSpawns"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 18.956)
+
+[node name="4" type="Node3D" parent="Arena/PlayerSpawns"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.83847, 0, 18.956)
+
+[node name="5" type="Node3D" parent="Arena/PlayerSpawns"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.00983, 0, 18.956)
+
+[node name="2" type="Node3D" parent="Arena/PlayerSpawns"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.50458, 0, 18.956)
+
+[node name="3" type="Node3D" parent="Arena/PlayerSpawns"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.99942, 0, 18.956)
 
 [node name="RealizationPool" type="Node3D" parent="."]
 unique_name_in_owner = true

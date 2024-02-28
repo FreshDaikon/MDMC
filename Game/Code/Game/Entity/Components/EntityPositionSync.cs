@@ -66,7 +66,7 @@ public partial class EntityPositionSync : MultiplayerSynchronizer
 
     private void Correction()
     {
-        var delta = controller.Position - (Vector3)SyncState[1];
+        // var delta = controller.Position - (Vector3)SyncState[1];
         Vector3 synVec = (Vector3)SyncState[1];
         SyncState[1] = controller.Position.Lerp(new Vector3(synVec.X, controller.Position.Y, synVec.Z), 0.5f);
         Vector3 syncH = (Vector3)SyncState[1];

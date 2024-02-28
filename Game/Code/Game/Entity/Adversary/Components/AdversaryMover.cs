@@ -12,7 +12,6 @@ public partial class AdversaryMover : Node, IEntityMover
 
     public override void _Ready()
     {
-        base._Ready();
         adversary = GetParent<AdversaryEntity>();
     }
 

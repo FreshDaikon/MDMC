@@ -3,6 +3,7 @@ using Godot;
 
 namespace Daikon.Game;
 
+[GlobalClass]
 public partial class Chase: BaseBehavior
 {   
     [Export]

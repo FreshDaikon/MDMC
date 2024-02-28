@@ -6,10 +6,15 @@ namespace Daikon.Game;
 public partial class ArenaManager : Node
 {  
 
-    public static ArenaManager Instance;
-   
+    public static ArenaManager Instance;   
     private Node3D ArenaContainer;
     private Arena currentArena;
+
+    //Events for users who rely on this singleton:
+    [Signal]
+    public delegate void ArenaVictoryEventHandler();
+    [Signal]
+    public delegate void ArenaDefeatEventHandler();
 
     public override void _Ready()
     {
@@ -50,12 +55,25 @@ public partial class ArenaManager : Node
         {
             ArenaContainer.AddChild(arena);
             currentArena = arena;
+            currentArena.Victory += () => { Rpc(nameof(SyncEventVictory)); };
+            currentArena.Defeat += () => { Rpc(nameof(SyncEventDefeat)); };
             return true;
         }
         else
         {
             return false;
         }
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SyncEventDefeat()
+    {
+        EmitSignal( SignalName.ArenaDefeat);
+    }
+    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SyncEventVictory()
+    {
+        EmitSignal( SignalName.ArenaVictory);
     }
 
     public void UnloadArena()

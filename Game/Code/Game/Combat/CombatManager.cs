@@ -14,11 +14,25 @@ public partial class CombatManager: Node
     //Combat Session Tracker:
     private double CombatStartTime = 0;
 
+    public enum CombatState 
+    {
+        None,
+        Running,
+        Paused,
+        Stopped
+    }
 
     private List<EntityContributionTracker> damage = new List<EntityContributionTracker>();
     private List<EntityContributionTracker> heal = new List<EntityContributionTracker>();
     private List<EntityContributionTracker> enmity = new List<EntityContributionTracker>();
     private List<EntityContributionTracker> effect = new List<EntityContributionTracker>();
+
+    private CombatState _currentState = CombatState.None;
+
+    public CombatState CurrentState
+    {
+        get { return _currentState; }
+    }
 
     public override void _Ready()
     {
@@ -30,17 +44,51 @@ public partial class CombatManager: Node
         Instance = this;
         base._Ready();
     }
+
     public override void _ExitTree()
     {
 		if(Instance == this )
 		{
 			Instance = null;
 		}
+        //TODO parse combat log and save it.
         base._ExitTree();
     }
 
     public void StartCombat()
     {
+        if(_currentState == CombatState.None)
+        {
+            CombatStartTime = GameManager.Instance.GameClock;
+            _currentState = CombatState.Running;
+        }
+        else if(_currentState == CombatState.Stopped)
+        {
+            CombatStartTime = GameManager.Instance.GameClock;
+            _currentState = CombatState.Running;
+        }
+    }
+
+    public void ResetCombat()
+    { 
+        // TODO : Also save a combat log here.
+        _currentState = CombatState.Stopped;
+        Messages = new List<CombatMessage>();
+        damage = new List<EntityContributionTracker>(); 
+        heal = new List<EntityContributionTracker>();
+        enmity = new List<EntityContributionTracker>();
+        effect = new List<EntityContributionTracker>();
+        CombatStartTime = GameManager.Instance.GameClock;
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]    
+    private void SyncReset()
+    {
+        Messages = new List<CombatMessage>();
+        damage = new List<EntityContributionTracker>(); 
+        heal = new List<EntityContributionTracker>();
+        enmity = new List<EntityContributionTracker>();
+        effect = new List<EntityContributionTracker>();
         CombatStartTime = GameManager.Instance.GameClock;
     }
 

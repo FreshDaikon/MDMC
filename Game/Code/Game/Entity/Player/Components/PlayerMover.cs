@@ -32,6 +32,8 @@ public partial class PlayerMover : Node, IEntityMover
 	}
     public override void _PhysicsProcess(double delta)
 	{		        
+        if(player.Status.IsKnockedOut)
+            return;
         Move((float)delta);
         Rotate((float)delta);
 	}
@@ -90,6 +92,7 @@ public partial class PlayerMover : Node, IEntityMover
 
     public void Teleport(Vector3 position)
     {
+        GD.Print("Teleporting player!");
         player.Controller.Position = position;
     }
 }

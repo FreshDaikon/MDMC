@@ -18,6 +18,8 @@ public partial class GameManager : Node
 
     [Signal]    
     public delegate void ConnectionStartedEventHandler();
+    [Signal]
+    public delegate void GameStartedEventHandler();
 
     public override void _Ready()
     {  
@@ -48,10 +50,12 @@ public partial class GameManager : Node
     {
         if(isServer)
         {
+            EmitSignal(SignalName.GameStarted);
             _isConnected = true;
         }
         else 
         {
+            EmitSignal(SignalName.GameStarted);
             SyncServerTime();
         }
     }

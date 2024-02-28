@@ -25,7 +25,7 @@ public partial class Realization: Node3D
     private AnimationPlayer animationPlayer;
     public dynamic ExtraData;
 
-    [Signal ]
+    [Signal]
     public delegate void OnRealizationEndEventHandler();
 
     public override void _Ready()

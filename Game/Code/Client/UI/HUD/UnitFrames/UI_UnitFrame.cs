@@ -85,6 +85,7 @@ public partial class UI_UnitFrame : Control
 			var currentShield = (float)unit.Status.CurrentShield / (float)unit.Status.MaxHealth;
 			ShieldBar.Visible = currentShield > 0f;
 			var shieldClip = Mathf.Clamp((currentShield + currentHealth) - 1f, 0f, 2f);
+			Modulate = unit.Status.IsKnockedOut ? new Color("#ffffff32") : new Color("#ffffffff");
 			BarBG.Size = BarSize;
 			HealthBar.Size = new Vector2(BarSize.X * currentHealth, BarSize.Y);
 			ShieldBar.Size = new Vector2(BarSize.X * currentShield, BarSize.Y); 

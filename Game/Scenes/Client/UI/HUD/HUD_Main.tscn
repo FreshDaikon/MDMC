@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://ds72o2h662r4r"]
+[gd_scene load_steps=18 format=3 uid="uid://ds72o2h662r4r"]
 
 [ext_resource type="Script" path="res://Code/Client/UI/HUD/UIHUDMain.cs" id="1_poobr"]
 [ext_resource type="PackedScene" uid="uid://d0fgtib258a7k" path="res://Scenes/Client/UI/HUD/Elements/DamageMeter/Damage_Meter.tscn" id="2_t5a6y"]
@@ -10,6 +10,65 @@
 [ext_resource type="PackedScene" uid="uid://c3nva5iqe38aq" path="res://Scenes/Client/UI/HUD/Elements/TimerBars/Channel_Bar.tscn" id="4_cntgf"]
 [ext_resource type="PackedScene" uid="uid://cj5m27jrog0rj" path="res://Scenes/Client/UI/HUD/Arsenal/hud_skill_container.tscn" id="7_55lo1"]
 [ext_resource type="FontFile" uid="uid://xv28cftjto52" path="res://Assets/UI/Fonts/twoweekendssans-regular.otf" id="8_aw1je"]
+[ext_resource type="Script" path="res://Code/Client/UI/HUD/Notifications/UI_DefeatScreen.cs" id="11_h2w22"]
+[ext_resource type="FontFile" uid="uid://q3aynbg5gvis" path="res://Assets/UI/Fonts/LibreFranklin-BlackItalic.ttf" id="11_hsuk0"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_efaiw"]
+bg_color = Color(0.0588235, 0.0588235, 0.0588235, 1)
+
+[sub_resource type="Animation" id="Animation_51gmi"]
+resource_name = "Defeat"
+length = 6.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("DefeatScreen:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_o4xfu"]
+resource_name = "FadeOut"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("DefeatScreen:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_dwiry"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("DefeatScreen:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_hw40h"]
+_data = {
+"Defeat": SubResource("Animation_51gmi"),
+"FadeOut": SubResource("Animation_o4xfu"),
+"RESET": SubResource("Animation_dwiry")
+}
 
 [node name="HUD_Main" type="Control" node_paths=PackedStringArray("dmgNumberContainer")]
 layout_mode = 3
@@ -174,6 +233,20 @@ text = "FPS: 99"
 horizontal_alignment = 2
 vertical_alignment = 1
 
+[node name="TimeLeft" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+offset_left = 12.0
+offset_top = 7.0
+offset_right = 552.0
+offset_bottom = 30.0
+theme_override_colors/font_color = Color(0.890196, 0.458824, 0.329412, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("8_aw1je")
+theme_override_font_sizes/font_size = 22
+text = "Time Left :"
+vertical_alignment = 1
+
 [node name="Latency" type="Label" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
@@ -192,3 +265,40 @@ theme_override_font_sizes/font_size = 22
 text = "FPS: 99"
 horizontal_alignment = 2
 vertical_alignment = 1
+
+[node name="DefeatScreen" type="Panel" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_efaiw")
+script = ExtResource("11_h2w22")
+
+[node name="DefeatedLabel" type="Label" parent="DefeatScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -46.0
+offset_top = -11.5
+offset_right = 46.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("11_hsuk0")
+theme_override_font_sizes/font_size = 42
+text = "DEFEATED..."
+horizontal_alignment = 1
+
+[node name="DefeatPlayer" type="AnimationPlayer" parent="DefeatScreen"]
+unique_name_in_owner = true
+root_node = NodePath("../..")
+libraries = {
+"": SubResource("AnimationLibrary_hw40h")
+}

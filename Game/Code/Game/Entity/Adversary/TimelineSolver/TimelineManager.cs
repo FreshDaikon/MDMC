@@ -8,12 +8,8 @@ public partial class TimelineManager : Node
     private AnimationPlayer behaviorPlayer;
     private string[] phases;
     private string currentPhase;
-
-    private bool isEngaged = false;
     //Entity Reference:
     private AdversaryEntity entity;
-
-    public bool IsEngaged { get { return isEngaged;} }
     public AdversaryEntity Entity { get { return entity; }}
 
     public override void _Ready()
@@ -29,22 +25,23 @@ public partial class TimelineManager : Node
     {
         if(!Multiplayer.IsServer()) 
             return;
-        if(!isEngaged)
-            return;
         currentPhase = phases[0];
         Entity.Reset();
         behaviorPlayer.Stop();
     }
 
-    public void Engage()
+    public void Stop()
+    {
+        if(!Multiplayer.IsServer())
+            return;
+        currentPhase = phases[0];
+        behaviorPlayer.Stop();
+    }
+
+    public void Start()
     {
         if(!Multiplayer.IsServer()) 
             return;
-        if(isEngaged)
-            return;
-
-        isEngaged = true;
-        CombatManager.Instance.StartCombat();
         behaviorPlayer.Play(currentPhase);
     }
 
@@ -54,5 +51,10 @@ public partial class TimelineManager : Node
             return;
         currentPhase = phases[Array.IndexOf(phases, currentPhase) + 1];
         behaviorPlayer.Play(currentPhase);        
+    }
+
+    public bool GetState()
+    {
+        return behaviorPlayer.IsPlaying();
     }
 }

@@ -6,6 +6,7 @@ public partial class Entity : Node3D
 {
     public enum TeamType
     {
+        Player,
         Friend,
         Foe,
         Neutral
@@ -37,6 +38,7 @@ public partial class Entity : Node3D
     public bool Targetable
     {
         get { return targetable; }
+        set { targetable = value; }
     }
     public EntityController Controller
     {

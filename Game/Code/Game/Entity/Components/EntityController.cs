@@ -13,7 +13,6 @@ public partial class EntityController : CharacterBody3D
     private List<EntityState> entityStatesBuffer = new();
     
     private EntityState lastState;
-    private EntityState lastLocalState;
     public Vector3 SavedPosition;
     public Vector3 SavedRotation;
 
@@ -99,7 +98,7 @@ public partial class EntityController : CharacterBody3D
 
     public void Teleport(Vector3 destination)
     {
-        if(Multiplayer.IsServer())
+        if(!Multiplayer.IsServer())
             return;
         Position = destination;
     }

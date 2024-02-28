@@ -1,12 +1,19 @@
-[gd_scene load_steps=14 format=3 uid="uid://mqy1fcnfwrjp"]
+[gd_scene load_steps=17 format=3 uid="uid://mqy1fcnfwrjp"]
 
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/AdversaryEntity.cs" id="1_c7f3p"]
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/TimelineSolver/TimelineManager.cs" id="1_vf7wp"]
+[ext_resource type="Script" path="res://Code/Game/Entity/Components/EntityPositionSync.cs" id="2_mafja"]
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/Actions/Behaviors/Chase.cs" id="3_1pc8c"]
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/Components/AdversaryMover.cs" id="4_kbwyt"]
+[ext_resource type="Script" path="res://Code/Game/Entity/Adversary/Actions/Behaviors/AutoAttack.cs" id="5_4tabc"]
 [ext_resource type="PackedScene" uid="uid://gtdhgpxhnebn" path="res://Scenes/Game/EntitySystem/Shared/EntityModifiers.tscn" id="5_cqkqa"]
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/Components/AdversaryStatus.cs" id="6_ahpdf"]
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/Components/AdversaryController.cs" id="7_ymrw4"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_u2e6p"]
+properties/0/path = NodePath("EntityPositionSync:SyncState")
+properties/0/spawn = true
+properties/0/replication_mode = 1
 
 [sub_resource type="Animation" id="Animation_l313m"]
 resource_name = "Phase_01"
@@ -19,7 +26,35 @@ tracks/0/path = NodePath("TimeLineManager/Chase")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
+"times": PackedFloat32Array(0.3),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"StartBehavior"
+}]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("TimeLineManager/AutoAttack")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
 "times": PackedFloat32Array(0.5),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"StartBehavior"
+}]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("TimeLineManager/AutoAttack2")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(1.3),
 "transitions": PackedFloat32Array(1),
 "values": [{
 "args": [],
@@ -48,8 +83,12 @@ albedo_color = Color(0.811765, 0.137255, 0.67451, 1)
 [node name="99" type="Node3D"]
 script = ExtResource("1_c7f3p")
 targetable = true
-team = 1
+team = 2
 EntityName = "Best Boss"
+
+[node name="EntityPositionSync" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_u2e6p")
+script = ExtResource("2_mafja")
 
 [node name="TimeLineManager" type="Node" parent="."]
 unique_name_in_owner = true
@@ -58,6 +97,15 @@ script = ExtResource("1_vf7wp")
 [node name="Chase" type="Node" parent="TimeLineManager"]
 script = ExtResource("3_1pc8c")
 chaseDistance = 4.0
+
+[node name="AutoAttack" type="Node" parent="TimeLineManager"]
+script = ExtResource("5_4tabc")
+attackDamage = 1000
+
+[node name="AutoAttack2" type="Node" parent="TimeLineManager"]
+script = ExtResource("5_4tabc")
+attackDamage = 400
+attackTime = 1.0
 
 [node name="BehaviorPlayer" type="AnimationPlayer" parent="."]
 unique_name_in_owner = true

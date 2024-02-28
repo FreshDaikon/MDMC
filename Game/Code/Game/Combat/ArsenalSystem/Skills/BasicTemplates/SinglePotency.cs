@@ -145,8 +145,9 @@ public partial class SinglePotency : Skill
     public override void SkillRealization(int value, int type)
     {
         var realization = RealizeOnSkill.GetRealization();
-        // We Expect this realization to be the damage number one so pass the extra data
+        // Expect this realization to be the damage number one so pass the extra data
         var damageNumberInfo = new { Value = value, Type = type};
-        realization.Spawn(Player.Controller.GlobalPosition, Player.CurrentTarget.Controller, 10f, 2f, damageNumberInfo);
+        var target = SkillType == MD.SkillType.HEAL ? Player.CurrentFriendlyTarget.Controller : Player.CurrentTarget.Controller;
+        realization.Spawn(Player.Controller.GlobalPosition, target, 10f, 2f, damageNumberInfo);
     }
 }

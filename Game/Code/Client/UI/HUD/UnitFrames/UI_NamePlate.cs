@@ -43,7 +43,7 @@ public partial class UI_NamePlate : Control
         }
         _camera = GetViewport().GetCamera3D();
         var entityPos = _entity.Controller.GlobalPosition;
-        Visible = !_camera.IsPositionBehind(entityPos);
+        Visible = !_camera.IsPositionBehind(entityPos) && !_entity.Status.IsKnockedOut;
         NameLabel.Text = _entity.EntityName;
         _uiPosition = _camera.UnprojectPosition(entityPos + new Vector3(0f, _entity.EntityHeight, 0f));
 		Position = _uiPosition; 

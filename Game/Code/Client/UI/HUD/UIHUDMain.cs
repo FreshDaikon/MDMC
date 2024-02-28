@@ -1,5 +1,6 @@
 using Godot;
 using Daikon.Game;
+using System;
 
 namespace Daikon.Client;
 
@@ -18,6 +19,7 @@ public partial class UIHUDMain : Control
 
 	private Label fpsLabel;
 	private Label latencyLabel;
+	private Label timeLeftLabel;
 	public Entity LocalPlayerUITarget;
 
 	public override void _Ready()
@@ -32,6 +34,7 @@ public partial class UIHUDMain : Control
 		Visible = false;
 		fpsLabel = GetNode<Label>("%FPS");
 		latencyLabel = GetNode<Label>("%Latency");
+		timeLeftLabel = GetNode<Label>("%TimeLeft");
 	}
 
     public override void _ExitTree()
@@ -65,6 +68,9 @@ public partial class UIHUDMain : Control
 		Visible = true;
 		fpsLabel.Text = "FPS [ " + Engine.GetFramesPerSecond().ToString() +" ]";
 		latencyLabel.Text = "Latency  [ " + (GameManager.Instance.GetLatency() * 1000).ToString("0.00") + " ms ]";
+		double timeLeft = ArenaManager.Instance.GetCurrentArena().GetTimeLeft();
+		TimeSpan span = TimeSpan.FromSeconds(timeLeft);
+		timeLeftLabel.Text =" Time Left : 0" + span.Hours.ToString() + ":" + span.Minutes.ToString() + ":" + span.Seconds.ToString();
 		if(localPlayer == null)
 		{
             var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();

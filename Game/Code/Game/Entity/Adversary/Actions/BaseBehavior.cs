@@ -8,10 +8,12 @@ public partial class BaseBehavior : Node
     private bool ShouldProcess = false;
 
     public TimelineManager Manager { get { return manager; }}
+    public AdversaryEntity Entity;
 
     public override void _Ready()
     {
         manager = GetParent<TimelineManager>();
+        Entity = manager.Entity;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -20,16 +22,24 @@ public partial class BaseBehavior : Node
             return;
         if(ShouldProcess)
         {
+            if(!CheckBehaviorState())
+            {
+                StopBehavior();
+                return;
+            }
             ProcessBehavior();
         }
     }
 
     public virtual void ProcessBehavior(){}
+    public virtual void OnStart(){}
+    public virtual void OnEnd(){}
 
     public void StartBehavior()
     {
         if(!Multiplayer.IsServer()) 
             return;
+        OnStart();
         ShouldProcess = true;
     }
 
@@ -37,6 +47,12 @@ public partial class BaseBehavior : Node
     {
         if(!Multiplayer.IsServer()) 
             return;
+        OnEnd();
         ShouldProcess = false;
+    }
+
+    private bool CheckBehaviorState()
+    {
+        return manager.GetState();        
     }
 }

@@ -9,7 +9,7 @@ public partial class AdversaryEntity : Entity
     [Export]
     private Node3D StartPosition;
     [Export]
-    private float AggroRange = 5f;
+    private float AggroRange = 2f;
 
     private TimelineManager manager;
     private AdversaryMover mover;
@@ -17,33 +17,45 @@ public partial class AdversaryEntity : Entity
 
     public TimelineManager Manager { get { return manager; }}
     public AdversaryMover Mover { get { return mover; } }
+
     private Dictionary<Entity, float> damageTable;
     private Dictionary<Entity, float> threatTable;
+
+    public enum AdversaryState
+    {
+        Engaged,
+        Idle,
+        Dead
+    }
+
+    public AdversaryState CurrentState = AdversaryState.Idle;
+
+    [Signal]    
+    public delegate void EngagedEventHandler();       
 
     public override void _Ready()
     {
         base._Ready();
-
         manager = GetNode<TimelineManager>("%TimeLineManager");
         mover = GetNode<AdversaryMover>("%Mover");
+
         damageTable = new Dictionary<Entity, float>();
         threatTable = new Dictionary<Entity, float>();
-
         adversaryStatus = (AdversaryStatus)Status;
-
+        
+        adversaryStatus.KnockedOut += Defeat;
         adversaryStatus.DamageTaken += OnDamageTaken;
         adversaryStatus.ThreatInflicted += OnThreatTaken;
-        adversaryStatus.HealTaken += (heal, entity) => {};
-        adversaryStatus.KnockedOut += () => {};
+        adversaryStatus.HealTaken += (heal, entity) => {};        
     }
-
 
     public override void _PhysicsProcess(double delta)
     {
         if(!Multiplayer.IsServer()) 
             return;
-        base._PhysicsProcess(delta);
-        if(!manager.IsEngaged)
+        if(CurrentState == AdversaryState.Dead)
+            return;
+        if(CurrentState == AdversaryState.Idle)
         {
             CheckAggro();
         }
@@ -59,21 +71,48 @@ public partial class AdversaryEntity : Entity
                 var distance = (player.Controller.Position - Controller.Position).Length();
                 if(distance <= AggroRange)
                 {
-                    manager.Engage();
-                    OnThreatTaken(500, player);
+                    EmitSignal(SignalName.Engaged);
+                    Engage(player);
                 } 
             }
         }
     }
 
-    public void Defeat()
+    private void Defeat()
     {
-        //Implement victory once all adversaries are dead.
+        CurrentState = AdversaryState.Dead;
+        manager.Stop();
+
+        Visible = false;
+        Targetable = false;
+
+        Rpc(nameof(SyncDefeat));
+    }
+
+    public void Engage(Entity entity)
+    {
+        CurrentState = AdversaryState.Engaged;
+        manager.Start();
+        OnThreatTaken(500, entity);
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SyncDefeat()
+    {
+        Visible = false;
+        Targetable = false;
+    }
+    
+    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SyncReset()
+    {
+        Visible = true;
+        Targetable = true;
     }
 
     public Entity GetThreatEntity(int position)
     {
-         if(threatTable.Count < position+1)
+        if(threatTable.Count < position+1)
             return null; 
         if(threatTable.Count > 0)
         {
@@ -99,9 +138,9 @@ public partial class AdversaryEntity : Entity
 
     private void OnDamageTaken(float damage, Entity entity)
     {
-        if(!manager.IsEngaged)
+        if(CurrentState == AdversaryState.Idle)
         {
-            manager.Engage();
+            EmitSignal(SignalName.Engaged);
         }
         if(damageTable.ContainsKey(entity))
         {
@@ -115,9 +154,9 @@ public partial class AdversaryEntity : Entity
 
     private void OnThreatTaken(float threat, Entity entity)
     {
-        if(!manager.IsEngaged)
+        if(CurrentState == AdversaryState.Idle)
         {
-            manager.Engage();
+            EmitSignal(SignalName.Engaged);
         }
         if(threatTable.ContainsKey(entity))
         {
@@ -131,9 +170,17 @@ public partial class AdversaryEntity : Entity
 
     public void Reset()
     {
-        Status.Reset( );
+        CurrentState = AdversaryState.Idle;
+        manager.Stop();
+        Status.Reset();
         threatTable.Clear();
         damageTable.Clear();
+
+        Visible = true;
+        Targetable = true;
+        
+        
         Controller.Teleport(StartPosition.Position);
+        Rpc(nameof(SyncReset));
     }
 }

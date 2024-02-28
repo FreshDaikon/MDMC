@@ -1,6 +1,7 @@
 using Godot;
 using Daikon.Helpers;
 using Daikon.Client;
+using PlayFab.AdminModels;
 
 namespace Daikon.Game;
 
@@ -12,6 +13,7 @@ public partial class PlayerInput : Node
     public bool Dashing = false;
     public Vector3 Direction = Vector3.Zero;
     public Vector3 Rotation = Vector3.Zero;
+    public Vector3 LastDirection = Vector3.Zero;
     
      // References:
 	private PlayerEntity player;
@@ -36,6 +38,8 @@ public partial class PlayerInput : Node
         if(!StateManager.Instance.HasFocus)
             return;
         if(UIManager.Instance.GetCurrentState() != UIManager.UIState.HUD)
+            return;
+        if(player.Status.IsKnockedOut)
             return;
         HandleInputs();
     }    
@@ -304,7 +308,12 @@ public partial class PlayerInput : Node
             }
             UpdateRotation(Direction);
         }        
-        RpcId(1, nameof(SyncDirection), Direction);   
+        if(LastDirection != Direction)
+        {
+            RpcId(1, nameof(SyncDirection), Direction);   
+            LastDirection = Direction;
+        }
+
     }
 
     private void UpdateRotation(Vector3 direction)
