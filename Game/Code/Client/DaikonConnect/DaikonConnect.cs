@@ -12,7 +12,7 @@ public partial class DaikonConnect: Node
 {
     public static DaikonConnect Instance;   
     private string baseLocal = "http://127.0.0.1:5000";
-    private string baseRemote = "http://194.163.183.217:5000";
+    private string baseRemote = "http://103.45.246.143:5000";
     private string baseActual = "";
 
     private string[] baseHeader = {"Content-Type: application/json"};

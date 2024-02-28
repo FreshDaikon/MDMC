@@ -128,7 +128,7 @@ public partial class UILandingPage : Control
 
     private void ConnectWS()
     {        
-        DaikonConnect.Instance.SetToLocalHost();
+        DaikonConnect.Instance.SetToRemote();
         DaikonConnect.Instance.DaikonAuth();
     }
 
