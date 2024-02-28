@@ -22,12 +22,12 @@ public partial class EntityController : CharacterBody3D
         if(Multiplayer.IsServer())
         {
             MoveAndSlide();
-            Rpc(nameof(UpdateEntityState), GameManager.Instance.GameClock, Position, Rotation);
+            //Rpc(nameof(UpdateEntityState), GameManager.Instance.GameClock, Position, Rotation);
         }        
         else
         {
             MoveAndSlide();
-            UpdateController();       
+           // UpdateController();       
         }
     }
 

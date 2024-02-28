@@ -109,6 +109,10 @@ public partial class UILandingPage : Control
     private void JoinGame()
     {
         GD.Print("Let's see if we can find a game!");
+        if(ArenaManager.Instance.GetCurrentArena() == null)
+        {
+            ArenaManager.Instance.LoadArena(_arenas[ArenaListOptions.Selected].Id);
+        }
         DaikonConnect.Instance.DaikonJoinGame(JoinCodeEdit.Text);
     }
 
@@ -138,25 +142,14 @@ public partial class UILandingPage : Control
         ClientMultiplayerManager.Instance.SetData("127.0.0.1", 8080);
         ClientMultiplayerManager.Instance.StartPeer(); 
         // a bit weary here..
+        if(ArenaManager.Instance.GetCurrentArena() == null)
+        {
+            ArenaManager.Instance.LoadArena(_arenas[ArenaListOptions.Selected].Id);
+        }
         UIManager.Instance.TrySetUIState(UIManager.UIState.HUD);
         Multiplayer.ConnectedToServer += () => 
         {
             GameManager.Instance.StartGame(false);
-        };
-    }
-
-    private void JoinAnyLocalServer()
-    {
-        //Load the Arena:
-        ArenaManager.Instance.LoadArena(_arenas[ArenaListOptions.Selected].Id);
-        //Set up Multiplayer:
-        ClientMultiplayerManager.Instance.SetData("127.0.0.1", 8080);
-        ClientMultiplayerManager.Instance.StartPeer(); 
-        // a bit weary here..
-        Multiplayer.ConnectedToServer += () => 
-        {
-            GameManager.Instance.StartGame(false);
-            UIManager.Instance.TrySetUIState(UIManager.UIState.HUD);
         };
     }
 }
