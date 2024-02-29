@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="ModifierObject" load_steps=6 format=3 uid="uid://cnqu8ecblvl3j"]
+
+[ext_resource type="Script" path="res://Code/Game/Data/ModifierObject.cs" id="1_pk08y"]
+[ext_resource type="Script" path="res://Code/System/DataID.cs" id="1_sbyja"]
+[ext_resource type="Texture2D" uid="uid://do6mkfdyxlvf5" path="res://Assets/UI/ArsenalSystem/Skills/FlubberSkill_DEBUGF.png" id="2_6y4jc"]
+[ext_resource type="PackedScene" uid="uid://hj4407suf1xn" path="res://Data/Instances/Modifiers/BasicModifier.tscn" id="3_rg0vg"]
+
+[sub_resource type="Resource" id="Resource_og0la"]
+script = ExtResource("1_sbyja")
+Id = -51553097
+
+[resource]
+script = ExtResource("1_pk08y")
+IsPermanent = true
+Duration = 5.0
+IsTicked = false
+TickRate = 1.0
+CanStack = false
+Stacks = 1
+MaxStacks = 1
+Tags = Array[int]([4, 10])
+ModifierValue = 0.8
+ID = SubResource("Resource_og0la")
+Scene = ExtResource("3_rg0vg")
+Name = "Spirit of the Gallant"
+Description = "Some Object Description."
+Icon = ExtResource("2_6y4jc")

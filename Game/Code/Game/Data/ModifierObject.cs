@@ -39,6 +39,7 @@ public partial class ModifierObject : DataObject
         instance.MaxStacks = MaxStacks;
         instance.Tags = Tags.ToList();
         instance.ModifierValue = ModifierValue; // This is very specific per mod!
+        instance.RemainingValue = ModifierValue; // Only used for exhaustible mods!
         instance.Data = this;
         return instance;
     }

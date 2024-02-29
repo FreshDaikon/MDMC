@@ -5,6 +5,7 @@ bin/
 .Tools/
 .Engine/
 .SOURCE/
+.idea/
 obj/
 */obj/
 .vscode/

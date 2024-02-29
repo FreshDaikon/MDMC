@@ -1,3 +1,4 @@
+using Daikon.Game.EffectRules;
 using Godot;
 using Daikon.Helpers;
 
@@ -32,6 +33,9 @@ public partial class SkillObject : DataObject
     public float TickRate = 1f;
     [Export]
     public float ThreatMultiplier = 1f;
+    
+    [Export]
+    public EffectRuleData[] Rules { get; private set; }
 
     [ExportGroup("Skill Realizations")]
     [Export]
@@ -60,6 +64,9 @@ public partial class SkillObject : DataObject
         instance.RealizeOnCast = RealizeOnCast;
         instance.RealizeOnFinish = RealizeOnFinish;
         instance.RealizeOnSkill = RealizeOnSkill;
+
+        instance.Rules = Rules;
+        
         // Finally pass it back :
         return instance;
     }

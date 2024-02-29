@@ -1,6 +1,7 @@
 using Godot;
 using Daikon.Game;
 using Daikon.Helpers;
+using System;
 
 namespace Daikon.Server;
 
@@ -13,8 +14,6 @@ public partial class ServerManager : Node3D
     private Node3D EntityContainer;
     [Export]
     private string playerEntityPath;
-    [Export]
-    private string sackManEntityPath;
 
     public override void _Ready()
     {  
@@ -133,9 +132,8 @@ public partial class ServerManager : Node3D
     {
         var prefab = (PackedScene)ResourceLoader.Load(playerEntityPath);
         PlayerEntity player = prefab.Instantiate<PlayerEntity>();
-        //Sets the node name . TODO : add more identifying information (steam name fx.)
         player.Name =  id.ToString();
-        player.EntityName = "Unknown Player" + id.ToString().Substring(0, 4);
+        player.EntityName = string.Concat("Player", id.ToString().AsSpan(0, 4));
         return player;        
     }
 }

@@ -100,11 +100,11 @@ chaseDistance = 4.0
 
 [node name="AutoAttack" type="Node" parent="TimeLineManager"]
 script = ExtResource("5_4tabc")
-attackDamage = 1000
+attackDamage = 500
 
 [node name="AutoAttack2" type="Node" parent="TimeLineManager"]
 script = ExtResource("5_4tabc")
-attackDamage = 400
+attackDamage = 50
 attackTime = 1.0
 
 [node name="BehaviorPlayer" type="AnimationPlayer" parent="."]
@@ -123,7 +123,7 @@ unique_name_in_owner = true
 [node name="EntityStatus" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("6_ahpdf")
-MaxHealth = 50000
+MaxHealth = 5000000
 
 [node name="Controller" type="CharacterBody3D" parent="."]
 unique_name_in_owner = true

@@ -1,3 +1,4 @@
+using System.Linq;
 using Godot;
 using Daikon.Helpers;
 
@@ -15,14 +16,26 @@ public partial class SinglePotency : Skill
             GD.PrintErr("This Skill can never be universal!");
             return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.INVALID_SETUP };
         }
+
+        var workingValue = AdjustedPotency;
+        
+        if (Effects != null)
+        {
+            var potency = Effects.Where(e => e.Type == Effect.EffectType.Potency);
+            if (potency.Any())
+            {
+                GD.Print("The sum of all the potency effects are:" + ( AdjustedPotency * potency.Sum(p => p.Value))); 
+                workingValue = (int)( AdjustedPotency * potency.Sum(p => p.Value));
+            }
+        }
+        
         switch(SkillType)
         {
             case MD.SkillType.DPS:
             {
                 var target = (AdversaryStatus)Player.CurrentTarget.Status;
-                GD.Print("Trying to deal damage = " + AdjustedPotency);
-                var dmgDone = target.InflictDamage(AdjustedPotency, Player);
-                target.InflictThreat(dmgDone * ThreatMultiplier, Player);
+                var dmgDone = target.InflictDamage(workingValue, Player);
+                target.InflictThreat((int)(dmgDone * ThreatMultiplier), Player);
                 var message = new CombatMessage()
                 {
                     Caster = int.Parse(Player.Name),
@@ -55,7 +68,7 @@ public partial class SinglePotency : Skill
             {
                 var target = (AdversaryStatus)Player.CurrentTarget.Status;
                 var dmgDone = target.InflictDamage(AdjustedPotency, Player);
-                target.InflictThreat(dmgDone * ThreatMultiplier, Player);
+                target.InflictThreat((int)(dmgDone * ThreatMultiplier), Player);
                 var message = new CombatMessage()
                 {
                     Caster = int.Parse(Player.Name),

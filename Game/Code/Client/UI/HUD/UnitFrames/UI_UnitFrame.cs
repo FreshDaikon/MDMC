@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using Daikon.Game;
+using Daikon.Helpers;
 
 namespace Daikon.Client;
 
@@ -49,8 +50,10 @@ public partial class UI_UnitFrame : Control
 			NameLabel.Text = unit.EntityName;
 			if(unit is PlayerEntity)
 			{
+				var player = unit as PlayerEntity;
 				//Set Color:
-				HealthBar.Modulate = new Color("#89eb75");
+				var WeightedValue = player.Arsenal.GetWeightedTotal(player.Arsenal.GetArsenalSkillWeights());
+				HealthBar.Modulate = MD.GetPlayerColor(WeightedValue);
 				var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();
 				if(players == null)
 					return;
@@ -83,9 +86,8 @@ public partial class UI_UnitFrame : Control
 			var currentHealth = (float)unit.Status.CurrentHealth / (float)unit.Status.MaxHealth;
 			HealthBar.Visible = currentHealth > 0f;
 			var currentShield = (float)unit.Status.CurrentShield / (float)unit.Status.MaxHealth;
-			ShieldBar.Visible = currentShield > 0f;
+			ShieldBar.Visible = currentShield > 0f && unit.Status.CurrentState != EntityStatus.StatusState.KnockedOut;;
 			var shieldClip = Mathf.Clamp((currentShield + currentHealth) - 1f, 0f, 2f);
-			Modulate = unit.Status.IsKnockedOut ? new Color("#ffffff32") : new Color("#ffffffff");
 			BarBG.Size = BarSize;
 			HealthBar.Size = new Vector2(BarSize.X * currentHealth, BarSize.Y);
 			ShieldBar.Size = new Vector2(BarSize.X * currentShield, BarSize.Y); 

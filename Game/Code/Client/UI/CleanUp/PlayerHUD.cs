@@ -9,13 +9,6 @@ public partial class PlayerHUD : Control
 	public static PlayerHUD Instance;
 
 	private PlayerEntity localPlayer;
-	// Labels :
-	[Export]
-	private Label idLabel;
-	[Export]
-	private Label healthLabel;
-	[Export]
-	private Label speedLabel;
 	[Export]
 	private HBoxContainer modContainer;
 
@@ -61,28 +54,15 @@ public partial class PlayerHUD : Control
 	{
 		if(!GameManager.Instance.IsGameRunning())
 			return;
-		//////////////////////////////////////////
 			
 		fpsLabel.Text = Engine.GetFramesPerSecond().ToString();
 		if(localPlayer == null)
 		{
 			localPlayer = ArenaManager.Instance.GetCurrentArena().GetPlayers().Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
-			if(localPlayer == null)
-			{
-				Visible = false;
-			}
-			else
-			{
-				Visible = true;
-			}
+			Visible = localPlayer != null;
 		}
 		else
 		{
-			//Basic Values:
-			idLabel.Text = "Current UI Target" + (LocalPlayerUITarget == null ? "NO UI TARGET" : LocalPlayerUITarget.Name);
-			healthLabel.Text = localPlayer.Status.CurrentHealth.ToString();
-			speedLabel.Text = localPlayer.Status.GetCurrentSpeed().ToString();
-
 			// Modifiers:
 			// Clean up first...???
 			foreach(var mod in modContainer.GetChildren())

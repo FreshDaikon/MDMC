@@ -15,7 +15,7 @@ public partial class ChannelBar : Control
 	
 	private PlayerEntity localPlayer;
 
-	private float WeightedValue = -1f;
+	private float[] WeightedValue;
 
     public override void _Process(double delta)
 	{
@@ -29,7 +29,7 @@ public partial class ChannelBar : Control
 		if(localPlayer ==  null)
 			return;
 
-		if(WeightedValue == -1f)
+		if(WeightedValue == null)
 		{
 			WeightedValue = localPlayer.Arsenal.GetWeightedTotal(localPlayer.Arsenal.GetArsenalSkillWeights());
 		}			

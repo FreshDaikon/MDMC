@@ -7,8 +7,8 @@ public partial class ArenaManager : Node
 {  
 
     public static ArenaManager Instance;   
-    private Node3D ArenaContainer;
-    private Arena currentArena;
+    private Node3D _arenaContainer;
+    private Arena _currentArena;
 
     //Events for users who rely on this singleton:
     [Signal]
@@ -24,27 +24,27 @@ public partial class ArenaManager : Node
             return;
         }
         Instance = this;
-        ArenaContainer = GetNode<Node3D>("%ArenaContainer");
+        _arenaContainer = GetNode<Node3D>("%ArenaContainer");
         base._Ready();
     }
 
     public Arena GetCurrentArena()
     {
-        return currentArena;
+        return _currentArena;
     }
 
     public Node3D GetRealizationPool()
     {
-        if(currentArena != null)
+        if(_currentArena != null)
         {
-            return currentArena.RealizationPool;
+            return _currentArena.RealizationPool;
         }
         return null;
     }
 
     public bool HasArena()
     {
-        return currentArena != null;
+        return _currentArena != null;
     }
 
     public bool LoadArena(int id)
@@ -53,10 +53,10 @@ public partial class ArenaManager : Node
         var arena = DataManager.Instance.GetArenaInstance(id);
         if(arena != null)
         {
-            ArenaContainer.AddChild(arena);
-            currentArena = arena;
-            currentArena.Victory += () => { Rpc(nameof(SyncEventVictory)); };
-            currentArena.Defeat += () => { Rpc(nameof(SyncEventDefeat)); };
+            _arenaContainer.AddChild(arena);
+            _currentArena = arena;
+            _currentArena.Victory += () => { Rpc(nameof(SyncEventVictory)); };
+            _currentArena.Defeat += () => { Rpc(nameof(SyncEventDefeat)); };
             return true;
         }
         else
@@ -78,10 +78,10 @@ public partial class ArenaManager : Node
 
     public void UnloadArena()
     {
-        if(currentArena != null)
+        if(_currentArena != null)
         {
-            ArenaContainer.RemoveChild(currentArena);
-            currentArena.QueueFree();
+            _arenaContainer.RemoveChild(_currentArena);
+            _currentArena.QueueFree();
         }
         else
         {

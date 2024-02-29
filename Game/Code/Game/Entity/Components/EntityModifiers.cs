@@ -8,14 +8,14 @@ namespace Daikon.Game;
 public partial class EntityModifiers : Node
 {
     //Container:
-    private Node modContainer;
-    private Entity entity;
+    private Node _modContainer;
+    private Entity _entity;
 
     public override void _Ready()
     {        
 		SetProcess(GetMultiplayerAuthority() == 1);
-        modContainer = GetNode("%Mods");
-        entity = GetParent<Entity>();
+        _modContainer = GetNode("%Mods");
+        _entity = GetParent<Entity>();
         base._Ready();
     }
 
@@ -25,7 +25,7 @@ public partial class EntityModifiers : Node
             return new SkillResult() { SUCCESS = false, result = MD.ActionResult.ERROR }; ;
         if(mod != null)
         {
-            var existingMod = modContainer.GetChildren().Where(m => m is Modifier).Cast<Modifier>().ToList().Find( m => m.Data.Id == mod.Data.Id);
+            var existingMod = _modContainer.GetChildren().Where(m => m is Modifier).Cast<Modifier>().ToList().Find( m => m.Data.Id == mod.Data.Id);
             if(existingMod != null)
             {
                 if(!existingMod.CanStack)
@@ -38,8 +38,8 @@ public partial class EntityModifiers : Node
                     {
                         existingMod.Stacks += 1;
                         mod.Name = "mod_" + mod.Data.Id;
-                        mod.entity = entity;
-                        modContainer.AddChild(mod);
+                        mod.entity = _entity;
+                        _modContainer.AddChild(mod);
                         Rpc(nameof(SyncMod), mod.Data.Id, true);
                         return new SkillResult() { SUCCESS = true, result = MD.ActionResult.CAST };
                     }
@@ -49,8 +49,8 @@ public partial class EntityModifiers : Node
             else
             {
                 mod.Name = "mod_" + mod.Data.Id;
-                mod.entity = entity;
-                modContainer.AddChild(mod);
+                mod.entity = _entity;
+                _modContainer.AddChild(mod);
                 Rpc(nameof(SyncMod), mod.Data.Id, true);
                 return new SkillResult() { SUCCESS = true, result = MD.ActionResult.CAST }; 
             }            
@@ -64,14 +64,12 @@ public partial class EntityModifiers : Node
 
     public void RemoveModifier(int id)
     {
-        var existingMod = modContainer.GetChildren().Where(m => m is Modifier).Cast<Modifier>().ToList().Find( m => m.Data.Id == id);
-        if(existingMod != null)
-        {
-            existingMod.QueueFree();
-            if(Multiplayer.IsServer())
-            {  
-                Rpc(nameof(SyncMod), id, false);
-            }
+        var existingMod = _modContainer.GetChildren().Where(m => m is Modifier).Cast<Modifier>().ToList().Find( m => m.Data.Id == id);
+        if (existingMod == null) return;
+        existingMod.QueueFree();
+        if(Multiplayer.IsServer())
+        {  
+            Rpc(nameof(SyncMod), id, false);
         }
     }
 
@@ -84,13 +82,13 @@ public partial class EntityModifiers : Node
             if(newMod != null)
             {
                 newMod.Name = "mod_" + id;
-                newMod.entity = entity;
-                modContainer.AddChild(newMod);
+                newMod.entity = _entity;
+                _modContainer.AddChild(newMod);
             }
         }
         else
         {
-            var existingMod = modContainer.GetChildren().Where(m => m is Modifier).Cast<Modifier>().ToList().Find( m => m.Data.Id == id);
+            var existingMod = _modContainer.GetChildren().Where(m => m is Modifier).Cast<Modifier>().ToList().Find( m => m.Data.Id == id);
             if(existingMod != null)
             {
                 existingMod.QueueFree();
@@ -100,10 +98,7 @@ public partial class EntityModifiers : Node
 
     public List<Modifier> GetModifiers()
     {
-        var mods = modContainer.GetChildren()
-            .Where(mod => mod is Modifier)
-            .Cast<Modifier>()
-            .ToList();        
-        return mods;
+        var mods = _modContainer.GetChildren().ToList();
+        return mods.Count == 0 ? null : mods.Where(mod => mod is Modifier).Cast<Modifier>().ToList();
     }
 }

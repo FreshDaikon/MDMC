@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://hj4407suf1xn"]
+
+[ext_resource type="Script" path="res://Code/Game/Combat/Modifiers/Modifier.cs" id="1_vxv8b"]
+
+[node name="BasicModifier" type="Node"]
+script = ExtResource("1_vxv8b")

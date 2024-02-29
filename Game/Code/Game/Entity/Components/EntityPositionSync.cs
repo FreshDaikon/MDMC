@@ -20,43 +20,43 @@ public partial class EntityPositionSync : MultiplayerSynchronizer
         Rotation = 2,
     }
 
-    private CharacterBody3D controller;
+    private CharacterBody3D _controller;
     
-    private double currentTime = 0;
-    private double lastPacketTime = 0;
-    private double packetTime = 0;
+    private double _currentTime = 0;
+    private double _lastPacketTime = 0;
+    private double _packetTime = 0;
 
     public override void _Ready()
     {
         Synchronized += OnSynchronized;
-        controller = GetNode<CharacterBody3D>("%Controller");
+        _controller = GetNode<CharacterBody3D>("%Controller");
     }
 
     public override void _PhysicsProcess(double delta)
     {
-        if(Multiplayer.IsServer() && controller != null)
+        if(Multiplayer.IsServer() && _controller != null)
         {
-            currentTime += delta;
-            SyncState[0] = currentTime;
+            _currentTime += delta;
+            SyncState[0] = _currentTime;
             GetState();
         }
     }
 
     private void SetState() 
     {
-        controller.Position = (Vector3)SyncState[1];
-        controller.Rotation = (Vector3)SyncState[2];
+        _controller.Position = (Vector3)SyncState[1];
+        _controller.Rotation = (Vector3)SyncState[2];
     }
 
     private void GetState()
     {
-        SyncState[1] = controller.Position;
-        SyncState[2] = controller.Rotation;
+        SyncState[1] = _controller.Position;
+        SyncState[2] = _controller.Rotation;
     }
 
     private void OnSynchronized()
     {
-        if(controller == null)
+        if(_controller == null)
             return;
         if(IsPreviousFrame())
             return;
@@ -68,9 +68,9 @@ public partial class EntityPositionSync : MultiplayerSynchronizer
     {
         // var delta = controller.Position - (Vector3)SyncState[1];
         Vector3 synVec = (Vector3)SyncState[1];
-        SyncState[1] = controller.Position.Lerp(new Vector3(synVec.X, controller.Position.Y, synVec.Z), 0.5f);
+        SyncState[1] = _controller.Position.Lerp(new Vector3(synVec.X, _controller.Position.Y, synVec.Z), 0.5f);
         Vector3 syncH = (Vector3)SyncState[1];
-        if((controller.Position.Y - synVec.Y) > 3) 
+        if((_controller.Position.Y - synVec.Y) > 3) 
         {
             SyncState[1] = new Vector3(syncH.X, synVec.Y, syncH.Z);
         }
@@ -78,13 +78,13 @@ public partial class EntityPositionSync : MultiplayerSynchronizer
 
     private bool IsPreviousFrame()
     {
-        if((double)SyncState[0] < lastPacketTime)
+        if((double)SyncState[0] < _lastPacketTime)
         {
             return true;
         }
         else
         {
-            lastPacketTime = (double)SyncState[0];
+            _lastPacketTime = (double)SyncState[0];
             return false;
         }
     }

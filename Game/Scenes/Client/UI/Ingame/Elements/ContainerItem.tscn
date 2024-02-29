@@ -1,46 +1,73 @@
-[gd_scene load_steps=3 format=3 uid="uid://bigy6igqibv5v"]
+[gd_scene load_steps=4 format=3 uid="uid://bigy6igqibv5v"]
 
+[ext_resource type="Script" path="res://Code/Client/UI/Ingame/Elements/UIContainerItem.cs" id="1_hhoa6"]
 [ext_resource type="Texture2D" uid="uid://coyetxtc5aald" path="res://Assets/UI/ArsenalSystem/SkillContainers/Warlocks_MK3.png" id="1_w28es"]
-[ext_resource type="PackedScene" uid="uid://blou54k4vmy5m" path="res://Scenes/Client/UI/Ingame/Elements/SkillItem.tscn" id="2_4uyn7"]
+[ext_resource type="Texture2D" uid="uid://do6mkfdyxlvf5" path="res://Assets/UI/ArsenalSystem/Skills/FlubberSkill_DEBUGF.png" id="3_pg6nq"]
 
 [node name="ContainerItem" type="Control"]
-custom_minimum_size = Vector2(200, 250)
+custom_minimum_size = Vector2(270, 140)
 layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Container" type="Control" parent="."]
-custom_minimum_size = Vector2(150, 150)
 anchors_preset = 0
-offset_right = 150.0
-offset_bottom = 150.0
+offset_right = 270.0
+offset_bottom = 140.0
+script = ExtResource("1_hhoa6")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Container"]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 208.0
+offset_bottom = 131.0
 
-[node name="TextureRect" type="TextureRect" parent="Container/VBoxContainer"]
-custom_minimum_size = Vector2(200, 200)
+[node name="ContainerName" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
-texture = ExtResource("1_w28es")
-expand_mode = 1
+text = "Container Name
+"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Container/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 0
-
-[node name="SkillItem" parent="Container/VBoxContainer/HBoxContainer" instance=ExtResource("2_4uyn7")]
+[node name="VBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
-[node name="SkillItem2" parent="Container/VBoxContainer/HBoxContainer" instance=ExtResource("2_4uyn7")]
+[node name="ContainerButton" type="TextureButton" parent="VBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
+size_flags_horizontal = 0
+texture_normal = ExtResource("1_w28es")
+ignore_texture_size = true
+stretch_mode = 0
 
-[node name="SkillItem3" parent="Container/VBoxContainer/HBoxContainer" instance=ExtResource("2_4uyn7")]
+[node name="Grid" type="GridContainer" parent="VBoxContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_stretch_ratio = 0.0
+columns = 2
 
-[node name="SkillItem4" parent="Container/VBoxContainer/HBoxContainer" instance=ExtResource("2_4uyn7")]
+[node name="SlotButton1" type="TextureButton" parent="VBoxContainer/VBoxContainer/Grid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
+texture_normal = ExtResource("3_pg6nq")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="SlotButton2" type="TextureButton" parent="VBoxContainer/VBoxContainer/Grid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture_normal = ExtResource("3_pg6nq")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="SlotButton3" type="TextureButton" parent="VBoxContainer/VBoxContainer/Grid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture_normal = ExtResource("3_pg6nq")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="SlotButton4" type="TextureButton" parent="VBoxContainer/VBoxContainer/Grid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture_normal = ExtResource("3_pg6nq")
+ignore_texture_size = true
+stretch_mode = 0

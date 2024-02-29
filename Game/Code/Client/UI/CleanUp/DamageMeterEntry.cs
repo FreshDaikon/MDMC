@@ -26,7 +26,7 @@ public partial class DamageMeterEntry : ColorRect
 	private Tween barTween;
 	public double sortValue = 0f;
 
-	private float WeightedValue = -1f;
+	private float[] WeightedValue;
 
     public override void _Ready()
     {

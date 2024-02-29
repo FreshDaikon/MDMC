@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Daikon.Game.EffectRules;
 using Godot;
 using SmartFormat;
 using Daikon.Helpers;
@@ -20,11 +22,17 @@ public partial class Skill : Node
     public float TickRate = 1f;
     public float ThreatMultiplier = 1f;
     // Maintinece:
+    public MD.ContainerSlot AssignedContainerSlot = MD.ContainerSlot.Main;
     public int AssignedSlot = -1;
     // Realizations 
     public RealizationObject RealizeOnCast;
     public RealizationObject RealizeOnFinish;    
     public RealizationObject RealizeOnSkill;
+    
+    //Test :
+    public EffectRuleData[] Rules;
+    
+    public List<Effect> Effects = new();
 
     //Class Internals:
     public SkillObject Data;
@@ -120,25 +128,20 @@ public partial class Skill : Node
         return check;        
     }
     
-    public void InteruptCast()
+    public void InterruptCast()
     {
-        GD.Print("try interupt casting.");
-        if(isCasting)
-        {
-            isCasting = false;        
-            Rpc(nameof(CancelRealization));        
-        }
+        if (!isCasting) return;
+        Rpc(nameof(CancelRealization));
+        isCasting = false;        
     }
   
     public void InteruptChannel()
     {
-        if(isChanneling)
-        {
-            Rpc(nameof(CancelRealization));
-            isChanneling = false;
-            ticks = 0;
-            lastLapse = 0;
-        }
+        if (!isChanneling) return;
+        Rpc(nameof(CancelRealization));
+        isChanneling = false;
+        ticks = 0;
+        lastLapse = 0;
     }    
     
     public override void _PhysicsProcess(double delta)
@@ -226,6 +229,7 @@ public partial class Skill : Node
         var realization = RealizeOnFinish.GetRealization();
         realization.Spawn(Player.Controller.Position, 2f);
     }    
+    
     public virtual SkillResult TriggerResult()
     {
         GD.PrintErr("Please Override this implementation!");

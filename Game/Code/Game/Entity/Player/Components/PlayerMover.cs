@@ -6,19 +6,19 @@ namespace Daikon.Game;
 public partial class PlayerMover : Node, IEntityMover
 {	
 	[Export]
-	private float JUMP_VELOCITY = 30f;
+	private float _jumpVelocity = 30f;
     [Export]
-    private float DASH_POWER = 5f;
+    private float _dashPower = 5f;
 
     private PlayerEntity player;
     private PlayerInput input;
 	private Camera3D camera;
 
-    private Vector3 direction = Vector3.Zero;
-    private Vector3 velocity = Vector3.Zero;
-    private float verticalVelocity = 0;
-    private float fallGravity = 50f;
-    private float jumpGravity;
+    private Vector3 _direction = Vector3.Zero;
+    private Vector3 _velocity = Vector3.Zero;
+    private float _verticalVelocity = 0;
+    private float _fallGravity = 50f;
+    private float _jumpGravity;
 
     private float jumpHeight = 1f;
     private float apexDuration = 0.3f;
@@ -27,13 +27,13 @@ public partial class PlayerMover : Node, IEntityMover
 	{
         player = (PlayerEntity)GetParent();       
         input = (PlayerInput)GetNode("%Input"); 
-        jumpGravity = fallGravity;
+        _jumpGravity = _fallGravity;
         base._Ready();
 	}
     public override void _PhysicsProcess(double delta)
 	{		        
-        if(player.Status.IsKnockedOut)
-            return;
+        if(player.Status.CurrentState == EntityStatus.StatusState.KnockedOut) return;
+        
         Move((float)delta);
         Rotate((float)delta);
 	}
@@ -41,15 +41,15 @@ public partial class PlayerMover : Node, IEntityMover
     public void Move(float delta)
     {
         var controller = player.Controller;   
-        var playerSpeed = player.Status.GetCurrentSpeed();    
+        var playerSpeed = player.Status.CurrentSpeed;
 
-        velocity.X = controller.IsOnFloor() ? playerSpeed * input.Direction.X : velocity.X;
-        velocity.Z = controller.IsOnFloor() ? playerSpeed * input.Direction.Z : velocity.Z;
+        _velocity.X = controller.IsOnFloor() ? playerSpeed * input.Direction.X : _velocity.X;
+        _velocity.Z = controller.IsOnFloor() ? playerSpeed * input.Direction.Z : _velocity.Z;
 
         if(input.Jumping && controller.IsOnFloor())
 		{	
-            velocity.Y = (2 * jumpHeight) / apexDuration;
-            jumpGravity = velocity.Y / apexDuration;
+            _velocity.Y = (2 * jumpHeight) / apexDuration;
+            _jumpGravity = _velocity.Y / apexDuration;
             if(player.Arsenal.IsCasting || player.Arsenal.IsChanneling)
             {
                 player.Arsenal.TryInteruptCast();
@@ -59,22 +59,22 @@ public partial class PlayerMover : Node, IEntityMover
 		input.Jumping = false;               
         if(!controller.IsOnFloor())
         {           
-            if(velocity.Y >= 0)
+            if(_velocity.Y >= 0)
             {
-                velocity.Y -= jumpGravity * delta;
+                _velocity.Y -= _jumpGravity * delta;
             }
             else 
             {
-                velocity.Y  -= fallGravity * delta;
+                _velocity.Y  -= _fallGravity * delta;
             }
         }
-        direction = controller.IsOnFloor() ? input.Direction : direction;
-        if(direction.Length() > 0f && (player.Arsenal.IsCasting || player.Arsenal.IsChanneling))
+        _direction = controller.IsOnFloor() ? input.Direction : _direction;
+        if(_direction.Length() > 0f && (player.Arsenal.IsCasting || player.Arsenal.IsChanneling))
         {
            player.Arsenal.TryInteruptCast();
            player.Arsenal.TryInteruptChanneling();
         }
-        controller.Velocity = velocity; //controller.Velocity.Lerp(velocity, delta * acceleration);        
+        controller.Velocity = _velocity; //controller.Velocity.Lerp(velocity, delta * acceleration);        
     }
 
     public void Rotate(float delta)

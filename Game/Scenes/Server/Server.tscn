@@ -8,7 +8,6 @@
 [node name="Main" type="Node3D"]
 script = ExtResource("1_pi4fx")
 playerEntityPath = "res://Scenes/Game/EntitySystem/Player/PlayerEntity.tscn"
-sackManEntityPath = "res://Scenes/Game/Bosses/SackMan.tscn"
 
 [node name="Managers" type="Node" parent="."]
 
@@ -16,7 +15,7 @@ sackManEntityPath = "res://Scenes/Game/Bosses/SackMan.tscn"
 
 [node name="DataManager" type="Node" parent="Managers/Game"]
 script = ExtResource("2_85quu")
-LibraryPath = "res://Data/Library"
+_libraryPath = "res://Data/Library"
 
 [node name="ArenaManager" type="Node" parent="Managers/Game"]
 script = ExtResource("6_wdpge")

@@ -22,7 +22,6 @@ public partial class AutoAttack: BaseBehavior
         if(GameManager.Instance.GameClock - lastAttack > attackTime)
         {
             //auto attack
-            GD.Print("Attack the target!!!");
             Attack(topThreat);
             lastAttack = GameManager.Instance.GameClock;
         }

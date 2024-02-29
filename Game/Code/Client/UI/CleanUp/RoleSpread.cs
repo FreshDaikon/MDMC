@@ -38,8 +38,6 @@ public partial class RoleSpread : Control
 		{
 			hasBeenSet = true;
 			roleWeights = localPlayer.Arsenal.GetArsenalSkillWeights();
-			roleColorValue = localPlayer.Arsenal.GetWeightedTotal(roleWeights);
-			RoleRECT.Color = MD.GetPlayerColor(roleColorValue);
 
 			DPSRect.Color = new Color("#e34f22");	
 			DPSRect.Position = new Vector2(0F, 0F);

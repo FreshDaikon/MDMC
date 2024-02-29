@@ -1,6 +1,7 @@
 using Daikon.Game;
 using Godot;
-using System;
+
+namespace Daikon.Client; 
 
 public partial class UI_DefeatScreen : Control
 {

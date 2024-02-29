@@ -1,0 +1,62 @@
+[gd_resource type="Resource" script_class="SkillContainerObject" load_steps=11 format=3 uid="uid://b3jhqg25v7o1y"]
+
+[ext_resource type="Script" path="res://Code/System/DataID.cs" id="1_ewytu"]
+[ext_resource type="Script" path="res://Code/Game/Data/SkillContainerObject.cs" id="1_yduxv"]
+[ext_resource type="PackedScene" uid="uid://c7cpyo2qxinvj" path="res://Data/Instances/SkillContainers/BasicContainer.tscn" id="2_nd8ib"]
+[ext_resource type="Texture2D" uid="uid://coyetxtc5aald" path="res://Assets/UI/ArsenalSystem/SkillContainers/Warlocks_MK3.png" id="2_sr5a1"]
+[ext_resource type="Script" path="res://Code/Game/Data/Decorators/SkillSlotData.cs" id="4_3p76q"]
+
+[sub_resource type="Resource" id="Resource_iyqq2"]
+script = ExtResource("1_ewytu")
+Id = -1786517060
+
+[sub_resource type="Resource" id="Resource_50mvx"]
+script = ExtResource("4_3p76q")
+SlotSkillType = 1
+PotencyMultiplier = 1.5
+ThreatMultiplier = 1.0
+IsComboSlot = false
+ComboSlotIndex = 0
+ComboPotecyBonus = 0.0
+FailurePotencyPenalty = 0.0
+
+[sub_resource type="Resource" id="Resource_8jsbb"]
+script = ExtResource("4_3p76q")
+SlotSkillType = 1
+PotencyMultiplier = 1.3
+ThreatMultiplier = 1.0
+IsComboSlot = false
+ComboSlotIndex = 0
+ComboPotecyBonus = 0.0
+FailurePotencyPenalty = 0.0
+
+[sub_resource type="Resource" id="Resource_esr1k"]
+script = ExtResource("4_3p76q")
+SlotSkillType = 0
+PotencyMultiplier = 0.5
+ThreatMultiplier = 1.0
+IsComboSlot = false
+ComboSlotIndex = 0
+ComboPotecyBonus = 0.0
+FailurePotencyPenalty = 0.0
+
+[sub_resource type="Resource" id="Resource_qfrdn"]
+script = ExtResource("4_3p76q")
+SlotSkillType = 2
+PotencyMultiplier = 2.0
+ThreatMultiplier = 1.0
+IsComboSlot = false
+ComboSlotIndex = 0
+ComboPotecyBonus = 0.0
+FailurePotencyPenalty = 0.0
+
+[resource]
+script = ExtResource("1_yduxv")
+BaseGcd = 1.5
+skillSlots = Array[Object]([SubResource("Resource_50mvx"), SubResource("Resource_8jsbb"), SubResource("Resource_esr1k"), SubResource("Resource_qfrdn")])
+Modifiers = null
+ID = SubResource("Resource_iyqq2")
+Scene = ExtResource("2_nd8ib")
+Name = "Warlock MK1"
+Description = "Some Object Description."
+Icon = ExtResource("2_sr5a1")

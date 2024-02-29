@@ -15,9 +15,6 @@
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_f104j")
-frontendScene = ExtResource("2_2g20u")
-hudScene = ExtResource("3_3lbq8")
-ingamemenuScene = ExtResource("4_6g5te")
 
 [node name="Managers" type="Node" parent="."]
 
@@ -25,7 +22,7 @@ ingamemenuScene = ExtResource("4_6g5te")
 
 [node name="DataManager" type="Node" parent="Managers/Game"]
 script = ExtResource("5_kp3vg")
-LibraryPath = "res://Data/Library"
+_libraryPath = "res://Data/Library"
 
 [node name="ArenaManager" type="Node" parent="Managers/Game"]
 script = ExtResource("9_a7vxa")

@@ -170,10 +170,9 @@ public static class MD
          return num.ToString("#,0");
 	}
 
-    public static Color GetPlayerColor(float value)
+    public static Color GetPlayerColor(float[] value)
     {
-        var remap = Mathf.Remap(value, 3f, 48f, 0.0f, 1f);
-        var newColor = Color.FromHsv(remap, 0.7f, 0.6f);
+        var newColor = new Color(value[0], value[1], value[2]);
         return newColor; 
     }
 }

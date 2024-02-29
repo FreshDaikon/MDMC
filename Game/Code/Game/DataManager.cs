@@ -1,16 +1,16 @@
 using System.Collections.Generic;
 using Godot;
-using Daikon.Game;
 using System.Linq;
-using System.IO;
+
+namespace Daikon.Game;
 
 public partial class DataManager : Node
 {
     public static DataManager Instance;
 
     [Export(PropertyHint.Dir)]
-    private string LibraryPath;
-    private List<DataObject> library;
+    private string _libraryPath;
+    private List<DataObject> _library;
 
     public override void _Ready()
     {
@@ -19,48 +19,45 @@ public partial class DataManager : Node
             Free();
         }
         Instance = this;
-        library = new List<DataObject>();
+        _library = new List<DataObject>();
         SetupLibrary();
     }
 
     private void SetupLibrary()
     {
-        GetObjectsInDirectory(LibraryPath);
+        GetObjectsInDirectory(_libraryPath);
         GD.Print(
             "Finished filling up library! =>  Library Items:");
-        library.ForEach(x => { GD.Print(
+        _library.ForEach(x => { GD.Print(
             "---------------------------      Library item: " + x.Name ); });
     }
 
     private void GetObjectsInDirectory(string path)
     {
         var dir = DirAccess.Open(path);
-        if(dir != null)
+        if (dir == null) return;
+        dir.ListDirBegin();
+        var file = dir.GetNext();
+        while(file != "")
         {
-            dir.ListDirBegin();
-            string file = dir.GetNext();
-            while(file != "")
+            if(dir.CurrentIsDir())
             {
-                if(dir.CurrentIsDir())
-                {
-                    GetObjectsInDirectory(path + "/" + file);
-                    file = dir.GetNext();
-                }
-                else
-                {
-                    var res = ResourceLoader.Load(path + "/" + file.Replace(".remap", ""));
-                    library.Add((DataObject)res);
-                    file = dir.GetNext();
-                }
+                GetObjectsInDirectory(path + "/" + file);
+                file = dir.GetNext();
             }
-            dir.ListDirEnd();
+            else
+            {
+                var res = ResourceLoader.Load(path + "/" + file.Replace(".remap", ""));
+                _library.Add((DataObject)res);
+                file = dir.GetNext();
+            }
         }
+        dir.ListDirEnd();
     }
 
-    // Skills:
     public List<SkillObject> GetAllSkills()
     {
-        var skills = library.Where(skill => skill is SkillObject).Cast<SkillObject>().ToList();
+        var skills = _library.Where(skill => skill is SkillObject).Cast<SkillObject>().ToList();
         return skills;
     }
 
@@ -79,7 +76,7 @@ public partial class DataManager : Node
 
     public List<ArenaObject> GetAllArenas()
     {
-        var arenas = library.Where(arena => arena is ArenaObject).Cast<ArenaObject>().ToList();
+        var arenas = _library.Where(arena => arena is ArenaObject).Cast<ArenaObject>().ToList();
         return arenas;
     }
     
@@ -98,7 +95,7 @@ public partial class DataManager : Node
 
     public List<SkillContainerObject> GetAllSkillContainers()
     {
-        var skillContainers = library.Where(container => container is SkillContainerObject).Cast<SkillContainerObject>().ToList();
+        var skillContainers = _library.Where(container => container is SkillContainerObject).Cast<SkillContainerObject>().ToList();
         return skillContainers;
     }
 
@@ -117,7 +114,7 @@ public partial class DataManager : Node
 
     public List<ModifierObject> GetAllModifiers()
     {
-        var modifiers = library.Where(mod => mod is ModifierObject).Cast<ModifierObject>().ToList();
+        var modifiers = _library.Where(mod => mod is ModifierObject).Cast<ModifierObject>().ToList();
         return modifiers;
     }
 
@@ -136,7 +133,7 @@ public partial class DataManager : Node
 
     public List<RealizationObject> GetAllRealizations()
     {
-        var realizations = library.Where(r => r is RealizationObject).Cast<RealizationObject>().ToList();
+        var realizations = _library.Where(r => r is RealizationObject).Cast<RealizationObject>().ToList();
         return realizations;
     }
 

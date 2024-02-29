@@ -21,7 +21,12 @@ public partial class UIManager : Node
     [Export]
     private PackedScene ingamemenuScene; 
     private UIState _currentState = UIState.None;    
+    
     private Node UIContainer;
+
+    private UILandingPage _landingPage;
+    private UIHUDMain _hud;
+    private UIIngameMenu _ingame;
 
     public override void _Ready()
     {
@@ -32,6 +37,22 @@ public partial class UIManager : Node
         }
         Instance = this;
         UIContainer = GetNode("%UIContainer");
+
+        _landingPage = frontendScene.Instantiate<UILandingPage>();
+        _hud = hudScene.Instantiate<UIHUDMain>();
+        _ingame = ingamemenuScene.Instantiate<UIIngameMenu>();
+
+        _landingPage.Visible = false;
+        _hud.Visible = false;
+        _ingame.Visible = false;
+
+        _landingPage.ProcessMode = ProcessModeEnum.Disabled;
+        _hud.ProcessMode = ProcessModeEnum.Disabled;
+        _ingame.ProcessMode = ProcessModeEnum.Disabled;
+
+        UIContainer.AddChild(_landingPage);
+        UIContainer.AddChild(_hud);
+        UIContainer.AddChild(_ingame);
     }
 
     public override void _ExitTree()
@@ -45,7 +66,6 @@ public partial class UIManager : Node
 
     public override void _PhysicsProcess(double delta)
     {
-
         if(Input.IsActionJustPressed("Start"))
         {
             if(_currentState == UIState.HUD)
@@ -93,25 +113,27 @@ public partial class UIManager : Node
                 GD.Print("Remove old UI..");
                 foreach(var ui in UIContainer.GetChildren())
                 {
-                    ui.QueueFree();
+                    var control = (Control)ui;
+                    control.ProcessMode = ProcessModeEnum.Disabled;
+                    control.Visible = false;
                 }
             }
             switch(state)
             {
                 case UIState.Ingame:
                     GD.Print("Add Ingame Menu..");
-                    var ingame = ingamemenuScene.Instantiate();
-                    UIContainer.AddChild(ingame);
+                    _ingame.ProcessMode = ProcessModeEnum.Always;
+                    _ingame.Visible = true;
                     break;
                 case UIState.Frontend:
                     GD.Print("Add Frontend..");
-                    var frontend = frontendScene.Instantiate(); 
-                    UIContainer.AddChild(frontend);
+                    _landingPage.ProcessMode = ProcessModeEnum.Always;
+                    _landingPage.Visible = true;
                     break;
                 case UIState.HUD:
                     GD.Print("Add HUD..");
-                    var hud = hudScene.Instantiate();
-                    UIContainer.AddChild(hud);
+                    _hud.ProcessMode = ProcessModeEnum.Always;
+                    _hud.Visible = true;
                     break;
                 case UIState.None:
                     //Screen should clear.

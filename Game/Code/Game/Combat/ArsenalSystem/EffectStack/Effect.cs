@@ -1,15 +1,13 @@
-namespace Daikon.Game.EffectStack;
+using Godot;
 
-public class Effect
+namespace Daikon.Game;
+
+[GlobalClass]
+public partial class Effect : Resource
 {
-    public Effect(EffectType type, double value)
-    {
-        Type = type;
-        Value = value;
-    }
-    
     public enum EffectType
     {
+        Failed,
         NoEffect,
         Trigger,
         Potency,
@@ -18,7 +16,8 @@ public class Effect
         Cooldown,
         
     }
-
-    public EffectType Type { get; private set; } = EffectType.Trigger;
+    [Export]
+    public EffectType Type { get; private set; } = EffectType.Failed;
+    [Export]
     public double Value { get; private set; } = 0;
 }

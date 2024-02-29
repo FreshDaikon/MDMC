@@ -39,7 +39,7 @@ public partial class PlayerInput : Node
             return;
         if(UIManager.Instance.GetCurrentState() != UIManager.UIState.HUD)
             return;
-        if(player.Status.IsKnockedOut)
+        if(player.Status.CurrentState == EntityStatus.StatusState.KnockedOut)
             return;
         HandleInputs();
     }    

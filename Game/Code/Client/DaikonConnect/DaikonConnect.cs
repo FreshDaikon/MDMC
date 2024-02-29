@@ -11,18 +11,18 @@ namespace Daikon.Client.Connect;
 public partial class DaikonConnect: Node
 {
     public static DaikonConnect Instance;   
-    private string baseLocal = "http://127.0.0.1:5000";
-    private string baseRemote = "http://103.45.246.143:5000";
-    private string baseActual = "";
+    private string _baseLocal = "http://127.0.0.1:5000";
+    private string _baseRemote = "http://103.45.246.143:5000";
+    private string _baseActual = "";
 
-    private string[] baseHeader = {"Content-Type: application/json"};
+    private string[] _baseHeader = {"Content-Type: application/json"};
     
     // Various Configs:
-    public bool ConnectOnline = false;
+    private bool _connectOnline = false;
 
     //Session Data 
-    private Guid SessionToken;
-    private string JoinCode;
+    private Guid _sessionToken;
+    private string _joinCode;
 
     //Signals:
     [Signal]
@@ -41,28 +41,25 @@ public partial class DaikonConnect: Node
             return;
         }
         Instance = this;
-        baseActual = baseLocal;
+        _baseActual = _baseLocal;
         base._Ready();
     }
 
     public void SetToLocalHost()
     {
-        baseActual = baseLocal;
+        _baseActual = _baseLocal;
     }
 
     public void SetToRemote()
     {
-        baseActual = baseRemote;
+        _baseActual = _baseRemote;
     }
 
     //_____________________________Requests____________________________________________//
     ////////////////////////////////////////////////////////////////////////////////////
-        
-    
-    // Authorize and recieve a token:
-    public void DaikonAuth() 
+    public void DaikonAuthenticate() 
     {
-        HttpRequest authRequest = new HttpRequest();
+        var authRequest = new HttpRequest();
         AddChild(authRequest);
         authRequest.RequestCompleted += (result, responseCode, headers, body) => {
             if(responseCode != 200)
@@ -74,53 +71,52 @@ public partial class DaikonConnect: Node
             AuthRequestCompleted(body);
             CleanUp(authRequest);
         }; 
-        AuthUserRequest message = new AuthUserRequest()
+        var message = new AuthUserRequest()
         {
-            // TODO : Implement the proper steam x-ticket.
             SteamTicket = "bannana"
         };
         var messageContent = JsonConvert.SerializeObject(message);
-        Error error = authRequest.Request(baseActual+"/auth", baseHeader, HttpClient.Method.Get, messageContent);
+        var error = authRequest.Request(_baseActual+"/auth", _baseHeader, HttpClient.Method.Get, messageContent);
     }
 
     public void DaikonRequestGame(int ArenaId)
     {
         GD.Print("Let's try to get a game! give the ID:" + ArenaId);
-        if(SessionToken == Guid.Empty)
+        if(_sessionToken == Guid.Empty)
         {
             // We need a valid token to proceed!
             return;
         }
-        HttpRequest gameRequest = new HttpRequest();
+        var gameRequest = new HttpRequest();
         AddChild(gameRequest);
         gameRequest.RequestCompleted += (result, responseCode, headers, body) => {
             if(responseCode != 200)
             {
-                GD.Print("Respones was not 200 OK -  [" + responseCode + "]"); 
+                GD.Print("Response was not 200 OK -  [" + responseCode + "]"); 
                 CleanUp(gameRequest);
                 return;
             }
             GameRequestCompleted(body); 
             CleanUp(gameRequest);
         };
-        NewGameRequest message = new NewGameRequest()
+        var message = new NewGameRequest()
         {
             Arena = ArenaId.ToString(),
-            SessionToken = SessionToken
+            SessionToken = _sessionToken
         };
         var messageContent = JsonConvert.SerializeObject(message);
-        Error error = gameRequest.Request(baseActual+"/games/create", baseHeader, HttpClient.Method.Get, messageContent);
+        var error = gameRequest.Request(_baseActual+"/games/create", _baseHeader, HttpClient.Method.Get, messageContent);
     }
 
     public void DaikonJoinGame(string joinCode)
     {
-        if(SessionToken == Guid.Empty)
+        if(_sessionToken == Guid.Empty)
         {
             // We need a valid token to proceed!
             return;
         }
         
-        HttpRequest joinRequest = new HttpRequest();
+        var joinRequest = new HttpRequest();
         AddChild(joinRequest);
         joinRequest.RequestCompleted += (result, responseCode, headers, body) => {
             if(responseCode != 200)
@@ -132,13 +128,13 @@ public partial class DaikonConnect: Node
             JoinRequestCompleted(body); 
             CleanUp(joinRequest);
         };
-        JoinGameRequest message = new JoinGameRequest()
+        var message = new JoinGameRequest()
         {
-            SessionToken = SessionToken,
+            SessionToken = _sessionToken,
             JoinCode = joinCode
         };
         var messageContent = JsonConvert.SerializeObject(message);
-        Error error = joinRequest.Request(baseActual+"/games/join", baseHeader, HttpClient.Method.Get, messageContent);
+        var error = joinRequest.Request(_baseActual+"/games/join", _baseHeader, HttpClient.Method.Get, messageContent);
     }
 
     //___________________________ Responses ____________________________________________//
@@ -146,17 +142,17 @@ public partial class DaikonConnect: Node
 
     private void AuthRequestCompleted(byte[] body)
     {
-        var json = UTF8Encoding.UTF8.GetString(body);
+        var json = Encoding.UTF8.GetString(body);
         var messageData = JsonConvert.DeserializeObject<AuthUserResponse>(json); 
         GD.Print(messageData);        
         GD.Print("We good to go!");
-        SessionToken = messageData.SessionToken;
+        _sessionToken = messageData.SessionToken;
         EmitSignal(SignalName.AuthSuccess);
     }
 
     private void GameRequestCompleted(byte[] body)
     {
-        var json = UTF8Encoding.UTF8.GetString(body);
+        var json = Encoding.UTF8.GetString(body);
         var messageData = JsonConvert.DeserializeObject<GameCreatedResponse>(json); 
         GD.Print(messageData);  
         // Setup Multiplayer interface:
@@ -166,7 +162,7 @@ public partial class DaikonConnect: Node
 
     private void JoinRequestCompleted(byte[] body)
     {
-        var json = UTF8Encoding.UTF8.GetString(body);
+        var json = Encoding.UTF8.GetString(body);
         var messageData = JsonConvert.DeserializeObject<GameFoundReponse>(json); 
         GD.Print(messageData);  
         EmitSignal(nameof(GameFound), new Variant[]{messageData.ServerHost, messageData.ServerPort});
@@ -174,8 +170,7 @@ public partial class DaikonConnect: Node
 
     //___________________________ Utility ____________________________________________//
     ////////////////////////////////////////////////////////////////////////////////////
-    
-    private void CleanUp(HttpRequest request)
+    private void CleanUp(Node request)
     {
         RemoveChild(request);
         request.QueueFree();

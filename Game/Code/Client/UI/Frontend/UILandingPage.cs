@@ -51,20 +51,7 @@ public partial class UILandingPage : Control
         JoinLocalServerButton.Pressed += () => JoinLocalServer();
 
         StartGameButton.ButtonUp += () => StartGame();
-
-
-        //Setup Extras
-        var args = MD.GetArgs();
-        if(args.ContainsKey("standalone"))
-        {
-            StartServerButton.Visible = true;
-            StartServerButton.Disabled = false;
-        }
-        else
-        {
-            StartServerButton.Visible = false;
-            StartServerButton.Disabled = true;
-        }         
+      
         CallDeferred(nameof(GetArenaList));
         CallDeferred(nameof(SetupNetworkListeners));
     }
@@ -129,7 +116,7 @@ public partial class UILandingPage : Control
     private void ConnectWS()
     {        
         DaikonConnect.Instance.SetToRemote();
-        DaikonConnect.Instance.DaikonAuth();
+        DaikonConnect.Instance.DaikonAuthenticate();
     }
 
     private void StartLocalServer()

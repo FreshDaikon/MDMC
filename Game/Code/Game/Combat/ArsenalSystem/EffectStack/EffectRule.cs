@@ -1,27 +1,57 @@
 using Godot;
 
-namespace Daikon.Game.EffectStack;
+namespace Daikon.Game;
 
-public partial class EffectRule: Resource
+
+public class EffectRule
 {
     
-    private Effect _effect;
-    private bool _wasResolved = true;
-    
-    public Effect Trigger(Skill instigator, PlayerArsenal owner)
+    public Effect Effect { get; init; }
+    public bool IsConditional { get; init; }
+
+    public Skill TrigggerSkill { get; private set; }
+    public bool PreviousOutcome { get; private set; }
+    public Skill OriginSkill { get; private set; }
+    public bool HasData { get; private set; } = false;
+    public bool WasResolved { get; private set; } = true;
+
+
+    public void Init(Skill owner)
     {
-        return CheckCondition() ? _effect : new Effect(Effect.EffectType.NoEffect, 0);
+        OriginSkill = owner;
+    }
+    
+    public void SetTrigger(Skill triggerSkill, bool previousOutcome)
+    {
+        GD.Print("Setting Trigger data..");
+        TrigggerSkill = triggerSkill;
+        PreviousOutcome = previousOutcome;
+        HasData = true;
+    }
+    
+    public Effect Trigger()
+    {
+        if (!HasData)
+        {
+            return new Effect();
+        }
+
+        if (!CheckCondition()) return new Effect();
+        
+        GD.Print("Condition was ok! try and resolve");
+        TryResolve();
+        return Effect;
     }
 
-    protected virtual void SetWasResolved() { }
+    public virtual void TryResolve() {}
 
-    protected virtual bool CheckCondition()
+    public void SetWasResolved(bool result)
+    {
+        WasResolved = result;
+    }
+
+    public virtual bool CheckCondition()
     {
         return false; 
-    }
-
-    public virtual bool WasResolved()
-    {
-        return _wasResolved;
     }
 }

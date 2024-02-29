@@ -8,16 +8,11 @@ namespace Daikon.Game;
 
 public partial class PlayerArsenal: Node
 {
-    public static class ContainerNames
-    {
-        public static string Main { get { return "Main"; }}
-        public static string Left { get { return "Left"; }}
-        public static string Right { get { return "Right"; }}
-    }
+    [Export]
+    public float BaseGcd { get; private set; } = 1.5f;
+    
     public PlayerEntity Player;
-
     public bool IsCasting = false;
-
     public double CastingStartTime;
     public double CastingTime;
     public bool IsChanneling = false;
@@ -25,10 +20,12 @@ public partial class PlayerArsenal: Node
     public double ChannelingTime;
     public Skill CastingSkill;
     public Skill ChannelingSkill;
-    public float GCD = 2.5f;
     public double GCDStartTime = 0;
-
-    //Lest the fuckery become too much
+    
+    public EffectStack Stack { get; private set; }
+    public Skill LastSkill { get; set; }
+    
+    
     bool hasBeenInit = false;
     bool hasBeenInitLocal = false;
 
@@ -37,6 +34,7 @@ public partial class PlayerArsenal: Node
     {
         //skillContainers = GetNode("%SkillContainers");
         Player = GetParent<PlayerEntity>();
+        Stack = new EffectStack(this);
     }
 
     public override void _Process(double delta)
@@ -83,8 +81,8 @@ public partial class PlayerArsenal: Node
             Rpc(nameof(SyncSkill), firstSkill.Id, (int)slot, 1);
             Rpc(nameof(SyncSkill), firstSkill.Id, (int)slot, 2);
             Rpc(nameof(SyncSkill), firstSkill.Id, (int)slot, 3);
-         }
-         hasBeenInit = true;
+        }
+        hasBeenInit = true;
     }  
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -117,27 +115,12 @@ public partial class PlayerArsenal: Node
 
     public void ResetArsenal()
     {
-        var modGCD = Player.Status.GetGCDModifier();
-        GCDStartTime = GameManager.Instance.GameClock - modGCD;
+        GCDStartTime = GameManager.Instance.GameClock - BaseGcd;
         Rpc(nameof(SyncGCD), GCDStartTime);
         IsCasting = false;
         IsChanneling = false;
         CastingSkill = null;
         ChannelingSkill = null;
-
-        //Reset Skills:
-        if(GetChildCount() > 0)
-        {
-            var containers = GetChildren()
-                .Where(c => c is SkillContainer)
-                .Cast<SkillContainer>()
-                .ToList();
-
-            foreach(var container in containers)
-            {
-                container.ResetContainer();
-            }
-        }
     }
 
     public SkillContainer GetSkillContainer(MD.ContainerSlot containerSlot)
@@ -167,21 +150,9 @@ public partial class PlayerArsenal: Node
         newContainer.Name = containerSlot.ToString();
         newContainer.AssignedSlot = containerSlot;
         AddChild(newContainer); 
-        GD.Print(newContainer.Name); 
-    }
 
-    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void SyncSkillContainer(int id, int containerSlot)
-    {
-        GD.Print("Adding skillContainer on client for " + containerSlot);
-        SetSkillContainer(id, (MD.ContainerSlot)containerSlot);
-    }
-    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void SyncSkill(int id, int containerSlot, int slot)
-    {
-        GD.Print("Adding skill on client");
-        SetSkill(id, (MD.ContainerSlot)containerSlot, slot);
-    }
+        newContainer.InitSkills();
+    }    
     
     public Skill GetSkill(MD.ContainerSlot containerSlot, int slot)
     {
@@ -205,6 +176,17 @@ public partial class PlayerArsenal: Node
             GD.Print("Container was null... bullockes!");
         }
     }
+
+    public void TrySetContainer(int id, int slot)
+    {
+        RpcId(1, nameof(RequestContainerChange), id, slot);
+    }
+
+    public void TrySetSkill(int id, int containerSlot, int slot)
+    {
+        RpcId(1, nameof(RequestSkillChange), id, containerSlot, slot);
+    }    
+    
     #endregion
     
     #region SERVER_CALLS
@@ -228,7 +210,7 @@ public partial class PlayerArsenal: Node
                 return container.TriggerSkill(index);
             }            
             var lapsed = GameManager.Instance.GameClock - GCDStartTime;
-            var modGCD = Player.Status.GetGCDModifier(); 
+            var modGCD = BaseGcd; 
             if(lapsed < modGCD)
             {
                 return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.ON_COOLDOWN };
@@ -303,10 +285,10 @@ public partial class PlayerArsenal: Node
         {
             if(CastingSkill.TimerType == MD.SkillTimerType.GCD)
             { 
-                GCDStartTime = GCDStartTime - Player.Status.GetGCDModifier();
+                GCDStartTime = GCDStartTime - BaseGcd;
                 Rpc(nameof(SyncGCD), GCDStartTime);
             }
-            CastingSkill.InteruptCast();
+            CastingSkill.InterruptCast();
             CastingSkill = null;
             IsCasting = false;
             Rpc(nameof(SyncCasting), IsCasting, CastingStartTime, CastingTime);
@@ -319,7 +301,7 @@ public partial class PlayerArsenal: Node
     {
         if(IsChanneling && !ChannelingSkill.CanMove)
         {
-            ChannelingSkill.InteruptCast();
+            ChannelingSkill.InterruptCast();
             ChannelingSkill = null;
             IsChanneling = false;
             Rpc(nameof(SyncCasting), IsCasting, CastingStartTime, CastingTime);
@@ -330,6 +312,34 @@ public partial class PlayerArsenal: Node
        
 
     #region RPC_CALLS
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void RequestContainerChange(int id, int slot)
+    {
+        SetSkillContainer(id, (MD.ContainerSlot)slot);
+        Rpc(nameof(SyncSkillContainer), id, slot);
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void RequestSkillChange(int id, int containerSlot, int slot)
+    {
+        SetSkill(id, (MD.ContainerSlot)containerSlot, slot);
+        Rpc(nameof(SyncSkill), id, containerSlot, slot);
+    }
+    
+    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SyncSkillContainer(int id, int containerSlot)
+    {
+        GD.Print("Adding skillContainer on client for " + containerSlot);
+        SetSkillContainer(id, (MD.ContainerSlot)containerSlot);
+    }
+    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SyncSkill(int id, int containerSlot, int slot)
+    {
+        GD.Print("Adding skill on client");
+        SetSkill(id, (MD.ContainerSlot)containerSlot, slot);
+    }
+
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void SyncGCD(double time)
     {
@@ -402,7 +412,7 @@ public partial class PlayerArsenal: Node
     public bool IsArsenalOnCD()
     {
         var lapsed = GameManager.Instance.GameClock - GCDStartTime;
-        var modGCD = Player.Status.GetGCDModifier();
+        var modGCD = BaseGcd;
         if(lapsed < modGCD)
         {
             return true;
@@ -412,13 +422,14 @@ public partial class PlayerArsenal: Node
 
     public float GetArsenalGCD()
     {
-        var modGCD = Player.Status.GetGCDModifier();
+        var modGCD = BaseGcd;
         return modGCD;
     }    
 
     public float[] GetArsenalSkillWeights()
     {
         float[] weights = new float[3];
+        
         if(GetChildCount() > 0)
         {
             var containers = GetChildren()
@@ -460,11 +471,15 @@ public partial class PlayerArsenal: Node
             return weights;
         }
     } 
-    public float GetWeightedTotal(float[] weights)
+    public float[] GetWeightedTotal(float[] weights)
     {
-        var indexValue = weights.ToList().IndexOf(weights.Max()) * 12.0f;
-        var indexWeight = weights.Max();
-        return indexValue + Mathf.Remap( indexWeight, 3f, 12f, 12f, 3f);
+        var list = weights.ToList();
+        float[] totals = new float[3];
+        foreach(float value in list)
+        {
+            totals[list.IndexOf(value)] = Mathf.Remap(value, 0, 12, 0.1f, 0.9f); 
+        }
+        return totals;
     }
     #endregion
 }

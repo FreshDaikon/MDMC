@@ -1,161 +1,234 @@
-using System.Collections.Generic;
 using System.Linq;
 using Godot;
-using Daikon.Helpers;
-using System.Runtime.Intrinsics.Arm;
 
 namespace Daikon.Game;
 
 public partial class EntityStatus : Node
 {
-    //----------------------------------------------------------
-    #region SPEED
-    [Export]
-    public float BaseSpeed = 5f;
-    #endregion
-    //----------------------------------------------------------
-    #region HEALTH
-    public int CurrentHealth = 10000;
-    [Export]
-    public int MaxHealth = 10000;
-    #endregion
-    #region SHIELD
-    public int CurrentShield = 10;
-    #endregion
-    //----------------------------------------------------------
-    #region MITIGATION
-    [Export]
-    public float BaseMitigation = 0f;
-    [Export]
-    public float CurrentMitigation = 0f;
-    #endregion
-    //----------------------------------------------------------
-    #region  DAMAGE
-    [Export]
-    public float DamageMultiplier = 1.0f;
-    #endregion
+    //Base Values to use before mods:
+    [Export] private int _baseSpeed = 5;
+    //Getters for max variables:
+    [Export] public int MaxHealth { get; private set; } = 10000;
+    //Getters for Current Stats:
+    public int CurrentHealth { get; private set; } = 0;
+    public int CurrentShield { get; private set; } = 0;
+    public int CurrentSpeed { get; private set; } = 0;
 
-    private RandomNumberGenerator random;
-    private Entity entity;
-    private EntityModifiers modifiers;
+    
+    private int _lastHealth;
+    private int _lastShield;
+    private int _lastSpeed;
+    private StatusState _lastState;
 
-    public bool IsKnockedOut = false;
+    //References and utility:
+    private RandomNumberGenerator _random;
+    private Entity _entity;
+    private EntityModifiers _modifiers;
+    
+    public enum StatusState
+    {
+        Alive,
+        KnockedOut,
+        Stunned,
+    }
 
+    public StatusState CurrentState { get; private set; } = StatusState.Alive;
+    
     //Signals
     [Signal]
-    public delegate void DamageTakenEventHandler(float damage, Entity entity);
+    public delegate void DamageTakenEventHandler(int damage, Entity entity);
     [Signal]
-    public delegate void HealTakenEventHandler(float heal, Entity entity);
+    public delegate void HealTakenEventHandler(int heal, Entity entity);
     [Signal]
     public delegate void KnockedOutEventHandler();
+
+    [Signal]
+    public delegate void StateChangeEventHandler(StatusState state);
 
 
     public override void _Ready()
     {
-        if(Multiplayer.IsServer())
-        {
-            random = new RandomNumberGenerator();
-            CurrentHealth = MaxHealth;
-        }
-        //Setup base values.
-        entity = GetParent<Entity>();
-        modifiers = entity.GetNode<EntityModifiers>("%EntityModifiers");
+        _entity = GetParent<Entity>();
+        //Init Values ?
+        CurrentHealth = MaxHealth;
+        CurrentSpeed = _baseSpeed;
+        GD.Print("Current Speed should be " + CurrentSpeed);
+        
+        _lastSpeed = CurrentSpeed;
+        _lastHealth = CurrentHealth;
+        _lastShield = CurrentShield;
+        _lastState = CurrentState;
+        
+        _modifiers = _entity.GetNode<EntityModifiers>("%EntityModifiers");
+
+        if (!Multiplayer.IsServer()) return;
+        _random = new RandomNumberGenerator();
     }
 
     public override void _PhysicsProcess(double delta)
     {
-        //Dunno what to do here tbf.
-        base._PhysicsProcess(delta);
-    }
-
-    //Bah, this is only really relevant for player entities.
-    public float GetGCDModifier(float baseGCD = 1.5f)
-    {    
-        var modGCD = baseGCD;    
-        var mods = modifiers.GetModifiers();
-        if(mods != null)
-        {
-            //modGCD *= (float)mods.Where(m => m.Types.Contains(Modifier.ModTypes.GCDSpeed)).ToList().Sum(x => x.ModifierValue);
-        }
-        return modGCD;
-    }
-    
-    public int InflictDamage(int amount, Entity entity)
-    {
-        if(IsKnockedOut || CurrentHealth == 0)
-            return 0;
-        var workingValue = amount;
-        float variance = random.RandfRange(1.0f, 1.05f);
-        workingValue = (int)(workingValue * variance);
-
-        var weakness = 1f;
-        // Damage Recieved will be a additive weakness modifier. (add up all the mods, and multiply the total by the damage)
-        // For example : 2 mods, 1.2 and 1.4 = 1.6 * damage. (60% more damage taken)
-        var mods = modifiers.GetModifiers();
-        if(mods != null)
-        {
-            weakness += (float)mods.Where(m => 
-                m.Tags.Contains(Modifier.ModTags.Debuff) && m.Tags.Contains(Modifier.ModTags.DamageTaken))
-                .ToList()
-                .Sum(x => x.ModifierValue);
-        }
-        workingValue = (int)(workingValue * weakness);
+        if (!Multiplayer.IsServer()) return;
+        if(!GameManager.Instance.IsGameRunning()) return;
         
-        // Base mits will add up all the mods, and subtract the total from the damage.
-        // For example : 2 mods, 0.4 and 0.4 = 0.8 * damage. (20% less damage taken).
-        var baseMit = 0f;
-        if(mods != null)
-        {
-        }
-        workingValue = (int)(workingValue - workingValue * baseMit);
+        CalculateSpeed();
+        CalculateHealth();
+        CalculateShields();
 
-        // Active Mitigation will be a multiplicative modifier. (multiply all the mods together, and subtract the total from the damage)
-        // For example : 2 mods, 0.8 and 0.95 = 0.76 * damage. (24% less damage taken).
-        var activeMits = 1f;
-        if(mods != null)
-        { 
-            /**
-            baseMit += (float)mods.Where(m => 
-                m.Types.Contains(Modifier.ModTypes.Buff) && m.Types.Contains(Modifier.ModTypes.DamageTaken))
-                .ToList()
-                .Select(v => v.ModifierValue)
-                .ToList()
-                .Aggregate((x, y) => x * y); **/
-        }
-        workingValue = (int)(workingValue * activeMits);
-        if(CurrentShield > 0)
+        if (_lastState != CurrentState)
         {
-            var stored = workingValue;
-            workingValue =  Mathf.Clamp( workingValue - CurrentShield, 0, workingValue);
-            GD.Print("New working Value is " + workingValue);
-            CurrentShield = Mathf.Clamp(CurrentShield - stored, 0, CurrentShield);
+            _lastState = CurrentState;
+            Rpc(nameof(SyncState), (int)CurrentState);
+        }
+        
+        if(_lastSpeed != CurrentSpeed)
+        {
+            _lastSpeed = CurrentSpeed;
+            Rpc(nameof(SyncSpeed), CurrentSpeed);
+        }
+
+        if (_lastHealth != CurrentHealth)
+        {
+            _lastHealth = CurrentHealth;
+            Rpc(nameof(SyncHealth), CurrentHealth);
+        }
+
+        if (_lastShield != CurrentShield)
+        {
+            _lastShield = CurrentShield;
             Rpc(nameof(SyncShields), CurrentShield);
         }
+
+    }
+
+    private void CalculateSpeed()
+    {
+        CurrentSpeed = _baseSpeed;
+        var mods = _modifiers.GetModifiers();
+        if (mods != null)
+        {
+            var speed = mods.Where(m => m.Tags.Contains(Modifier.ModTags.MoveSpeed));
+            if (speed.Any())
+            {
+                CurrentSpeed = _baseSpeed + (int)speed.Sum(s => s.ModifierValue);
+            }
+            
+        }
+    }
+
+    private void CalculateHealth()
+    {
+        if (CurrentHealth <= 0 && CurrentState != StatusState.KnockedOut)
+        {
+            EmitSignal(SignalName.KnockedOut);
+            CurrentState = StatusState.KnockedOut;
+            return;
+        }
+        // Figure out Regen:
+        var mods = _modifiers.GetModifiers();
+        if (mods != null)
+        {
+            var regen = mods.Where(m => m.Tags.Contains(Modifier.ModTags.Regen));
+            if (regen.Any())
+            {
+                CurrentHealth += (int)regen.Sum(v => v.ModifierValue);
+            }
+        }
+        
+        CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
+    }
+
+    private void CalculateShields()
+    {
+        var mods = _modifiers.GetModifiers();
+        if (mods == null)
+        {
+            CurrentShield = 0;
+            return;
+        }
+        var shields = mods.Where(m => m.Tags.Contains(Modifier.ModTags.Shield));
+        if (!shields.Any())
+            CurrentShield = 0;
+        CurrentShield = (int)shields.Sum(s => s.RemainingValue);
+    }
+
+    public int InflictDamage(int amount, Entity entity)
+    {
+        if (CurrentState == StatusState.KnockedOut)
+            return 0;
+        
+        // A little bit of boiler plate:
+        var workingValue = amount;
+        var variance = _random.RandfRange(1.0f, 1.05f);
+        //Apply a bit of variance:
+        workingValue = (int)(workingValue * variance);
+        // Time to get all the mods:
+        var mods = _modifiers.GetModifiers();
+
+        if (mods != null)
+        {
+            // First Increase the value by damage taken: (Note : we might want to move mits before weakness to make it more scary.)
+            var weaknesses = mods.Where(m => m.Tags.Contains(Modifier.ModTags.DamageTaken));
+            if(weaknesses.Any())
+            {
+                // Expected values : 0.1 + 0.4 + 0.4 = 1 + 0.9 = 1.9 = value * 1.9 for example.
+                var multiplier = weaknesses.Sum(w => w.ModifierValue);
+                workingValue = (int)(workingValue * (1 + multiplier));
+            }
+            // Now that the value is greater - we can reduce it by mitigation:
+            var mits = mods.Where(m => m.Tags.Contains(Modifier.ModTags.Mitigation));
+            if (mits.Any())
+            {
+                // Expected values : 0.8 * 0.8 * 0.9 = 0.576 = value * 0.576 for example.
+                var factor = mits.Aggregate(1d, (current, mit) => current * mit.ModifierValue);
+                workingValue = (int)(workingValue * Mathf.Clamp(factor, 0.4d, 1d)); // Maximum is 60%
+            }
+            // Now then we can reduce the remaining damage by shields.
+            var shields = mods.Where(m => m.Tags.Contains(Modifier.ModTags.Shield));
+            if (shields.Any())
+            {
+                var remainder = workingValue;
+                foreach (var shield in shields)
+                {
+                    var stored = remainder;
+                    remainder = Mathf.Clamp(remainder - (int)shield.RemainingValue, 0, remainder);
+              
+                    var newValue = shield.RemainingValue - stored;
+                    if (newValue < 0)
+                    {
+                        _modifiers.RemoveModifier(shield.Data.Id);
+                    }
+                    else
+                    {
+                        shield.RemainingValue = newValue;
+                    }
+                    // Check if damage was fully absorbed:
+                    if (remainder == 0)
+                        break;
+                }
+                workingValue = remainder;
+            }
+        }
+
+        // Now that we have modified the incoming damage in all kinds of interesting ways, simply subtract it:
         CurrentHealth -= workingValue;
+        
+        // Check for knocked out state:
         if(CurrentHealth <= 0)
         {
             CurrentHealth = 0;
-            IsKnockedOut = true;
-            EmitSignal(SignalName.KnockedOut);
-            Rpc(nameof(SyncHealth), CurrentHealth);
             return 0;            
         }
-        GD.Print("I took :" + workingValue + " Damage!");
-        EmitSignal(SignalName.DamageTaken, (float)workingValue);
-        Rpc(nameof(SyncHealth), CurrentHealth);
+        EmitSignal(SignalName.DamageTaken, workingValue);
         return workingValue;
     }
-
+    
     public int InflictHeal(int amount, Entity entity)
     {
-        if(IsKnockedOut)
-            return 0;
-
-        float variance = random.RandfRange(1f, 1.1f);
+        var variance = _random.RandfRange(1f, 1.1f);
         amount = (int)(amount * variance);
 
         var healMods = 1f;
-        var mods = modifiers.GetModifiers();
+        var mods = _modifiers.GetModifiers();
         if(mods != null)
         {
             healMods += (float)mods.Where(m => 
@@ -172,65 +245,37 @@ public partial class EntityStatus : Node
         }
         GD.Print("I Was Healed for :" + adjusted + " Health!");
         EmitSignal(SignalName.HealTaken, (float)adjusted);
-
-        Rpc(nameof(SyncHealth), CurrentHealth);
         return adjusted;
-    }
-
-    public int InflictShield(int amount, Entity entity)
-    {
-        CurrentShield += amount;
-        Rpc(nameof(SyncShields), CurrentShield);
-        return CurrentShield;
-    }
-   
-    public float GetCurrentSpeed()
-    {
-        var speed = BaseSpeed;
-        // Flat values expected, so just add them up.
-        // For example : 2 mods, 10 and 20 = BaseSpeed + 30 = 35.
-        // Can be negative - so get both buffs and debuffs!
-        var mods = modifiers.GetModifiers();
-        if(mods != null)
-        {
-            speed += (float)mods.Where(m => 
-                m.Tags.Contains(Modifier.ModTags.MoveSpeed))
-                .ToList()
-                .Sum(x => x.ModifierValue);
-        }
-        return speed;
-    }
-
-    public float GetDamageMultiplier()
-    {
-        var damage = DamageMultiplier;
-       // var baseDamage = 1f;
-        var mods = modifiers.GetModifiers();
-        if(mods != null)
-        {
-
-        }
-        GD.Print("Damage Multiplier is :" + damage + "!"); 
-        return damage;
     }
 
     public void Reset()
     {
         CurrentHealth = MaxHealth;
-        IsKnockedOut = false;
-        Rpc(nameof(SyncHealth), CurrentHealth);
+        CurrentState = StatusState.Alive;
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void SyncHealth(int newHealth)
     {
-        GD.Print("Health was updated to :" + newHealth);
         CurrentHealth = newHealth;
-        IsKnockedOut = CurrentHealth <= 0;
     }
+    
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void SyncShields(int newShield)
     {
         CurrentShield = newShield;
     }
+    
+    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SyncSpeed(int speed)
+    {
+        CurrentSpeed = speed;
+    }
+    
+    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SyncState(int state)
+    {
+        CurrentState = (StatusState)state;
+    }
+    
 }

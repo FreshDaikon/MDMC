@@ -32,7 +32,7 @@ public partial class AdversaryMover : Node, IEntityMover
             return;
             
         var controller = adversary.Controller;
-        var speed = adversary.Status.GetCurrentSpeed();
+        var speed = (float)adversary.Status.CurrentSpeed;
 
         _velocity.X = speed * _direction.X;
         _velocity.Y = speed * _direction.Y;

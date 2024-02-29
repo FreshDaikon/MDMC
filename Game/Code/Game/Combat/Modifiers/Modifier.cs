@@ -12,6 +12,7 @@ public partial class Modifier : Node
         Hot,
         Dot,
         Shield,
+        Regen,
         Buff,
         Debuff,
         MoveSpeed,
@@ -29,7 +30,8 @@ public partial class Modifier : Node
     public bool CanStack = false;
     public int MaxStacks = 1;
     public double ModifierValue = 0; // This is very specific per mod!
-    public List<ModTags> Tags = new List<ModTags>();
+    public double RemainingValue;
+    public List<ModTags> Tags = new();
 
     // Synced Properties:
     public int Stacks = 1;
@@ -45,6 +47,7 @@ public partial class Modifier : Node
     public EntityStatus targetStatus;
     public Entity entity;
     //Entity who applied this modifier:   
+    
     public override void _Ready()
     {
         if(!IsPermanent)

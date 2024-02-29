@@ -1,39 +1,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
-using Daikon.Helpers;
-using System;
 
 namespace Daikon.Game;
 
 public partial class Arena : Node3D
 {
     public ArenaObject Data;
-    [Export]
-    public double ArenaDuration = 7200;
-    [Export]
-    public Node3D[] PlayerStartPositions;
+    [Export] private double _arenaDuration = 7200;
+    [Export] private Node3D[] _playerStartPositions;
     //containers:
-    private Node3D EntityContainer;
     public Node3D RealizationPool;
+    private Node3D _entityContainer;
     //How Long has the arena been going in minutes:
     private double _startTime;
     private double _lapsed;
-    private ArenaState _currentState = ArenaState.Paused;
-    private Timer DefeatTimer; 
+    private Timer _defeatTimer; 
 
-    public ArenaState CurrentState
-    {
-        get {return _currentState; }
-    }
-
-    public enum ArenaState
-    {
-        Playing,
-        Paused,
-        Victory,
-        Defeat,
-    }
+    public ArenaState CurrentState { get; private set; } = ArenaState.Paused;
 
     [Signal]    
     public delegate void VictoryEventHandler();
@@ -42,14 +26,14 @@ public partial class Arena : Node3D
 
     public override void _Ready()
     {
-        EntityContainer = GetNode<Node3D>("%EntityContainer");
+        _entityContainer = GetNode<Node3D>("%EntityContainer");
         RealizationPool = GetNode<Node3D>("%RealizationPool");
         GameManager.Instance.GameStarted += StartArena;
     }
 
     public override void _Process(double delta)
     {
-        if(_currentState == ArenaState.Playing)
+        if(CurrentState == ArenaState.Playing)
         {
             if(Multiplayer.IsServer())
             {
@@ -63,31 +47,26 @@ public partial class Arena : Node3D
     private void StartArena()
     {
         _startTime = GameManager.Instance.GameClock;            
-        _currentState = ArenaState.Playing;
-        if(Multiplayer.IsServer())
+        CurrentState = ArenaState.Playing;
+        if (!Multiplayer.IsServer()) return;
+        _defeatTimer = new Timer(){
+            Autostart = false,
+            WaitTime = 5,
+            OneShot = true
+        };
+        var enemies = GetEnemyEntities();
+        if(enemies != null)
         {
-            DefeatTimer = new Timer(){
-                Autostart = false,
-                WaitTime = 5,
-                OneShot = true
-            };
-            var enemies = GetEnemyEntities();
-            if(enemies != null)
-            {
-                enemies.ForEach(e => { e.Engaged += OnAdversaryEngaged; });
-            }
-            DefeatTimer.Timeout += ResetArena;
-            AddChild(DefeatTimer);
+            enemies.ForEach(e => { e.Engaged += OnAdversaryEngaged; });
         }
+        _defeatTimer.Timeout += ResetArena;
+        AddChild(_defeatTimer);
     }
 
-    public double GetTimeLeft()
-    {
-        return Mathf.Clamp(ArenaDuration - _lapsed, 0, ArenaDuration);
-    }
+    public double GetTimeLeft() => Mathf.Clamp(_arenaDuration - _lapsed, 0, _arenaDuration);
 
-    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]  
-    public void SyncStartTime(double time)
+    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SyncStartTime(double time)
     {
         _startTime = time;
     }
@@ -95,56 +74,48 @@ public partial class Arena : Node3D
     private void OnAdversaryEngaged()
     {
         var current = CombatManager.Instance.CurrentState;
-        if(current == CombatManager.CombatState.None || current == CombatManager.CombatState.Stopped)
+        if(current is CombatManager.CombatState.None or CombatManager.CombatState.Stopped)
         {            
             CombatManager.Instance.StartCombat();            
         }
         var enemies = GetEnemyEntities();
         var players = GetPlayers();
         enemies?.ForEach( a => {
-                if(a.CurrentState == AdversaryEntity.AdversaryState.Idle)
+                if(a.CurrentState == AdversaryState.Idle)
                 {
                     a.Engage(players?[0]);
                 }
-            });
+        });
     }
 
     private void CheckForWipe()
     {
         var players = GetPlayers();
-        if(players != null)
-        {
-            var knocked = players.Where(p => p.Status.IsKnockedOut).ToList();
-            if(knocked.Count == players.Count)
-            {
-                GD.Print("All Players are knocked! Init Reset!");                
-                _currentState = ArenaState.Defeat;
-                CombatManager.Instance.ResetCombat();
-                EmitSignal(SignalName.Defeat);
-                DefeatTimer.Start();
-            }
-        }
+        
+        if (players == null) return;
+        
+        var knocked = players.Where(p => p.Status.CurrentState == EntityStatus.StatusState.KnockedOut).ToList();
+        
+        if (knocked.Count != players.Count) return;
+        //:
+        GD.Print("All Players are knocked! Init Reset!");                
+        CurrentState = ArenaState.Defeat;
+        CombatManager.Instance.ResetCombat();
+        EmitSignal(SignalName.Defeat);
+        _defeatTimer.Start();
     }
 
     private void CheckForVictory()
     {
         var enemies = GetEnemyEntities();
-        if(enemies != null)
-        {
-            var defeated = enemies.Where(e => e.CurrentState == AdversaryEntity.AdversaryState.Dead).ToList();
-            if(defeated.Count == enemies.Count)
-            {
-                foreach(var e in enemies)
-                {
-                    e.QueueFree();
-                }                
-                EmitSignal(SignalName.Victory);
-                _currentState = ArenaState.Victory;
-            }
-        }
+        if (enemies == null) return;
+        var defeated = enemies.Where(e => e.CurrentState == AdversaryState.Dead).ToList();
+        if (defeated.Count != enemies.Count) return;
+        foreach(var e in enemies) e.QueueFree();                
+        EmitSignal(SignalName.Victory);
+        CurrentState = ArenaState.Victory;
     }
 
-    // Should only be called on wipes.
     private void ResetArena()
     {        
         var players = GetPlayers();
@@ -152,7 +123,7 @@ public partial class Arena : Node3D
         {
             foreach(var p in players)
             {
-                p.Controller.Teleport(PlayerStartPositions[Mathf.Wrap(players.IndexOf(p), 0, PlayerStartPositions.Length)].Position);
+                p.Controller.Teleport(_playerStartPositions[Mathf.Wrap(players.IndexOf(p), 0, _playerStartPositions.Length)].Position);
                 p.Status.Reset();
             }
         }
@@ -164,81 +135,72 @@ public partial class Arena : Node3D
                 a.Reset();
             }
         }
-        _currentState = ArenaState.Playing;
+        CurrentState = ArenaState.Playing;
     }
 
     public void AddPlayerEntity(PlayerEntity player)
     {
-        if(Multiplayer.IsServer())
-        {
-            GD.Print("Adding Player!");
-            var players = GetPlayers();
-            int count = 0;
-            if(players != null)
-            {
-                count = players.Count;
-            }
-            EntityContainer.AddChild(player);
-            player.Controller.Teleport(PlayerStartPositions[Mathf.Wrap(count, 0, PlayerStartPositions.Length)].GlobalPosition);
-        }
+        if (!Multiplayer.IsServer()) return;
+        
+        var players = GetPlayers();
+        var count = players == null ? 0 : player.GetChildCount();
+        _entityContainer.AddChild(player);
+        player.Controller.Teleport(_playerStartPositions[Mathf.Wrap(count, 0, _playerStartPositions.Length)].GlobalPosition);
     }
 
     public void RemovePlayerEntity(int id)
     {
-        if(Multiplayer.IsServer())
-        {
-            if(EntityContainer.GetChildCount() == 0)
-                return;
-            var player = EntityContainer.GetChildren().Where(p => p is PlayerEntity).Cast<PlayerEntity>().ToList().Find(e => e.Name == id.ToString());        
-            EntityContainer.RemoveChild(player);
-        }
+        if (!Multiplayer.IsServer()) return;
+        
+        if(_entityContainer.GetChildCount() == 0)
+            return;
+        var player = _entityContainer.GetChildren().Where(p => p is PlayerEntity).Cast<PlayerEntity>().ToList()
+            .Find(e => e.Name == id.ToString());        
+        _entityContainer.RemoveChild(player);
     }
 
-    public Entity GetEntity(int id)
-    {
-        if(EntityContainer.GetChildCount() == 0)
-            return null;
-        return EntityContainer.GetChildren().Where(x => x is Entity).Cast<Entity>().ToList().Find(e => e.Name == id.ToString());
-    }
+    public Entity GetEntity(int id) => _entityContainer.GetChildCount() == 0
+        ? null
+        : _entityContainer.GetChildren().Where(x => x is Entity).Cast<Entity>().ToList()
+            .Find(e => e.Name == id.ToString());
+
     public int GetEntityIndex(int id)
     {
-        if(EntityContainer.GetChildCount() == 0)
+        if(_entityContainer.GetChildCount() == 0)
             return -1;
-        return EntityContainer.GetNode(id.ToString()).GetIndex();
+        return _entityContainer.GetNode(id.ToString()).GetIndex();
     }
     public int GetEnemyIndex(int id)
     {
-        GD.Print("Id to find: " + id);
-        if(EntityContainer.GetChildCount() == 0)
+        if(_entityContainer.GetChildCount() == 0)
             return -1;
-        var enemies = EntityContainer.GetChildren()
+        var enemies = _entityContainer.GetChildren()
             .Where(child => child is AdversaryEntity)
             .Cast<AdversaryEntity>()
             .ToList();
         if(enemies.Count == 0)
             return -1;
-        GD.Print("Index : " + enemies.IndexOf(enemies.Find(p => p.Name == id.ToString())));
-        return enemies.IndexOf(enemies.Find(p => p.Name == id.ToString()));        
+        return enemies.IndexOf(enemies.Find(p => p.Name == id.ToString()));
     }
+
     public int GetFriendlyIndex(int id)
     {
-        if(EntityContainer.GetChildCount() == 0)
+        if(_entityContainer.GetChildCount() == 0)
             return -1;
-        var friends = EntityContainer.GetChildren()
+        var friends = _entityContainer.GetChildren()
             .Where(child => child is Entity)
             .Cast<Entity>()
             .Where(e => e.Team == Entity.TeamType.Player)
             .ToList();
         if(friends.Count == 0)
             return -1;
-        GD.Print("Index : " + friends.IndexOf(friends.Find(p => p.Name == id.ToString())));
         return friends.IndexOf(friends.Find(p => p.Name == id.ToString())); 
     }
     public List<Entity> GetEntities()
     {
-        if(EntityContainer.GetChildCount() == 0)
+        if(_entityContainer.GetChildCount() == 0)
             return null;
-        var entities = EntityContainer.GetChildren()
+        var entities = _entityContainer.GetChildren()
             .Where(child => child is Entity)
             .Cast<Entity>()
             .ToList();        
@@ -246,39 +208,41 @@ public partial class Arena : Node3D
     }
     public List<PlayerEntity> GetPlayers()
     {
-        if(EntityContainer.GetChildren().Count == 0)
+        if(_entityContainer.GetChildren().Count == 0)
             return null;
-        var players = EntityContainer.GetChildren()
+        var players = _entityContainer.GetChildren()
             .Where(child => child is PlayerEntity)
             .Cast<PlayerEntity>()
             .ToList();     
-        if(players.Count == 0)
-            return null;   
-        return players;
+        return players.Count == 0 ? null : players;
     }
     public List<Entity> GetFriendlyEntities()
     {
-        if(EntityContainer.GetChildren().Count == 0)
+        if(_entityContainer.GetChildren().Count == 0)
             return null;
-        var entities = EntityContainer.GetChildren()
+        var entities = _entityContainer.GetChildren()
             .Where(child => child is Entity)
             .Cast<Entity>()
             .Where(e => e.Team == Entity.TeamType.Player)
             .ToList();        
-        if(entities.Count == 0)
-            return null;
-        return entities;
+        return entities.Count == 0 ? null : entities;
     }
     public List<AdversaryEntity> GetEnemyEntities()
     {
-        if(EntityContainer.GetChildren().Count == 0)
+        if(_entityContainer.GetChildren().Count == 0)
             return null;
-        var entities = EntityContainer.GetChildren()
+        var entities = _entityContainer.GetChildren()
             .Where(child => child is AdversaryEntity)
             .Cast<AdversaryEntity>()
             .ToList();        
-        if(entities.Count == 0)
-            return null;
-        return entities;
+        return entities.Count == 0 ? null : entities;
     }
+}
+
+public enum ArenaState
+{
+    Playing,
+    Paused,
+    Victory,
+    Defeat,
 }

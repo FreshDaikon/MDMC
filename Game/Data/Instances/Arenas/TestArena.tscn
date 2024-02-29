@@ -66,16 +66,18 @@ top_radius = 20.0
 bottom_radius = 20.0
 height = 1.0
 
-[node name="TestArena" type="Node3D" node_paths=PackedStringArray("PlayerStartPositions")]
+[node name="TestArena" type="Node3D" node_paths=PackedStringArray("_playerStartPositions")]
 script = ExtResource("1_1mb5o")
-PlayerStartPositions = [NodePath("Arena/PlayerSpawns/1"), NodePath("Arena/PlayerSpawns/4"), NodePath("Arena/PlayerSpawns/5"), NodePath("Arena/PlayerSpawns/2"), NodePath("Arena/PlayerSpawns/3")]
+_playerStartPositions = [NodePath("Arena/PlayerSpawns/1"), NodePath("Arena/PlayerSpawns/4"), NodePath("Arena/PlayerSpawns/5"), NodePath("Arena/PlayerSpawns/2"), NodePath("Arena/PlayerSpawns/3")]
 
 [node name="Managers" type="Node" parent="."]
 
 [node name="CombatManager" type="Node" parent="Managers"]
+unique_name_in_owner = true
 script = ExtResource("3_xg5fo")
 
 [node name="GameManager" type="Node" parent="Managers"]
+unique_name_in_owner = true
 script = ExtResource("4_3qdsl")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -89,21 +91,27 @@ spawn_limit = 8
 [node name="EntityContainer" type="Node3D" parent="."]
 unique_name_in_owner = true
 
-[node name="99" parent="EntityContainer" node_paths=PackedStringArray("StartPosition") instance=ExtResource("5_atyi8")]
+[node name="99" parent="EntityContainer" node_paths=PackedStringArray("_startPosition") instance=ExtResource("5_atyi8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.366731, -15)
-StartPosition = NodePath("Start")
+_startPosition = NodePath("Start")
+TargetId = 99
+EntityName = "Best Boss Middle"
 
 [node name="Start" type="Node3D" parent="EntityContainer/99"]
 
-[node name="100" parent="EntityContainer" node_paths=PackedStringArray("StartPosition") instance=ExtResource("5_atyi8")]
+[node name="100" parent="EntityContainer" node_paths=PackedStringArray("_startPosition") instance=ExtResource("5_atyi8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.93801, 0.366731, -15)
-StartPosition = NodePath("Start")
+_startPosition = NodePath("Start")
+TargetId = 100
+EntityName = "Best Boss Left"
 
 [node name="Start" type="Node3D" parent="EntityContainer/100"]
 
-[node name="101" parent="EntityContainer" node_paths=PackedStringArray("StartPosition") instance=ExtResource("5_atyi8")]
+[node name="101" parent="EntityContainer" node_paths=PackedStringArray("_startPosition") instance=ExtResource("5_atyi8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.05757, 0.366731, -15)
-StartPosition = NodePath("Start")
+_startPosition = NodePath("Start")
+TargetId = 101
+EntityName = "Best Boss Right"
 
 [node name="Start" type="Node3D" parent="EntityContainer/101"]
 
