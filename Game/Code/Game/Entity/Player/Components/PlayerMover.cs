@@ -52,7 +52,6 @@ public partial class PlayerMover : Node, IEntityMover
             _jumpGravity = _velocity.Y / apexDuration;
             if(player.Arsenal.IsCasting || player.Arsenal.IsChanneling)
             {
-                player.Arsenal.TryInteruptCast();
                 if(player.Arsenal.ChannelingSkill != null) player.Arsenal.TryInterruptChanneling();
             }  
 		}
@@ -71,7 +70,6 @@ public partial class PlayerMover : Node, IEntityMover
         _direction = controller.IsOnFloor() ? input.Direction : _direction;
         if(_direction.Length() > 0f && (player.Arsenal.IsCasting || player.Arsenal.IsChanneling))
         {
-           player.Arsenal.TryInteruptCast();
            if(player.Arsenal.ChannelingSkill != null) player.Arsenal.TryInterruptChanneling();
         }
         controller.Velocity = _velocity; //controller.Velocity.Lerp(velocity, delta * acceleration);        

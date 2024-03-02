@@ -125,7 +125,7 @@ public partial class PlayerInput : Node
     private void HandleHotbars()
     {
         //Setup Triggers:
-        if(Input.IsActionJustPressed("Hotbar1"))
+        if(Input.IsActionJustReleased("Hotbar1"))
         {
             if(Input.IsKeyPressed(Key.Shift))
             {
@@ -143,7 +143,7 @@ public partial class PlayerInput : Node
                 AddBufferMessage((int)MD.ContainerSlot.Main, 0);
             }
         }
-        if(Input.IsActionJustPressed("Hotbar2"))
+        if(Input.IsActionJustReleased("Hotbar2"))
         {
             if(Input.IsKeyPressed(Key.Shift))
             {
@@ -161,7 +161,7 @@ public partial class PlayerInput : Node
                 AddBufferMessage((int)MD.ContainerSlot.Main, 1);
             }
         }
-        if(Input.IsActionJustPressed("Hotbar3"))
+        if(Input.IsActionJustReleased("Hotbar3"))
         {
             if(Input.IsKeyPressed(Key.Shift))
             {
@@ -179,7 +179,7 @@ public partial class PlayerInput : Node
                 AddBufferMessage((int)MD.ContainerSlot.Main, 2);
             }
         }
-        if(Input.IsActionJustPressed("Hotbar4"))
+        if(Input.IsActionJustReleased("Hotbar4"))
         {
             if(Input.IsKeyPressed(Key.Shift))
             {
@@ -205,22 +205,22 @@ public partial class PlayerInput : Node
     private void HandleSkillActions(MD.ContainerSlot containerSlot)
     {
         //Setup Triggers:
-        if(Input.IsActionPressed("ActionButton1"))
+        if(Input.IsActionJustReleased("ActionButton1"))
         {
             EmitSignal(SignalName.ActionButtonPressed, (int)containerSlot, 0);
             AddBufferMessage((int)containerSlot, 0);
         }
-        if(Input.IsActionPressed("ActionButton2"))
+        if(Input.IsActionJustReleased("ActionButton2"))
         {
             EmitSignal(SignalName.ActionButtonPressed, (int)containerSlot, 1);
             AddBufferMessage((int)containerSlot, 1);
         }
-        if(Input.IsActionPressed("ActionButton3"))
+        if(Input.IsActionJustReleased("ActionButton3"))
         {
             EmitSignal(SignalName.ActionButtonPressed, (int)containerSlot, 2);
             AddBufferMessage((int)containerSlot, 2); 
         }
-        if(Input.IsActionPressed("ActionButton4"))
+        if(Input.IsActionJustReleased("ActionButton4"))
         {
             EmitSignal(SignalName.ActionButtonPressed, (int)containerSlot, 3);
             AddBufferMessage((int)containerSlot, 3);
@@ -298,13 +298,14 @@ public partial class PlayerInput : Node
             _skillBuffer.Remove(buffered.Key);
         }
         // Now then:
-        foreach (var skill in _skillBuffer.ToList().Where(skill => player.Arsenal.CanCast((MD.ContainerSlot)skill.Key.container, skill.Key.slot).SUCCESS))
+        foreach (var skill in _skillBuffer.ToList())
         {
+            if (!player.Arsenal.CanCast((MD.ContainerSlot)skill.Key.container, skill.Key.slot).SUCCESS) continue;
             RpcId(1, nameof(TryTriggerSkill), skill.Key.container, skill.Key.slot);
-            _skillBuffer.Remove(skill.Key);
+            _skillBuffer.Clear();
+            break;
         }
     }
-    
     
     //RPC Calls: 
     [Rpc(CallLocal = true)]

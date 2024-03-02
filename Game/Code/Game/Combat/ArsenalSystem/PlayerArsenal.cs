@@ -362,7 +362,33 @@ public partial class PlayerArsenal: Node
 
     #region Utility
     // Various utility functions for both Server And Client:
-    public SkillResult CanCast(MD.ContainerSlot containerSlot, int index)
+
+    public void LocalStart(MD.ContainerSlot containerSlot, int slot)
+    {
+        var container = GetSkillContainer(containerSlot);
+        var skill = container.GetSkill(slot);
+
+        if (skill.TimerType == MD.SkillTimerType.GCD)
+        {
+            GCDStartTime = GameManager.Instance.GameClock - GCDStartTime;
+        }
+        if (skill.Cooldown > 0)
+        {
+            skill.StartTime = GameManager.Instance.GameClock - GCDStartTime;
+        }
+
+        if (skill.ActionType == MD.SkillActionType.CAST)
+        {
+            IsCasting = true;
+        }
+
+        if (skill.ActionType == MD.SkillActionType.CHANNEL)
+        {
+            IsChanneling = true;
+        }
+    }
+    
+    public SkillResult CanCast(MD.ContainerSlot containerSlot, int slot)
     {
         var result = new SkillResult() { SUCCESS = false, result= MD.ActionResult.ERROR };
         if(IsCasting)
@@ -387,7 +413,7 @@ public partial class PlayerArsenal: Node
             result.result = MD.ActionResult.ERROR;
             return result;
         }
-        var skill = container.GetSkill(index);
+        var skill = container.GetSkill(slot);
         if(skill == null)
         {
             result.result = MD.ActionResult.ERROR;
