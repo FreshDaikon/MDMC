@@ -9,12 +9,8 @@ public partial class DataObject : Resource
     [ExportGroup("Data Object Properties")]
     [Export]
     private DataID ID;
-    public int Id
-    {
-        get { return ID.Id; }
-    }
-    [Export]
-    public PackedScene Scene;
+    public int Id => ID.Id;
+
     [ExportGroup("UI Properties")]
     [Export]
     public string Name = "Some Object.";

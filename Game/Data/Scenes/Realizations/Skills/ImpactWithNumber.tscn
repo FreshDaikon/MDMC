@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://tu8deoill0dx"]
 
-[ext_resource type="Script" path="res://Code/Game/Realization/Realizations/DamageNumberRealization.cs" id="1_4a7ro"]
+[ext_resource type="Script" path="res://Code/Game/Realization/Realizations/General/ChaseTargetRealization.cs" id="1_4a7ro"]
 
 [sub_resource type="Animation" id="Animation_8aq24"]
 resource_name = "End"

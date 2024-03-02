@@ -4,9 +4,10 @@ using Daikon.Game;
 
 public partial class UISkillButton : Control
 {
-	public SkillObject AssignedSkill;
+	public SkillData AssignedSkill;
 
 	private TextureButton _button;
+	
 	
 	[Signal]
 	public delegate void SkillPressedEventHandler(int id);

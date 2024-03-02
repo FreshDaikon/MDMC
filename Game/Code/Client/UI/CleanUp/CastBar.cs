@@ -33,11 +33,7 @@ public partial class CastBar : Control
 		{
 			animationPlayer.Play("Casting");
 		}
-		if(WeightedValue == null)
-		{
-			WeightedValue = localPlayer.Arsenal.GetWeightedTotal(localPlayer.Arsenal.GetArsenalSkillWeights());
-		}
-		CastBarRect.Color = MD.GetPlayerColor(WeightedValue);
+		
 		if(localPlayer.Arsenal.IsCasting)
 		{
 			Visible = true;

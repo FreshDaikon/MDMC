@@ -44,20 +44,7 @@ public partial class HUD_ComboSlot : Control
 			for(int i = 0; i < container.SkillSlots.Length; i++)
 			{
 				SkillSlotData current = container.SkillSlots[i];
-				if(current.ComboSlotIndex == SlotIndex)
-				{
-					Visible = current.IsComboSlot;
-					ComboSlotLabel.Text = (i+1).ToString();
-					if(container.NextComboSlot == i)
-					{
-						ComboGlowRect.Visible = true;
-					}
-					else
-					{
-						ComboGlowRect.Visible = false;
-					}
-					break;
-				}
+				
 			}
 		}
 	}

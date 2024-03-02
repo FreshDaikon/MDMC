@@ -1,9 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://c7cpyo2qxinvj"]
-
-[ext_resource type="Script" path="res://Code/Game/Combat/ArsenalSystem/SkillContainer.cs" id="1_h1d6d"]
-
-[node name="BasicContainer" type="Node"]
-script = ExtResource("1_h1d6d")
-
-[node name="Skills" type="Node" parent="."]
-unique_name_in_owner = true

@@ -29,15 +29,11 @@ public partial class ChannelBar : Control
 		if(localPlayer ==  null)
 			return;
 
-		if(WeightedValue == null)
-		{
-			WeightedValue = localPlayer.Arsenal.GetWeightedTotal(localPlayer.Arsenal.GetArsenalSkillWeights());
-		}			
+	
 		if(!animationPlayer.IsPlaying())
 		{
 			animationPlayer.Play("Channeling");
 		}
-		ChannelBarRect.Color = MD.GetPlayerColor(WeightedValue);
 		if(localPlayer.Arsenal.IsChanneling)
 		{
 			Visible = true;

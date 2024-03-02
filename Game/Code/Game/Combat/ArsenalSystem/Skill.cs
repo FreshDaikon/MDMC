@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Daikon.Game.EffectRules;
 using Godot;
@@ -21,35 +22,29 @@ public partial class Skill : Node
     public float ChannelTime = 0f;
     public float TickRate = 1f;
     public float ThreatMultiplier = 1f;
-    // Maintinece:
+    
     public MD.ContainerSlot AssignedContainerSlot = MD.ContainerSlot.Main;
     public int AssignedSlot = -1;
-    // Realizations 
-    public RealizationObject RealizeOnCast;
-    public RealizationObject RealizeOnFinish;    
-    public RealizationObject RealizeOnSkill;
     
     //Test :
     public EffectRuleData[] Rules;
-    
-    public List<Effect> Effects = new();
+    public List<EffectData> Effects = new();
 
     //Class Internals:
-    public SkillObject Data;
-    public Realization CurrentRealization;
+    public SkillData Data;
     public MD.SkillType SkillType;
     public PlayerEntity Player;
     public double StartTime;
 
     // Internal Time Keeping.
-    private bool isCasting;
-    private double startCastTime;
-    private bool isChanneling;
-    private double startChannelTime;
+    private bool _isCasting;
+    private double _startCastTime;
+    private bool _isChanneling;
+    private double _startChannelTime;
     //Time Keeping continued:
-    private int lastLapse = 0;
-    private int ticks = 0;
-
+    private int _lastLapse = 0;
+    private int _ticks = 0;
+   
     public void InitSkill()
     {
         if(Cooldown > 0f)
@@ -59,9 +54,9 @@ public partial class Skill : Node
     }
     public void Reset()
     {
-        isCasting = false;
-        isChanneling = false;
-        lastLapse = 0;
+        _isCasting = false;
+        _isChanneling = false;
+        _lastLapse = 0;
         StartTime = GameManager.Instance.GameClock - Cooldown;
         Rpc(nameof(SyncCooldown), StartTime);
     }
@@ -74,87 +69,83 @@ public partial class Skill : Node
         {
             return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.ON_COOLDOWN };
         }
-        if(ActionType == MD.SkillActionType.CAST)
-        {            
-            return StartCast();
-        }
-        if(ActionType == MD.SkillActionType.CHANNEL)
+        switch (ActionType)
         {
-            return StartChannel();
+            case MD.SkillActionType.CAST:
+                return StartCast();
+            case MD.SkillActionType.CHANNEL:
+                return StartChannel();
+            case MD.SkillActionType.INSTANT:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
+
         var check = CheckSkill();
         if(!check.SUCCESS)
         {
             return check;
         }
+        
         if(Cooldown > 0f)
         {
             StartTime = GameManager.Instance.GameClock;
             Rpc(nameof(SyncCooldown), StartTime);
         }
-        Rpc(nameof(RealizeFinished));
         return TriggerResult();        
     }
 
     public SkillResult StartCast()
     {
         var check = CheckSkill();
-        if(check.SUCCESS)
-        {
-            GD.Print("Start Casting!");
-            Rpc(nameof(RealizeCast));
-            Player.Arsenal.StartCasting(this);
-            startCastTime = GameManager.Instance.GameClock;
-            isCasting = true;
-            return new SkillResult(){SUCCESS = true, result = MD.ActionResult.CAST };
-        }
-        return check;        
+        if (!check.SUCCESS) return check;
+        
+        GD.Print("Start Casting!");
+        Player.Arsenal.StartCasting(this);
+        _startCastTime = GameManager.Instance.GameClock;
+        _isCasting = true;
+        return new SkillResult(){SUCCESS = true, result = MD.ActionResult.CAST };
     }
     
     public SkillResult StartChannel()
     {
         var check = CheckSkill();
-        if(check.SUCCESS)
-        {
-            Rpc(nameof(RealizeCast));
-            Player.Arsenal.TryInteruptChanneling();
-            Player.Arsenal.StartChanneling(this);
-            ticks = 0;
-            lastLapse = 0;
-            startChannelTime = GameManager.Instance.GameClock;
-            isChanneling = true;
-            return new SkillResult(){ result = MD.ActionResult.CAST };            
-        }
-        return check;        
+        if (!check.SUCCESS) return check;
+        
+        if(Player.Arsenal.ChannelingSkill != null) Player.Arsenal.TryInterruptChanneling();
+        
+        Player.Arsenal.StartChanneling(this);
+        _ticks = 0;
+        _lastLapse = 0;
+        _startChannelTime = GameManager.Instance.GameClock;
+        _isChanneling = true;
+        return new SkillResult(){ result = MD.ActionResult.CAST };
     }
     
     public void InterruptCast()
     {
-        if (!isCasting) return;
-        Rpc(nameof(CancelRealization));
-        isCasting = false;        
+        if (!_isCasting) return;
+        _isCasting = false;        
     }
   
-    public void InteruptChannel()
+    public void InterruptChannel()
     {
-        if (!isChanneling) return;
-        Rpc(nameof(CancelRealization));
-        isChanneling = false;
-        ticks = 0;
-        lastLapse = 0;
+        if (!_isChanneling) return;
+        _isChanneling = false;
+        _ticks = 0;
+        _lastLapse = 0;
     }    
     
     public override void _PhysicsProcess(double delta)
     {
         if(!Multiplayer.IsServer())
             return;
-        if(isCasting)
+        if(_isCasting)
         {
-            double lapsed = GameManager.Instance.GameClock - startCastTime;
+            var lapsed = GameManager.Instance.GameClock - _startCastTime;
             if(lapsed > CastTime)
             {
-                Rpc(nameof(RealizeFinished));
-                isCasting = false;
+                _isCasting = false;
                 if(Cooldown > 0f)
                 {
                     StartTime = GameManager.Instance.GameClock;
@@ -164,14 +155,14 @@ public partial class Skill : Node
                 Player.Arsenal.FinishCasting(Result);
             }
         }
-        if(isChanneling)
+        if(_isChanneling)
         {
-            double lapsed = GameManager.Instance.GameClock - startChannelTime;
-            double scaled = lapsed * TickRate;
-            if((int)scaled > lastLapse)
+            var lapsed = GameManager.Instance.GameClock - _startChannelTime;
+            var scaled = lapsed * TickRate;
+            if((int)scaled > _lastLapse)
             {
-                ticks += 1;
-                lastLapse = (int)scaled;        
+                _ticks += 1;
+                _lastLapse = (int)scaled;        
                 var Tick = TriggerResult();
                 GD.Print("Channel Skill Tick : " + Tick.result );
             }
@@ -182,10 +173,9 @@ public partial class Skill : Node
                     StartTime = GameManager.Instance.GameClock;
                     Rpc(nameof(SyncCooldown), StartTime);
                 }
-                Rpc(nameof(RealizeFinished));
-                ticks = 0;
-                lastLapse = 0;
-                isChanneling = false;
+                _ticks = 0;
+                _lastLapse = 0;
+                _isChanneling = false;
                 Player.Arsenal.FinishChanneling(new SkillResult(){ SUCCESS= true, result=MD.ActionResult.CHANNELING_FINISHED });
             }
         }
@@ -193,12 +183,9 @@ public partial class Skill : Node
 
     public bool IsOnCooldown()
     {
-        if(Cooldown <= 0f)
+        if(Cooldown <= 0)
             return false;
-        else
-        {
-            return (GameManager.Instance.GameClock - StartTime) <= Cooldown;
-        }
+        return (GameManager.Instance.GameClock - StartTime) <= Cooldown;
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -206,30 +193,7 @@ public partial class Skill : Node
     {
         StartTime = time;
     }
-    
-    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void CancelRealization()
-    {
-        if(CurrentRealization != null)
-        {
-            CurrentRealization.Kill();
-        }
-    }
-
-    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void RealizeCast()
-    {
-        var realization = RealizeOnCast.GetRealization();
-        realization.Spawn(Player.Controller.GlobalPosition, 2f);
-        CurrentRealization = realization;
-    }
-    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void RealizeFinished()
-    {       
-        var realization = RealizeOnFinish.GetRealization();
-        realization.Spawn(Player.Controller.Position, 2f);
-    }    
-    
+   
     public virtual SkillResult TriggerResult()
     {
         GD.PrintErr("Please Override this implementation!");
@@ -237,13 +201,9 @@ public partial class Skill : Node
     }
 
     public virtual SkillResult CheckSkill()
-    {
+    {   
         GD.PrintErr("Please Override this implementation!");
         return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.INVALID_TARGET }; 
     }
-
-    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public virtual void SkillRealization(int value, int type)
-    {    }
     
 }

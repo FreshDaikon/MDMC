@@ -20,7 +20,4 @@
     <EmbeddedResource Remove="Code\Server\**" />
     <None Remove="Code\Server\**" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Code\Game\Combat\ArsenalSystem\EffectStack\Effects\" />
-  </ItemGroup>
 </Project>

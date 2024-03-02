@@ -1,11 +1,12 @@
 using Godot;
-using PlayFab.CloudScriptModels;
 
 namespace Daikon.Game;
 
 
 public class RuleCombo: EffectRule
 {
+    
+    
     public enum ComboDirection
     {
         Clockwise,
@@ -15,20 +16,22 @@ public class RuleCombo: EffectRule
     
     public ComboDirection Direction { get; init; }
 
+    
     public override void TryResolve()
     {
+        base.TryResolve();
         SetWasResolved(true);
     }
 
     public override bool CheckCondition()
     {
+        if (IsConditional && !PreviousOutcome)
+            return false;
+        
         var nextSlot = OriginSkill.AssignedSlot + GetOffset();
-        GD.Print("Offset Slot: " + nextSlot);
         nextSlot = Mathf.Wrap(nextSlot, 0, 4);
         var nextSkill = OriginSkill.Player.Arsenal.GetSkill(OriginSkill.AssignedContainerSlot, nextSlot);
-        GD.Print("Next Skill : " + nextSkill.AssignedSlot);
-        GD.Print("Was it indeed the correct trigger? : " + (TrigggerSkill == nextSkill));
-        return TrigggerSkill == nextSkill;
+        return TriggerSkill == nextSkill;
     }
 
     private int GetOffset()

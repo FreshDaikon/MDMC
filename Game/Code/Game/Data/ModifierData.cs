@@ -6,11 +6,12 @@ using System.Linq;
 namespace Daikon.Game;
 
 [GlobalClass]
-public partial class ModifierObject : DataObject
+public abstract partial class ModifierData : DataObject
 {
     [ExportGroup("Modifier Settings")]
     [Export]
     public bool IsPermanent = false;
+    [ExportCategory("REMEMBER : only use saved mods - don't create inline!")]
     [Export]
     public float Duration = 5f;
     [Export]
@@ -24,24 +25,10 @@ public partial class ModifierObject : DataObject
     [Export]
     public int MaxStacks = 1;
     [Export]
-    private Godot.Collections.Array<ModTags> Tags { get; set; }
+    public Godot.Collections.Array<ModTags> Tags { get; set; }
     [Export]
     public double ModifierValue = 0; // This is very specific per mod!
 
-    public Modifier GetModifier()
-    {
-        var instance = Scene.Instantiate<Modifier>();
-        instance.IsPermanent = IsPermanent;
-        instance.Duration = Duration;
-        instance.IsTicked = IsTicked;
-        instance.TickRate = TickRate;
-        instance.CanStack = CanStack;
-        instance.MaxStacks = MaxStacks;
-        instance.Tags = Tags.ToList();
-        instance.ModifierValue = ModifierValue; // This is very specific per mod!
-        instance.RemainingValue = ModifierValue; // Only used for exhaustible mods!
-        instance.Data = this;
-        return instance;
-    }
+    public abstract Modifier GetModifier();
 
 }

@@ -1,17 +1,20 @@
+using Daikon.Game.Realizations;
 using Godot;
 
 namespace Daikon.Game.Skills;
 
 [GlobalClass]
-public partial class BasicPotencyData: SkillData
+public partial class SinglePotencyData: SkillData
 {
+    [Export] private ChaseTargetRealizationData _onSkillCastRealizationData;
+    
     public override Skill GetSkill()
     {
         var skill = new SinglePotency();
-        //Implement Setting up stuff:
         skill.Data = this;
         skill.IsUniversalSkill = IsUniversalSkill;
         skill.TimerType = TimerType;
+        skill.ActionType = ActionType;
         skill.BasePotency = BasePotency;
         skill.Range = Range;
         skill.Cooldown = Cooldown;
@@ -20,11 +23,9 @@ public partial class BasicPotencyData: SkillData
         skill.ChannelTime = ChannelTime;
         skill.TickRate = TickRate;
         skill.ThreatMultiplier = ThreatMultiplier;
-        // Setup Realizations :
-        skill.RealizeOnCast = RealizeOnCast;
-        skill.RealizeOnFinish = RealizeOnFinish;
-        skill.RealizeOnSkill = RealizeOnSkill;
-
+        // Realizations:
+        skill.OnSkillCastRealization = _onSkillCastRealizationData;
+        // Rules:
         skill.Rules = Rules;
         
         // Finally pass it back :

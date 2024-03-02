@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using Daikon.Helpers;
 using Daikon.Client;
@@ -26,6 +28,14 @@ public partial class PlayerInput : Node
     public bool isActivator2Pressed = false;
     public bool isActivator3Pressed = false;
 
+    // Time stamp , <container, slot> :
+    private Dictionary<BufferMessage, ulong> _skillBuffer = new();
+    private record BufferMessage()
+    {
+        public int container { get; init; }
+        public int slot { get; init; }
+    }
+    private ulong _buffer = 300;
     public override void _Ready()
     {
         player = (PlayerEntity)GetParent();
@@ -42,6 +52,8 @@ public partial class PlayerInput : Node
         if(player.Status.CurrentState == EntityStatus.StatusState.KnockedOut)
             return;
         HandleInputs();
+        UpdateSkillBuffer();
+
     }    
 
     private bool Activators()
@@ -92,179 +104,126 @@ public partial class PlayerInput : Node
             RpcId(1, nameof(RequestEnemyTargetChange), false);
         }
     }
+    
+    private void AddBufferMessage(int containerSlot, int slot)
+    {
+        var message = new BufferMessage()
+        {
+            container = (int)containerSlot,
+            slot = slot
+        };
+        if (_skillBuffer.ContainsKey(message))
+        {
+            _skillBuffer[message] = Time.GetTicksMsec();
+        }
+        else
+        {
+            _skillBuffer.Add(message, Time.GetTicksMsec());
+        }
+    }
+    
     private void HandleHotbars()
     {
         //Setup Triggers:
         if(Input.IsActionJustPressed("Hotbar1"))
         {
             if(Input.IsKeyPressed(Key.Shift))
+            {
                 EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Right, 0);
+                AddBufferMessage((int)MD.ContainerSlot.Right, 0);
+            }
             else if(Input.IsKeyPressed(Key.Ctrl))
+            {
                 EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Left, 0);
+                AddBufferMessage((int)MD.ContainerSlot.Left, 0);
+            }
             else
+            {
                 EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Main, 0);
+                AddBufferMessage((int)MD.ContainerSlot.Main, 0);
+            }
         }
         if(Input.IsActionJustPressed("Hotbar2"))
         {
             if(Input.IsKeyPressed(Key.Shift))
+            {
                 EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Right, 1);
+                AddBufferMessage((int)MD.ContainerSlot.Right, 1);
+            }
             else if(Input.IsKeyPressed(Key.Ctrl))
+            {
                 EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Left, 1);
+                AddBufferMessage((int)MD.ContainerSlot.Left, 1);
+            }
             else
+            {
                 EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Main, 1);
+                AddBufferMessage((int)MD.ContainerSlot.Main, 1);
+            }
         }
         if(Input.IsActionJustPressed("Hotbar3"))
         {
             if(Input.IsKeyPressed(Key.Shift))
+            {
                 EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Right, 2);
+                AddBufferMessage((int)MD.ContainerSlot.Right, 2);
+            }
             else if(Input.IsKeyPressed(Key.Ctrl))
+            {
                 EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Left, 2);
+                AddBufferMessage((int)MD.ContainerSlot.Left, 2);
+            }
             else
+            {
                 EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Main, 2);
+                AddBufferMessage((int)MD.ContainerSlot.Main, 2);
+            }
         }
         if(Input.IsActionJustPressed("Hotbar4"))
         {
             if(Input.IsKeyPressed(Key.Shift))
+            {
                 EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Right, 3);
+                AddBufferMessage((int)MD.ContainerSlot.Right, 3);
+            }
             else if(Input.IsKeyPressed(Key.Ctrl))
+            {
                 EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Left, 3);
+                AddBufferMessage((int)MD.ContainerSlot.Left, 3);
+            }
             else
+            {
                 EmitSignal(SignalName.ActionButtonPressed, (int)MD.ContainerSlot.Main, 3);
-        }
-
-        if(player.Arsenal.CanCast(MD.ContainerSlot.Main, 0).SUCCESS)
-        {
-            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar1"))
-            {
-                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Main, 0);
-            }
-        }
-        if(player.Arsenal.CanCast(MD.ContainerSlot.Main, 1).SUCCESS)
-        {
-            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar2"))
-            {
-                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Main, 1);
-            }
-        }
-        if(player.Arsenal.CanCast(MD.ContainerSlot.Main, 2).SUCCESS)
-        {
-            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar3"))
-            {
-                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Main, 2);
-            }
-        }
-        if(player.Arsenal.CanCast(MD.ContainerSlot.Main, 3).SUCCESS)
-        {
-            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar4"))
-            {
-                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Main, 3);
-            }
-        }
-        if(player.Arsenal.CanCast(MD.ContainerSlot.Right, 0).SUCCESS)
-        {
-            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar5"))
-            {
-                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Right, 0);
-            }
-        }
-        if(player.Arsenal.CanCast(MD.ContainerSlot.Right, 1).SUCCESS)
-        {
-            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar6"))
-            {
-                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Right, 1);
-            }
-        }
-        if(player.Arsenal.CanCast(MD.ContainerSlot.Right, 2).SUCCESS)
-        {
-            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar7"))
-            {
-                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Right, 2);
-            }
-        }
-        if(player.Arsenal.CanCast(MD.ContainerSlot.Right, 3).SUCCESS)
-        {
-            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar8"))
-            {
-                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Right, 3);
-            }
-        }
-        if(player.Arsenal.CanCast(MD.ContainerSlot.Left, 0).SUCCESS)
-        {
-            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar9"))
-            {
-                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Left, 0);
-            }
-        }
-        if(player.Arsenal.CanCast(MD.ContainerSlot.Left, 1).SUCCESS)
-        {
-            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar10"))
-            {
-                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Left, 1);
-            }
-        }
-        if(player.Arsenal.CanCast(MD.ContainerSlot.Left, 2).SUCCESS)
-        {
-            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar11"))
-            {
-                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Left, 2);
-            }
-        }
-        if(player.Arsenal.CanCast(MD.ContainerSlot.Left, 3).SUCCESS)
-        {
-            if(InputBuffer.Instance.IsActionPressedBuffered("Hotbar12"))
-            {
-                RpcId(1, nameof(TryTriggerSkill), (int)MD.ContainerSlot.Left, 3);
+                AddBufferMessage((int)MD.ContainerSlot.Main, 3);
             }
         }
     }
 
 
+    
+    
     private void HandleSkillActions(MD.ContainerSlot containerSlot)
     {
         //Setup Triggers:
         if(Input.IsActionPressed("ActionButton1"))
         {
             EmitSignal(SignalName.ActionButtonPressed, (int)containerSlot, 0);
+            AddBufferMessage((int)containerSlot, 0);
         }
         if(Input.IsActionPressed("ActionButton2"))
         {
             EmitSignal(SignalName.ActionButtonPressed, (int)containerSlot, 1);
+            AddBufferMessage((int)containerSlot, 1);
         }
         if(Input.IsActionPressed("ActionButton3"))
         {
             EmitSignal(SignalName.ActionButtonPressed, (int)containerSlot, 2);
+            AddBufferMessage((int)containerSlot, 2); 
         }
         if(Input.IsActionPressed("ActionButton4"))
         {
             EmitSignal(SignalName.ActionButtonPressed, (int)containerSlot, 3);
-        }
-        if(player.Arsenal.CanCast(containerSlot, 0).SUCCESS)
-        {
-            if(InputBuffer.Instance.IsActionPressedBuffered("ActionButton1"))
-            {
-                RpcId(1, nameof(TryTriggerSkill), (int)containerSlot, 0);
-            }
-        }
-        if(player.Arsenal.CanCast(containerSlot, 1).SUCCESS)
-        {
-            if(InputBuffer.Instance.IsActionPressedBuffered("ActionButton2"))
-            {
-                RpcId(1, nameof(TryTriggerSkill), (int)containerSlot, 1);
-            }
-        }            
-        if(player.Arsenal.CanCast(containerSlot, 2).SUCCESS)
-        {
-            if(InputBuffer.Instance.IsActionPressedBuffered("ActionButton3"))
-            {
-                RpcId(1, nameof(TryTriggerSkill), (int)containerSlot, 2);
-            }
-        }
-        if(player.Arsenal.CanCast(containerSlot, 3).SUCCESS)
-        {
-            if(InputBuffer.Instance.IsActionPressedBuffered("ActionButton4"))
-            {
-                RpcId(1, nameof(TryTriggerSkill), (int)containerSlot, 3);
-            }
+            AddBufferMessage((int)containerSlot, 3);
         }
     }
 
@@ -324,7 +283,29 @@ public partial class PlayerInput : Node
 		controller.Rotation = rotation;
         RpcId(1, nameof(SyncRotation), rotation);    
     }
- 
+
+    private void UpdateSkillBuffer()
+    {
+        _skillBuffer.ToList().ForEach(b => { GD.Print("Input Message: " + b.Key.container + "@" + b.Key.slot + " time :" + b.Value);});
+        
+        var current = Time.GetTicksMsec();
+        foreach (var buffered in (from buffered in _skillBuffer
+                     let lapsed = Time.GetTicksMsec() - buffered.Value
+                     where lapsed > _buffer
+                     select buffered).ToList())
+        {
+            
+            _skillBuffer.Remove(buffered.Key);
+        }
+        // Now then:
+        foreach (var skill in _skillBuffer.ToList().Where(skill => player.Arsenal.CanCast((MD.ContainerSlot)skill.Key.container, skill.Key.slot).SUCCESS))
+        {
+            RpcId(1, nameof(TryTriggerSkill), skill.Key.container, skill.Key.slot);
+            _skillBuffer.Remove(skill.Key);
+        }
+    }
+    
+    
     //RPC Calls: 
     [Rpc(CallLocal = true)]
     public void Jump()
@@ -358,62 +339,60 @@ public partial class PlayerInput : Node
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void RequestEnemyTargetChange(bool direction)
     {
-        if(Multiplayer.IsServer())
+        if (!Multiplayer.IsServer()) return;
+        
+        if(player.TargetId == -1)
         {
-            if(player.TargetId == -1)
+            var enemies = ArenaManager.Instance.GetCurrentArena().GetEnemyEntities();
+            if(enemies == null)
             {
-                var enemies = ArenaManager.Instance.GetCurrentArena().GetEnemyEntities();
-                if(enemies == null)
-                {
-                    player.TargetId = -1;
-                    return;
-                }
-                var target  = enemies[0];
-                player.TargetId = int.Parse(target.Name);                
+                player.TargetId = -1;
+                return;
             }
-            else
-            {                
-                var enemies = ArenaManager.Instance.GetCurrentArena().GetEnemyEntities();
-                if(enemies == null )
-                {
-                    player.TargetId = -1;
-                    return;
-                }
-                int index = ArenaManager.Instance.GetCurrentArena().GetEnemyIndex(player.TargetId) + (direction ? 1 : -1);
-                int newIndex = Mathf.Wrap(index, 0, enemies.Count);
-                player.TargetId = int.Parse(enemies[newIndex].Name);
+            var target  = enemies[0];
+            player.TargetId = int.Parse(target.Name);                
+        }
+        else
+        {                
+            var enemies = ArenaManager.Instance.GetCurrentArena().GetEnemyEntities();
+            if(enemies == null )
+            {
+                player.TargetId = -1;
+                return;
             }
+            var index = ArenaManager.Instance.GetCurrentArena().GetEnemyIndex(player.TargetId) + (direction ? 1 : -1);
+            var newIndex = Mathf.Wrap(index, 0, enemies.Count);
+            player.TargetId = int.Parse(enemies[newIndex].Name);
         }
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void RequestFriendlyTargetChange(bool direction)
     {
-        if(Multiplayer.IsServer())
+        if (!Multiplayer.IsServer()) return;
+        
+        if(player.FriendlyTargetId == -1)
         {
-            if(player.FriendlyTargetId == -1)
+            var friends = ArenaManager.Instance.GetCurrentArena().GetFriendlyEntities();
+            if(friends == null)
             {
-                var friends = ArenaManager.Instance.GetCurrentArena().GetFriendlyEntities();
-                if(friends == null)
-                {
-                    player.FriendlyTargetId = -1;
-                    return;
-                }
-                var target = friends[0];
-                player.FriendlyTargetId = int.Parse(target.Name);                
+                player.FriendlyTargetId = -1;
+                return;
             }
-            else
-            {                
-                var friends = ArenaManager.Instance.GetCurrentArena().GetFriendlyEntities();
-                if(friends == null)
-                {
-                    player.FriendlyTargetId = -1;
-                    return;
-                }
-                int index = ArenaManager.Instance.GetCurrentArena().GetFriendlyIndex(player.FriendlyTargetId) + (direction ? 1 : -1);
-                int newIndex = Mathf.Wrap(index, 0, friends.Count);
-                player.FriendlyTargetId = int.Parse(friends[newIndex].Name);
+            var target = friends[0];
+            player.FriendlyTargetId = int.Parse(target.Name);                
+        }
+        else
+        {                
+            var friends = ArenaManager.Instance.GetCurrentArena().GetFriendlyEntities();
+            if(friends == null)
+            {
+                player.FriendlyTargetId = -1;
+                return;
             }
+            var index = ArenaManager.Instance.GetCurrentArena().GetFriendlyIndex(player.FriendlyTargetId) + (direction ? 1 : -1);
+            var newIndex = Mathf.Wrap(index, 0, friends.Count);
+            player.FriendlyTargetId = int.Parse(friends[newIndex].Name);
         }
     }
 

@@ -11,15 +11,4 @@ public partial class SkillSlotData : Resource
     public float PotencyMultiplier = 1.0f;
     [Export]
     public float ThreatMultiplier = 1.0f;
-
-    [ExportGroup("Combo Setup")]
-    [Export]
-    public bool IsComboSlot { get; set; }
-    [Export]
-    public int ComboSlotIndex { get; set; }
-    [Export]
-    public float ComboPotecyBonus { get; set; }
-    [Export]
-    public float FailurePotencyPenalty { get; set; }
-
 }

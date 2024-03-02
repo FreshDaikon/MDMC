@@ -170,6 +170,18 @@ public static class MD
          return num.ToString("#,0");
 	}
 
+    public static Color GetSkillTypeColor(SkillType type)
+    {
+        var color = type switch
+        {
+            SkillType.DPS => new Color("#cfc148"),
+            SkillType.HEAL => new Color("#7fbf3f"),
+            SkillType.TANK => new Color("#4da6c9"),
+            _ => new Color("#ffffff"),
+        };
+        return color;
+    }
+
     public static Color GetPlayerColor(float[] value)
     {
         var newColor = new Color(value[0], value[1], value[2]);

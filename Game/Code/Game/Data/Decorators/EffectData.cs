@@ -14,8 +14,8 @@ public partial class EffectData : Resource
         Range,
         CastTime,
         Cooldown,
-        
     }
+    
     [Export]
     public EffectType Type { get; private set; } = EffectType.Failed;
     [Export]

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ArenaData" load_steps=5 format=3 uid="uid://ddbrsm54b4bg0"]
+
+[ext_resource type="Script" path="res://Code/System/DataID.cs" id="1_073jp"]
+[ext_resource type="Script" path="res://Code/Game/Data/ArenaData.cs" id="1_hak1s"]
+[ext_resource type="PackedScene" uid="uid://04nun7ayudyy" path="res://Data/Scenes/Arenas/TestArena.tscn" id="2_rnuqk"]
+
+[sub_resource type="Resource" id="Resource_cty1u"]
+script = ExtResource("1_073jp")
+Id = 1400124858
+
+[resource]
+script = ExtResource("1_hak1s")
+Scene = ExtResource("2_rnuqk")
+ID = SubResource("Resource_cty1u")
+Name = "Arena One"
+Description = "we come here to test... ALL THE THINGS"

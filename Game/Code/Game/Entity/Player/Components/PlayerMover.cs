@@ -53,7 +53,7 @@ public partial class PlayerMover : Node, IEntityMover
             if(player.Arsenal.IsCasting || player.Arsenal.IsChanneling)
             {
                 player.Arsenal.TryInteruptCast();
-                player.Arsenal.TryInteruptChanneling();
+                if(player.Arsenal.ChannelingSkill != null) player.Arsenal.TryInterruptChanneling();
             }  
 		}
 		input.Jumping = false;               
@@ -72,7 +72,7 @@ public partial class PlayerMover : Node, IEntityMover
         if(_direction.Length() > 0f && (player.Arsenal.IsCasting || player.Arsenal.IsChanneling))
         {
            player.Arsenal.TryInteruptCast();
-           player.Arsenal.TryInteruptChanneling();
+           if(player.Arsenal.ChannelingSkill != null) player.Arsenal.TryInterruptChanneling();
         }
         controller.Velocity = _velocity; //controller.Velocity.Lerp(velocity, delta * acceleration);        
     }

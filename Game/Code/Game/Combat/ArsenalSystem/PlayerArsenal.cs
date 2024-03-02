@@ -209,6 +209,7 @@ public partial class PlayerArsenal: Node
                 GD.Print("Try Trigger OGCD Skill:");
                 return container.TriggerSkill(index);
             }            
+            
             var lapsed = GameManager.Instance.GameClock - GCDStartTime;
             var modGCD = BaseGcd; 
             if(lapsed < modGCD)
@@ -259,8 +260,8 @@ public partial class PlayerArsenal: Node
         }
         ChannelingStartTime = GameManager.Instance.GameClock;
         ChannelingTime = caster.ChannelTime;
-        Rpc(nameof(SyncChanneling), IsChanneling, ChannelingStartTime, ChannelingTime);
         ChannelingSkill = caster;
+        Rpc(nameof(SyncChanneling), IsChanneling, ChannelingStartTime, ChannelingTime);
     }
 
     public void FinishCasting(SkillResult result)
@@ -281,32 +282,30 @@ public partial class PlayerArsenal: Node
 
     public void TryInteruptCast()
     {
-        if(IsCasting && !CastingSkill.CanMove)   
-        {
-            if(CastingSkill.TimerType == MD.SkillTimerType.GCD)
-            { 
-                GCDStartTime = GCDStartTime - BaseGcd;
-                Rpc(nameof(SyncGCD), GCDStartTime);
-            }
-            CastingSkill.InterruptCast();
-            CastingSkill = null;
-            IsCasting = false;
-            Rpc(nameof(SyncCasting), IsCasting, CastingStartTime, CastingTime);
-            var result = new SkillResult() { result = MD.ActionResult.CASTING_INTERUPTED };         
-             
+        if (!IsCasting || CastingSkill.CanMove) return;
+        
+        if(CastingSkill.TimerType == MD.SkillTimerType.GCD)
+        { 
+            GCDStartTime = GCDStartTime - BaseGcd;
+            Rpc(nameof(SyncGCD), GCDStartTime);
         }
+        CastingSkill.InterruptCast();
+        CastingSkill = null;
+        IsCasting = false;
+        Rpc(nameof(SyncCasting), IsCasting, CastingStartTime, CastingTime);
+        var result = new SkillResult() { result = MD.ActionResult.CASTING_INTERUPTED };
     }
 
-    public void TryInteruptChanneling()
+    public void TryInterruptChanneling()
     {
-        if(IsChanneling && !ChannelingSkill.CanMove)
-        {
-            ChannelingSkill.InterruptCast();
-            ChannelingSkill = null;
-            IsChanneling = false;
-            Rpc(nameof(SyncCasting), IsCasting, CastingStartTime, CastingTime);
-            FinishChanneling(new SkillResult(){  } );
-        }
+        
+        if (!IsChanneling || ChannelingSkill.CanMove) return;
+        
+        ChannelingSkill.InterruptChannel();
+        ChannelingSkill = null;
+        IsChanneling = false;
+        Rpc(nameof(SyncCasting), IsCasting, CastingStartTime, CastingTime);
+        FinishChanneling(new SkillResult(){  } );
     }
     #endregion
        
@@ -373,6 +372,7 @@ public partial class PlayerArsenal: Node
         }
         if(IsChanneling)
         {
+            GD.Print("This channeling Triggered!");
             result.result = MD.ActionResult.IS_CHANNELING;
             return result;
         }

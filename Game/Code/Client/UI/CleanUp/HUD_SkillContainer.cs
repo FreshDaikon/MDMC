@@ -20,11 +20,6 @@ public partial class HUD_SkillContainer : Control
 	public HUD_SkillSlot Slot3;
 	public HUD_SkillSlot Slot4;
 
-	public HUD_ComboSlot Combo1;
-	public HUD_ComboSlot Combo2;
-	public HUD_ComboSlot Combo3;
-	public HUD_ComboSlot Combo4;
-
 	private AnimationPlayer animationPlayer;
 	private bool _playerUpdate = false;
 
@@ -37,10 +32,6 @@ public partial class HUD_SkillContainer : Control
 		Slot2 = GetNode<HUD_SkillSlot>("%Slot2");
 		Slot3 = GetNode<HUD_SkillSlot>("%Slot3");
 		Slot4 = GetNode<HUD_SkillSlot>("%Slot4");
-		Combo1 = GetNode<HUD_ComboSlot>("%Combo1");
-		Combo2 = GetNode<HUD_ComboSlot>("%Combo2");
-		Combo3 = GetNode<HUD_ComboSlot>("%Combo3");
-		Combo4 = GetNode<HUD_ComboSlot>("%Combo4");
 		containerIcon = GetNode<TextureRect>("%ContainerIcon");
 		animationPlayer = GetNode<AnimationPlayer>("%AnimationPlayer");
 		//Set Skills Up:	
@@ -57,15 +48,6 @@ public partial class HUD_SkillContainer : Control
 		Slot3.SkillSlot = 2;
 		Slot4.ContainerName = containerSlot;
 		Slot4.SkillSlot = 3;
-		//ComboSlots:
-		Combo1.ContainerName = containerSlot;
-		Combo1.SlotIndex = 0;
-		Combo2.ContainerName = containerSlot;
-		Combo2.SlotIndex = 1;
-		Combo3.ContainerName = containerSlot;
-		Combo3.SlotIndex = 2;
-		Combo4.ContainerName = containerSlot;
-		Combo4.SlotIndex = 3;
 	}
 
 	private bool wasActivated = false;

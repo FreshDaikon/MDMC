@@ -6,7 +6,7 @@ namespace Daikon.Game;
 
 public partial class Arena : Node3D
 {
-    public ArenaObject Data;
+    public ArenaData Data;
     [Export] private double _arenaDuration = 7200;
     [Export] private Node3D[] _playerStartPositions;
     //containers:

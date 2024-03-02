@@ -38,7 +38,7 @@ public partial class Modifier : Node
     private double startTime;    
     public double TimeRemaining = -1f;
 
-    public ModifierObject Data;
+    public ModifierData Data;
     //Time Keeping continued:
     private int lastLapse = 0;
     private int ticks = 0;

@@ -14,14 +14,14 @@ public class EffectStack
     
     public Skill LastSkill { get; set; }
     public bool PreviousRuleOutcome = false;
-    public List<Effect> Stack { get; private set; } = new();
+    public List<EffectData> Stack { get; private set; } = new();
 
     public void AddRule(EffectRule effectRule)
     {
         _currentRules.Enqueue(effectRule);
     }
     
-    public List<Effect> ResolveEffects(Skill instigator)
+    public List<EffectData> ResolveEffects(Skill instigator)
     {
         GD.Print("Resolving any effects..");
         Stack.Clear();
@@ -34,7 +34,7 @@ public class EffectStack
             currentRule.SetTrigger(instigator, PreviousRuleOutcome);
             var effect = currentRule.Trigger();
            
-            if(effect.Type == Effect.EffectType.Failed)
+            if(effect.Type == EffectData.EffectType.Failed)
             {
                 PreviousRuleOutcome = false;
                 GD.Print("Effect was null - so no type!");
@@ -44,7 +44,7 @@ public class EffectStack
             {
                 PreviousRuleOutcome = true;
                 GD.Print("Effect was added to the stack!");
-                if(effect.Type != Effect.EffectType.NoEffect) Stack.Add(effect);   
+                if(effect.Type != EffectData.EffectType.NoEffect) Stack.Add(effect);   
                 if(!currentRule.WasResolved) _storedRules.Add(currentRule);
             }
         }

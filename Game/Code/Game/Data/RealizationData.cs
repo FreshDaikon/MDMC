@@ -2,18 +2,11 @@ using Daikon.Game;
 using Godot;
 
 [GlobalClass]
-public partial class RealizationObject: DataObject
+public abstract partial class RealizationData: Resource
 {
     [ExportGroup("Scene to Load:")]
     [Export]
-    public PackedScene Scene; 
+    public PackedScene Scene;
     
-    // Note - this is a one shot Object!
-    // Meaning it requires a scene!
-    // NOT abstract - don't reimplement (yet!)
-    public Realization GetRealization()
-    {
-         var instance = Scene.Instantiate<Realization>();
-         return instance;
-    }
+    public abstract Realization GetRealization();
 }

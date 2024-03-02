@@ -5,16 +5,16 @@ namespace Daikon.Game;
 
 public class EffectRule
 {
-    
-    public Effect Effect { get; init; }
+    public EffectData TriggerEffectData { get; init; }
     public bool IsConditional { get; init; }
 
-    public Skill TrigggerSkill { get; private set; }
+    public Skill TriggerSkill { get; private set; }
     public bool PreviousOutcome { get; private set; }
     public Skill OriginSkill { get; private set; }
     public bool HasData { get; private set; } = false;
     public bool WasResolved { get; private set; } = true;
 
+    private int _resolveTries = 0;
 
     public void Init(Skill owner)
     {
@@ -24,26 +24,33 @@ public class EffectRule
     public void SetTrigger(Skill triggerSkill, bool previousOutcome)
     {
         GD.Print("Setting Trigger data..");
-        TrigggerSkill = triggerSkill;
+        TriggerSkill = triggerSkill;
         PreviousOutcome = previousOutcome;
         HasData = true;
     }
     
-    public Effect Trigger()
+    public EffectData Trigger()
     {
         if (!HasData)
         {
-            return new Effect();
+            return new EffectData();
         }
 
-        if (!CheckCondition()) return new Effect();
-        
+        if (!CheckCondition()) return new EffectData();
         GD.Print("Condition was ok! try and resolve");
         TryResolve();
-        return Effect;
+        return GetEffect();
     }
 
-    public virtual void TryResolve() {}
+    public virtual void TryResolve()
+    {
+        if (_resolveTries >= 10)
+        {
+            GD.Print("We failed in 10 attempts..");
+            SetWasResolved(true);
+        }
+        _resolveTries++;
+    }
 
     public void SetWasResolved(bool result)
     {
@@ -52,6 +59,11 @@ public class EffectRule
 
     public virtual bool CheckCondition()
     {
-        return false; 
+        return false;
+    }
+
+    public virtual EffectData GetEffect()
+    {
+        return TriggerEffectData;
     }
 }

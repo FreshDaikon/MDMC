@@ -55,13 +55,13 @@ public partial class DataManager : Node
         dir.ListDirEnd();
     }
 
-    public List<SkillObject> GetAllSkills()
+    public List<SkillData> GetAllSkills()
     {
-        var skills = _library.Where(skill => skill is SkillObject).Cast<SkillObject>().ToList();
+        var skills = _library.Where(skill => skill is SkillData).Cast<SkillData>().ToList();
         return skills;
     }
 
-    public SkillObject GetSkill(int id)
+    public SkillData GetSkill(int id)
     {
         var skill = GetAllSkills().Find(s => s.Id == id);
         return skill;
@@ -74,13 +74,13 @@ public partial class DataManager : Node
         return instance;
     }
 
-    public List<ArenaObject> GetAllArenas()
+    public List<ArenaData> GetAllArenas()
     {
-        var arenas = _library.Where(arena => arena is ArenaObject).Cast<ArenaObject>().ToList();
+        var arenas = _library.Where(arena => arena is ArenaData).Cast<ArenaData>().ToList();
         return arenas;
     }
     
-    public ArenaObject GetArena(int id)
+    public ArenaData GetArena(int id)
     {
         var arena = GetAllArenas().Find(s => s.Id == id);
         return arena;
@@ -93,13 +93,13 @@ public partial class DataManager : Node
         return instance;
     }
 
-    public List<SkillContainerObject> GetAllSkillContainers()
+    public List<SkillContainerData> GetAllSkillContainers()
     {
-        var skillContainers = _library.Where(container => container is SkillContainerObject).Cast<SkillContainerObject>().ToList();
+        var skillContainers = _library.Where(container => container is SkillContainerData).Cast<SkillContainerData>().ToList();
         return skillContainers;
     }
 
-    public SkillContainerObject GetSkillContainer(int id)
+    public SkillContainerData GetSkillContainer(int id)
     {
         var container = GetAllSkillContainers().Find(s => s.Id == id);
         return container;
@@ -112,13 +112,13 @@ public partial class DataManager : Node
         return instance;
     }
 
-    public List<ModifierObject> GetAllModifiers()
+    public List<ModifierData> GetAllModifiers()
     {
-        var modifiers = _library.Where(mod => mod is ModifierObject).Cast<ModifierObject>().ToList();
+        var modifiers = _library.Where(mod => mod is ModifierData).Cast<ModifierData>().ToList();
         return modifiers;
     }
 
-    public ModifierObject GetModifier(int id)
+    public ModifierData GetModifier(int id)
     {
         var mod = GetAllModifiers().Find(m => m.Id == id);
         return mod;
@@ -130,24 +130,4 @@ public partial class DataManager : Node
         var instance = mod.GetModifier();
         return instance;
     }
-
-    public List<RealizationObject> GetAllRealizations()
-    {
-        var realizations = _library.Where(r => r is RealizationObject).Cast<RealizationObject>().ToList();
-        return realizations;
-    }
-
-    public RealizationObject GetRealization(int id)
-    {
-        var real = GetAllRealizations().Find(r => r.Id == id);
-        return real;
-    }
-
-    public Realization GetRealizationInstance(int id)
-    {
-        var real = GetAllRealizations().Find(r => r.Id == id);
-        var instance = real.GetRealization();
-        return instance;
-    }
-
 }

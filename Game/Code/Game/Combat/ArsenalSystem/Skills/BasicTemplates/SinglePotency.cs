@@ -1,4 +1,7 @@
 using System.Linq;
+using Daikon.Client;
+using Daikon.Game.General;
+using Daikon.Game.Realizations;
 using Godot;
 using Daikon.Helpers;
 
@@ -6,6 +9,9 @@ namespace Daikon.Game;
 
 public partial class SinglePotency : Skill
 {
+    public ChaseTargetRealizationData OnSkillCastRealization;
+    
+    
     public override SkillResult TriggerResult()
     {
         if(!Multiplayer.IsServer())
@@ -13,7 +19,6 @@ public partial class SinglePotency : Skill
 
         if(IsUniversalSkill)
         {
-            GD.PrintErr("This Skill can never be universal!");
             return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.INVALID_SETUP };
         }
 
@@ -21,7 +26,7 @@ public partial class SinglePotency : Skill
         
         if (Effects != null)
         {
-            var potency = Effects.Where(e => e.Type == Effect.EffectType.Potency);
+            var potency = Effects.Where(e => e.Type == EffectData.EffectType.Potency);
             if (potency.Any())
             {
                 GD.Print("The sum of all the potency effects are:" + ( AdjustedPotency * potency.Sum(p => p.Value))); 
@@ -45,7 +50,7 @@ public partial class SinglePotency : Skill
                     Effect = "X damaged Y"
                 };
                 CombatManager.Instance.AddCombatMessage(message);
-                Rpc(nameof(SkillRealization), message.Value, (int)message.MessageType);
+                Rpc(nameof(OnSkillCast), dmgDone);
                 return new SkillResult(){ SUCCESS = true, result = MD.ActionResult.CAST};
             };
             case MD.SkillType.HEAL:
@@ -61,7 +66,7 @@ public partial class SinglePotency : Skill
                     Effect = "X healed Y"
                 };
                 CombatManager.Instance.AddCombatMessage(message);
-                Rpc(nameof(SkillRealization), message.Value, (int)message.MessageType);
+                Rpc(nameof(OnSkillCast), healDone);
                 return new SkillResult(){ SUCCESS = true, result = MD.ActionResult.CAST};
             }                
             case MD.SkillType.TANK:
@@ -78,7 +83,7 @@ public partial class SinglePotency : Skill
                     Effect = "X damaged Y"
                 };
                 CombatManager.Instance.AddCombatMessage(message);
-                Rpc(nameof(SkillRealization), message.Value, (int)message.MessageType);
+                Rpc(nameof(OnSkillCast), dmgDone);
                 return new SkillResult(){ SUCCESS = true, result = MD.ActionResult.CAST};
             }
             default:
@@ -154,13 +159,26 @@ public partial class SinglePotency : Skill
         }
     }
 
-    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public override void SkillRealization(int value, int type)
+    [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void OnSkillCast(int value)
     {
-        var realization = RealizeOnSkill.GetRealization();
-        // Expect this realization to be the damage number one so pass the extra data
-        var damageNumberInfo = new { Value = value, Type = type};
+        if(Multiplayer.IsServer()) return;
+        if(OnSkillCastRealization == null) return;
+        
+        GD.Print("We are supposed to spawn the realization here!");
+
         var target = SkillType == MD.SkillType.HEAL ? Player.CurrentFriendlyTarget.Controller : Player.CurrentTarget.Controller;
-        realization.Spawn(Player.Controller.GlobalPosition, target, 10f, 2f, damageNumberInfo);
+        var color = MD.GetSkillTypeColor(SkillType);
+        
+        var newRealization = (ChaseTargetRealization)OnSkillCastRealization.GetRealization();
+        newRealization.SetData(Player.Controller.GlobalPosition, target, 5f, 10f);
+        newRealization.Spawn();
+
+        newRealization.OnRealizationEnd += () =>
+        {
+            UIHUDMain.Instance?.SpawnDamageNumber(value.ToString(), color, newRealization.GlobalPosition);
+        };
     }
+    
+    
 }

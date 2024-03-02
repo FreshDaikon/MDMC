@@ -1,0 +1,53 @@
+[gd_resource type="Resource" script_class="SinglePotencyData" load_steps=12 format=3 uid="uid://cao825sb4cux6"]
+
+[ext_resource type="Script" path="res://Code/System/DataID.cs" id="1_1bypw"]
+[ext_resource type="Script" path="res://Code/Game/Data/Skills/SinglePotencyData.cs" id="1_efd2q"]
+[ext_resource type="Texture2D" uid="uid://gc3l6kwp32bf" path="res://Assets/UI/ArsenalSystem/Skills/Skill_Blast_01.png" id="2_i0cr5"]
+[ext_resource type="Script" path="res://Code/Game/Data/Decorators/EffectData.cs" id="6_wskfo"]
+[ext_resource type="Script" path="res://Code/Game/Data/EffectRules/RuleComboData.cs" id="7_6ebme"]
+[ext_resource type="Script" path="res://Code/Game/Data/EffectRules/RuleEchoData.cs" id="8_u2ljv"]
+
+[sub_resource type="Resource" id="Resource_hyfsp"]
+script = ExtResource("1_1bypw")
+Id = 964601053
+
+[sub_resource type="Resource" id="Resource_4ebcp"]
+script = ExtResource("6_wskfo")
+Type = 3
+Value = 2.0
+
+[sub_resource type="Resource" id="Resource_5lsop"]
+script = ExtResource("7_6ebme")
+Direction = 0
+EffectData = SubResource("Resource_4ebcp")
+isConditional = false
+
+[sub_resource type="Resource" id="Resource_qwmuy"]
+script = ExtResource("6_wskfo")
+Type = 3
+Value = 10.0
+
+[sub_resource type="Resource" id="Resource_epbfl"]
+script = ExtResource("8_u2ljv")
+TypeToEcho = 0
+EffectData = SubResource("Resource_qwmuy")
+isConditional = false
+
+[resource]
+script = ExtResource("1_efd2q")
+IsUniversalSkill = false
+TimerType = 0
+BasePotency = 100
+Range = 10.0
+Cooldown = 1.0
+ActionType = 0
+CanMove = false
+CastTime = 0.0
+ChannelTime = 0.0
+TickRate = 1.0
+ThreatMultiplier = 1.0
+Rules = Array[Object]([SubResource("Resource_5lsop"), SubResource("Resource_epbfl")])
+ID = SubResource("Resource_hyfsp")
+Name = "Basic Skill Test"
+Description = "The beta skill!"
+Icon = ExtResource("2_i0cr5")

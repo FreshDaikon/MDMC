@@ -22,7 +22,7 @@ public partial class UILandingPage : Control
     private Button JoinLocalServerButton;
     private Button ConnectDaikon;
 
-    private List<ArenaObject> _arenas = new();
+    private List<ArenaData> _arenas = new();
 
 
     public override void _Ready()
@@ -54,6 +54,7 @@ public partial class UILandingPage : Control
       
         CallDeferred(nameof(GetArenaList));
         CallDeferred(nameof(SetupNetworkListeners));
+
     }
 
     private void GetArenaList()
@@ -62,7 +63,7 @@ public partial class UILandingPage : Control
         GD.Print("Arenas to show: " + _arenas.Count);
         if(_arenas.Count > 0)
         {
-            foreach(ArenaObject arena in _arenas)
+            foreach(ArenaData arena in _arenas)
             {
                 ArenaListOptions.AddItem(arena.Name);
             }

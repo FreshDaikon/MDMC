@@ -17,38 +17,34 @@ public partial class UI_NamePlateContainer : Control
 		//////////////////////////////////////////
 		
 		var entities = ArenaManager.Instance.GetCurrentArena().GetEntities();
-		if(entities != null)
-		{  
-			var namePlates = GetChildren().Where(x => x is UI_NamePlate).Cast<UI_NamePlate>().ToList();		
-            foreach(UI_NamePlate plate in namePlates)
-            {
-                if(!entities.Any(n => n == plate.GetEntity()))
-                {
-                    plate.QueueFree();
-                }
-            }
-			foreach(Entity entity in entities)
+		if (entities == null) return;
+		
+		var namePlates = GetChildren().Where(x => x is UI_NamePlate).Cast<UI_NamePlate>().ToList();		
+		foreach (var plate in namePlates.Where(plate => entities.All(n => n != plate.GetEntity())))
+		{
+			plate.QueueFree();
+		}
+		foreach(var entity in entities)
+		{
+			if(namePlates.Any(e => e.GetEntity() == entity))
 			{
-				if(namePlates.Any(e => e.GetEntity() == entity))
-                {
-					continue;
-                }
-				var newEntry = (UI_NamePlate)NameplateAsset.Instantiate();
-                newEntry.Name = entity.Name;
-				AddChild(newEntry);
-				newEntry.InitializeFrame(entity);
+				continue;
 			}
-            var unsorted = GetChildren().Where(x => x is UI_NamePlate).Cast<UI_NamePlate>().ToList();
-            var camera = GetViewport().GetCamera3D();
-            if(camera == null)
-            {
-                return;
-            }
-			var sorted = unsorted.OrderBy(x => ((camera.GlobalPosition - x.GetEntity().Controller.GlobalPosition).Length())).Cast<UI_NamePlate>().ToList();
-			for(int i = 0; i < sorted.Count; i++)
-			{
-				MoveChild(sorted[0], i);
-			}
+			var newEntry = (UI_NamePlate)NameplateAsset.Instantiate();
+			newEntry.Name = entity.Name;
+			AddChild(newEntry);
+			newEntry.InitializeFrame(entity);
+		}
+		var unsorted = GetChildren().Where(x => x is UI_NamePlate).Cast<UI_NamePlate>().ToList();
+		var camera = GetViewport().GetCamera3D();
+		if(camera == null)
+		{
+			return;
+		}
+		var sorted = unsorted.OrderBy(x => ((camera.GlobalPosition - x.GetEntity().Controller.GlobalPosition).Length())).Cast<UI_NamePlate>().ToList();
+		for(var i = 0; i < sorted.Count; i++)
+		{
+			MoveChild(sorted[0], i);
 		}
 	}
 }

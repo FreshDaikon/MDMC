@@ -7,7 +7,6 @@ namespace Daikon.Game;
 
 public partial class SkillContainer : Node
 {
-    
     public enum ContainerType
     {
         Armament,
@@ -15,19 +14,15 @@ public partial class SkillContainer : Node
     }
     
     public SkillSlotData[] SkillSlots;
-    public List<ModifierObject> BuffsGranted;
+    public List<ModifierData> BuffsGranted;
     public float BaseGcd = 1.5f;
     public MD.ContainerSlot AssignedSlot = 0;
-    public int NextComboSlot = 0;   
     //Internals:
     public PlayerEntity Player;
-    public SkillContainerObject Data;
-    private Node SkillHolder;
-    private Node skillSlotContainer;
+    public SkillContainerData Data;
 
     public override void _Ready()
     {
-        SkillHolder = GetNodeOrNull("%Skills");
         InitializeContainer(); 
         base._Ready();
     }    
@@ -43,13 +38,12 @@ public partial class SkillContainer : Node
     public void InitializeContainer()
     {
         Player = GetParent<PlayerArsenal>().Player;
-        if(Multiplayer.IsServer())
+        
+        if (!Multiplayer.IsServer()) return;
+        
+        foreach (var mod in BuffsGranted.Select(buff => buff.GetModifier()))
         {
-            foreach(var buff in BuffsGranted)
-            {
-                var mod = DataManager.Instance.GetModifierInstance(buff.Id);
-                var result = Player.Modifiers.AddModifier(mod);
-            }
+            Player.Modifiers.AddModifier(mod);
         }
     }
 
@@ -60,52 +54,48 @@ public partial class SkillContainer : Node
         {
             return;
         }
-        if(SkillHolder.GetChildCount() > 0)
+        if(GetChildCount() > 0)
         {
-            var current = SkillHolder.GetChildren().Where(s => s is Skill).Cast<Skill>().ToList().Find(x => x.AssignedSlot == slot);
+            var current = GetChildren().Where(s => s is Skill).Cast<Skill>().ToList().Find(x => x.AssignedSlot == slot);
             current?.Free();
         }
         // Get SkillSlot Data:
         var slotData = SkillSlots[slot];
-
         newSkill.AssignedContainerSlot = AssignedSlot;
         newSkill.AssignedSlot = slot;
         newSkill.Name = "Skill_" + slot;
         newSkill.SkillType = slotData.SlotSkillType;
-        newSkill.Player = Player == null ? null : Player;
+        newSkill.Player = Player;
         if(!newSkill.IsUniversalSkill)
         {
             newSkill.AdjustedPotency = (int)(newSkill.BasePotency * slotData.PotencyMultiplier);
         }             
-        SkillHolder.AddChild(newSkill);
+        AddChild(newSkill);
         newSkill.InitSkill();  
     }
 
     public void InitSkills()
     {
-        if(SkillHolder.GetChildCount() == 0) return;
+        if(GetChildCount() == 0) return;
         
-        var skills = SkillHolder.GetChildren().ToList().Where(c => c is Skill).Cast<Skill>().ToList();
-        if(skills.Count > 0)
+        var skills = GetChildren().ToList().Where(c => c is Skill).Cast<Skill>().ToList();
+        
+        if (skills.Count <= 0) return;
+        
+        foreach(var skill in skills)
         {
-            foreach(var skill in skills)
-            {
-                var slotData = SkillSlots[skills.IndexOf(skill)];
-                skill.SkillType = slotData.SlotSkillType;
-                skill.InitSkill();
-                skill.Reset();
-            }
+            var slotData = SkillSlots[skills.IndexOf(skill)];
+            skill.SkillType = slotData.SlotSkillType;
+            skill.InitSkill();
+            skill.Reset();
         }
     }
 
     public Skill GetSkill(int slot)
     {
-        if(SkillHolder.GetChildCount() > 0)
-        {
-            var current = SkillHolder.GetChildren().Where(s => s is Skill).Cast<Skill>().ToList().Find(x => x.AssignedSlot == slot);
-            return current;
-        }
-        return null;
+        if (GetChildCount() <= 0) return null;
+        var current = GetChildren().Where(s => s is Skill).Cast<Skill>().ToList().Find(x => x.AssignedSlot == slot);
+        return current;
     }
 
     public bool IsSkillOGCD(int slot)
@@ -142,10 +132,4 @@ public partial class SkillContainer : Node
         }
         return result;
     }
-
-    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void SyncNextCombo(int index)
-    {
-        NextComboSlot = index;
-    }    
 }

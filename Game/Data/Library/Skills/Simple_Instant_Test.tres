@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="SinglePotencyData" load_steps=5 format=3 uid="uid://bj731stl0vj5f"]
+
+[ext_resource type="Script" path="res://Code/System/DataID.cs" id="1_12s3n"]
+[ext_resource type="Script" path="res://Code/Game/Data/Skills/SinglePotencyData.cs" id="1_dbv0h"]
+[ext_resource type="Texture2D" uid="uid://bebd5ey6gkv5n" path="res://Assets/UI/ArsenalSystem/Skills/Skill_Echo_Test_01.png" id="2_mduxo"]
+
+[sub_resource type="Resource" id="Resource_wliw0"]
+script = ExtResource("1_12s3n")
+Id = -313054161
+
+[resource]
+script = ExtResource("1_dbv0h")
+IsUniversalSkill = false
+TimerType = 0
+BasePotency = 1000
+Range = 10.0
+Cooldown = 0.0
+ActionType = 0
+CanMove = false
+CastTime = 0.0
+ChannelTime = 0.0
+TickRate = 1.0
+ThreatMultiplier = 1.0
+Rules = null
+ID = SubResource("Resource_wliw0")
+Name = "Plast"
+Description = "Some Object Description."
+Icon = ExtResource("2_mduxo")

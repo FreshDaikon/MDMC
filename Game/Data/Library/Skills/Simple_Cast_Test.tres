@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="SinglePotencyData" load_steps=8 format=3 uid="uid://c43voovxhow2r"]
+
+[ext_resource type="Script" path="res://Code/Game/Data/Skills/SinglePotencyData.cs" id="1_05cfe"]
+[ext_resource type="Texture2D" uid="uid://dphqphuwtn0tm" path="res://Assets/UI/ArsenalSystem/Skills/Skill_Spark_01.png" id="1_6wwa0"]
+[ext_resource type="Script" path="res://Code/System/DataID.cs" id="1_sg1xc"]
+[ext_resource type="Script" path="res://Code/Game/Data/Realizations/ChaseTargetRealizationData.cs" id="3_j4wm7"]
+[ext_resource type="PackedScene" uid="uid://xk1bpl62qpho" path="res://Data/Scenes/Realizations/Skills/BasicChase.tscn" id="3_n7tjh"]
+
+[sub_resource type="Resource" id="Resource_jsu4n"]
+script = ExtResource("1_sg1xc")
+Id = 1911276951
+
+[sub_resource type="Resource" id="Resource_pmat8"]
+script = ExtResource("3_j4wm7")
+Scene = ExtResource("3_n7tjh")
+
+[resource]
+script = ExtResource("1_05cfe")
+_onSkillCastRealizationData = SubResource("Resource_pmat8")
+IsUniversalSkill = false
+TimerType = 0
+BasePotency = 2000
+Range = 10.0
+Cooldown = 0.0
+ActionType = 1
+CanMove = false
+CastTime = 2.0
+ChannelTime = 0.0
+TickRate = 1.0
+ThreatMultiplier = 1.0
+Rules = null
+ID = SubResource("Resource_jsu4n")
+Name = "Spark Load"
+Description = "A simple energy release with great potency!"
+Icon = ExtResource("1_6wwa0")

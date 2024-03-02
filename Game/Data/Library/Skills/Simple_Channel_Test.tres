@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="SinglePotencyData" load_steps=5 format=3 uid="uid://buaryqey4c0ip"]
+
+[ext_resource type="Script" path="res://Code/System/DataID.cs" id="1_1rwsc"]
+[ext_resource type="Script" path="res://Code/Game/Data/Skills/SinglePotencyData.cs" id="1_enp8j"]
+[ext_resource type="Texture2D" uid="uid://cj8mgojnx4djy" path="res://Assets/UI/ArsenalSystem/Skills/Skill_Former_01.png" id="2_ddehh"]
+
+[sub_resource type="Resource" id="Resource_8ve87"]
+script = ExtResource("1_1rwsc")
+Id = -709526078
+
+[resource]
+script = ExtResource("1_enp8j")
+IsUniversalSkill = false
+TimerType = 0
+BasePotency = 10000
+Range = 10.0
+Cooldown = 0.0
+ActionType = 2
+CanMove = false
+CastTime = 0.0
+ChannelTime = 9.0
+TickRate = 1.0
+ThreatMultiplier = 1.0
+Rules = null
+ID = SubResource("Resource_8ve87")
+Name = "Flow Release"
+Description = "A simple relase type that affects the target every so often while channeling."
+Icon = ExtResource("2_ddehh")

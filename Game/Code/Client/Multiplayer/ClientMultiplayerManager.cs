@@ -125,7 +125,7 @@ public partial class ClientMultiplayerManager: Node
         }
     }
 
-    public void StartLocalServer(ArenaObject arena)
+    public void StartLocalServer(ArenaData arena)
     {
         var args = MD.GetArgs();
         var path = OS.GetExecutablePath();

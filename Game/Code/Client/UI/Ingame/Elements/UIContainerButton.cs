@@ -4,7 +4,7 @@ using Daikon.Game;
 
 public partial class UIContainerButton : Control
 {
-	public SkillContainerObject AssignedContainer;
+	public SkillContainerData AssignedContainer;
 
 	private TextureButton _button;
 	

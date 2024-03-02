@@ -1,11 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://cj5m27jrog0rj"]
+[gd_scene load_steps=10 format=3 uid="uid://cj5m27jrog0rj"]
 
 [ext_resource type="Script" path="res://Code/Client/UI/CleanUp/HUD_SkillContainer.cs" id="1_3uhms"]
 [ext_resource type="Texture2D" uid="uid://coyetxtc5aald" path="res://Assets/UI/ArsenalSystem/SkillContainers/Warlocks_MK3.png" id="1_kaaot"]
 [ext_resource type="FontFile" uid="uid://q3aynbg5gvis" path="res://Assets/UI/Fonts/LibreFranklin-BlackItalic.ttf" id="1_q1tj0"]
 [ext_resource type="PackedScene" uid="uid://cxax3of812334" path="res://Scenes/Client/UI/HUD/Arsenal/hud_SkillSlot.tscn" id="1_q3fjt"]
 [ext_resource type="Texture2D" uid="uid://dnshiwotimgv1" path="res://Assets/UI/Core/Blur_Drop.png" id="4_756ky"]
-[ext_resource type="PackedScene" uid="uid://de5742ksrt2q4" path="res://Scenes/Client/UI/HUD/Arsenal/hud_combo_slot.tscn" id="5_6hhsb"]
 
 [sub_resource type="Animation" id="Animation_as1gm"]
 resource_name = "Active"
@@ -114,32 +113,6 @@ offset_left = -64.0
 offset_top = -19.0
 offset_right = -64.0
 offset_bottom = 17.0
-
-[node name="Combo1" parent="." instance=ExtResource("5_6hhsb")]
-unique_name_in_owner = true
-offset_top = -104.0
-offset_bottom = -84.0
-
-[node name="Combo2" parent="." instance=ExtResource("5_6hhsb")]
-unique_name_in_owner = true
-offset_left = 53.0
-offset_top = -50.0
-offset_right = 73.0
-offset_bottom = -30.0
-
-[node name="Combo3" parent="." instance=ExtResource("5_6hhsb")]
-unique_name_in_owner = true
-offset_left = -9.0
-offset_top = 14.0
-offset_right = 11.0
-offset_bottom = 34.0
-
-[node name="Combo4" parent="." instance=ExtResource("5_6hhsb")]
-unique_name_in_owner = true
-offset_left = -74.0
-offset_top = -51.0
-offset_right = -54.0
-offset_bottom = -31.0
 
 [node name="Activator" type="Label" parent="."]
 layout_mode = 0

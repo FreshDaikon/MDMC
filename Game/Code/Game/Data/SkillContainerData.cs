@@ -5,7 +5,7 @@ using System.Linq;
 namespace Daikon.Game;
 
 [GlobalClass]
-public partial class SkillContainerObject : DataObject
+public abstract partial class SkillContainerData : DataObject
 {
     [ExportGroup("Skill Container")] 
     [Export]
@@ -14,15 +14,7 @@ public partial class SkillContainerObject : DataObject
     public SkillSlotData[] skillSlots { get; private set; }
     [ExportGroup("Buffs Granted")]
     [Export]
-    public Godot.Collections.Array<ModifierObject> Modifiers { get; private set; }
-    
-    public SkillContainer GetSkillContainer()
-    {
-        var instance = Scene.Instantiate<SkillContainer>();
-        instance.BaseGcd = BaseGcd;
-        instance.Data = this;
-        instance.SkillSlots = skillSlots;
-        instance.BuffsGranted = Modifiers.ToList();
-        return instance;
-    }
+    public Godot.Collections.Array<ModifierData> Modifiers { get; private set; }
+
+    public abstract SkillContainer GetSkillContainer();
 }

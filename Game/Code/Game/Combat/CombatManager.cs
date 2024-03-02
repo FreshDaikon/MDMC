@@ -99,7 +99,7 @@ public partial class CombatManager: Node
         Rpc(nameof(CombatMessageRelay), message.Caster, message.Target, message.Effect, message.Value, (int)message.MessageType );
     }
 
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void CombatMessageRelay(int caster, int target, string effect, int value, int messageType)
     {
         GD.Print(" Got Combat Message ");
@@ -116,9 +116,13 @@ public partial class CombatManager: Node
             Value = value,
             MessageType = (MD.CombatMessageType)messageType
         };
-        var dmgNumberPos = ArenaManager.Instance.GetCurrentArena().GetEntity(target);
         UpdateEntityTracker(newMessage);
         Messages.Add(newMessage);
+        // We should consider doing damage numbers here - instead of using Realizations.
+        // However, we should note that damage occurs before realization completion..
+        // So this is a bit of a conundrum.
+        
+        
     }
 
     private void UpdateEntityTracker(CombatMessage message)

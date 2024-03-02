@@ -1,9 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://4pu7tudmtow7"]
-
-[ext_resource type="Script" path="res://Code/Game/Combat/ArsenalSystem/Skills/BasicTemplates/SinglePotency.cs" id="1_8pi11"]
-
-[node name="BasicPotency" type="Node"]
-script = ExtResource("1_8pi11")
-RealizeCastPath = "res://Data/Instances/Realizations/BigIMpact.tscn"
-RealizeFinishedPath = "res://Data/Instances/Realizations/BigIMpact.tscn"
-RealizeSkillPath = "res://Data/Instances/Realizations/Skills/ImpactWithNumber.tscn"
