@@ -11,7 +11,7 @@ public partial class RuleComboData: EffectRuleData
     {
         var newCombo = new RuleCombo()
         {
-            Effect = effect,
+            TriggerEffect = effect,
             Direction = Direction
         };
         return newCombo;

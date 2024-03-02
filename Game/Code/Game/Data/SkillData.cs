@@ -47,28 +47,28 @@ public partial class SkillObject : DataObject
 
     public Skill GetSkill()
     {
-        var instance = Scene.Instantiate<Skill>();
+        var skill = new Skill();
         //Implement Setting up stuff:
-        instance.Data = this;
-        instance.IsUniversalSkill = IsUniversalSkill;
-        instance.TimerType = TimerType;
-        instance.BasePotency = BasePotency;
-        instance.Range = Range;
-        instance.Cooldown = Cooldown;
-        instance.CanMove = CanMove;
-        instance.CastTime = CastTime;
-        instance.ChannelTime = ChannelTime;
-        instance.TickRate = TickRate;
-        instance.ThreatMultiplier = ThreatMultiplier;
+        skill.Data = this;
+        skill.IsUniversalSkill = IsUniversalSkill;
+        skill.TimerType = TimerType;
+        skill.BasePotency = BasePotency;
+        skill.Range = Range;
+        skill.Cooldown = Cooldown;
+        skill.CanMove = CanMove;
+        skill.CastTime = CastTime;
+        skill.ChannelTime = ChannelTime;
+        skill.TickRate = TickRate;
+        skill.ThreatMultiplier = ThreatMultiplier;
         // Setup Realizations :
-        instance.RealizeOnCast = RealizeOnCast;
-        instance.RealizeOnFinish = RealizeOnFinish;
-        instance.RealizeOnSkill = RealizeOnSkill;
+        skill.RealizeOnCast = RealizeOnCast;
+        skill.RealizeOnFinish = RealizeOnFinish;
+        skill.RealizeOnSkill = RealizeOnSkill;
 
-        instance.Rules = Rules;
+        skill.Rules = Rules;
         
         // Finally pass it back :
-        return instance;
+        return skill;
     }
 
 }

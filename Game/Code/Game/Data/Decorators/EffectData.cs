@@ -3,7 +3,7 @@ using Godot;
 namespace Daikon.Game;
 
 [GlobalClass]
-public partial class Effect : Resource
+public partial class EffectData : Resource
 {
     public enum EffectType
     {

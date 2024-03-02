@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Daikon.Game.EffectRules;
+namespace Daikon.Game;
 
 [GlobalClass]
 public abstract partial class EffectRuleData: Resource

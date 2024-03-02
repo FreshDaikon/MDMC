@@ -14,7 +14,7 @@ public partial class RuleEchoData: EffectRuleData
         var newRule = new RuleEcho
         {
             TypeToEcho = TypeToEcho,
-            Effect = effect
+            TriggerEffect = effect
         };
         return newRule;
     }
