@@ -97,28 +97,22 @@ public partial class AdversaryEntity : Entity
 
     public Entity GetThreatEntity(int position)
     {
-        if(_threatTable.Count < position+1)
-            return null; 
-        if(_threatTable.Count > 0)
-        {
-            var list = _threatTable.ToList();            
-            list.Sort((x, y) => y.Value.CompareTo(x.Value));
-            return list[position].Key;
-        }
-        return null;
+        var list = _threatTable.Where(e => e.Key.Status.CurrentState != EntityStatus.StatusState.KnockedOut).ToList();            
+        
+        if(list.Count < position+1 || list.Count == 0) return null;
+        
+        list.Sort((x, y) => y.Value.CompareTo(x.Value));
+        return list[position].Key;
     }
 
     public float GetThreatValue(int position)
     {
-        if(_threatTable.Count < position+1)
-            return 0f;        
-        if(_threatTable.Count > 0)
-        {
-            var list = _threatTable.ToList();            
-            list.Sort((x, y) => y.Value.CompareTo(x.Value));
-            return list[position].Value;
-        }
-        return 0f;
+        var list = _threatTable.Where(e => e.Key.Status.CurrentState != EntityStatus.StatusState.KnockedOut).ToList();            
+        
+        if(list.Count < position+1 || list.Count == 0)  return 0f;
+               
+        list.Sort((x, y) => y.Value.CompareTo(x.Value));
+        return list[position].Value;
     }
 
     private void OnDamageTaken(int damage, Entity entity)
@@ -127,13 +121,9 @@ public partial class AdversaryEntity : Entity
         {
             EmitSignal(SignalName.Engaged);
         }
-        if(_damageTable.ContainsKey(entity))
+        if(!_damageTable.TryAdd(entity, damage))
         {
             _damageTable[entity]  += damage;
-        }
-        else
-        {
-            _damageTable.Add(entity, damage);
         }
     }
 
@@ -143,13 +133,9 @@ public partial class AdversaryEntity : Entity
         {
             EmitSignal(SignalName.Engaged);
         }
-        if(_threatTable.ContainsKey(entity))
+        if(!_threatTable.TryAdd(entity, threat))
         {
             _threatTable[entity] += threat;
-        }
-        else
-        {
-            _threatTable.Add(entity, threat);
         }
     }
 

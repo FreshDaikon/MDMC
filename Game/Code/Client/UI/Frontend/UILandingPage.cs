@@ -100,10 +100,6 @@ public partial class UILandingPage : Control
     private void JoinGame()
     {
         GD.Print("Let's see if we can find a game!");
-        if(ArenaManager.Instance.GetCurrentArena() == null)
-        {
-            ArenaManager.Instance.LoadArena(_arenas[_arenaListOptions.Selected].Id);
-        }
         DaikonConnect.Instance.DaikonJoinGame(_joinCodeEdit.Text);
     }
 

@@ -20,6 +20,7 @@ public partial class Chase: BaseBehavior
             StopBehavior();
             return;
         }
+        
         var direction = topThreat.Controller.GlobalPosition - Manager.Entity.Controller.GlobalPosition;
         float distance = direction.Length();
         if(distance > chaseDistance)

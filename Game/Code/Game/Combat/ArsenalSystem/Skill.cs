@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Daikon.Game.EffectRules;
 using Godot;
 using SmartFormat;
@@ -16,6 +17,7 @@ public partial class Skill : Node
     public int AdjustedPotency = 100;
     public float Range = 10f;
     public float Cooldown = 1f;
+    public float AdjustedCooldown = 1f;
     public MD.SkillActionType ActionType;
     public bool CanMove = false;
     public float CastTime = 0f;
@@ -65,6 +67,14 @@ public partial class Skill : Node
         if(!Multiplayer.IsServer())
             return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.NOT_SERVER };
 
+        if (Effects.Count > 0)
+        {
+            if (Effects.Any(t => t.ExtraData.Type == EffectData.DataType.FreeCast))
+            {
+                return TriggerResult();
+            }
+        }
+        
         if(IsOnCooldown())
         {
             return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.ON_COOLDOWN };
@@ -86,11 +96,16 @@ public partial class Skill : Node
         {
             return check;
         }
-        
         if(Cooldown > 0f)
         {
+            AdjustedCooldown = Cooldown;
+            if (Effects.Any(cd => cd.Type == EffectData.EffectType.Cooldown))
+            {
+                var cd = Effects.First(cd => cd.Type == EffectData.EffectType.Cooldown).Value;
+                AdjustedCooldown = Cooldown * (float)cd;
+            }
             StartTime = GameManager.Instance.GameClock;
-            Rpc(nameof(SyncCooldown), StartTime);
+            Rpc(nameof(SyncCooldown), StartTime, AdjustedCooldown);
         }
         return TriggerResult();        
     }
@@ -185,12 +200,13 @@ public partial class Skill : Node
     {
         if(Cooldown <= 0)
             return false;
-        return (GameManager.Instance.GameClock - StartTime) <= Cooldown;
+        return (GameManager.Instance.GameClock - StartTime) <= AdjustedCooldown;
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void SyncCooldown(double time)
+    public void SyncCooldown(double time, float adjustedCooldown)
     {
+        AdjustedCooldown = adjustedCooldown;
         StartTime = time;
     }
    

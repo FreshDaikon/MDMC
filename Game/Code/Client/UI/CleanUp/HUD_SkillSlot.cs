@@ -87,7 +87,7 @@ public partial class HUD_SkillSlot : Control
 					var gcdLeft = gcd - gcdLapsed;
 					var gcdPercent = 100 - ((float)gcdLapsed / (float)gcd * 100f);
 				{
-					var cd = skill.Cooldown;
+					var cd = skill.AdjustedCooldown;
 					var cdStartTime = skill.StartTime;
 					var cdLapsed = Mathf.Clamp(GameManager.Instance.GameClock - cdStartTime, 0, cd);
 					var cdPercent = 100 - cdLapsed / cd * 100f;

@@ -17,9 +17,14 @@ public partial class PlayerController : EntityController
         {
             Position = SavedPosition;
         }
-        else if((Position - SavedPosition).Length() > 1.5f)
+        else
         {
-            Position = SavedPosition;
+            
+            var lastPosition = LatestState.position;
+            if ((lastPosition - Position).Length() > 2f)
+            {
+                Position = lastPosition;
+            }
         }
 
     }

@@ -1,19 +1,13 @@
-[gd_scene load_steps=17 format=3 uid="uid://mqy1fcnfwrjp"]
+[gd_scene load_steps=15 format=3 uid="uid://mqy1fcnfwrjp"]
 
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/AdversaryEntity.cs" id="1_c7f3p"]
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/TimelineSolver/TimelineManager.cs" id="1_vf7wp"]
-[ext_resource type="Script" path="res://Code/Game/Entity/Components/EntityPositionSync.cs" id="2_mafja"]
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/Actions/Behaviors/Chase.cs" id="3_1pc8c"]
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/Components/AdversaryMover.cs" id="4_kbwyt"]
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/Actions/Behaviors/AutoAttack.cs" id="5_4tabc"]
 [ext_resource type="PackedScene" uid="uid://gtdhgpxhnebn" path="res://Scenes/Game/EntitySystem/Shared/EntityModifiers.tscn" id="5_cqkqa"]
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/Components/AdversaryStatus.cs" id="6_ahpdf"]
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/Components/AdversaryController.cs" id="7_ymrw4"]
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_u2e6p"]
-properties/0/path = NodePath("EntityPositionSync:SyncState")
-properties/0/spawn = true
-properties/0/replication_mode = 1
 
 [sub_resource type="Animation" id="Animation_l313m"]
 resource_name = "Phase_01"
@@ -86,10 +80,6 @@ targetable = true
 team = 2
 EntityName = "Best Boss"
 EntityHeight = 6.0
-
-[node name="EntityPositionSync" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_u2e6p")
-script = ExtResource("2_mafja")
 
 [node name="TimeLineManager" type="Node" parent="."]
 unique_name_in_owner = true

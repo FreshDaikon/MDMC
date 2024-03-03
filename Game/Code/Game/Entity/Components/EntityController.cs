@@ -11,8 +11,9 @@ public partial class EntityController : CharacterBody3D
     private const double InterpolationOffset = 0.1;
 
     private List<EntityState> _entityStatesBuffer = new();
+    private List<EntityState> _localStatesBuffer = new();
     
-    private EntityState _lastState;
+    public EntityState LatestState;
     public Vector3 SavedPosition;
     public Vector3 SavedRotation;
 
@@ -21,62 +22,48 @@ public partial class EntityController : CharacterBody3D
         if(Multiplayer.IsServer())
         {
             MoveAndSlide();
-            //Rpc(nameof(UpdateEntityState), GameManager.Instance.GameClock, Position, Rotation);
+            Rpc(nameof(UpdateEntityState), GameManager.Instance.GameClock, Position, Rotation);
         }        
         else
         {
             MoveAndSlide();
-           // UpdateController();       
+            var newState = new EntityState()
+            {
+                timeStamp = GameManager.Instance.GameClock,
+                position = Position,   
+                rotation = Rotation
+            };
+            UpdateController();       
         }
     }
 
-    public virtual void UpdateController()
+    public void UpdateController()
     {  
         if(!GameManager.Instance.IsGameRunning())
         { 
             return;
         }        
-        var renderTime = GameManager.Instance.GameClock - InterpolationOffset;
-        if(_entityStatesBuffer.Count > 2)
+        var renderTime = GameManager.Instance.GameClock - Mathf.Clamp(GameManager.Instance.GetLatency(), 0.02, InterpolationOffset);
+
+        if(_entityStatesBuffer.Count > 1)
         {
-            while(_entityStatesBuffer.Count > 2 && renderTime > _entityStatesBuffer[2].TimeStamp)
+            while(_entityStatesBuffer.Count > 2 && renderTime > _entityStatesBuffer[1].timeStamp)
             {
                 _entityStatesBuffer.RemoveAt(0);
             } 
-            if(_entityStatesBuffer.Count > 2)
+            var current = renderTime - _entityStatesBuffer[0].timeStamp;
+            var difference = _entityStatesBuffer[1].timeStamp - _entityStatesBuffer[0].timeStamp;           
+            var interpolationFactor = (float)current / (float)difference;
+            if(current < 0)
             {
-                var current = renderTime - _entityStatesBuffer[1].TimeStamp;
-                var difference = _entityStatesBuffer[2].TimeStamp - _entityStatesBuffer[1].TimeStamp;           
-                var interpolationFactor = (float)current / (float)difference;
-                if(current < 0)
-                {
-                    return;
-                }
-                var newPosition = _entityStatesBuffer[1].Position.Lerp(_entityStatesBuffer[2].Position, interpolationFactor);
-                var newRotation = _entityStatesBuffer[1].Rotation.Lerp(_entityStatesBuffer[2].Rotation, interpolationFactor);
-                SavedPosition = newPosition;
-                SavedRotation = newRotation;
-                UpdatePosition();
-                UpdateRotation();
+                return;
             }
-            else if(renderTime > _entityStatesBuffer[1].TimeStamp)
-            {
-                var current = renderTime - _entityStatesBuffer[0].TimeStamp;
-                var difference = _entityStatesBuffer[1].TimeStamp - _entityStatesBuffer[0].TimeStamp;
-                var extrapolationFactor = ((float)current / (float)difference) -1f;
-                if(current < 0)
-                {
-                    return;
-                }
-                var positonDelta = _entityStatesBuffer[1].Position - _entityStatesBuffer[0].Position;
-                var rotationDelta = _entityStatesBuffer[1].Rotation - _entityStatesBuffer[0].Rotation;                
-                var newPosition = _entityStatesBuffer[1].Position + positonDelta * extrapolationFactor;
-                var newRotation = _entityStatesBuffer[1].Rotation + rotationDelta * extrapolationFactor;
-                SavedPosition = newPosition;
-                SavedRotation = newRotation;
-                UpdatePosition();
-                UpdateRotation();
-            }
+            var newPosition = _entityStatesBuffer[0].position.Lerp(_entityStatesBuffer[1].position, interpolationFactor);
+            var newRotation = _entityStatesBuffer[0].rotation.Lerp(_entityStatesBuffer[1].rotation, interpolationFactor);
+            SavedPosition = newPosition;
+            SavedRotation = newRotation;
+            UpdatePosition();
+            UpdateRotation();
         } 
     }
 
@@ -108,17 +95,17 @@ public partial class EntityController : CharacterBody3D
     {
         var newState = new EntityState()
         {
-          TimeStamp = time,
-          Position = postition,   
-          Rotation = rotation
+          timeStamp = time,
+          position = postition,   
+          rotation = rotation
         };
-        if(_lastState == null)
+        if(LatestState == null)
         {
-            _lastState = newState;
+            LatestState = newState;
         }
-        else if(newState.TimeStamp > _lastState.TimeStamp)
+        else if(newState.timeStamp > LatestState.timeStamp)
         {
-            _lastState = newState;
+            LatestState = newState;
             _entityStatesBuffer.Add(newState);
         }
     }

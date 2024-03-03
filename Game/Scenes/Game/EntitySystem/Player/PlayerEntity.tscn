@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://dkewiv4f333eh"]
+[gd_scene load_steps=17 format=3 uid="uid://dkewiv4f333eh"]
 
 [ext_resource type="Script" path="res://Code/Game/Entity/Player/PlayerEntity.cs" id="1_6j6p2"]
 [ext_resource type="PackedScene" uid="uid://g1ekudtsi5t0" path="res://Scenes/Game/EntitySystem/Player/Components/PlayerInput.tscn" id="3_1ru0t"]
@@ -10,7 +10,6 @@
 [ext_resource type="PackedScene" uid="uid://gtdhgpxhnebn" path="res://Scenes/Game/EntitySystem/Shared/EntityModifiers.tscn" id="7_wtkie"]
 [ext_resource type="PackedScene" uid="uid://cqhl1y0g5lq7x" path="res://Assets/3D/Heroes/Hero_Male_Base.blend" id="9_b3bqd"]
 [ext_resource type="Script" path="res://Code/Game/Entity/Player/Components/PlayerController.cs" id="9_ykwia"]
-[ext_resource type="Script" path="res://Code/Game/Entity/Components/EntityPositionSync.cs" id="11_nmxcm"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_jddvm"]
 properties/0/path = NodePath(".:TargetId")
@@ -22,11 +21,6 @@ properties/1/replication_mode = 2
 properties/2/path = NodePath(".:FriendlyTargetId")
 properties/2/spawn = true
 properties/2/replication_mode = 2
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_j2yat"]
-properties/0/path = NodePath("PlayerSync:SyncState")
-properties/0/spawn = true
-properties/0/replication_mode = 1
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kjjmq"]
 
@@ -59,12 +53,6 @@ team = 0
 replication_interval = 0.083
 delta_interval = 0.083
 replication_config = SubResource("SceneReplicationConfig_jddvm")
-
-[node name="PlayerSync" type="MultiplayerSynchronizer" parent="."]
-replication_interval = 0.03
-delta_interval = 0.03
-replication_config = SubResource("SceneReplicationConfig_j2yat")
-script = ExtResource("11_nmxcm")
 
 [node name="EntityStatus" parent="." instance=ExtResource("3_ocq80")]
 unique_name_in_owner = true

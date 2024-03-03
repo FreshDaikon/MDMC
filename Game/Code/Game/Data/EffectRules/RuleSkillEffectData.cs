@@ -4,17 +4,17 @@ using Godot;
 namespace Daikon.Game.EffectRules.Rules;
 
 [GlobalClass]
-public partial class RuleConditionEffect: EffectRuleData
+public partial class RuleSkillEffectData: EffectRuleData
 {
     [Export]
-    public MD.SkillType TypeToEcho { get; set; }
+    public MD.SkillType TypeToEffect { get; set; }
     
     public override EffectRule GetRule()
     {
-        var newRule = new RuleEcho
+        var newRule = new RuleSkillEffect()
         {
             TriggerEffectData = EffectData,
-            TypeToEcho = TypeToEcho,
+            TypeToEffect = TypeToEffect,
         };
         return newRule;
     }

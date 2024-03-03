@@ -2,9 +2,9 @@ using Daikon.Helpers;
 
 namespace Daikon.Game;
 
-public class RuleCooldownReduction: EffectRule
+public class RuleSkillEffect: EffectRule
 {
-    public MD.SkillType TypeToReduce { get; init; }
+    public MD.SkillType TypeToEffect { get; init; }
     
     public override void TryResolve()
     {
@@ -17,6 +17,6 @@ public class RuleCooldownReduction: EffectRule
         if (IsConditional && !PreviousOutcome)
             return false;
 
-        return TriggerSkill != null && TriggerSkill.SkillType == TypeToReduce;
+        return TriggerSkill != null && TriggerSkill.SkillType == TypeToEffect;
     }
 }

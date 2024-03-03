@@ -31,7 +31,6 @@ public partial class UIIngameMenu: Control
 
         _itemSelector = GetNode<Control>("%ItemSelector");
         _itemContainer = GetNode<Control>("%AvailableGrid");
-        
 
         _mainContainer.ContainerSelected += OnContainerSelected;
         _rightContainer.ContainerSelected += OnContainerSelected;

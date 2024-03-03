@@ -53,6 +53,7 @@ public partial class ArenaManager : Node
         var arena = DataManager.Instance.GetArenaInstance(id);
         if(arena != null)
         {
+            UnloadArena();
             _arenaContainer.AddChild(arena);
             _currentArena = arena;
             _currentArena.Victory += () => { Rpc(nameof(SyncEventVictory)); };

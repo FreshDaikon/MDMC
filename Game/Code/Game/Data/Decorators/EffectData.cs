@@ -16,8 +16,15 @@ public partial class EffectData : Resource
         Cooldown,
     }
     
+    public enum DataType
+    {
+        FreeCast
+    }
+    
     [Export]
     public EffectType Type { get; private set; } = EffectType.Failed;
     [Export]
     public double Value { get; private set; } = 0;
+    
+    public dynamic ExtraData { get; set; } 
 }

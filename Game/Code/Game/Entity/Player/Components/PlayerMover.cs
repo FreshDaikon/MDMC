@@ -31,8 +31,12 @@ public partial class PlayerMover : Node, IEntityMover
         base._Ready();
 	}
     public override void _PhysicsProcess(double delta)
-	{		        
-        if(player.Status.CurrentState == EntityStatus.StatusState.KnockedOut) return;
+	{
+        if (player.Status.CurrentState == EntityStatus.StatusState.KnockedOut)
+        {
+            player.Controller.Velocity = Vector3.Zero;
+            return;
+        }
         
         Move((float)delta);
         Rotate((float)delta);

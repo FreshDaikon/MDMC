@@ -24,4 +24,13 @@ public class RuleEcho: EffectRule
 
         return TriggerSkill != null && TriggerSkill.SkillType == TypeToEcho;
     }
+
+    public override EffectData GetEffect()
+    {
+        TriggerEffectData.ExtraData = new
+        {
+            Type = EffectData.DataType.FreeCast
+        };
+        return base.GetEffect();
+    }
 }
