@@ -5,8 +5,6 @@ namespace Daikon.Game;
 
 public class RuleCombo: EffectRule
 {
-    
-    
     public enum ComboDirection
     {
         Clockwise,
@@ -15,11 +13,9 @@ public class RuleCombo: EffectRule
     }
     
     public ComboDirection Direction { get; init; }
-
     
     public override void TryResolve()
     {
-        base.TryResolve();
         SetWasResolved(true);
     }
 

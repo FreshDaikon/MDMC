@@ -9,48 +9,51 @@ namespace Daikon.Client;
 public partial class UILandingPage : Control
 {
     //Status
-    private Label WSConnectionLabel;
+    private Label _wsConnectionLabel;
     //Join Code Field
-    private LineEdit JoinCodeEdit;
+    private LineEdit _joinCodeEdit;
     // Buttons 
-    private OptionButton ArenaListOptions;
+    private OptionButton _arenaListOptions;
     
-    private Button RequestGameButton;
-    private Button JoinGameButton;
-    private Button StartGameButton;
-    private Button StartServerButton;
-    private Button JoinLocalServerButton;
-    private Button ConnectDaikon;
+    private Button _requestGameButton;
+    private Button _joinGameButton;
+    private Button _startGameButton;
+    private Button _startServerButton;
+    private Button _joinLocalServerButton;
+    private Button _connectDaikonLocal;
+    private Button _connectDaikonRemote;
 
     private List<ArenaData> _arenas = new();
 
 
     public override void _Ready()
     {
-        WSConnectionLabel = GetNode<Label>("%WSConnectionLabel");
-        RequestGameButton = GetNode<Button>("%RequestGameButton");
+        _wsConnectionLabel = GetNode<Label>("%WSConnectionLabel");
+        _requestGameButton = GetNode<Button>("%RequestGameButton");
         
-        ArenaListOptions = GetNode<OptionButton>("%ArenaListOptions");
-        JoinCodeEdit = GetNode<LineEdit>("%JoinCodeEdit");
-        JoinGameButton = GetNode<Button>("%JoinGameButton");
-        StartGameButton = GetNode<Button>("%StartGameButton");
+        _arenaListOptions = GetNode<OptionButton>("%ArenaListOptions");
+        _joinCodeEdit = GetNode<LineEdit>("%JoinCodeEdit");
+        _joinGameButton = GetNode<Button>("%JoinGameButton");
+        _startGameButton = GetNode<Button>("%StartGameButton");
 
 
-        StartServerButton = GetNode<Button>("%StartServerButton");
-        JoinLocalServerButton = GetNode<Button>("%JoinLocal");        
+        _startServerButton = GetNode<Button>("%StartServerButton");
+        _joinLocalServerButton = GetNode<Button>("%JoinLocal");        
 
-        ConnectDaikon = GetNode<Button>("%ConnectWSButton");
+        _connectDaikonLocal = GetNode<Button>("%ConnectDaikonLocal");
+        _connectDaikonRemote = GetNode<Button>("%ConnectDaikonRemote");
 
 
         //Setup Signals:
-        RequestGameButton.Pressed += () => RequestGame();
-        JoinGameButton.Pressed += () => JoinGame();
-        ConnectDaikon.Pressed += () => ConnectWS();
+        _requestGameButton.Pressed += RequestGame;
+        _joinGameButton.Pressed += JoinGame;
+        _connectDaikonLocal.Pressed += () => ConnectToDaikon(false);
+        _connectDaikonRemote.Pressed += () => ConnectToDaikon(true);
         //Local Setup:
-        StartServerButton.Pressed += () => StartLocalServer();
-        JoinLocalServerButton.Pressed += () => JoinLocalServer();
+        _startServerButton.Pressed += StartLocalServer;
+        _joinLocalServerButton.Pressed += JoinLocalServer;
 
-        StartGameButton.ButtonUp += () => StartGame();
+        _startGameButton.ButtonUp += StartGame;
       
         CallDeferred(nameof(GetArenaList));
         CallDeferred(nameof(SetupNetworkListeners));
@@ -65,7 +68,7 @@ public partial class UILandingPage : Control
         {
             foreach(ArenaData arena in _arenas)
             {
-                ArenaListOptions.AddItem(arena.Name);
+                _arenaListOptions.AddItem(arena.Name);
             }
         }
     }
@@ -77,13 +80,13 @@ public partial class UILandingPage : Control
         };
         DaikonConnect.Instance.GameCreated += (serverhost, port, joincode) => {
             GD.Print("We got a game Created over here!");
-            JoinCodeEdit.Text = joincode;
-            ArenaManager.Instance.LoadArena(_arenas[ArenaListOptions.Selected].Id);
+            _joinCodeEdit.Text = joincode;
+            ArenaManager.Instance.LoadArena(_arenas[_arenaListOptions.Selected].Id);
             ClientMultiplayerManager.Instance.SetData(serverhost, port);
         };
         DaikonConnect.Instance.GameFound += (host, port) => {
             GD.Print("We have gotten a game here!");
-            ArenaManager.Instance.LoadArena(_arenas[ArenaListOptions.Selected].Id);
+            ArenaManager.Instance.LoadArena(_arenas[_arenaListOptions.Selected].Id);
             ClientMultiplayerManager.Instance.SetData(host, port);
         };
         
@@ -91,7 +94,7 @@ public partial class UILandingPage : Control
 
     private void RequestGame()
     {
-        DaikonConnect.Instance.DaikonRequestGame(_arenas[ArenaListOptions.Selected].Id);
+        DaikonConnect.Instance.DaikonRequestGame(_arenas[_arenaListOptions.Selected].Id);
     }
 
     private void JoinGame()
@@ -99,9 +102,9 @@ public partial class UILandingPage : Control
         GD.Print("Let's see if we can find a game!");
         if(ArenaManager.Instance.GetCurrentArena() == null)
         {
-            ArenaManager.Instance.LoadArena(_arenas[ArenaListOptions.Selected].Id);
+            ArenaManager.Instance.LoadArena(_arenas[_arenaListOptions.Selected].Id);
         }
-        DaikonConnect.Instance.DaikonJoinGame(JoinCodeEdit.Text);
+        DaikonConnect.Instance.DaikonJoinGame(_joinCodeEdit.Text);
     }
 
     private void StartGame()
@@ -114,16 +117,23 @@ public partial class UILandingPage : Control
         };
     }
 
-    private void ConnectWS()
+    private void ConnectToDaikon(bool remote)
     {        
-        DaikonConnect.Instance.SetToRemote();
+        if(remote)
+        {
+            DaikonConnect.Instance.SetToRemote();
+        }
+        else
+        {
+            DaikonConnect.Instance.SetToLocalHost();
+        }
         DaikonConnect.Instance.DaikonAuthenticate();
     }
 
     private void StartLocalServer()
     {
-        ClientMultiplayerManager.Instance.StartLocalServer(_arenas[ArenaListOptions.Selected]);
-        ArenaManager.Instance.LoadArena(_arenas[ArenaListOptions.Selected].Id);
+        ClientMultiplayerManager.Instance.StartLocalServer(_arenas[_arenaListOptions.Selected]);
+        ArenaManager.Instance.LoadArena(_arenas[_arenaListOptions.Selected].Id);
     }
     private void JoinLocalServer()
     {
@@ -132,7 +142,7 @@ public partial class UILandingPage : Control
         // a bit weary here..
         if(ArenaManager.Instance.GetCurrentArena() == null)
         {
-            ArenaManager.Instance.LoadArena(_arenas[ArenaListOptions.Selected].Id);
+            ArenaManager.Instance.LoadArena(_arenas[_arenaListOptions.Selected].Id);
         }
         UIManager.Instance.TrySetUIState(UIManager.UIState.HUD);
         Multiplayer.ConnectedToServer += () => 

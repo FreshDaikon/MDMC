@@ -27,18 +27,23 @@ public class EffectStack
         Stack.Clear();
         _storedRules.ForEach(e => _currentRules.Enqueue(e));
         _storedRules.Clear();
-        
+        GD.Print("The number of rules to check is :" + _currentRules.Count);
         while (_currentRules.Count > 0)
         {
             var currentRule = _currentRules.Dequeue();
             currentRule.SetTrigger(instigator, PreviousRuleOutcome);
             var effect = currentRule.Trigger();
-           
+            GD.Print("Current effect result:" + effect.Type);
             if(effect.Type == EffectData.EffectType.Failed)
             {
                 PreviousRuleOutcome = false;
-                GD.Print("Effect was null - so no type!");
-                if(!currentRule.WasResolved) _storedRules.Add(currentRule);
+                GD.Print("Effect was failed!");
+                if (currentRule.WasResolved)
+                {
+                    GD.Print("Effect was failed and resolved");
+                    continue;
+                }
+                _storedRules.Add(currentRule);
             }
             else
             {

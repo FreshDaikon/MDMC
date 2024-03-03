@@ -3,9 +3,10 @@
 [ext_resource type="Script" path="res://Code/System/DataID.cs" id="1_1bypw"]
 [ext_resource type="Script" path="res://Code/Game/Data/Skills/SinglePotencyData.cs" id="1_efd2q"]
 [ext_resource type="Texture2D" uid="uid://gc3l6kwp32bf" path="res://Assets/UI/ArsenalSystem/Skills/Skill_Blast_01.png" id="2_i0cr5"]
+[ext_resource type="PackedScene" uid="uid://xk1bpl62qpho" path="res://Data/Scenes/Realizations/Skills/BasicChase.tscn" id="6_8rd2o"]
 [ext_resource type="Script" path="res://Code/Game/Data/Decorators/EffectData.cs" id="6_wskfo"]
 [ext_resource type="Script" path="res://Code/Game/Data/EffectRules/RuleComboData.cs" id="7_6ebme"]
-[ext_resource type="Script" path="res://Code/Game/Data/EffectRules/RuleEchoData.cs" id="8_u2ljv"]
+[ext_resource type="Script" path="res://Code/Game/Data/Realizations/ChaseTargetRealizationData.cs" id="7_dx8mp"]
 
 [sub_resource type="Resource" id="Resource_hyfsp"]
 script = ExtResource("1_1bypw")
@@ -20,24 +21,18 @@ Value = 2.0
 script = ExtResource("7_6ebme")
 Direction = 0
 EffectData = SubResource("Resource_4ebcp")
-isConditional = false
+IsConditional = false
 
-[sub_resource type="Resource" id="Resource_qwmuy"]
-script = ExtResource("6_wskfo")
-Type = 3
-Value = 10.0
-
-[sub_resource type="Resource" id="Resource_epbfl"]
-script = ExtResource("8_u2ljv")
-TypeToEcho = 0
-EffectData = SubResource("Resource_qwmuy")
-isConditional = false
+[sub_resource type="Resource" id="Resource_3r7gt"]
+script = ExtResource("7_dx8mp")
+Scene = ExtResource("6_8rd2o")
 
 [resource]
 script = ExtResource("1_efd2q")
+_onSkillCastRealizationData = SubResource("Resource_3r7gt")
 IsUniversalSkill = false
 TimerType = 0
-BasePotency = 100
+BasePotency = 1000
 Range = 10.0
 Cooldown = 1.0
 ActionType = 0
@@ -46,7 +41,7 @@ CastTime = 0.0
 ChannelTime = 0.0
 TickRate = 1.0
 ThreatMultiplier = 1.0
-Rules = Array[Object]([SubResource("Resource_5lsop"), SubResource("Resource_epbfl")])
+Rules = Array[Object]([SubResource("Resource_5lsop")])
 ID = SubResource("Resource_hyfsp")
 Name = "Basic Skill Test"
 Description = "The beta skill!"

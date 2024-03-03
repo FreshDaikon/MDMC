@@ -39,16 +39,22 @@ public partial class PlayerArsenal: Node
 
     public override void _Process(double delta)
     {
-        if(!hasBeenInitLocal)
+        if (hasBeenInitLocal) return;
+        if (!GameManager.Instance.IsGameRunning()) return;
+        if(!Multiplayer.IsServer())
         {
-            if(GameManager.Instance.IsGameRunning())
+            GD.Print("Ask the server to sync us pretty please!");
+            RpcId(1, nameof(RequestStartupSync));
+            hasBeenInitLocal = true;
+        }
+        else
+        {
+            Player.Status.KnockedOut += () =>
             {
-                if(Multiplayer.IsServer())
-                    return;
-                GD.Print("Ask the server to sync us pretty please!");
-                RpcId(1, nameof(RequestStartupSync));
-                hasBeenInitLocal = true;
-            }
+                if(IsCasting) TryInteruptCast();
+                if(IsChanneling) TryInterruptChanneling();
+            };
+            hasBeenInitLocal = true;
         }
     }
 
@@ -362,32 +368,7 @@ public partial class PlayerArsenal: Node
 
     #region Utility
     // Various utility functions for both Server And Client:
-
-    public void LocalStart(MD.ContainerSlot containerSlot, int slot)
-    {
-        var container = GetSkillContainer(containerSlot);
-        var skill = container.GetSkill(slot);
-
-        if (skill.TimerType == MD.SkillTimerType.GCD)
-        {
-            GCDStartTime = GameManager.Instance.GameClock - GCDStartTime;
-        }
-        if (skill.Cooldown > 0)
-        {
-            skill.StartTime = GameManager.Instance.GameClock - GCDStartTime;
-        }
-
-        if (skill.ActionType == MD.SkillActionType.CAST)
-        {
-            IsCasting = true;
-        }
-
-        if (skill.ActionType == MD.SkillActionType.CHANNEL)
-        {
-            IsChanneling = true;
-        }
-    }
-    
+   
     public SkillResult CanCast(MD.ContainerSlot containerSlot, int slot)
     {
         var result = new SkillResult() { SUCCESS = false, result= MD.ActionResult.ERROR };

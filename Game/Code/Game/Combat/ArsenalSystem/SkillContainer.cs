@@ -116,6 +116,7 @@ public partial class SkillContainer : Node
         if (skill == null) return new SkillResult() { SUCCESS = false, result = MD.ActionResult.ERROR };
         
         var effects = stack.ResolveEffects(skill);
+        GD.Print("Effects in stack:" + effects.Count);
         skill.Effects = effects;
             
         var result = skill.TriggerSkill();

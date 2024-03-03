@@ -119,6 +119,7 @@ public partial class EntityStatus : Node
     {
         if (CurrentHealth <= 0 && CurrentState != StatusState.KnockedOut)
         {
+            GD.Print("Sending Knock out signal");
             EmitSignal(SignalName.KnockedOut);
             CurrentState = StatusState.KnockedOut;
             return;

@@ -1,14 +1,39 @@
-[gd_resource type="Resource" script_class="SinglePotencyData" load_steps=8 format=3 uid="uid://bj731stl0vj5f"]
+[gd_resource type="Resource" script_class="SinglePotencyData" load_steps=15 format=3 uid="uid://bj731stl0vj5f"]
 
 [ext_resource type="Script" path="res://Code/System/DataID.cs" id="1_12s3n"]
 [ext_resource type="Script" path="res://Code/Game/Data/Skills/SinglePotencyData.cs" id="1_dbv0h"]
 [ext_resource type="Texture2D" uid="uid://bebd5ey6gkv5n" path="res://Assets/UI/ArsenalSystem/Skills/Skill_Echo_Test_01.png" id="2_mduxo"]
 [ext_resource type="PackedScene" uid="uid://xk1bpl62qpho" path="res://Data/Scenes/Realizations/Skills/BasicChase.tscn" id="3_d8qxd"]
+[ext_resource type="Script" path="res://Code/Game/Data/Decorators/EffectData.cs" id="3_db1ah"]
+[ext_resource type="Script" path="res://Code/Game/Data/EffectRules/RuleComboData.cs" id="4_if0bi"]
 [ext_resource type="Script" path="res://Code/Game/Data/Realizations/ChaseTargetRealizationData.cs" id="4_yekk4"]
+[ext_resource type="Script" path="res://Code/Game/Data/EffectRules/RuleEchoData.cs" id="5_w07r4"]
 
 [sub_resource type="Resource" id="Resource_wliw0"]
 script = ExtResource("1_12s3n")
 Id = -313054161
+
+[sub_resource type="Resource" id="Resource_dcqli"]
+script = ExtResource("3_db1ah")
+Type = 3
+Value = 2.0
+
+[sub_resource type="Resource" id="Resource_8hqys"]
+script = ExtResource("4_if0bi")
+Direction = 1
+EffectData = SubResource("Resource_dcqli")
+IsConditional = false
+
+[sub_resource type="Resource" id="Resource_y8rcc"]
+script = ExtResource("3_db1ah")
+Type = 2
+Value = 0.0
+
+[sub_resource type="Resource" id="Resource_33y2t"]
+script = ExtResource("5_w07r4")
+TypeToEcho = 0
+EffectData = SubResource("Resource_y8rcc")
+IsConditional = false
 
 [sub_resource type="Resource" id="Resource_c7pml"]
 script = ExtResource("4_yekk4")
@@ -28,7 +53,7 @@ CastTime = 0.0
 ChannelTime = 0.0
 TickRate = 1.0
 ThreatMultiplier = 1.0
-Rules = null
+Rules = Array[Object]([SubResource("Resource_8hqys"), SubResource("Resource_33y2t")])
 ID = SubResource("Resource_wliw0")
 Name = "Plast"
 Description = "Some Object Description."

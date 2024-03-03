@@ -85,6 +85,7 @@ script = ExtResource("1_c7f3p")
 targetable = true
 team = 2
 EntityName = "Best Boss"
+EntityHeight = 6.0
 
 [node name="EntityPositionSync" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_u2e6p")

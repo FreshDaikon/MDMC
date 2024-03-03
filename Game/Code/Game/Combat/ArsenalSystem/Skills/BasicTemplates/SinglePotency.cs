@@ -29,8 +29,10 @@ public partial class SinglePotency : Skill
             var potency = Effects.Where(e => e.Type == EffectData.EffectType.Potency);
             if (potency.Any())
             {
+                GD.Print("The value of the sum is: " + potency.Sum(p => p.Value));
                 GD.Print("The sum of all the potency effects are:" + ( AdjustedPotency * potency.Sum(p => p.Value))); 
                 workingValue = (int)( AdjustedPotency * potency.Sum(p => p.Value));
+                GD.Print("New working value : " + workingValue);
             }
         }
         
@@ -56,7 +58,7 @@ public partial class SinglePotency : Skill
             case MD.SkillType.HEAL:
             {
                 var target = Player.CurrentFriendlyTarget.Status;
-                var healDone = target.InflictHeal(AdjustedPotency, Player);
+                var healDone = target.InflictHeal(workingValue, Player);
                 var message = new CombatMessage()
                 {
                     Caster = int.Parse(Player.Name),
@@ -72,7 +74,7 @@ public partial class SinglePotency : Skill
             case MD.SkillType.TANK:
             {
                 var target = (AdversaryStatus)Player.CurrentTarget.Status;
-                var dmgDone = target.InflictDamage(AdjustedPotency, Player);
+                var dmgDone = target.InflictDamage(workingValue, Player);
                 target.InflictThreat((int)(dmgDone * ThreatMultiplier), Player);
                 var message = new CombatMessage()
                 {

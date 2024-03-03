@@ -43,7 +43,7 @@ public class GamesController : ControllerBase
             // Could not auth this Controller.
             if(pfToken.Error != null)
             {
-                _logger.Log(LogLevel.Information, "Could Not auth title..");
+                _logger.Log(LogLevel.Information, ("Could Not auth title.." + pfToken.Error.ErrorMessage));
                 return NoContent();
             }
             else 
@@ -52,7 +52,7 @@ public class GamesController : ControllerBase
                 //Could Not Retrieve build list..
                 if(buildIds.Error != null)
                 {
-                    _logger.Log(LogLevel.Information, "Could Not Create Server..");
+                    _logger.Log(LogLevel.Information, ("Could Not Create Server.." + buildIds.Error.ErrorMessage));
                     return NoContent();
                 }
                 // OK got a list of builds..
@@ -98,6 +98,10 @@ public class GamesController : ControllerBase
                             };
                             return Ok(response);
                         }
+                    }
+                    else
+                    {
+                        _logger.Log(LogLevel.Information, "Could Not get a server because the list is empty!");
                     }
                 }
             }
