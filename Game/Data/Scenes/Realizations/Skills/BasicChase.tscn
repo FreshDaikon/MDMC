@@ -62,8 +62,9 @@ _data = {
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ctkbm"]
 albedo_color = Color(1, 0.396078, 1, 1)
 
-[node name="RealizationTemplate" type="Node3D"]
+[node name="RealizationTemplate" type="Node3D" node_paths=PackedStringArray("AnimationPlayer")]
 script = ExtResource("1_rqa07")
+AnimationPlayer = NodePath("RealizationPlayer")
 
 [node name="RealizationPlayer" type="AnimationPlayer" parent="."]
 unique_name_in_owner = true

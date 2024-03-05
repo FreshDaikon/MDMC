@@ -44,7 +44,7 @@ emission = Color(1, 0, 0, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_qorjo"]
 
-[node name="PlayerEntity" type="Node3D"]
+[node name="PlayerEntity" type="Node3D" groups=["Players"]]
 script = ExtResource("1_6j6p2")
 targetable = true
 team = 0
@@ -90,8 +90,12 @@ texture_albedo = SubResource("GradientTexture2D_hrlgr")
 
 [node name="Hero_Male_Base2" parent="Controller" instance=ExtResource("9_b3bqd")]
 
+[node name="BODY" parent="Controller/Hero_Male_Base2" index="0"]
+layers = 6
+
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Controller"]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0.0527783, 0)
+layers = 6
 material_override = SubResource("StandardMaterial3D_pvarx")
 mesh = SubResource("SphereMesh_qorjo")
 

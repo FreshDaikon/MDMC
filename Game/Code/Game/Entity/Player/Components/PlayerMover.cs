@@ -56,6 +56,7 @@ public partial class PlayerMover : Node, IEntityMover
             _jumpGravity = _velocity.Y / apexDuration;
             if(player.Arsenal.IsCasting || player.Arsenal.IsChanneling)
             {
+                if(player.Arsenal.CastingSkill != null) player.Arsenal.TryInterruptCast();
                 if(player.Arsenal.ChannelingSkill != null) player.Arsenal.TryInterruptChanneling();
             }  
 		}
@@ -74,7 +75,8 @@ public partial class PlayerMover : Node, IEntityMover
         _direction = controller.IsOnFloor() ? input.Direction : _direction;
         if(_direction.Length() > 0f && (player.Arsenal.IsCasting || player.Arsenal.IsChanneling))
         {
-           if(player.Arsenal.ChannelingSkill != null) player.Arsenal.TryInterruptChanneling();
+            if(player.Arsenal.CastingSkill != null) player.Arsenal.TryInterruptCast();
+            if(player.Arsenal.ChannelingSkill != null) player.Arsenal.TryInterruptChanneling();
         }
         controller.Velocity = _velocity; //controller.Velocity.Lerp(velocity, delta * acceleration);        
     }
@@ -95,6 +97,8 @@ public partial class PlayerMover : Node, IEntityMover
     public void Teleport(Vector3 position)
     {
         GD.Print("Teleporting player!");
+        if(player.Arsenal.CastingSkill != null) player.Arsenal.TryInterruptCast();
+        if(player.Arsenal.ChannelingSkill != null) player.Arsenal.TryInterruptChanneling();
         player.Controller.Position = position;
     }
 }

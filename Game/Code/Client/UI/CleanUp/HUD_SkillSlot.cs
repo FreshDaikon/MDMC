@@ -84,10 +84,10 @@ public partial class HUD_SkillSlot : Control
 			switch (skill.TimerType)
 			{
 				case MD.SkillTimerType.GCD:
+				{
 					var gcdLeft = gcd - gcdLapsed;
 					var gcdPercent = 100 - ((float)gcdLapsed / (float)gcd * 100f);
-				{
-					var cd = skill.AdjustedCooldown;
+					var cd = skill.Cooldown;
 					var cdStartTime = skill.StartTime;
 					var cdLapsed = Mathf.Clamp(GameManager.Instance.GameClock - cdStartTime, 0, cd);
 					var cdPercent = 100 - cdLapsed / cd * 100f;
@@ -102,7 +102,6 @@ public partial class HUD_SkillSlot : Control
 					{
 						_gcdBar.Value = 100 - (gcdLapsed / gcd * 100f);
 					}
-
 					break;
 				}
 				case MD.SkillTimerType.OGCD:
@@ -114,8 +113,10 @@ public partial class HUD_SkillSlot : Control
 					break;
 				}
 				default:
+				{
 					_gcdBar.Value = 0;
 					break;
+				}
 			}
 			
 		}

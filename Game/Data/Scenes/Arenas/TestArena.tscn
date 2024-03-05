@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://04nun7ayudyy"]
+[gd_scene load_steps=18 format=3 uid="uid://04nun7ayudyy"]
 
 [ext_resource type="Script" path="res://Code/Game/Arena/Arena.cs" id="1_1mb5o"]
 [ext_resource type="PackedScene" uid="uid://c3rdlqkf2jd7e" path="res://Assets/3D/Hero_Female_Base.glb" id="3_4es0r"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://Code/Game/GameManager.cs" id="4_3qdsl"]
 [ext_resource type="PackedScene" uid="uid://mqy1fcnfwrjp" path="res://Scenes/Game/EntitySystem/Adversary/Bosses/Test/TestBoss.tscn" id="5_atyi8"]
 [ext_resource type="PackedScene" uid="uid://cqhl1y0g5lq7x" path="res://Assets/3D/Heroes/Hero_Male_Base.blend" id="5_esgk8"]
+[ext_resource type="PackedScene" uid="uid://clp5eucv45owf" path="res://Data/Scenes/Realizations/Boss/CircleAoe.tscn" id="8_fbpbu"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tt0g8"]
 sky_top_color = Color(0.156863, 0.329412, 0.858824, 1)
@@ -152,7 +153,6 @@ mesh = SubResource("BoxMesh_bxdhf")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Arena/Enviroment/ArenaMesh"]
 transform = Transform3D(1.00623, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
-layers = 4
 material_override = SubResource("StandardMaterial3D_1vy03")
 mesh = SubResource("CylinderMesh_gg4ma")
 skeleton = NodePath("../../..")
@@ -193,3 +193,6 @@ unique_name_in_owner = true
 [node name="ArenaCam" type="Camera3D" parent="."]
 transform = Transform3D(0.707107, -0.353553, 0.612373, 0, 0.866025, 0.5, -0.707107, -0.353553, 0.612372, 57.0998, 40.4378, 53.514)
 fov = 23.8
+
+[node name="CircleAoe" parent="." instance=ExtResource("8_fbpbu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.38175, -0.060022, 1.45416)

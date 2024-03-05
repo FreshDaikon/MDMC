@@ -27,7 +27,6 @@ public partial class SinglePotencyData: SkillData
         skill.OnSkillCastRealization = _onSkillCastRealizationData;
         // Rules:
         skill.Rules = Rules;
-        
         // Finally pass it back :
         return skill;
     }

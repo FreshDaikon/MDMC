@@ -1,27 +1,14 @@
-[gd_resource type="Resource" script_class="SinglePotencyData" load_steps=12 format=3 uid="uid://buaryqey4c0ip"]
+[gd_resource type="Resource" script_class="SinglePotencyData" load_steps=8 format=3 uid="uid://buaryqey4c0ip"]
 
 [ext_resource type="Script" path="res://Code/System/DataID.cs" id="1_1rwsc"]
 [ext_resource type="Script" path="res://Code/Game/Data/Skills/SinglePotencyData.cs" id="1_enp8j"]
 [ext_resource type="Texture2D" uid="uid://cj8mgojnx4djy" path="res://Assets/UI/ArsenalSystem/Skills/Skill_Former_01.png" id="2_ddehh"]
-[ext_resource type="Script" path="res://Code/Game/Data/Decorators/EffectData.cs" id="3_6g4rp"]
 [ext_resource type="PackedScene" uid="uid://xk1bpl62qpho" path="res://Data/Scenes/Realizations/Skills/BasicChase.tscn" id="3_g30or"]
-[ext_resource type="Script" path="res://Code/Game/Data/EffectRules/RuleSkillEffectData.cs" id="4_f1owo"]
 [ext_resource type="Script" path="res://Code/Game/Data/Realizations/ChaseTargetRealizationData.cs" id="4_hrhr2"]
 
 [sub_resource type="Resource" id="Resource_8ve87"]
 script = ExtResource("1_1rwsc")
 Id = -709526078
-
-[sub_resource type="Resource" id="Resource_vv3cd"]
-script = ExtResource("3_6g4rp")
-Type = 5
-Value = 0.5
-
-[sub_resource type="Resource" id="Resource_15r55"]
-script = ExtResource("4_f1owo")
-TypeToEffect = 1
-EffectData = SubResource("Resource_vv3cd")
-IsConditional = false
 
 [sub_resource type="Resource" id="Resource_lwpkn"]
 script = ExtResource("4_hrhr2")
@@ -41,7 +28,7 @@ CastTime = 0.0
 ChannelTime = 9.0
 TickRate = 1.0
 ThreatMultiplier = 1.0
-Rules = Array[Object]([SubResource("Resource_15r55")])
+Rules = Array[Object]([])
 ID = SubResource("Resource_8ve87")
 Name = "Flow Release"
 Description = "A simple relase type that affects the target every so often while channeling."

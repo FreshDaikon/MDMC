@@ -8,7 +8,7 @@ public partial class EntityController : CharacterBody3D
 {
     public List<Vector3> Forces = new List<Vector3>();
     private float _gravity = (float)ProjectSettings.GetSetting("physics/3d/default_gravity");
-    private const double InterpolationOffset = 0.1;
+    private const double InterpolationOffset = 0.2;
 
     private List<EntityState> _entityStatesBuffer = new();
     private List<EntityState> _localStatesBuffer = new();
@@ -42,8 +42,9 @@ public partial class EntityController : CharacterBody3D
         if(!GameManager.Instance.IsGameRunning())
         { 
             return;
-        }        
-        var renderTime = GameManager.Instance.GameClock - Mathf.Clamp(GameManager.Instance.GetLatency(), 0.02, InterpolationOffset);
+        }
+
+        var renderTime = GameManager.Instance.GameClock - 0.1;
 
         if(_entityStatesBuffer.Count > 1)
         {

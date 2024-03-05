@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://mqy1fcnfwrjp"]
+[gd_scene load_steps=23 format=3 uid="uid://mqy1fcnfwrjp"]
 
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/AdversaryEntity.cs" id="1_c7f3p"]
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/TimelineSolver/TimelineManager.cs" id="1_vf7wp"]
@@ -6,8 +6,22 @@
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/Components/AdversaryMover.cs" id="4_kbwyt"]
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/Actions/Behaviors/AutoAttack.cs" id="5_4tabc"]
 [ext_resource type="PackedScene" uid="uid://gtdhgpxhnebn" path="res://Scenes/Game/EntitySystem/Shared/EntityModifiers.tscn" id="5_cqkqa"]
+[ext_resource type="Script" path="res://Code/Game/Entity/Adversary/Actions/Mechanics/SpawnCircleAoe.cs" id="5_e17fn"]
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/Components/AdversaryStatus.cs" id="6_ahpdf"]
+[ext_resource type="PackedScene" uid="uid://clp5eucv45owf" path="res://Data/Scenes/Realizations/Boss/CircleAoe.tscn" id="6_gcqwy"]
+[ext_resource type="Script" path="res://Code/Game/Data/Realizations/Boss/Mechanics/CircleAoeRealizationData.cs" id="7_sj66h"]
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/Components/AdversaryController.cs" id="7_ymrw4"]
+[ext_resource type="Script" path="res://Code/Game/Data/Realizations/Boss/Mechanics/RectAoeRealizationData.cs" id="8_1e1qa"]
+[ext_resource type="Script" path="res://Code/Game/Entity/Adversary/Actions/Mechanics/SpawnRectAoe.cs" id="8_od7gs"]
+[ext_resource type="PackedScene" uid="uid://dogebc18mwo8y" path="res://Data/Scenes/Realizations/Boss/RectAoeRealization.tscn" id="9_ba2ob"]
+
+[sub_resource type="Resource" id="Resource_h6iss"]
+script = ExtResource("7_sj66h")
+Scene = ExtResource("6_gcqwy")
+
+[sub_resource type="Resource" id="Resource_raby0"]
+script = ExtResource("8_1e1qa")
+Scene = ExtResource("9_ba2ob")
 
 [sub_resource type="Animation" id="Animation_l313m"]
 resource_name = "Phase_01"
@@ -55,6 +69,40 @@ tracks/2/keys = {
 "method": &"StartBehavior"
 }]
 }
+tracks/3/type = "method"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("TimeLineManager/AOECircle")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(1.3, 7.1),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"InitiateMechanic"
+}, {
+"args": [],
+"method": &"InitiateMechanic"
+}]
+}
+tracks/4/type = "method"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("TimeLineManager/AoeSquare")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(4.3, 9.3),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"InitiateMechanic"
+}, {
+"args": [],
+"method": &"InitiateMechanic"
+}]
+}
 
 [sub_resource type="Animation" id="Animation_y045m"]
 resource_name = "Phase_02"
@@ -91,12 +139,22 @@ chaseDistance = 4.0
 
 [node name="AutoAttack" type="Node" parent="TimeLineManager"]
 script = ExtResource("5_4tabc")
-attackDamage = 500
+attackDamage = 50
 
 [node name="AutoAttack2" type="Node" parent="TimeLineManager"]
 script = ExtResource("5_4tabc")
 attackDamage = 50
 attackTime = 1.0
+
+[node name="AOECircle" type="Node" parent="TimeLineManager"]
+script = ExtResource("5_e17fn")
+_realizationData = SubResource("Resource_h6iss")
+_radius = 10.0
+
+[node name="AoeSquare" type="Node" parent="TimeLineManager"]
+script = ExtResource("8_od7gs")
+_realizationData = SubResource("Resource_raby0")
+_size = Vector2(4, 20)
 
 [node name="BehaviorPlayer" type="AnimationPlayer" parent="."]
 unique_name_in_owner = true
@@ -114,7 +172,7 @@ unique_name_in_owner = true
 [node name="EntityStatus" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("6_ahpdf")
-MaxHealth = 5000000
+MaxHealth = 100000
 
 [node name="Controller" type="CharacterBody3D" parent="."]
 unique_name_in_owner = true
@@ -127,5 +185,6 @@ shape = SubResource("CapsuleShape3D_jjl8y")
 
 [node name="Model" type="MeshInstance3D" parent="Controller"]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 3, 0)
+layers = 6
 material_override = SubResource("StandardMaterial3D_slwbi")
 mesh = SubResource("CapsuleMesh_j482u")

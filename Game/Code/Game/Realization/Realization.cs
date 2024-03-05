@@ -6,32 +6,26 @@ namespace Daikon.Game;
 public partial class Realization: Node3D
 {    
     // Configuration:
-    protected AnimationPlayer animationPlayer;
+   
+    protected float Lifetime;
+    protected ulong StartTime;
 
     [Signal]
     public delegate void OnRealizationEndEventHandler();
 
-    public override void _Ready()
+    public override void _PhysicsProcess(double delta)
     {
-        animationPlayer = GetNode<AnimationPlayer>("%RealizationPlayer");
-        animationPlayer.AnimationFinished += (animation) => Despawn(animation);
+        var lapsed = (Time.GetTicksMsec() - StartTime) / 1000f;
+        if (!(lapsed > Lifetime)) return;
+        EmitSignal(SignalName.OnRealizationEnd);
+        Despawn();
     }
 
-    
     public virtual void Spawn(){}
-
-
-    protected void OnEndStart()
-    {
-        EmitSignal(nameof(OnRealizationEnd));
-    }
-    
-    protected void Despawn(string animation)
+   
+    protected void Despawn()
     {        
-        if(animation == "End")
-        {
-            QueueFree();
-        }        
+        QueueFree();
     }
     public void Kill()
     {   

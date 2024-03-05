@@ -51,7 +51,7 @@ public partial class PlayerArsenal: Node
         {
             Player.Status.KnockedOut += () =>
             {
-                if(IsCasting) TryInteruptCast();
+                if(IsCasting) TryInterruptCast();
                 if(IsChanneling) TryInterruptChanneling();
             };
             hasBeenInitLocal = true;
@@ -206,10 +206,9 @@ public partial class PlayerArsenal: Node
             {
                 return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.IS_CASTING };
             }
-            if(IsChanneling)
-            {
-                return container.TriggerSkill(index); 
-            }
+            
+            TryInterruptChanneling();
+            
             if(container.IsSkillOGCD(index))
             {
                 GD.Print("Try Trigger OGCD Skill:");
@@ -222,22 +221,17 @@ public partial class PlayerArsenal: Node
             {
                 return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.ON_COOLDOWN };
             }
-            else
+
+            var result = container.TriggerSkill(index);
+            if(result.SUCCESS)
             {
-                var result = container.TriggerSkill(index);
-                if(result.SUCCESS)
-                {
-                    GD.Print("We triggered and it was success.");
-                    Rpc(nameof(SyncGCD), GameManager.Instance.GameClock);
-                    GCDStartTime = GameManager.Instance.GameClock;
-                    return result;
-                }
-                else
-                {
-                    GD.Print("We triggered, but it was not success");
-                    return result;
-                }
-            }      
+                GD.Print("We triggered and it was success.");
+                Rpc(nameof(SyncGCD), GameManager.Instance.GameClock);
+                GCDStartTime = GameManager.Instance.GameClock;
+                return result;
+            }
+            GD.Print("We triggered, but it was not success");
+            return result;
         }
         return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.ERROR };
     }
@@ -272,10 +266,10 @@ public partial class PlayerArsenal: Node
 
     public void FinishCasting(SkillResult result)
     {
-        GD.Print("Skill result after channeling:" + result.result);
+        GD.Print("Skill result after casting:" + result.result);
         CastingSkill = null;
         IsCasting = false;
-        Rpc(nameof(SyncCasting), IsCasting, CastingStartTime, CastingTime);
+        Rpc(nameof(SyncCasting), IsCasting, CastingStartTime, 0);
     }
 
     public void FinishChanneling(SkillResult result)
@@ -283,35 +277,31 @@ public partial class PlayerArsenal: Node
         GD.Print("Skill result after channeling:" + result.result);
         ChannelingSkill = null;
         IsChanneling = false;
-        Rpc(nameof(SyncChanneling), IsChanneling, ChannelingStartTime, ChannelingTime);
+        Rpc(nameof(SyncChanneling), IsChanneling, ChannelingStartTime, 0);
     }
 
-    public void TryInteruptCast()
+    public void TryInterruptCast()
     {
-        if (!IsCasting || CastingSkill.CanMove) return;
+        if (!IsCasting) return;
         
         if(CastingSkill.TimerType == MD.SkillTimerType.GCD)
         { 
-            GCDStartTime = GCDStartTime - BaseGcd;
+            GCDStartTime -= BaseGcd;
             Rpc(nameof(SyncGCD), GCDStartTime);
         }
         CastingSkill.InterruptCast();
         CastingSkill = null;
         IsCasting = false;
-        Rpc(nameof(SyncCasting), IsCasting, CastingStartTime, CastingTime);
-        var result = new SkillResult() { result = MD.ActionResult.CASTING_INTERUPTED };
+        Rpc(nameof(SyncCasting), IsCasting, CastingStartTime, 0);
     }
 
     public void TryInterruptChanneling()
     {
-        
-        if (!IsChanneling || ChannelingSkill.CanMove) return;
-        
+        if (!IsChanneling) return;
         ChannelingSkill.InterruptChannel();
         ChannelingSkill = null;
         IsChanneling = false;
-        Rpc(nameof(SyncCasting), IsCasting, CastingStartTime, CastingTime);
-        FinishChanneling(new SkillResult(){  } );
+        Rpc(nameof(SyncChanneling), IsChanneling, ChannelingStartTime, 0);
     }
     #endregion
        
@@ -372,22 +362,6 @@ public partial class PlayerArsenal: Node
     public SkillResult CanCast(MD.ContainerSlot containerSlot, int slot)
     {
         var result = new SkillResult() { SUCCESS = false, result= MD.ActionResult.ERROR };
-        if(IsCasting)
-        {
-            result.result = MD.ActionResult.IS_CASTING;
-            return result;
-        }
-        if(IsChanneling)
-        {
-            GD.Print("This channeling Triggered!");
-            result.result = MD.ActionResult.IS_CHANNELING;
-            return result;
-        }
-        if(IsArsenalOnCD())
-        {
-            result.result = MD.ActionResult.ON_COOLDOWN;
-            return result;
-        }  
         var container = GetSkillContainer(containerSlot);
         if(container == null)
         {
@@ -400,6 +374,16 @@ public partial class PlayerArsenal: Node
             result.result = MD.ActionResult.ERROR;
             return result;
         }
+        if(IsCasting)
+        {
+            result.result = MD.ActionResult.IS_CASTING;
+            return result;
+        }
+        if(IsArsenalOnCD() && skill.TimerType == MD.SkillTimerType.GCD)
+        {
+            result.result = MD.ActionResult.ON_COOLDOWN;
+            return result;
+        }  
         if(skill.IsOnCooldown())
         {            
             result.result = MD.ActionResult.ON_COOLDOWN;

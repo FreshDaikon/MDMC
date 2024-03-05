@@ -4,16 +4,16 @@ namespace Daikon.Game.General;
 
 public partial class ChaseTargetRealization : Realization
 {
-    private float _lifetime;
+    [Export]
+    protected AnimationPlayer AnimationPlayer;
+    
     private Vector3 _startPosition;
     private Node3D _target;
     private float _speed;
-    private ulong _startTime;
-    
 
     public void SetData(Vector3 startPosition, Node3D target, float lifetime, float speed)
     {
-        _lifetime = lifetime;
+        Lifetime = lifetime;
         _startPosition = startPosition;
         _target = target;
         _speed = speed;
@@ -23,24 +23,23 @@ public partial class ChaseTargetRealization : Realization
     {
         ArenaManager.Instance.GetRealizationPool()?.AddChild(this);
         GlobalPosition = _startPosition;
-        _startTime = Time.GetTicksMsec();
-        animationPlayer.Play("Spawn"); 
+        StartTime = Time.GetTicksMsec();
+        AnimationPlayer.Play("Spawn"); 
     }
 
     public override void _PhysicsProcess(double delta)
     {
-        base._PhysicsProcess(delta);
-        var lapsed = (Time.GetTicksMsec() - _startTime) / 1000f;
+        var lapsed = (Time.GetTicksMsec() - StartTime) / 1000f;
         
         if (_target == null) return;
         
-        var lapsedMultiplier = Mathf.Max(1f, lapsed/_lifetime);
+        var lapsedMultiplier = Mathf.Max(1f, lapsed/Lifetime);
         GlobalPosition = GlobalPosition.MoveToward(_target.GlobalPosition, (_speed * lapsedMultiplier * (float)delta));
         var distance = GlobalPosition.DistanceSquaredTo(_target.GlobalPosition);
         
         if (!(distance <= 0.01f)) return;
-        if(animationPlayer.CurrentAnimation == "End") return;
-        OnEndStart();
-        animationPlayer.Play("End");
+        EmitSignal(SignalName.OnRealizationEnd);
+        Despawn();
+        
     }
 }
