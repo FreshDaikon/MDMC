@@ -129,7 +129,6 @@ public partial class UILandingPage : Control
     private void StartLocalServer()
     {
         ClientMultiplayerManager.Instance.StartLocalServer(_arenas[_arenaListOptions.Selected]);
-        ArenaManager.Instance.LoadArena(_arenas[_arenaListOptions.Selected].Id);
     }
     private void JoinLocalServer()
     {

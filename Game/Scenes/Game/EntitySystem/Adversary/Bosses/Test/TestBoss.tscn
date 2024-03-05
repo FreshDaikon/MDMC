@@ -25,7 +25,7 @@ Scene = ExtResource("9_ba2ob")
 
 [sub_resource type="Animation" id="Animation_l313m"]
 resource_name = "Phase_01"
-length = 10.0
+length = 15.0
 loop_mode = 1
 tracks/0/type = "method"
 tracks/0/imported = false
@@ -76,12 +76,9 @@ tracks/3/path = NodePath("TimeLineManager/AOECircle")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(1.3, 7.1),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(3),
+"transitions": PackedFloat32Array(1),
 "values": [{
-"args": [],
-"method": &"InitiateMechanic"
-}, {
 "args": [],
 "method": &"InitiateMechanic"
 }]
@@ -93,7 +90,7 @@ tracks/4/path = NodePath("TimeLineManager/AoeSquare")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(4.3, 9.3),
+"times": PackedFloat32Array(6.5, 10),
 "transitions": PackedFloat32Array(1, 1),
 "values": [{
 "args": [],
@@ -150,11 +147,13 @@ attackTime = 1.0
 script = ExtResource("5_e17fn")
 _realizationData = SubResource("Resource_h6iss")
 _radius = 10.0
+_resolveTime = 3.0
 
 [node name="AoeSquare" type="Node" parent="TimeLineManager"]
 script = ExtResource("8_od7gs")
 _realizationData = SubResource("Resource_raby0")
 _size = Vector2(4, 20)
+_resolveTime = 3.0
 
 [node name="BehaviorPlayer" type="AnimationPlayer" parent="."]
 unique_name_in_owner = true
@@ -188,3 +187,6 @@ transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 3, 0)
 layers = 6
 material_override = SubResource("StandardMaterial3D_slwbi")
 mesh = SubResource("CapsuleMesh_j482u")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+avoidance_enabled = true

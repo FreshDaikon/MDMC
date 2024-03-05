@@ -33,15 +33,6 @@ public partial class ArenaManager : Node
         return _currentArena;
     }
 
-    public Node3D GetRealizationPool()
-    {
-        if(_currentArena != null)
-        {
-            return _currentArena.RealizationPool;
-        }
-        return null;
-    }
-
     public bool HasArena()
     {
         return _currentArena != null;

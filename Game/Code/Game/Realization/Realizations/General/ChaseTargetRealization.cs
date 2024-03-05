@@ -21,7 +21,7 @@ public partial class ChaseTargetRealization : Realization
 
     public override void Spawn()
     {
-        ArenaManager.Instance.GetRealizationPool()?.AddChild(this);
+        RealizationManager.Instance?.AddRealization(this);
         GlobalPosition = _startPosition;
         StartTime = Time.GetTicksMsec();
         AnimationPlayer.Play("Spawn"); 
@@ -40,6 +40,5 @@ public partial class ChaseTargetRealization : Realization
         if (!(distance <= 0.01f)) return;
         EmitSignal(SignalName.OnRealizationEnd);
         Despawn();
-        
     }
 }

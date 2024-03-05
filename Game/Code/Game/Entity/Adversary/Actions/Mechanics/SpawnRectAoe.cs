@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Daikon.Client;
 using Daikon.Game.Realizations.Boss.Mechanics;
 using Godot;
 
@@ -21,13 +22,15 @@ public partial class SpawnRectAoe: BaseMechanic
         var playerEntities = ArenaManager.Instance.GetCurrentArena().GetPlayers();
         _startTime = Time.GetTicksMsec();
         
+        manager.Entity.StartCast(_resolveTime);
+        
         foreach (var player in playerEntities)
         {
             var startPosition = manager.Entity.Controller.GlobalPosition;
             var targetPosition = player.Controller.GlobalPosition;
             Rpc(nameof(SpawnIndicatorOnClient), startPosition, targetPosition);
             var detector = new Area3D();
-            ArenaManager.Instance.GetCurrentArena().RealizationPool.AddChild(detector);
+            RealizationManager.Instance?.AddDisposable(detector);
             detector.Position = startPosition;
             var collision = new CollisionShape3D();
             var shape = new BoxShape3D();
@@ -40,14 +43,6 @@ public partial class SpawnRectAoe: BaseMechanic
             detector.BodyExited += OnBodyExited;
             _detectors.Add(detector);
         }
-    }
-    [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void SpawnIndicatorOnClient(Vector3 position, Vector3 target)
-    {
-        var newAoe = (RectAoeRealization)_realizationData.GetRealization();
-        newAoe.SetData(position, target, _resolveTime, _size);
-        newAoe.Spawn();
-        
     }
 
     private void OnBodyEntered(Node3D body)
@@ -84,6 +79,7 @@ public partial class SpawnRectAoe: BaseMechanic
         foreach (var player in _players)
         {
             player.Status.InflictDamage(_damage, manager.Entity);
+            Rpc(nameof(SpawnDamageNumber), player.Controller.GlobalPosition + new Vector3(0f, player.EntityHeight, 0f), _damage);
         }
         foreach (var detector in _detectors.ToList())
         {
@@ -91,5 +87,19 @@ public partial class SpawnRectAoe: BaseMechanic
             detector.QueueFree();
         }
         base.ResolveMechanic();
+    }
+    
+    [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SpawnIndicatorOnClient(Vector3 position, Vector3 target)
+    {
+        var newAoe = (RectAoeRealization)_realizationData.GetRealization();
+        newAoe.SetData(position, target, _resolveTime, _size);
+        newAoe.Spawn();
+    }
+
+    [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SpawnDamageNumber(Vector3 position, int value)
+    {
+        RealizationManager.Instance.SpawnDamageNumber(value, position, new Color("#ff0000"));
     }
 }

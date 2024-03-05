@@ -19,6 +19,11 @@ public partial class UI_UnitFrame : Control
 	private Label NameLabel;
 	private Entity unit;
 
+	[Export] private Vector2 CastSize = new Vector2(188f, 18f);
+	[Export] private ColorRect CastBG;
+	[Export] private TextureRect CastBar;
+	
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -44,6 +49,7 @@ public partial class UI_UnitFrame : Control
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+		CastBG.Visible = false;
 		//TODO: implemen unit check here!
 		if(unit != null)
 		{
@@ -69,6 +75,7 @@ public partial class UI_UnitFrame : Control
 			}
 			else if(unit is AdversaryEntity)
 			{
+				var adv = (AdversaryEntity)unit;
 				HealthBar.Modulate = new Color("#eb7575");
 				var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();
 				if(players == null)
@@ -80,6 +87,13 @@ public partial class UI_UnitFrame : Control
 						SelectionIndicator.Visible = true;
 					else
 						SelectionIndicator.Visible = false;
+				}
+
+				if (adv._isCasting)
+				{
+					CastBG.Visible = true;
+					var lapsed = GameManager.Instance.GameClock - adv._startTime;
+					CastBar.Size = new Vector2(CastSize.X * (float)(lapsed / adv._castTime), CastSize.Y);
 				}
 			}
 			//TODO : modulate color based on either team/skills etc.

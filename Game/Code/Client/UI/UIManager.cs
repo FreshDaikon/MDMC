@@ -1,3 +1,4 @@
+using Daikon.Game;
 using Daikon.Helpers;
 using Godot;
 
@@ -68,24 +69,34 @@ public partial class UIManager : Node
     {
         if(Input.IsActionJustPressed("Start"))
         {
-            if(_currentState == UIState.HUD)
+            if(GameManager.Instance == null) return;
+            
+            if (!GameManager.Instance.IsGameRunning())
             {
-                TrySetUIState(UIState.Frontend);
-            }
-            else
-            {
-                TrySetUIState(UIState.HUD);
+                if(_currentState == UIState.HUD)
+                {
+                    TrySetUIState(UIState.Frontend);
+                }
+                else
+                {
+                    TrySetUIState(UIState.HUD);
+                }
             }
         }
         if(Input.IsActionJustPressed("Select"))
         {
-            if(_currentState == UIState.HUD)
+            if(GameManager.Instance == null) return;
+
+            if (!GameManager.Instance.IsGameRunning())
             {
-                TrySetUIState(UIState.Ingame);
-            }
-            else
-            {
-                TrySetUIState(UIState.HUD);
+                if (_currentState == UIState.HUD)
+                {
+                    TrySetUIState(UIState.Ingame);
+                }
+                else
+                {
+                    TrySetUIState(UIState.HUD);
+                }
             }
         }        
     }

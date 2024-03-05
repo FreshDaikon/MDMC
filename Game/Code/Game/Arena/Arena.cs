@@ -10,7 +10,6 @@ public partial class Arena : Node3D
     [Export] private double _arenaDuration = 7200;
     [Export] private Node3D[] _playerStartPositions;
     //containers:
-    public Node3D RealizationPool;
     private Node3D _entityContainer;
     //How Long has the arena been going in minutes:
     private double _startTime;
@@ -27,7 +26,6 @@ public partial class Arena : Node3D
     public override void _Ready()
     {
         _entityContainer = GetNode<Node3D>("%EntityContainer");
-        RealizationPool = GetNode<Node3D>("%RealizationPool");
         GameManager.Instance.GameStarted += StartArena;
     }
 

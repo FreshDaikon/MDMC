@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cplev7d1ykh7j"]
+[gd_scene load_steps=11 format=3 uid="uid://cplev7d1ykh7j"]
 
 [ext_resource type="Script" path="res://Code/Client/UI/HUD/UnitFrames/UI_UnitFrame.cs" id="1_m4g0v"]
 [ext_resource type="FontFile" uid="uid://b1qmam0dvludo" path="res://Assets/UI/Fonts/LibreFranklin-Medium.ttf" id="1_ml87c"]
@@ -28,7 +28,14 @@ gradient = SubResource("Gradient_308nc")
 fill_from = Vector2(0, 1)
 fill_to = Vector2(0, 0)
 
-[node name="UnitFrame" type="Control"]
+[sub_resource type="Gradient" id="Gradient_hpjh1"]
+offsets = PackedFloat32Array(0, 0.518095, 1)
+colors = PackedColorArray(0.690196, 0.4, 0.109804, 1, 1, 0.713726, 0.431373, 1, 0.708069, 0.4181, 0.128356, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_mttcp"]
+gradient = SubResource("Gradient_hpjh1")
+
+[node name="UnitFrame" type="Control" node_paths=PackedStringArray("CastBG", "CastBar")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -36,6 +43,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_m4g0v")
+CastBG = NodePath("CastBG")
+CastBar = NodePath("CastBG/CastBar")
 
 [node name="SelectionIndicator" type="ColorRect" parent="."]
 unique_name_in_owner = true
@@ -85,3 +94,21 @@ offset_bottom = 23.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("1_ml87c")
 text = "SomePlayerName"
+
+[node name="CastBG" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 76.0
+offset_right = 195.0
+offset_bottom = 96.0
+color = Color(0, 0, 0, 1)
+
+[node name="CastBar" type="TextureRect" parent="CastBG"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 189.0
+offset_bottom = 19.0
+pivot_offset = Vector2(0, 9)
+texture = SubResource("GradientTexture1D_mttcp")
+expand_mode = 1

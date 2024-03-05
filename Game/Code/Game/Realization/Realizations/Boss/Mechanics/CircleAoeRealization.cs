@@ -21,7 +21,7 @@ public partial class CircleAoeRealization: Realization
 
     public override void Spawn()
     {
-        ArenaManager.Instance.GetRealizationPool()?.AddChild(this);
+        RealizationManager.Instance?.AddRealization(this);
         StartTime = Time.GetTicksMsec();
         GlobalPosition = _position;
         _indicator.Size = new Vector3(0.01f, 0.01f, 0.01f);

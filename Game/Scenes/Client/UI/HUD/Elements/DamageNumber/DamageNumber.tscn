@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://clfovbg7cevmv"]
 
 [ext_resource type="Script" path="res://Code/Client/UI/CleanUp/DamageNumber.cs" id="1_q7qxf"]
-[ext_resource type="FontFile" uid="uid://xv28cftjto52" path="res://Assets/UI/Fonts/twoweekendssans-regular.otf" id="2_gy811"]
+[ext_resource type="FontFile" uid="uid://q3aynbg5gvis" path="res://Assets/UI/Fonts/LibreFranklin-BlackItalic.ttf" id="2_onsmx"]
 
 [sub_resource type="Animation" id="Animation_o075t"]
 resource_name = "FloatAway"
@@ -94,8 +94,8 @@ pivot_offset = Vector2(50, 17.5)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
-theme_override_fonts/font = ExtResource("2_gy811")
-theme_override_font_sizes/font_size = 28
+theme_override_fonts/font = ExtResource("2_onsmx")
+theme_override_font_sizes/font_size = 32
 text = "99999"
 horizontal_alignment = 1
 vertical_alignment = 1

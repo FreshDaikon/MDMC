@@ -178,7 +178,7 @@ public partial class SinglePotency : Skill
 
         newRealization.OnRealizationEnd += () =>
         {
-            UIHUDMain.Instance?.SpawnDamageNumber(value.ToString(), color, newRealization.GlobalPosition);
+            RealizationManager.Instance?.SpawnDamageNumber(value, newRealization.GlobalPosition, color);
         };
     }
     

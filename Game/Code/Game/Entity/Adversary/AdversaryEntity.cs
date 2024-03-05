@@ -21,6 +21,10 @@ public partial class AdversaryEntity : Entity
 
     public AdversaryState CurrentState = AdversaryState.Idle;
 
+    public double _startTime { get; private set; }
+    public double _castTime { get; private set; }
+    public bool _isCasting { get; private set; }
+
     [Signal]    
     public delegate void EngagedEventHandler();       
 
@@ -52,7 +56,37 @@ public partial class AdversaryEntity : Entity
                 CheckAggro();
                 break;
         }
-    }    
+
+        if (_isCasting)
+        {
+            var lapsed = GameManager.Instance.GameClock - _startTime;
+            if (lapsed > _castTime)
+            {
+                _startTime = 0;
+                _castTime = 0;
+                _isCasting = false;
+                Rpc(nameof(SyncCastInfo), _isCasting, _startTime, _castTime);
+            }
+        }
+    }
+    
+    [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void SyncCastInfo(bool casting, double start, double time)
+    {
+        _isCasting = casting;
+        _startTime = start;
+        _castTime = time;
+    }
+   
+    public void StartCast(double castTime)
+    {
+        if(!Multiplayer.IsServer()) return;
+        
+        _isCasting = true;
+        _startTime = GameManager.Instance.GameClock;
+        _castTime = castTime;
+        Rpc(nameof(SyncCastInfo), _isCasting, _startTime, _castTime);
+    }
 
     private void CheckAggro()
     {

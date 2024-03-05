@@ -1,15 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://dogebc18mwo8y"]
+[gd_scene load_steps=5 format=3 uid="uid://dogebc18mwo8y"]
 
 [ext_resource type="Script" path="res://Code/Game/Realization/Realizations/Boss/Mechanics/RectAoeRealization.cs" id="1_qd10p"]
+[ext_resource type="Texture2D" uid="uid://b7porsy4xnmj2" path="res://Assets/Effects/Generated/RectAoe.tres" id="2_j70ti"]
 
-[sub_resource type="Gradient" id="Gradient_rwsqm"]
-offsets = PackedFloat32Array(0, 0.702595, 1)
-colors = PackedColorArray(0.54902, 0.227451, 0.0980392, 0, 0.577771, 0.238566, 0.104119, 0.346621, 1, 0.807843, 0.278431, 0.368627)
+[sub_resource type="PlaneMesh" id="PlaneMesh_crfa0"]
 
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_k224o"]
-gradient = SubResource("Gradient_rwsqm")
-fill = 2
-fill_from = Vector2(0.5, 0.5)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pael1"]
+albedo_color = Color(0, 0, 0, 1)
 
 [node name="RectAoeRealization" type="Node3D" node_paths=PackedStringArray("_indicator")]
 script = ExtResource("1_qd10p")
@@ -17,7 +14,13 @@ _indicator = NodePath("Decal")
 
 [node name="Decal" type="Decal" parent="."]
 size = Vector3(1, 1, 1)
-texture_albedo = SubResource("GradientTexture2D_k224o")
+texture_emission = ExtResource("2_j70ti")
+emission_energy = 0.5
 cull_mask = 1048569
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("PlaneMesh_crfa0")
+surface_material_override/0 = SubResource("StandardMaterial3D_pael1")

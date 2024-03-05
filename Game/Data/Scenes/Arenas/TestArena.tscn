@@ -1,13 +1,14 @@
-[gd_scene load_steps=18 format=3 uid="uid://04nun7ayudyy"]
+[gd_scene load_steps=20 format=3 uid="uid://04nun7ayudyy"]
 
 [ext_resource type="Script" path="res://Code/Game/Arena/Arena.cs" id="1_1mb5o"]
 [ext_resource type="PackedScene" uid="uid://c3rdlqkf2jd7e" path="res://Assets/3D/Hero_Female_Base.glb" id="3_4es0r"]
 [ext_resource type="Script" path="res://Code/Game/Combat/CombatManager.cs" id="3_xg5fo"]
 [ext_resource type="PackedScene" uid="uid://dbmg74fi1wc6k" path="res://Assets/3D/Hero_Male_Base.glb" id="4_0p4my"]
 [ext_resource type="Script" path="res://Code/Game/GameManager.cs" id="4_3qdsl"]
+[ext_resource type="Script" path="res://Code/Game/Realization/RealizationManager.cs" id="4_ns7cb"]
+[ext_resource type="PackedScene" uid="uid://clfovbg7cevmv" path="res://Scenes/Client/UI/HUD/Elements/DamageNumber/DamageNumber.tscn" id="5_6ucb5"]
 [ext_resource type="PackedScene" uid="uid://mqy1fcnfwrjp" path="res://Scenes/Game/EntitySystem/Adversary/Bosses/Test/TestBoss.tscn" id="5_atyi8"]
 [ext_resource type="PackedScene" uid="uid://cqhl1y0g5lq7x" path="res://Assets/3D/Heroes/Hero_Male_Base.blend" id="5_esgk8"]
-[ext_resource type="PackedScene" uid="uid://clp5eucv45owf" path="res://Data/Scenes/Realizations/Boss/CircleAoe.tscn" id="8_fbpbu"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tt0g8"]
 sky_top_color = Color(0.156863, 0.329412, 0.858824, 1)
@@ -67,6 +68,12 @@ top_radius = 20.0
 bottom_radius = 20.0
 height = 1.0
 
+[sub_resource type="NavigationMesh" id="NavigationMesh_c2hkm"]
+vertices = PackedVector3Array(-3.5935, 0.301025, 20.5302, -3.3435, 0.301025, 14.2802, -5.0935, 0.301025, 14.0302, -23.0935, 0.301025, 20.5302, -5.0935, 0.301025, -13.9698, -3.3435, 0.301025, -14.2198, -3.5935, 0.301025, -20.4698, -23.0935, 0.301025, -20.4698, -5.0935, 0.301025, 12.2802, -2.8435, 0.301025, 12.0302, -2.8435, 0.301025, -11.9698, -5.0935, 0.301025, -12.2198, -5.0935, 0.301025, 12.2802, -5.0935, 0.301025, -12.2198, -23.0935, 0.301025, -20.4698, -23.0935, 0.301025, 20.5302, -5.0935, 0.301025, -12.2198, -5.0935, 0.301025, -13.9698, -23.0935, 0.301025, -20.4698, -23.0935, 0.301025, 20.5302, -5.0935, 0.301025, 14.0302, -5.0935, 0.301025, 12.2802, -3.3435, 0.301025, -14.2198, 3.4065, 0.301025, -14.2198, 3.6565, 0.301025, -20.4698, -3.5935, 0.301025, -20.4698, 5.1565, 0.301025, 14.0302, 3.4065, 0.301025, 14.2802, 3.6565, 0.301025, 20.5302, 23.1565, 0.301025, 20.5302, 3.6565, 0.301025, -20.4698, 3.4065, 0.301025, -14.2198, 5.1565, 0.301025, -13.9698, 23.1565, 0.301025, -20.4698, 5.1565, 0.301025, -12.2198, 5.1565, 0.301025, 12.2802, 23.1565, 0.301025, 20.5302, 23.1565, 0.301025, -20.4698, 5.1565, 0.301025, -12.2198, 2.9065, 0.301025, -11.9698, 2.9065, 0.301025, 12.0302, 5.1565, 0.301025, 12.2802, 5.1565, 0.301025, 12.2802, 5.1565, 0.301025, 14.0302, 23.1565, 0.301025, 20.5302, 23.1565, 0.301025, -20.4698, 5.1565, 0.301025, -13.9698, 5.1565, 0.301025, -12.2198, -2.8435, 0.301025, 12.0302, 2.9065, 0.301025, 12.0302, 2.9065, 0.301025, -11.9698, -2.8435, 0.301025, -11.9698, -3.5935, 0.301025, 20.5302, 3.6565, 0.301025, 20.5302, 3.4065, 0.301025, 14.2802, -3.3435, 0.301025, 14.2802)
+polygons = [PackedInt32Array(1, 0, 2), PackedInt32Array(2, 0, 3), PackedInt32Array(5, 4, 6), PackedInt32Array(6, 4, 7), PackedInt32Array(9, 8, 10), PackedInt32Array(10, 8, 11), PackedInt32Array(12, 15, 13), PackedInt32Array(13, 15, 14), PackedInt32Array(18, 17, 16), PackedInt32Array(21, 20, 19), PackedInt32Array(22, 25, 23), PackedInt32Array(23, 25, 24), PackedInt32Array(27, 26, 28), PackedInt32Array(28, 26, 29), PackedInt32Array(31, 30, 32), PackedInt32Array(32, 30, 33), PackedInt32Array(34, 37, 35), PackedInt32Array(35, 37, 36), PackedInt32Array(39, 38, 40), PackedInt32Array(40, 38, 41), PackedInt32Array(44, 43, 42), PackedInt32Array(47, 46, 45), PackedInt32Array(51, 50, 48), PackedInt32Array(48, 50, 49), PackedInt32Array(55, 54, 52), PackedInt32Array(52, 54, 53)]
+geometry_source_geometry_mode = 1
+geometry_source_group_name = &"ArenaNav"
+
 [node name="TestArena" type="Node3D" node_paths=PackedStringArray("_playerStartPositions")]
 script = ExtResource("1_1mb5o")
 _playerStartPositions = [NodePath("Arena/PlayerSpawns/1"), NodePath("Arena/PlayerSpawns/4"), NodePath("Arena/PlayerSpawns/5"), NodePath("Arena/PlayerSpawns/2"), NodePath("Arena/PlayerSpawns/3")]
@@ -80,6 +87,21 @@ script = ExtResource("3_xg5fo")
 [node name="GameManager" type="Node" parent="Managers"]
 unique_name_in_owner = true
 script = ExtResource("4_3qdsl")
+
+[node name="RealizationManager" type="Node" parent="Managers" node_paths=PackedStringArray("_realizationContainer", "_damageNumberContainer")]
+script = ExtResource("4_ns7cb")
+_realizationContainer = NodePath("../../RealizationPool")
+_damageNumberScene = ExtResource("5_6ucb5")
+_damageNumberContainer = NodePath("UIRealizations")
+
+[node name="UIRealizations" type="Control" parent="Managers/RealizationManager"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_e0a7j")
@@ -122,12 +144,9 @@ metadata/_edit_group_ = true
 
 [node name="Enviroment" type="Node3D" parent="Arena"]
 
-[node name="ArenaMesh" type="StaticBody3D" parent="Arena/Enviroment"]
+[node name="ArenaMesh" type="StaticBody3D" parent="Arena/Enviroment" groups=["ArenaNav"]]
 collision_layer = 4
 collision_mask = 7
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Arena/Enviroment/ArenaMesh"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.99027, 0)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="Arena/Enviroment/ArenaMesh"]
 transform = Transform3D(47.187, 0, 0, 0, 1, 0, 0, 0, 41.9396, 0, -0.64447, 0)
@@ -170,6 +189,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.6114, -0.126356, 20.6214)
 [node name="Hero_Male_Base2" parent="Arena/Enviroment" instance=ExtResource("5_esgk8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.0716, 0, 20.7283)
 
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Arena/Enviroment"]
+navigation_mesh = SubResource("NavigationMesh_c2hkm")
+
 [node name="PlayerSpawns" type="Node3D" parent="Arena"]
 
 [node name="1" type="Node3D" parent="Arena/PlayerSpawns"]
@@ -193,6 +215,3 @@ unique_name_in_owner = true
 [node name="ArenaCam" type="Camera3D" parent="."]
 transform = Transform3D(0.707107, -0.353553, 0.612373, 0, 0.866025, 0.5, -0.707107, -0.353553, 0.612372, 57.0998, 40.4378, 53.514)
 fov = 23.8
-
-[node name="CircleAoe" parent="." instance=ExtResource("8_fbpbu")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.38175, -0.060022, 1.45416)

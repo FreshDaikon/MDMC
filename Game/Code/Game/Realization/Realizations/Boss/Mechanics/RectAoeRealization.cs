@@ -22,7 +22,7 @@ public partial class RectAoeRealization : Realization
 
 	public override void Spawn()
 	{
-		ArenaManager.Instance.GetRealizationPool()?.AddChild(this);
+		RealizationManager.Instance.AddRealization(this);
 		StartTime = Time.GetTicksMsec();
 		GlobalPosition = _position;
 		LookAt(_targetPosition, Vector3.Up);

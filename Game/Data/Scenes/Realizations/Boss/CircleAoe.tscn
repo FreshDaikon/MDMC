@@ -1,18 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://clp5eucv45owf"]
 
 [ext_resource type="Script" path="res://Code/Game/Realization/Realizations/Boss/Mechanics/CircleAoeRealization.cs" id="1_ngt8v"]
-[ext_resource type="Texture2D" uid="uid://dc262hyayiiuv" path="res://Assets/Effects/Generated/CircleAoe.tres" id="2_m0njp"]
-
-[sub_resource type="Animation" id="Animation_ufopy"]
-resource_name = "Spawn"
-loop_mode = 1
-tracks/0/type = "rotation_3d"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Indicator")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1)
+[ext_resource type="Texture2D" uid="uid://bbpfefdjbww27" path="res://Assets/Effects/Generated/Circle_Aoe_Alpha.png" id="2_vr0th"]
 
 [sub_resource type="Animation" id="Animation_s454k"]
 resource_name = "End"
@@ -24,6 +13,17 @@ tracks/0/path = NodePath("Indicator")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.5, 1, 0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_ufopy"]
+resource_name = "Spawn"
+loop_mode = 1
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Indicator")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1)
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_65iqx"]
 _data = {
@@ -38,9 +38,8 @@ _indicator = NodePath("Indicator")
 [node name="Indicator" type="Decal" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.56108, 0)
 size = Vector3(2, 13.3858, 2)
-texture_albedo = ExtResource("2_m0njp")
-emission_energy = 0.0
-modulate = Color(1, 1, 1, 0.509804)
+texture_emission = ExtResource("2_vr0th")
+emission_energy = 0.5
 cull_mask = 1048569
 
 [node name="Player" type="AnimationPlayer" parent="."]
