@@ -1,4 +1,4 @@
-namespace Daikon.Models.Games;
+namespace Daikon.Models;
 
 public record Game
 {

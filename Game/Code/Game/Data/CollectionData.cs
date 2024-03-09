@@ -14,7 +14,8 @@ public partial class CollectionData: DataObject
         SkillContainer,
         Arena,
         Adversaries,
-        Modifiers
+        Modifiers,
+        Collection,
     }
 
     [ExportGroup("Collection Data")]

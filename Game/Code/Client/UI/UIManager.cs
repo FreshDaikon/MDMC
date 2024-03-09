@@ -71,7 +71,7 @@ public partial class UIManager : Node
         {
             if(GameManager.Instance == null) return;
             
-            if (!GameManager.Instance.IsGameRunning())
+            if (GameManager.Instance.IsGameRunning())
             {
                 if(_currentState == UIState.HUD)
                 {
@@ -87,7 +87,7 @@ public partial class UIManager : Node
         {
             if(GameManager.Instance == null) return;
 
-            if (!GameManager.Instance.IsGameRunning())
+            if (GameManager.Instance.IsGameRunning())
             {
                 if (_currentState == UIState.HUD)
                 {

@@ -1,6 +1,8 @@
-namespace Daikon.Contracts.Models;
+using Daikon.Contracts.Models;
 
-public record ArenaRecord
+namespace Daikon.InternalContracts;
+
+public record UpdateArena()
 {
     public required float Progress { get; init; }
     public required double DateTime {get; init; }

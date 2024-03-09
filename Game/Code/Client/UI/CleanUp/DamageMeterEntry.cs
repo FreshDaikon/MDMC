@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Godot;
 using System.Linq;
 using Daikon.Game;
@@ -11,15 +12,23 @@ public partial class DamageMeterEntry : ColorRect
 	public MD.CombatMessageType BarType;
 
 	[Export]
-	public ColorRect playerColor;
+	private ColorRect _playerColor;
+
+	[Export] private TextureRect _edgeGlow;
+
+	private GradientTexture1D _barGradient; 
 	[Export]
-	public Label playerName;
+	private Label _playerName;
 	[Export]
-	public Label playerDPS;
+	private Label _playerDps;
 	[Export]
-	public Label playerTotal;
+	private Label _playerTotal;
 	[Export]
 	public float EntryWidth;
+
+	[Export] private TextureRect _tagLeft;
+	[Export] private TextureRect _tagMain;
+	[Export] private TextureRect _tagRight;
 
 
 	private double oldDps;
@@ -35,7 +44,6 @@ public partial class DamageMeterEntry : ColorRect
 			.Cast<PlayerEntity>()
 			.ToList()
 			.Find(p => p.Name == EntryId.ToString());		
-		WeightedValue = testEntity.Arsenal.GetWeightedTotal(testEntity.Arsenal.GetArsenalSkillWeights());
     }
 
     public override void _Process(double delta)
@@ -47,24 +55,35 @@ public partial class DamageMeterEntry : ColorRect
 		
 		if(!CombatManager.Instance.IsInCombat)
 			return;		
-		var testEntity = ArenaManager.Instance.GetCurrentArena().GetEntities()
+		
+		
+		var playerEntity = ArenaManager.Instance.GetCurrentArena().GetEntities()
 			.Where(e => e is PlayerEntity)
 			.Cast<PlayerEntity>()
 			.ToList()
 			.Find(p => p.Name == EntryId.ToString()); 
 		
-		if(testEntity == null)
+		if(playerEntity == null)
 		{
-			playerName.Text = "Unknown Entity";
-			playerColor.Color = new Color("#545454");
+			_playerName.Text = "Unknown Entity";
 			UpdateNumbers();
 		}
 		else
 		{
-			playerName.Text = testEntity.EntityName;
-			playerColor.Color = MD.GetPlayerColor(WeightedValue);
+			_playerName.Text = playerEntity.EntityName;
 			UpdateNumbers();
-			
+			_tagLeft.Modulate = playerEntity.Arsenal.GetSkillContainer(MD.ContainerSlot.Left) == null ? new Color("#ffffff") : playerEntity.Arsenal.GetSkillContainer(MD.ContainerSlot.Left).Data.ContainerColor;
+			_tagMain.Modulate = playerEntity.Arsenal.GetSkillContainer(MD.ContainerSlot.Main) == null ? new Color("#ffffff") : playerEntity.Arsenal.GetSkillContainer(MD.ContainerSlot.Main).Data.ContainerColor;
+			_tagRight.Modulate = playerEntity.Arsenal.GetSkillContainer(MD.ContainerSlot.Right) == null ? new Color("#ffffff") : playerEntity.Arsenal.GetSkillContainer(MD.ContainerSlot.Right).Data.ContainerColor;
+			_playerColor.Modulate = BarType switch
+			{
+				MD.CombatMessageType.HEAL => new Color("#86bd73"),
+				MD.CombatMessageType.DAMAGE => new Color("#ba4545"),
+				MD.CombatMessageType.ENMITY => new Color("#5990bd"),
+				MD.CombatMessageType.KNOCKED_OUT => new Color("#85417a"),
+				_ => new Color("#000000")
+				
+			};
 		}
 		base._Process(delta);
 	}
@@ -73,23 +92,24 @@ public partial class DamageMeterEntry : ColorRect
 			var vps = CombatManager.Instance.GetEntityVPS(EntryId, BarType);
 			var topVps = CombatManager.Instance.GetTopVPS(BarType);
 			sortValue = vps;			
-			playerDPS.Text = MD.FormatDisplayNumber((float)vps);
-			playerTotal.Text = MD.FormatDisplayNumber(CombatManager.Instance.GetEntityValue(EntryId, BarType));	
+			_playerDps.Text = MD.FormatDisplayNumber((float)vps);
+			_playerTotal.Text = MD.FormatDisplayNumber(CombatManager.Instance.GetEntityValue(EntryId, BarType));	
 			if(vps > 0 && topVps > 0)
 			{
 				if(vps != oldDps)
 				{
 					oldDps = vps;
 					barTween = GetTree().CreateTween();
-					barTween.TweenProperty(playerColor, "size", new Vector2(EntryWidth * ((float)vps/(float)topVps) , playerColor.Size.Y), 0.1f).SetTrans(Tween.TransitionType.Cubic);
+					barTween.TweenProperty(_playerColor, "size", new Vector2(EntryWidth * ((float)vps/(float)topVps) , _playerColor.Size.Y), 0.1f).SetTrans(Tween.TransitionType.Cubic);
 				}				
 			}			
 			if(vps == 0)
 			{
 				barTween = GetTree().CreateTween();
-				barTween.TweenProperty(playerColor, "size", new Vector2(0f , playerColor.Size.Y), 0.1f).SetTrans(Tween.TransitionType.Cubic);
+				barTween.TweenProperty(_playerColor, "size", new Vector2(0f , _playerColor.Size.Y), 0.1f).SetTrans(Tween.TransitionType.Cubic);
 								
 			}
+			_edgeGlow.Position = new Vector2(_playerColor.Position.X + _playerColor.Size.X - 40, _edgeGlow.Position.Y);
 	}
 
 }

@@ -1,4 +1,5 @@
 using System.Linq;
+using Daikon.Helpers;
 using Godot;
 
 namespace Daikon.Game;
@@ -122,6 +123,18 @@ public partial class EntityStatus : Node
             GD.Print("Sending Knock out signal");
             EmitSignal(SignalName.KnockedOut);
             CurrentState = StatusState.KnockedOut;
+            
+            if(_entity is PlayerEntity)
+            {
+                CombatManager.Instance.AddCombatMessage(new CombatMessage()
+                {
+                    Caster = int.Parse(_entity.Name),
+                    Effect = "Knocked Out",
+                    MessageType = MD.CombatMessageType.KNOCKED_OUT,
+                    Value = 1,
+                    Target = -1
+                });
+            }
             return;
         }
         // Figure out Regen:

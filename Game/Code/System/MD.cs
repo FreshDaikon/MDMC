@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Daikon.Game;
 using Godot;
 
 namespace Daikon.Helpers;
@@ -36,7 +38,8 @@ public static class MD
         DAMAGE,
         HEAL,
         ENMITY,
-        EFFECT
+        EFFECT,
+        KNOCKED_OUT
     }
     public enum SkillType
     {
@@ -180,6 +183,20 @@ public static class MD
             _ => new Color("#ffffff"),
         };
         return color;
+    }
+
+    public static Gradient GetPlayerGradient(PlayerEntity player)
+    {
+        var main = player.Arsenal.GetSkillContainer(ContainerSlot.Main) == null ? new Color("#000000") : player.Arsenal.GetSkillContainer(ContainerSlot.Main).Data.ContainerColor;
+        var left = player.Arsenal.GetSkillContainer(ContainerSlot.Left) == null ? new Color("#000000") : player.Arsenal.GetSkillContainer(ContainerSlot.Left).Data.ContainerColor;
+        var right = player.Arsenal.GetSkillContainer(ContainerSlot.Right) == null ? new Color("#000000") : player.Arsenal.GetSkillContainer(ContainerSlot.Right).Data.ContainerColor;
+		
+        var newGrad = new Gradient()
+        {
+            Colors = new []{left, main, right},
+            Offsets = new []{0f, 0.5f, 1f}
+        };
+        return newGrad;
     }
 
     public static Color GetPlayerColor(float[] value)

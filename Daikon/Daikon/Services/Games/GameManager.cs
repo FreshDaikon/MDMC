@@ -1,6 +1,6 @@
+using Daikon.Models;
 
-using Daikon.Models.Games;
-using Daikon.Services.Games;
+namespace Daikon.Services.Games;
 
 public class GameManager : IGameManager
 {

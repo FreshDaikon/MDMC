@@ -1,4 +1,5 @@
 using Daikon.Game;
+using Daikon.Helpers;
 using Godot;
 
 namespace Daikon.Client;
@@ -19,10 +20,13 @@ public partial class UI_NamePlate : Control
 	private TextureRect HealthBar;
 	private Label NameLabel;
 
+    private GradientTexture1D _barGradient = new GradientTexture1D();
+
     public override void _Ready()
     {
         HealthBar = GetNode<TextureRect>("%HealthBar");
 		NameLabel = GetNode<Label>("%Name");
+        HealthBar.Texture = _barGradient;
     }
 
     public void InitializeFrame(Entity entity)
@@ -41,7 +45,14 @@ public partial class UI_NamePlate : Control
         {
             CallDeferred(nameof(QueueFree));
         }
+
+        if (_entity is PlayerEntity entity)
+        {
+            _barGradient.Gradient = MD.GetPlayerGradient(entity);
+        }
+        
         _camera = GetViewport().GetCamera3D();
+        
         var entityPos = _entity.Controller.GlobalPosition;
         Visible = !_camera.IsPositionBehind(entityPos) && _entity.Status.CurrentState != EntityStatus.StatusState.KnockedOut;
         NameLabel.Text = _entity.EntityName;

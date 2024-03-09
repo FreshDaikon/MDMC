@@ -12,7 +12,9 @@ public partial class UI_UnitFrame : Control
 	[Export]
 	private float ChangeSpeed = 5f;
 
+	[Export] private TextureRect _edgeGlow;
 	private ColorRect BarBG;
+	
 	private ColorRect SelectionIndicator;
 	private TextureRect HealthBar;
 	private TextureRect ShieldBar;
@@ -22,7 +24,10 @@ public partial class UI_UnitFrame : Control
 	[Export] private Vector2 CastSize = new Vector2(188f, 18f);
 	[Export] private ColorRect CastBG;
 	[Export] private TextureRect CastBar;
-	
+
+	[Export] private TextureRect _tagLeft;
+	[Export] private TextureRect _tagMain;
+	[Export] private TextureRect _tagRight;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -50,23 +55,26 @@ public partial class UI_UnitFrame : Control
 	public override void _Process(double delta)
 	{
 		CastBG.Visible = false;
+		_edgeGlow.Visible = false;
 		//TODO: implemen unit check here!
 		if(unit != null)
 		{
 			NameLabel.Text = unit.EntityName;
-			if(unit is PlayerEntity)
+			if(unit is PlayerEntity player)
 			{
-				var player = unit as PlayerEntity;
 				//Set Color:
-				var WeightedValue = player.Arsenal.GetWeightedTotal(player.Arsenal.GetArsenalSkillWeights());
-				HealthBar.Modulate = MD.GetPlayerColor(WeightedValue);
+				_tagLeft.Modulate = player.Arsenal.GetSkillContainer(MD.ContainerSlot.Left) == null ? new Color("#ffffff") : player.Arsenal.GetSkillContainer(MD.ContainerSlot.Left).Data.ContainerColor;
+				_tagMain.Modulate = player.Arsenal.GetSkillContainer(MD.ContainerSlot.Main) == null ? new Color("#ffffff") : player.Arsenal.GetSkillContainer(MD.ContainerSlot.Main).Data.ContainerColor;
+				_tagRight.Modulate = player.Arsenal.GetSkillContainer(MD.ContainerSlot.Right) == null ? new Color("#ffffff") : player.Arsenal.GetSkillContainer(MD.ContainerSlot.Right).Data.ContainerColor;
+				HealthBar.Modulate = new Color("#b1cf84");
+				
 				var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();
 				if(players == null)
 					return;
 				var localPlayer = players.Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
 				if(localPlayer != null)
 				{
-					if(localPlayer.CurrentFriendlyTarget == unit)
+					if(localPlayer.CurrentFriendlyTarget == player)
 						SelectionIndicator.Visible = true;
 
 					else
@@ -75,8 +83,11 @@ public partial class UI_UnitFrame : Control
 			}
 			else if(unit is AdversaryEntity)
 			{
+				_tagLeft.Visible = false;
+				_tagMain.Visible = false;
+				_tagRight.Visible = false;
 				var adv = (AdversaryEntity)unit;
-				HealthBar.Modulate = new Color("#eb7575");
+				HealthBar.Modulate = new Color("#d65858");
 				var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();
 				if(players == null)
 					return;
@@ -89,11 +100,13 @@ public partial class UI_UnitFrame : Control
 						SelectionIndicator.Visible = false;
 				}
 
-				if (adv._isCasting)
+				if (adv._isCasting && adv.Status.CurrentState != EntityStatus.StatusState.KnockedOut)
 				{
 					CastBG.Visible = true;
+					_edgeGlow.Visible = true;
 					var lapsed = GameManager.Instance.GameClock - adv._startTime;
 					CastBar.Size = new Vector2(CastSize.X * (float)(lapsed / adv._castTime), CastSize.Y);
+					_edgeGlow.Position = new Vector2(CastBar.Position.X + CastBar.Size.X - 40, _edgeGlow.Position.Y );
 				}
 			}
 			//TODO : modulate color based on either team/skills etc.

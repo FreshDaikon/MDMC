@@ -36,7 +36,14 @@ public partial class AutoAttack: BaseBehavior
 
     private void Attack(Entity entity)
     {
-        entity.Status.InflictDamage(attackDamage, Manager.Entity);
+        var dmg = entity.Status.InflictDamage(attackDamage, Manager.Entity);
+        Rpc(nameof(SpawnDamageNumber), entity.Controller.GlobalPosition, dmg);
+    }
+    
+    [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SpawnDamageNumber(Vector3 position, int value)
+    {
+        RealizationManager.Instance.SpawnDamageNumber(value, position, new Color("#ff0000"));
     }
 }
  

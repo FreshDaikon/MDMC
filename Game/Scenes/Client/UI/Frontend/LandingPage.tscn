@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://drwf23ju3cmju" path="res://Scenes/Client/UI/Frontend/Components/MDMC_Title.tscn" id="2_cqgh0"]
 [ext_resource type="FontFile" uid="uid://q3aynbg5gvis" path="res://Assets/UI/Fonts/LibreFranklin-BlackItalic.ttf" id="4_0a1n2"]
 
-[node name="Base" type="Control"]
+[node name="Base" type="Control" node_paths=PackedStringArray("_joinCodeEdit", "_arenaListOptions", "_requestGameButton", "_joinGameButton", "_startGameButton", "_startServerButton", "_joinLocalServerButton", "_connectDaikonLocal", "_connectDaikonRemote", "_getArenaRecords")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,6 +13,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_p3haa")
+_joinCodeEdit = NodePath("Panel/VBoxContainer/JoinCodeEdit")
+_arenaListOptions = NodePath("Panel/VBoxContainer/ArenaListOptions")
+_requestGameButton = NodePath("Panel/VBoxContainer/RequestGameButton")
+_joinGameButton = NodePath("Panel/VBoxContainer/JoinGameButton")
+_startGameButton = NodePath("Panel/VBoxContainer/StartGameButton")
+_startServerButton = NodePath("Panel/VBoxContainer/StartServerButton")
+_joinLocalServerButton = NodePath("Panel/VBoxContainer/JoinLocal")
+_connectDaikonLocal = NodePath("Panel/VBoxContainer/ConnectDaikonLocal")
+_connectDaikonRemote = NodePath("Panel/VBoxContainer/ConnectDaikonRemote")
+_getArenaRecords = NodePath("Panel/GetArenaRecords")
 
 [node name="BG" type="Control" parent="."]
 layout_mode = 1
@@ -163,3 +173,12 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.254902, 0.721569, 0, 1)
 text = "Status..."
+
+[node name="GetArenaRecords" type="Button" parent="Panel"]
+unique_name_in_owner = true
+layout_mode = 2
+offset_left = 1204.0
+offset_top = 326.0
+offset_right = 1706.0
+offset_bottom = 387.0
+text = "Get Arena Records"

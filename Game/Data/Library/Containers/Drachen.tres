@@ -1,44 +1,45 @@
 [gd_resource type="Resource" script_class="StandardContainerData" load_steps=10 format=3 uid="uid://ty0aau3ivoqi"]
 
-[ext_resource type="Script" path="res://Code/Game/Data/SkillContainers/StandardContainerData.cs" id="1_h1ivl"]
-[ext_resource type="Texture2D" uid="uid://d1g6ehxjt0nof" path="res://Assets/UI/ArsenalSystem/SkillContainers/Drachen_MK1.png" id="1_vmi0k"]
-[ext_resource type="Script" path="res://Code/System/DataID.cs" id="2_ll665"]
-[ext_resource type="Script" path="res://Code/Game/Data/Decorators/SkillSlotData.cs" id="6_fvnkx"]
+[ext_resource type="Script" path="res://Code/System/DataID.cs" id="1_21jcf"]
+[ext_resource type="Texture2D" uid="uid://d1g6ehxjt0nof" path="res://Assets/UI/ArsenalSystem/SkillContainers/Drachen_MK1.png" id="2_fi1h7"]
+[ext_resource type="Script" path="res://Code/Game/Data/SkillContainers/StandardContainerData.cs" id="3_nfma3"]
+[ext_resource type="Script" path="res://Code/Game/Data/Decorators/SkillSlotData.cs" id="4_0e1xy"]
 
 [sub_resource type="Resource" id="Resource_v6623"]
-script = ExtResource("2_ll665")
+script = ExtResource("1_21jcf")
 Id = -1315057978
 
 [sub_resource type="Resource" id="Resource_e124e"]
-script = ExtResource("6_fvnkx")
-SlotSkillType = 0
-PotencyMultiplier = 0.8
-ThreatMultiplier = 19.0
+script = ExtResource("4_0e1xy")
+SlotSkillType = 1
+PotencyMultiplier = 1.2
+ThreatMultiplier = 1.0
 
 [sub_resource type="Resource" id="Resource_ja6j6"]
-script = ExtResource("6_fvnkx")
-SlotSkillType = 2
+script = ExtResource("4_0e1xy")
+SlotSkillType = 1
 PotencyMultiplier = 1.0
 ThreatMultiplier = 1.0
 
 [sub_resource type="Resource" id="Resource_wa4q8"]
-script = ExtResource("6_fvnkx")
+script = ExtResource("4_0e1xy")
 SlotSkillType = 0
 PotencyMultiplier = 0.8
 ThreatMultiplier = 1.0
 
 [sub_resource type="Resource" id="Resource_aevpr"]
-script = ExtResource("6_fvnkx")
-SlotSkillType = 0
+script = ExtResource("4_0e1xy")
+SlotSkillType = 1
 PotencyMultiplier = 0.8
 ThreatMultiplier = 1.0
 
 [resource]
-script = ExtResource("1_h1ivl")
+script = ExtResource("3_nfma3")
+ContainerColor = Color(0.458824, 0.419608, 0.74902, 1)
 BaseGcd = 1.5
 skillSlots = Array[Object]([SubResource("Resource_e124e"), SubResource("Resource_ja6j6"), SubResource("Resource_wa4q8"), SubResource("Resource_aevpr")])
 Modifiers = Array[Object]([])
 ID = SubResource("Resource_v6623")
 Name = "Purple"
 Description = "Some Object Description."
-Icon = ExtResource("1_vmi0k")
+Icon = ExtResource("2_fi1h7")

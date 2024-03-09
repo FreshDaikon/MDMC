@@ -6,6 +6,7 @@ bin/
 .Engine/
 .SOURCE/
 .idea/
+.dev/
 obj/
 */obj/
 .vscode/

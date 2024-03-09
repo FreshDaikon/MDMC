@@ -11,39 +11,32 @@ public partial class UILandingPage : Control
     //Status
     private Label _wsConnectionLabel;
     //Join Code Field
+    [Export]
     private LineEdit _joinCodeEdit;
     // Buttons 
+    [Export]
     private OptionButton _arenaListOptions;
-    
+    [Export]
     private Button _requestGameButton;
+    [Export]
     private Button _joinGameButton;
+    [Export]
     private Button _startGameButton;
+    [Export]
     private Button _startServerButton;
+    [Export]
     private Button _joinLocalServerButton;
+    [Export]
     private Button _connectDaikonLocal;
+    [Export]
     private Button _connectDaikonRemote;
-
+    [Export]
+    private Button _getArenaRecords;
     private List<ArenaData> _arenas = new();
 
 
     public override void _Ready()
     {
-        _wsConnectionLabel = GetNode<Label>("%WSConnectionLabel");
-        _requestGameButton = GetNode<Button>("%RequestGameButton");
-        
-        _arenaListOptions = GetNode<OptionButton>("%ArenaListOptions");
-        _joinCodeEdit = GetNode<LineEdit>("%JoinCodeEdit");
-        _joinGameButton = GetNode<Button>("%JoinGameButton");
-        _startGameButton = GetNode<Button>("%StartGameButton");
-
-
-        _startServerButton = GetNode<Button>("%StartServerButton");
-        _joinLocalServerButton = GetNode<Button>("%JoinLocal");        
-
-        _connectDaikonLocal = GetNode<Button>("%ConnectDaikonLocal");
-        _connectDaikonRemote = GetNode<Button>("%ConnectDaikonRemote");
-
-
         //Setup Signals:
         _requestGameButton.Pressed += RequestGame;
         _joinGameButton.Pressed += JoinGame;
@@ -54,10 +47,10 @@ public partial class UILandingPage : Control
         _joinLocalServerButton.Pressed += JoinLocalServer;
 
         _startGameButton.ButtonUp += StartGame;
+        _getArenaRecords.ButtonUp += GetArenaRecords;
       
         CallDeferred(nameof(GetArenaList));
         CallDeferred(nameof(SetupNetworkListeners));
-
     }
 
     private void GetArenaList()
@@ -101,6 +94,11 @@ public partial class UILandingPage : Control
     {
         GD.Print("Let's see if we can find a game!");
         DaikonConnect.Instance.DaikonJoinGame(_joinCodeEdit.Text);
+    }
+
+    private void GetArenaRecords()
+    {
+        DaikonConnect.Instance.GetArenaRecords(_arenas[_arenaListOptions.Selected].Id);
     }
 
     private void StartGame()

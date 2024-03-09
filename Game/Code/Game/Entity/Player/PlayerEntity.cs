@@ -1,6 +1,6 @@
-using System;
 using Daikon.Client;
 using Godot;
+using static System.Int32;
 
 namespace Daikon.Game;
 
@@ -52,9 +52,9 @@ public partial class PlayerEntity : Entity
         camera = GetNode<PlayerCamera>("%Rig");
         mover = GetNode<PlayerMover>("%Mover");
         //Make Sure the Input Component is owned by the client peer.
-        input.SetMultiplayerAuthority(Int32.Parse(Name), true);
+        input.SetMultiplayerAuthority(Parse(Name));
         
-        if(Multiplayer.GetUniqueId() == Int32.Parse(Name))
+        if(Multiplayer.GetUniqueId() == Parse(Name))
 		{
 			IsLocalPlayer = true;
             camera.GetCamera().Current = true;

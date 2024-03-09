@@ -23,32 +23,29 @@ sun_angle_max = 28.68
 sky_material = SubResource("ProceduralSkyMaterial_tt0g8")
 
 [sub_resource type="Environment" id="Environment_e0a7j"]
-background_mode = 2
+background_mode = 1
 background_color = Color(0.0941176, 0.803922, 0.870588, 1)
-background_energy_multiplier = 0.66
+background_energy_multiplier = 0.0
 sky = SubResource("Sky_nj8bo")
-ambient_light_source = 3
-ambient_light_energy = 16.0
-reflected_light_source = 2
-tonemap_mode = 3
+ambient_light_energy = 0.0
+tonemap_mode = 2
 ssao_enabled = true
 ssao_radius = 3.56
 sdfgi_enabled = true
 sdfgi_y_scale = 0
+glow_enabled = true
 glow_intensity = 1.0
 glow_bloom = 0.02
-fog_enabled = true
+glow_blend_mode = 0
 fog_light_color = Color(1, 1, 1, 1)
-fog_light_energy = 0.1
+fog_light_energy = 0.0
 fog_density = 0.0
-fog_aerial_perspective = 0.009
 fog_sky_affect = 0.0
-fog_height = 0.1
-fog_height_density = 0.4248
+fog_height = -29.8
+fog_height_density = 2.8774
 volumetric_fog_density = 0.1702
 volumetric_fog_length = 5.0
 volumetric_fog_sky_affect = 0.0
-adjustment_enabled = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5y40w"]
 albedo_color = Color(0.223529, 0.321569, 0.101961, 1)
@@ -122,25 +119,10 @@ EntityName = "Best Boss Middle"
 
 [node name="Start" type="Node3D" parent="EntityContainer/99"]
 
-[node name="100" parent="EntityContainer" node_paths=PackedStringArray("_startPosition") instance=ExtResource("5_atyi8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.93801, 0.366731, -15)
-_startPosition = NodePath("Start")
-TargetId = 100
-EntityName = "Best Boss Left"
-
-[node name="Start" type="Node3D" parent="EntityContainer/100"]
-
-[node name="101" parent="EntityContainer" node_paths=PackedStringArray("_startPosition") instance=ExtResource("5_atyi8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.05757, 0.366731, -15)
-_startPosition = NodePath("Start")
-TargetId = 101
-EntityName = "Best Boss Right"
-
-[node name="Start" type="Node3D" parent="EntityContainer/101"]
-
 [node name="Arena" type="Node3D" parent="."]
 unique_name_in_owner = true
 metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
 
 [node name="Enviroment" type="Node3D" parent="Arena"]
 
@@ -177,7 +159,9 @@ mesh = SubResource("CylinderMesh_gg4ma")
 skeleton = NodePath("../../..")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Arena/Enviroment"]
-transform = Transform3D(0.443692, 0.66945, -0.595797, -0.0510172, 0.682609, 0.729001, 0.894726, -0.293056, 0.337022, 0, 18, 0)
+transform = Transform3D(0.443692, 0.872101, 0.206342, -0.0510172, -0.205293, 0.97737, 0.894726, -0.444178, -0.0465947, 0, 18, 0)
+light_color = Color(1, 0.956863, 0.909804, 1)
+light_energy = 0.367
 shadow_enabled = true
 
 [node name="Hero_Female_Base" parent="Arena/Enviroment" instance=ExtResource("3_4es0r")]
@@ -191,6 +175,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.0716, 0, 20.7283)
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="Arena/Enviroment"]
 navigation_mesh = SubResource("NavigationMesh_c2hkm")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Arena/Enviroment"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 11.5526, -1.31134e-07)
+light_color = Color(0.831373, 0.956863, 1, 1)
+light_energy = 8.484
+shadow_enabled = true
+spot_range = 25.035
 
 [node name="PlayerSpawns" type="Node3D" parent="Arena"]
 

@@ -1,13 +1,13 @@
-[gd_scene load_steps=11 format=3 uid="uid://cplev7d1ykh7j"]
+[gd_scene load_steps=15 format=3 uid="uid://cplev7d1ykh7j"]
 
 [ext_resource type="Script" path="res://Code/Client/UI/HUD/UnitFrames/UI_UnitFrame.cs" id="1_m4g0v"]
-[ext_resource type="FontFile" uid="uid://b1qmam0dvludo" path="res://Assets/UI/Fonts/LibreFranklin-Medium.ttf" id="1_ml87c"]
+[ext_resource type="Texture2D" uid="uid://b6k6enogqidv8" path="res://Assets/UI/Core/PlayerBuildTag.png" id="2_8oe0y"]
+[ext_resource type="FontFile" uid="uid://dftj2ckdl3j7d" path="res://Assets/UI/Fonts/LibreFranklin-Black.ttf" id="2_pn6a6"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_uvja6"]
 
 [sub_resource type="Gradient" id="Gradient_wek2w"]
-offsets = PackedFloat32Array(0, 0.137525, 1)
-colors = PackedColorArray(0.9, 0.9, 0.9, 1, 0.55, 0.55, 0.55, 1, 0.26, 0.26, 0.26, 1)
+colors = PackedColorArray(0.9, 0.9, 0.9, 1, 0.55, 0.55, 0.55, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_7o1kf"]
 gradient = SubResource("Gradient_wek2w")
@@ -29,13 +29,25 @@ fill_from = Vector2(0, 1)
 fill_to = Vector2(0, 0)
 
 [sub_resource type="Gradient" id="Gradient_hpjh1"]
-offsets = PackedFloat32Array(0, 0.518095, 1)
-colors = PackedColorArray(0.690196, 0.4, 0.109804, 1, 1, 0.713726, 0.431373, 1, 0.708069, 0.4181, 0.128356, 1)
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.769716, 0.372206, 0.265699, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_mttcp"]
 gradient = SubResource("Gradient_hpjh1")
 
-[node name="UnitFrame" type="Control" node_paths=PackedStringArray("CastBG", "CastBar")]
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_pk5mu"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_d4ssw"]
+offsets = PackedFloat32Array(0, 0.19883, 0.331384, 1)
+colors = PackedColorArray(1, 1, 1, 0.780392, 0.4, 0.803922, 0.921569, 0.686275, 1, 0.851531, 0.315593, 0.503347, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_hk5sh"]
+gradient = SubResource("Gradient_d4ssw")
+fill = 1
+fill_from = Vector2(0.991453, 0.487179)
+
+[node name="UnitFrame" type="Control" node_paths=PackedStringArray("_edgeGlow", "CastBG", "CastBar", "_tagLeft", "_tagMain", "_tagRight")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -43,8 +55,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_m4g0v")
+_edgeGlow = NodePath("CastBG/EdgeGlow")
 CastBG = NodePath("CastBG")
 CastBar = NodePath("CastBG/CastBar")
+_tagLeft = NodePath("PlayerTags/LeftTag")
+_tagMain = NodePath("PlayerTags/MainTag")
+_tagRight = NodePath("PlayerTags/RightTag")
 
 [node name="SelectionIndicator" type="ColorRect" parent="."]
 unique_name_in_owner = true
@@ -54,6 +70,7 @@ offset_top = -3.0
 offset_right = 205.0
 offset_bottom = 103.0
 color = Color(1, 1, 0.670588, 1)
+metadata/_edit_lock_ = true
 
 [node name="BarBG" type="ColorRect" parent="."]
 unique_name_in_owner = true
@@ -62,10 +79,11 @@ offset_right = 200.0
 offset_bottom = 100.0
 pivot_offset = Vector2(0, 0.5)
 color = Color(0, 0, 0, 1)
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
 
 [node name="HealthBar" type="TextureRect" parent="BarBG"]
 unique_name_in_owner = true
-modulate = Color(0.921569, 0.458824, 0.458824, 1)
 material = SubResource("CanvasItemMaterial_uvja6")
 layout_mode = 2
 offset_right = 171.0
@@ -85,6 +103,61 @@ pivot_offset = Vector2(0, 0.5)
 texture = SubResource("GradientTexture2D_55gk0")
 expand_mode = 1
 
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 24.0
+color = Color(0.188235, 0.188235, 0.2, 1)
+
+[node name="PlayerTags" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 24.0
+
+[node name="RightTag" type="TextureRect" parent="PlayerTags"]
+layout_mode = 0
+offset_left = 150.0
+offset_right = 200.0
+offset_bottom = 24.0
+texture = ExtResource("2_8oe0y")
+expand_mode = 1
+
+[node name="ColorRect2" type="ColorRect" parent="PlayerTags/RightTag"]
+layout_mode = 0
+offset_left = -39.0
+offset_right = 25.0
+offset_bottom = 24.0
+
+[node name="MainTag" type="TextureRect" parent="PlayerTags"]
+modulate = Color(0.270588, 1, 1, 1)
+layout_mode = 0
+offset_left = 87.0
+offset_right = 135.0
+offset_bottom = 24.0
+texture = ExtResource("2_8oe0y")
+expand_mode = 1
+
+[node name="ColorRect" type="ColorRect" parent="PlayerTags/MainTag"]
+layout_mode = 0
+offset_left = -62.0
+offset_right = 2.0
+offset_bottom = 24.0
+
+[node name="LeftTag" type="TextureRect" parent="PlayerTags"]
+modulate = Color(1, 0.376471, 1, 1)
+layout_mode = 0
+offset_left = 25.0
+offset_right = 73.0
+offset_bottom = 24.0
+texture = ExtResource("2_8oe0y")
+expand_mode = 1
+
+[node name="ColorRect" type="ColorRect" parent="PlayerTags/LeftTag"]
+layout_mode = 0
+offset_left = -25.0
+offset_right = 15.0
+offset_bottom = 24.0
+
 [node name="Name" type="Label" parent="."]
 unique_name_in_owner = true
 layout_mode = 0
@@ -92,15 +165,16 @@ offset_left = 10.0
 offset_right = 148.0
 offset_bottom = 23.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_fonts/font = ExtResource("1_ml87c")
+theme_override_fonts/font = ExtResource("2_pn6a6")
 text = "SomePlayerName"
+metadata/_edit_lock_ = true
 
 [node name="CastBG" type="ColorRect" parent="."]
 layout_mode = 0
 offset_left = 5.0
-offset_top = 76.0
+offset_top = 90.0
 offset_right = 195.0
-offset_bottom = 96.0
+offset_bottom = 110.0
 color = Color(0, 0, 0, 1)
 
 [node name="CastBar" type="TextureRect" parent="CastBG"]
@@ -111,4 +185,13 @@ offset_right = 189.0
 offset_bottom = 19.0
 pivot_offset = Vector2(0, 9)
 texture = SubResource("GradientTexture1D_mttcp")
+expand_mode = 1
+
+[node name="EdgeGlow" type="TextureRect" parent="CastBG"]
+material = SubResource("CanvasItemMaterial_pk5mu")
+offset_left = 149.0
+offset_top = 1.0
+offset_right = 189.0
+offset_bottom = 20.0
+texture = SubResource("GradientTexture2D_hk5sh")
 expand_mode = 1

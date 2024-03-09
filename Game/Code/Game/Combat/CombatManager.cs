@@ -1,7 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Daikon.Contracts.Models;
 using Godot;
 using Daikon.Helpers;
+using Daikon.Server.Database;
+using Daikon.Server.Database.Models;
+using static System.Int32;
 
 namespace Daikon.Game;
 
@@ -22,10 +27,11 @@ public partial class CombatManager: Node
         Stopped
     }
 
-    private List<EntityContributionTracker> damage = new List<EntityContributionTracker>();
-    private List<EntityContributionTracker> heal = new List<EntityContributionTracker>();
-    private List<EntityContributionTracker> enmity = new List<EntityContributionTracker>();
-    private List<EntityContributionTracker> effect = new List<EntityContributionTracker>();
+    private List<EntityContributionTracker> _damage = new List<EntityContributionTracker>();
+    private List<EntityContributionTracker> _heal = new List<EntityContributionTracker>();
+    private List<EntityContributionTracker> _enmity = new List<EntityContributionTracker>();
+    private List<EntityContributionTracker> _effect = new List<EntityContributionTracker>();
+    private List<EntityContributionTracker> _deaths = new List<EntityContributionTracker>();
 
     private CombatState _currentState = CombatState.None;
 
@@ -42,7 +48,14 @@ public partial class CombatManager: Node
             return;
         }
         Instance = this;
+        // Post a record when we win!
+        CallDeferred(nameof(SetSignals));
         base._Ready();
+    }
+
+    private void SetSignals()
+    {
+        ArenaManager.Instance.GetCurrentArena().Victory += EndAndReport;
     }
 
     public override void _ExitTree()
@@ -71,24 +84,96 @@ public partial class CombatManager: Node
 
     public void ResetCombat()
     { 
-        // TODO : Also save a combat log here.
+        GD.Print("Resitting Combat!");
         _currentState = CombatState.Stopped;
         Messages = new List<CombatMessage>();
-        damage = new List<EntityContributionTracker>(); 
-        heal = new List<EntityContributionTracker>();
-        enmity = new List<EntityContributionTracker>();
-        effect = new List<EntityContributionTracker>();
+        _damage = new List<EntityContributionTracker>();
+        _deaths = new List<EntityContributionTracker>();
+        _heal = new List<EntityContributionTracker>();
+        _enmity = new List<EntityContributionTracker>();
+        _effect = new List<EntityContributionTracker>();
         CombatStartTime = GameManager.Instance.GameClock;
+    }
+
+    public void EndAndReport()
+    {
+        GD.Print("Ending combat and reporting!");
+        var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();
+        if (!(players.Count > 0)) return;
+
+        var participants = (from player in players
+            let dps =
+                _damage.Any(d => d.Id == Parse(player.Name))
+                    ? _damage.First(d => d.Id == Parse(player.Name)).TotalValue
+                    : 0
+            let hps =
+                _heal.Any(h => h.Id == Parse(player.Name))
+                    ? _heal.First(h => h.Id == Parse(player.Name)).TotalValue 
+                    : 0
+            let death = _deaths.Any(d => d.Id == Parse(player.Name))
+                    ? _deaths.First(d => d.Id == Parse(player.Name)).TotalValue
+                    : 0
+            select MakeParticipantFromPlayer(player, dps, hps, death)).ToList();
+
+        var record = new ServerArenaRecord()
+        {
+            ArenaId = ArenaManager.Instance.GetCurrentArena().Data.Id,
+            Runtime = GetTimeLapsed(),
+            Players = participants,
+            Progress = 1,
+            Time = DateTime.Now.ToUniversalTime().Ticks,
+        };
+        DaikonServerConnect.Instance.DaikonSetArenaRecord(record);
+    }
+
+    private ArenaParticipant MakeParticipantFromPlayer(PlayerEntity player, int dps, int hps, int deaths)
+    {
+        var participant = new ArenaParticipant()
+        {
+            Id = Parse(player.Name),
+            Deaths = deaths,
+            Dps = dps,
+            Hps = hps,
+            Name = "SomePlayer",
+            Build = new ParticipantBuild()
+            {
+                MainId = player.Arsenal.GetSkillContainer(MD.ContainerSlot.Main).Data.Id,
+                LeftId = player.Arsenal.GetSkillContainer(MD.ContainerSlot.Left).Data.Id,
+                RightId = player.Arsenal.GetSkillContainer(MD.ContainerSlot.Right).Data.Id,
+                MainSkillIds = new []
+                {
+                    player.Arsenal.GetSkill(MD.ContainerSlot.Main, 0).Data.Id,
+                    player.Arsenal.GetSkill(MD.ContainerSlot.Main, 1).Data.Id,
+                    player.Arsenal.GetSkill(MD.ContainerSlot.Main, 2).Data.Id,
+                    player.Arsenal.GetSkill(MD.ContainerSlot.Main, 3).Data.Id
+                },
+                LeftSkillIds = new []
+                {
+                    player.Arsenal.GetSkill(MD.ContainerSlot.Left, 0).Data.Id,
+                    player.Arsenal.GetSkill(MD.ContainerSlot.Left, 1).Data.Id,
+                    player.Arsenal.GetSkill(MD.ContainerSlot.Left, 2).Data.Id,
+                    player.Arsenal.GetSkill(MD.ContainerSlot.Left, 3).Data.Id
+                },
+                RightSkillIds = new []
+                {
+                    player.Arsenal.GetSkill(MD.ContainerSlot.Right, 0).Data.Id,
+                    player.Arsenal.GetSkill(MD.ContainerSlot.Right, 1).Data.Id,
+                    player.Arsenal.GetSkill(MD.ContainerSlot.Right, 2).Data.Id,
+                    player.Arsenal.GetSkill(MD.ContainerSlot.Right, 3).Data.Id
+                },
+            }
+        };
+        return participant;
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]    
     private void SyncReset()
     {
         Messages = new List<CombatMessage>();
-        damage = new List<EntityContributionTracker>(); 
-        heal = new List<EntityContributionTracker>();
-        enmity = new List<EntityContributionTracker>();
-        effect = new List<EntityContributionTracker>();
+        _damage = new List<EntityContributionTracker>(); 
+        _heal = new List<EntityContributionTracker>();
+        _enmity = new List<EntityContributionTracker>();
+        _effect = new List<EntityContributionTracker>();
         CombatStartTime = GameManager.Instance.GameClock;
     }
 
@@ -118,11 +203,6 @@ public partial class CombatManager: Node
         };
         UpdateEntityTracker(newMessage);
         Messages.Add(newMessage);
-        // We should consider doing damage numbers here - instead of using Realizations.
-        // However, we should note that damage occurs before realization completion..
-        // So this is a bit of a conundrum.
-        
-        
     }
 
     private void UpdateEntityTracker(CombatMessage message)
@@ -130,49 +210,62 @@ public partial class CombatManager: Node
         switch(message.MessageType)
         {
             case MD.CombatMessageType.DAMAGE:
-                if(damage.Any(dd => dd.Id == message.Caster))
+                if(_damage.Any(dd => dd.Id == message.Caster))
                 {
-                    var tracker = damage.Find(t => t.Id == message.Caster);
+                    var tracker = _damage.Find(t => t.Id == message.Caster);
                     tracker.TotalValue += message.Value;
                 }
                 else
                 {
-                    damage.Add(new EntityContributionTracker(){ Id = message.Caster, TotalValue=message.Value} );
+                    _damage.Add(new EntityContributionTracker(){ Id = message.Caster, TotalValue=message.Value} );
                 }
                 break;
             case MD.CombatMessageType.HEAL:
-                if(heal.Any(hd => hd.Id == message.Caster))
+                if(_heal.Any(hd => hd.Id == message.Caster))
                 {
-                    var tracker = heal.Find(t => t.Id == message.Caster);
+                    var tracker = _heal.Find(t => t.Id == message.Caster);
                     tracker.TotalValue += message.Value;
                 }
                 else
                 {
-                    heal.Add(new EntityContributionTracker(){ Id = message.Caster, TotalValue=message.Value} );
+                    _heal.Add(new EntityContributionTracker(){ Id = message.Caster, TotalValue=message.Value} );
                 }
                 break;
             case MD.CombatMessageType.ENMITY:
-                if(enmity.Any(ed => ed.Id == message.Caster))
+                if(_enmity.Any(ed => ed.Id == message.Caster))
                 {
-                    var tracker = enmity.Find(t => t.Id == message.Caster);
+                    var tracker = _enmity.Find(t => t.Id == message.Caster);
                     tracker.TotalValue += message.Value;
                 }
                 else
                 {
-                    enmity.Add(new EntityContributionTracker(){ Id = message.Caster, TotalValue=message.Value} );
+                    _enmity.Add(new EntityContributionTracker(){ Id = message.Caster, TotalValue=message.Value} );
                 }
                 break;
             case MD.CombatMessageType.EFFECT:
-                if(enmity.Any(ed => ed.Id == message.Caster))
+                if(_enmity.Any(ed => ed.Id == message.Caster))
                 {
-                    var tracker = effect.Find(t => t.Id == message.Caster);
+                    var tracker = _effect.Find(t => t.Id == message.Caster);
                     tracker.TotalValue += message.Value;
                 }
                 else
                 {
-                    effect.Add(new EntityContributionTracker(){ Id = message.Caster, TotalValue=message.Value} );
+                    _effect.Add(new EntityContributionTracker(){ Id = message.Caster, TotalValue=message.Value} );
                 }
                 break;
+            case MD.CombatMessageType.KNOCKED_OUT:
+            {
+                if(_deaths.Any(ed => ed.Id == message.Caster))
+                {
+                    var tracker = _deaths.Find(t => t.Id == message.Caster);
+                    tracker.TotalValue += message.Value;
+                }
+                else
+                {
+                    _deaths.Add(new EntityContributionTracker(){ Id = message.Caster, TotalValue=message.Value} );
+                }
+                break;
+            }
             default:
                 break;
         }
@@ -183,15 +276,17 @@ public partial class CombatManager: Node
         switch(type)
         {
             case MD.CombatMessageType.DAMAGE:
-                return damage;
+                return _damage;
             case MD.CombatMessageType.HEAL:
-                return heal;
+                return _heal;
             case MD.CombatMessageType.ENMITY:
-                return enmity;
+                return _enmity;
             case MD.CombatMessageType.EFFECT:
-                return effect;
+                return _effect;
+            case MD.CombatMessageType.KNOCKED_OUT:
+                return _deaths;
             default:
-                return damage;
+                return _damage;
         }
     }
 

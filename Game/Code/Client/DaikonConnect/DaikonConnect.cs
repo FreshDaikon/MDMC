@@ -1,6 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using Daikon.Contracts.Data;
 using Daikon.Contracts.Games;
+using Daikon.Contracts.Models;
 using Daikon.Contracts.Users;
 using Daikon.Helpers;
 using Godot;
@@ -107,7 +111,7 @@ public partial class DaikonConnect: Node
         var messageContent = JsonConvert.SerializeObject(message);
         var error = gameRequest.Request(_baseActual+"/games/create", _baseHeader, HttpClient.Method.Get, messageContent);
     }
-
+    
     public void DaikonJoinGame(string joinCode)
     {
         if(_sessionToken == Guid.Empty)
@@ -135,6 +139,31 @@ public partial class DaikonConnect: Node
         };
         var messageContent = JsonConvert.SerializeObject(message);
         var error = joinRequest.Request(_baseActual+"/games/join", _baseHeader, HttpClient.Method.Get, messageContent);
+    }
+
+    public void GetArenaRecords(int arenaId)
+    {
+        var arenaRecordRequest = new HttpRequest();
+        AddChild(arenaRecordRequest);
+        
+        arenaRecordRequest.RequestCompleted += (result, responseCode, headers, body) => 
+        {
+            if(responseCode != 200)
+            {
+                GD.Print("Responses was not 200 OK -  [" + responseCode + "]"); 
+                CleanUp(arenaRecordRequest);
+                return;
+            }
+            GetArenaRecordResponse(body); 
+            CleanUp(arenaRecordRequest);
+        };
+        var message = new GetArenaRecordsRequest()
+        {
+            SessionToken = _sessionToken,
+            ArenaId = arenaId
+        };
+        var messageContent = JsonConvert.SerializeObject(message);
+        var error = arenaRecordRequest.Request(_baseActual+"/data/GetArenaRecords", _baseHeader, HttpClient.Method.Get, messageContent);
     }
 
     //___________________________ Responses ____________________________________________//
@@ -166,6 +195,17 @@ public partial class DaikonConnect: Node
         var messageData = JsonConvert.DeserializeObject<GameFoundReponse>(json); 
         GD.Print(messageData);  
         EmitSignal(nameof(GameFound), new Variant[]{messageData.ServerHost, messageData.ServerPort});
+    }
+
+    private void GetArenaRecordResponse(byte[] body)
+    {
+        var json = Encoding.UTF8.GetString(body);
+        var messageData = JsonConvert.DeserializeObject<GetArenaRecordsResponse>(json);
+        GD.Print("Arena Record Data  :" + messageData);
+        foreach (var arenaRecord in messageData.Records.ToList())
+        {
+            GD.Print(arenaRecord.ToString());
+        }
     }
 
     //___________________________ Utility ____________________________________________//

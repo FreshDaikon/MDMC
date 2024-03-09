@@ -1,5 +1,5 @@
 using Daikon.Contracts.Games;
-using Daikon.Models.Games;
+using Daikon.Models;
 using Daikon.Services.Games;
 using Daikon.Services.Users;
 using Microsoft.AspNetCore.Mvc;

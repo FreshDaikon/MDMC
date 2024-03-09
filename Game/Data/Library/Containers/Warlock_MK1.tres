@@ -29,12 +29,13 @@ ThreatMultiplier = 1.0
 
 [sub_resource type="Resource" id="Resource_vnhw4"]
 script = ExtResource("4_on2yd")
-SlotSkillType = 0
+SlotSkillType = 1
 PotencyMultiplier = 1.0
 ThreatMultiplier = 1.0
 
 [resource]
 script = ExtResource("1_x2l7q")
+ContainerColor = Color(0.658824, 0, 0.317647, 1)
 BaseGcd = 1.5
 skillSlots = Array[Object]([SubResource("Resource_7cix2"), SubResource("Resource_nfocm"), SubResource("Resource_rfiey"), SubResource("Resource_vnhw4")])
 Modifiers = Array[Object]([])

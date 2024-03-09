@@ -1,0 +1,45 @@
+POST http://127.0.0.1:5000/data/SetArenaRecord
+Content-Type: application/json
+
+{
+    "ServerKey" : "bananna",
+    "Id" : 129868919,
+    "Progress" : 1,
+    "Session" : "fb81dca3-e988-40b8-a6e4-31ffdbc06309",
+    "DateTime" : 19728973916293819,
+    "Participants" : 
+    [ 
+        {
+            "Id" : 1236919,
+            "Name" : "Bogart",
+            "Dps" : 9999.4,
+            "Hps" : 12.3,
+            "Deaths" : 2,
+            "Build" :             
+             {
+                    "MainId" : 89,
+                    "LeftId" : 11,
+                    "RightId" : 390,
+                    "MainSkillIds" : [1231, 7660, 10696, 10689],
+                    "RightSkillIds" : [1231, 7660, 10696, 10689],
+                    "LeftSkillIds" : [1231, 7660, 10696, 10689]
+              }            
+        },
+        {
+            "Id" : 178919,
+            "Name" : "Bogart2",
+            "Dps" : 9999.4,
+            "Hps" : 12.3,
+            "Deaths" : 30,
+            "Build" :             
+             {
+                    "MainId" : 89,
+                    "LeftId" : 11,
+                    "RightId" : 390,
+                    "MainSkillIds" : [1231, 7660, 10696, 10689],
+                    "RightSkillIds" : [1231, 7660, 10696, 10689],
+                    "LeftSkillIds" : [1231, 7660, 10696, 10689]
+              }            
+        }
+    ]
+}

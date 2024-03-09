@@ -1,4 +1,4 @@
-namespace Daikon.Models.SteamUtils;
+namespace Daikon.Models;
 
 public class SteamUserInfoResponse 
 {

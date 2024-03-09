@@ -1,4 +1,4 @@
-using Daikon.Models.Games;
+using Daikon.Models;
 
 namespace Daikon.Services.Games;
 

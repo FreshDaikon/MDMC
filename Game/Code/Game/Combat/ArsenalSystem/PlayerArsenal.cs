@@ -419,7 +419,7 @@ public partial class PlayerArsenal: Node
 
     public float[] GetArsenalSkillWeights()
     {
-        float[] weights = new float[3];
+        float[] weights = new float[4];
         
         if(GetChildCount() > 0)
         {
@@ -436,9 +436,7 @@ public partial class PlayerArsenal: Node
                     var skill = container.GetSkill(skillSlots.IndexOf(slot));
                     if(skill == null || skill.IsUniversalSkill)
                     {
-                        weights[0] += 0.333f;
-                        weights[1] += 0.333f;
-                        weights[2] += 0.333f;
+                        weights[3] += 1f;
                         continue;
                     }
                     switch(skill.SkillType)
@@ -465,7 +463,7 @@ public partial class PlayerArsenal: Node
     public float[] GetWeightedTotal(float[] weights)
     {
         var list = weights.ToList();
-        float[] totals = new float[3];
+        float[] totals = new float[4];
         foreach(float value in list)
         {
             totals[list.IndexOf(value)] = Mathf.Remap(value, 0, 12, 0.1f, 0.9f); 

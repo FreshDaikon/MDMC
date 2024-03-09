@@ -1,0 +1,229 @@
+[gd_scene load_steps=3 format=3 uid="uid://j4by6mm8h652"]
+
+[ext_resource type="FontFile" uid="uid://q3aynbg5gvis" path="res://Assets/UI/Fonts/LibreFranklin-BlackItalic.ttf" id="1_d2x0h"]
+[ext_resource type="FontFile" uid="uid://dftj2ckdl3j7d" path="res://Assets/UI/Fonts/LibreFranklin-Black.ttf" id="2_7ibp6"]
+
+[node name="StoryPage" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="TitleBG" type="ColorRect" parent="."]
+layout_mode = 1
+offset_left = -355.0
+offset_top = 139.0
+offset_right = 1008.0
+offset_bottom = 339.0
+rotation = -0.128175
+color = Color(0.65098, 0, 0.262745, 1)
+
+[node name="Label" type="Label" parent="TitleBG"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -57.5
+offset_top = -11.5
+offset_right = 57.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 3
+theme_override_fonts/font = ExtResource("1_d2x0h")
+theme_override_font_sizes/font_size = 52
+text = "Arena Selector"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(1800, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -900.0
+offset_top = -223.0
+offset_right = 900.0
+offset_bottom = 450.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 30
+
+[node name="Seasons" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Seasons"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_7ibp6")
+theme_override_font_sizes/font_size = 32
+text = "Seasons"
+
+[node name="ChapterSelectorScroll" type="ScrollContainer" parent="HBoxContainer/Seasons"]
+custom_minimum_size = Vector2(320, 625.41)
+layout_mode = 2
+follow_focus = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Seasons/ChapterSelectorScroll"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="ColorRect" type="ColorRect" parent="HBoxContainer/Seasons/ChapterSelectorScroll/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+color = Color(0.529412, 0.529412, 0.529412, 1)
+
+[node name="ColorRect2" type="ColorRect" parent="HBoxContainer/Seasons/ChapterSelectorScroll/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+color = Color(0.529412, 0.529412, 0.529412, 1)
+
+[node name="ColorRect3" type="ColorRect" parent="HBoxContainer/Seasons/ChapterSelectorScroll/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+color = Color(0.529412, 0.529412, 0.529412, 1)
+
+[node name="ColorRect4" type="ColorRect" parent="HBoxContainer/Seasons/ChapterSelectorScroll/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+color = Color(0.529412, 0.529412, 0.529412, 1)
+
+[node name="ColorRect5" type="ColorRect" parent="HBoxContainer/Seasons/ChapterSelectorScroll/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+color = Color(0.529412, 0.529412, 0.529412, 1)
+
+[node name="ColorRect6" type="ColorRect" parent="HBoxContainer/Seasons/ChapterSelectorScroll/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+color = Color(0.529412, 0.529412, 0.529412, 1)
+
+[node name="ColorRect7" type="ColorRect" parent="HBoxContainer/Seasons/ChapterSelectorScroll/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+color = Color(0.529412, 0.529412, 0.529412, 1)
+
+[node name="ColorRect8" type="ColorRect" parent="HBoxContainer/Seasons/ChapterSelectorScroll/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+color = Color(0.529412, 0.529412, 0.529412, 1)
+
+[node name="ColorRect9" type="ColorRect" parent="HBoxContainer/Seasons/ChapterSelectorScroll/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+color = Color(0.529412, 0.529412, 0.529412, 1)
+
+[node name="ColorRect10" type="ColorRect" parent="HBoxContainer/Seasons/ChapterSelectorScroll/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+color = Color(0.529412, 0.529412, 0.529412, 1)
+
+[node name="ColorRect11" type="ColorRect" parent="HBoxContainer/Seasons/ChapterSelectorScroll/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+color = Color(0.529412, 0.529412, 0.529412, 1)
+
+[node name="Chapters" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Chapters"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_7ibp6")
+theme_override_font_sizes/font_size = 32
+text = "Chapters
+"
+
+[node name="ChapterSelectorScroll" type="ScrollContainer" parent="HBoxContainer/Chapters"]
+custom_minimum_size = Vector2(320, 625.41)
+layout_mode = 2
+follow_focus = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Chapters/ChapterSelectorScroll"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="ColorRect" type="ColorRect" parent="HBoxContainer/Chapters/ChapterSelectorScroll/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+color = Color(0.529412, 0.529412, 0.529412, 1)
+
+[node name="ColorRect2" type="ColorRect" parent="HBoxContainer/Chapters/ChapterSelectorScroll/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+color = Color(0.529412, 0.529412, 0.529412, 1)
+
+[node name="ColorRect3" type="ColorRect" parent="HBoxContainer/Chapters/ChapterSelectorScroll/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+color = Color(0.529412, 0.529412, 0.529412, 1)
+
+[node name="ColorRect4" type="ColorRect" parent="HBoxContainer/Chapters/ChapterSelectorScroll/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+color = Color(0.529412, 0.529412, 0.529412, 1)
+
+[node name="ColorRect5" type="ColorRect" parent="HBoxContainer/Chapters/ChapterSelectorScroll/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+color = Color(0.529412, 0.529412, 0.529412, 1)
+
+[node name="ColorRect6" type="ColorRect" parent="HBoxContainer/Chapters/ChapterSelectorScroll/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+color = Color(0.529412, 0.529412, 0.529412, 1)
+
+[node name="ColorRect7" type="ColorRect" parent="HBoxContainer/Chapters/ChapterSelectorScroll/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+color = Color(0.529412, 0.529412, 0.529412, 1)
+
+[node name="ColorRect8" type="ColorRect" parent="HBoxContainer/Chapters/ChapterSelectorScroll/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+color = Color(0.529412, 0.529412, 0.529412, 1)
+
+[node name="ColorRect9" type="ColorRect" parent="HBoxContainer/Chapters/ChapterSelectorScroll/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+color = Color(0.529412, 0.529412, 0.529412, 1)
+
+[node name="ColorRect10" type="ColorRect" parent="HBoxContainer/Chapters/ChapterSelectorScroll/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+color = Color(0.529412, 0.529412, 0.529412, 1)
+
+[node name="ColorRect11" type="ColorRect" parent="HBoxContainer/Chapters/ChapterSelectorScroll/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+color = Color(0.529412, 0.529412, 0.529412, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Chapter Panel" type="Label" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_7ibp6")
+theme_override_font_sizes/font_size = 32
+text = "Chapter"
+horizontal_alignment = 2
+
+[node name="ColorRect2" type="ColorRect" parent="HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 630)
+layout_mode = 2
+color = Color(0.301961, 0.301961, 0.301961, 1)
