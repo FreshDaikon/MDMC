@@ -1,9 +1,9 @@
+using System.Linq;
+using Daikon.Client;
 using Daikon.Game;
 using Godot;
-using System;
-using System.Linq;
 
-namespace Daikon.Client;
+namespace Mdmc.Code.Client.UI.HUD.UnitFrames;
 
 public partial class UI_PartyFrame : Control
 {

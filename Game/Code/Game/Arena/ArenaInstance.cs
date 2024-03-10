@@ -1,8 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
+using Daikon.Game;
 using Godot;
+using Mdmc.Code.Game.Entity.Adversary;
+using AdversaryEntity = Mdmc.Code.Game.Entity.Adversary.AdversaryEntity;
+using ArenaData = Mdmc.Code.Game.Data.ArenaData;
+using CombatManager = Mdmc.Code.Game.Combat.CombatManager;
+using EntityStatus = Mdmc.Code.Game.Entity.Components.EntityStatus;
+using PlayerEntity = Mdmc.Code.Game.Entity.Player.PlayerEntity;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Arena;
 
 public partial class Arena : Node3D
 {
@@ -157,9 +164,9 @@ public partial class Arena : Node3D
         _entityContainer.RemoveChild(player);
     }
 
-    public Entity GetEntity(int id) => _entityContainer.GetChildCount() == 0
+    public Entity.Entity GetEntity(int id) => _entityContainer.GetChildCount() == 0
         ? null
-        : _entityContainer.GetChildren().Where(x => x is Entity).Cast<Entity>().ToList()
+        : _entityContainer.GetChildren().Where(x => x is Entity.Entity).Cast<Entity.Entity>().ToList()
             .Find(e => e.Name == id.ToString());
 
     public int GetEntityIndex(int id)
@@ -186,21 +193,21 @@ public partial class Arena : Node3D
         if(_entityContainer.GetChildCount() == 0)
             return -1;
         var friends = _entityContainer.GetChildren()
-            .Where(child => child is Entity)
-            .Cast<Entity>()
-            .Where(e => e.Team == Entity.TeamType.Player)
+            .Where(child => child is Entity.Entity)
+            .Cast<Entity.Entity>()
+            .Where(e => e.Team == Entity.Entity.TeamType.Player)
             .ToList();
         if(friends.Count == 0)
             return -1;
         return friends.IndexOf(friends.Find(p => p.Name == id.ToString())); 
     }
-    public List<Entity> GetEntities()
+    public List<Entity.Entity> GetEntities()
     {
         if(_entityContainer.GetChildCount() == 0)
             return null;
         var entities = _entityContainer.GetChildren()
-            .Where(child => child is Entity)
-            .Cast<Entity>()
+            .Where(child => child is Entity.Entity)
+            .Cast<Entity.Entity>()
             .ToList();        
         return entities;
     }
@@ -214,14 +221,14 @@ public partial class Arena : Node3D
             .ToList();     
         return players.Count == 0 ? null : players;
     }
-    public List<Entity> GetFriendlyEntities()
+    public List<Entity.Entity> GetFriendlyEntities()
     {
         if(_entityContainer.GetChildren().Count == 0)
             return null;
         var entities = _entityContainer.GetChildren()
-            .Where(child => child is Entity)
-            .Cast<Entity>()
-            .Where(e => e.Team == Entity.TeamType.Player)
+            .Where(child => child is Entity.Entity)
+            .Cast<Entity.Entity>()
+            .Where(e => e.Team == Entity.Entity.TeamType.Player)
             .ToList();        
         return entities.Count == 0 ? null : entities;
     }

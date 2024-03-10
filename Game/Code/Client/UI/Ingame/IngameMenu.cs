@@ -1,8 +1,7 @@
 using Daikon.Game;
-using Daikon.Helpers;
 using Godot;
 
-namespace Daikon.Client;
+namespace Mdmc.Code.Client.UI.Ingame;
 
 public partial class UIIngameMenu: Control
 {

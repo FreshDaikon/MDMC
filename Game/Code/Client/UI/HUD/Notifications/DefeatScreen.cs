@@ -1,7 +1,7 @@
 using Daikon.Game;
 using Godot;
 
-namespace Daikon.Client; 
+namespace Mdmc.Code.Client.UI.HUD.Notifications; 
 
 public partial class UI_DefeatScreen : Control
 {

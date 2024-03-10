@@ -1,8 +1,8 @@
-using Godot;
 using Daikon.Game;
 using Daikon.Helpers;
+using Godot;
 
-namespace Daikon.Client;
+namespace Mdmc.Code.Client.UI.HUD.Hotbar;
 
 public partial class HUD_SkillSlot : Control
 {

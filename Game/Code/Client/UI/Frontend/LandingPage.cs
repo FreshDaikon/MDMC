@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using Godot;
+using Daikon.Client;
 using Daikon.Game;
-using Daikon.Helpers;
-using Daikon.Client.Connect;
+using Godot;
+using Mdmc.Code.Client.Connect;
 
-namespace Daikon.Client;
+namespace Mdmc.Code.Client.UI.Frontend;
 
 public partial class UILandingPage : Control
 {
@@ -75,12 +75,12 @@ public partial class UILandingPage : Control
             GD.Print("We got a game Created over here!");
             _joinCodeEdit.Text = joincode;
             ArenaManager.Instance.LoadArena(_arenas[_arenaListOptions.Selected].Id);
-            ClientMultiplayerManager.Instance.SetData(serverhost, port);
+            Mdmc.Code.Client.Multiplayer.ClientMultiplayerManager.Instance.SetData(serverhost, port);
         };
         DaikonConnect.Instance.GameFound += (host, port) => {
             GD.Print("We have gotten a game here!");
             ArenaManager.Instance.LoadArena(_arenas[_arenaListOptions.Selected].Id);
-            ClientMultiplayerManager.Instance.SetData(host, port);
+            Mdmc.Code.Client.Multiplayer.ClientMultiplayerManager.Instance.SetData(host, port);
         };
         
     }
@@ -103,7 +103,7 @@ public partial class UILandingPage : Control
 
     private void StartGame()
     {
-        ClientMultiplayerManager.Instance.StartPeer();
+        Mdmc.Code.Client.Multiplayer.ClientMultiplayerManager.Instance.StartPeer();
         UIManager.Instance.TrySetUIState(UIManager.UIState.HUD);
         Multiplayer.ConnectedToServer += () => 
         {
@@ -126,12 +126,12 @@ public partial class UILandingPage : Control
 
     private void StartLocalServer()
     {
-        ClientMultiplayerManager.Instance.StartLocalServer(_arenas[_arenaListOptions.Selected]);
+        Mdmc.Code.Client.Multiplayer.ClientMultiplayerManager.Instance.StartLocalServer(_arenas[_arenaListOptions.Selected]);
     }
     private void JoinLocalServer()
     {
-        ClientMultiplayerManager.Instance.SetData("127.0.0.1", 8080);
-        ClientMultiplayerManager.Instance.StartPeer(); 
+        Mdmc.Code.Client.Multiplayer.ClientMultiplayerManager.Instance.SetData("127.0.0.1", 8080);
+        Mdmc.Code.Client.Multiplayer.ClientMultiplayerManager.Instance.StartPeer(); 
         // a bit weary here..
         if(ArenaManager.Instance.GetCurrentArena() == null)
         {

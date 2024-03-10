@@ -2,6 +2,8 @@ using Godot;
 using System;
 using Daikon.Game;
 
+namespace Mdmc.Code.Client.UI.Ingame.Elements;
+
 public partial class UIContainerButton : Control
 {
 	public SkillContainerData AssignedContainer;

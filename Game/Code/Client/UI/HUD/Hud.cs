@@ -1,10 +1,11 @@
-using Godot;
-using Daikon.Game;
 using System;
+using Daikon.Game;
+using Godot;
+using ArenaManager = Mdmc.Code.Game.Arena.ArenaManager;
 
-namespace Daikon.Client;
+namespace Mdmc.Code.Client.UI.HUD;
 
-public partial class UIHUDMain : Control
+public partial class HudContainer : Control
 {
 
 	private PlayerEntity _localPlayer;

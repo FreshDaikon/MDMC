@@ -2,7 +2,7 @@ using Daikon.Game;
 using Daikon.Helpers;
 using Godot;
 
-namespace Daikon.Client;
+namespace Mdmc.Code.Client.UI.HUD.UnitFrames;
 
 public partial class UI_NamePlate : Control
 {

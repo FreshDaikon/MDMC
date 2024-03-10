@@ -1,9 +1,8 @@
+using System.Linq;
 using Daikon.Game;
 using Godot;
-using System;
-using System.Linq;
 
-namespace Daikon.Client;
+namespace Mdmc.Code.Client.UI.HUD.UnitFrames;
 
 public partial class UI_NamePlateContainer : Control
 {	
@@ -19,7 +18,7 @@ public partial class UI_NamePlateContainer : Control
 		var entities = ArenaManager.Instance.GetCurrentArena().GetEntities();
 		if (entities == null) return;
 		
-		var namePlates = GetChildren().Where(x => x is UI_NamePlate).Cast<UI_NamePlate>().ToList();		
+		var namePlates = GetChildren().Where(x => x is Mdmc.Code.Client.UI.HUD.UnitFrames.NamePlate).Cast<Mdmc.Code.Client.UI.HUD.UnitFrames.NamePlate>().ToList();		
 		foreach (var plate in namePlates.Where(plate => entities.All(n => n != plate.GetEntity())))
 		{
 			plate.QueueFree();
@@ -30,18 +29,18 @@ public partial class UI_NamePlateContainer : Control
 			{
 				continue;
 			}
-			var newEntry = (UI_NamePlate)NameplateAsset.Instantiate();
+			var newEntry = (Mdmc.Code.Client.UI.HUD.UnitFrames.NamePlate)NameplateAsset.Instantiate();
 			newEntry.Name = entity.Name;
 			AddChild(newEntry);
 			newEntry.InitializeFrame(entity);
 		}
-		var unsorted = GetChildren().Where(x => x is UI_NamePlate).Cast<UI_NamePlate>().ToList();
+		var unsorted = GetChildren().Where(x => x is Mdmc.Code.Client.UI.HUD.UnitFrames.NamePlate).Cast<Mdmc.Code.Client.UI.HUD.UnitFrames.NamePlate>().ToList();
 		var camera = GetViewport().GetCamera3D();
 		if(camera == null)
 		{
 			return;
 		}
-		var sorted = unsorted.OrderBy(x => ((camera.GlobalPosition - x.GetEntity().Controller.GlobalPosition).Length())).Cast<UI_NamePlate>().ToList();
+		var sorted = unsorted.OrderBy(x => ((camera.GlobalPosition - x.GetEntity().Controller.GlobalPosition).Length())).Cast<Mdmc.Code.Client.UI.HUD.UnitFrames.NamePlate>().ToList();
 		for(var i = 0; i < sorted.Count; i++)
 		{
 			MoveChild(sorted[0], i);

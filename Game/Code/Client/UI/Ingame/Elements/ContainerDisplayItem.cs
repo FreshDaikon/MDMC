@@ -4,6 +4,8 @@ using System.Linq;
 using Daikon.Game;
 using Daikon.Helpers;
 
+namespace Mdmc.Code.Client.UI.Ingame.Elements;
+
 public partial class UIContainerItem : Control
 {
 	[Export] public MD.ContainerSlot AssignedSlot { get; private set; }  
