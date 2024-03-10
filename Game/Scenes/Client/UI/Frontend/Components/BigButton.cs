@@ -1,5 +1,6 @@
 using Godot;
-using System;
+
+namespace Mdmc.Scenes.Client.UI.Frontend.Components;
 
 public partial class BigButton : TextureButton
 {

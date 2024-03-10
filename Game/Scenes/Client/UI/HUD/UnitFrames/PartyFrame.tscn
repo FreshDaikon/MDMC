@@ -1,10 +1,10 @@
 [gd_scene load_steps=4 format=3 uid="uid://c7ur3s0qe1nca"]
 
 [ext_resource type="PackedScene" uid="uid://cplev7d1ykh7j" path="res://Scenes/Client/UI/HUD/UnitFrames/UnitFrame.tscn" id="1_23ms4"]
-[ext_resource type="Script" path="res://Code/Client/UI/HUD/UnitFrames/UI_PartyFrame.cs" id="1_macan"]
+[ext_resource type="Script" path="res://Code/Client/UI/HUD/UnitFrames/PartyFrame.cs" id="1_macan"]
 [ext_resource type="FontFile" uid="uid://q3aynbg5gvis" path="res://Assets/UI/Fonts/LibreFranklin-BlackItalic.ttf" id="3_k6bjf"]
 
-[node name="PartyFrame" type="Control"]
+[node name="PartyFrame" type="Control" node_paths=PackedStringArray("_playerContainer")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,7 +12,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_macan")
-UnitFrameAsset = ExtResource("1_23ms4")
+_unitFrameAsset = ExtResource("1_23ms4")
+_playerContainer = NodePath("OverallContainer/PlayerContainer")
 
 [node name="OverallContainer" type="VBoxContainer" parent="."]
 layout_mode = 0

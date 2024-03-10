@@ -1,7 +1,7 @@
 
 using Godot;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Entity.Adversary.Actions.Behaviors;
 
 [GlobalClass]
 public partial class Chase: BaseBehavior

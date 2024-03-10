@@ -1,6 +1,6 @@
-using Daikon.Helpers;
+using Mdmc.Code.System;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Combat.ArsenalSystem.EffectStack.Rules;
 
 public class RuleSkillEffect: EffectRule
 {

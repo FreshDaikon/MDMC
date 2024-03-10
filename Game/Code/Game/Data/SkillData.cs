@@ -1,9 +1,8 @@
-using Daikon.Game.EffectRules;
 using Godot;
-using Daikon.Helpers;
-using Godot.Collections;
+using Mdmc.Code.Game.Combat.ArsenalSystem;
+using Mdmc.Code.System;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Data;
 
 [GlobalClass]
 public abstract partial class SkillData : DataObject

@@ -1,6 +1,6 @@
 using Godot;
-using System;
-using Daikon.Game;
+
+namespace Mdmc.Code.Game.Realization.Realizations.Boss.Mechanics;
 
 public partial class RectAoeRealization : Realization
 {

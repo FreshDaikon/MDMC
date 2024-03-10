@@ -1,45 +1,43 @@
 using Godot;
-using Daikon.Game;
+using GameManager = Mdmc.Code.Game.GameManager;
 
-namespace Daikon.Client;
+namespace Mdmc.Code.Client.UI.HUD.Misc;
 
 public partial class DamageNumber : Control
 {	
-	[Export]
-	public Label label;
-	private Vector2 UIPos;
-	private Camera3D camera;
+	[Export] private Label _label;
+	[Export] private AnimationPlayer _animationPlayer;
+	
+	private Vector2 _screenPosition;
+	private Camera3D _camera;
 	private Vector3 _worldPos;
-
-	[Export]
-	private AnimationPlayer animationPlayer;
 	
 	public void Initialize(string value, Color color, Vector3 worldPos)
 	{
 		var ran = new RandomNumberGenerator();
 		_worldPos = worldPos + new Vector3(ran.RandfRange(-0.6f, 0.6f), ran.RandfRange(-0.6f, 0.6f), ran.RandfRange(-0.6f, 0.6f));
-		camera = GetViewport().GetCamera3D();
-		UIPos = camera.UnprojectPosition(_worldPos);
-		label.Text = value;
-		label.AddThemeColorOverride("font_color", color);
-		Position = UIPos;
+		_camera = GetViewport().GetCamera3D();
+		_screenPosition = _camera.UnprojectPosition(_worldPos);
+		_label.Text = value;
+		_label.AddThemeColorOverride("font_color", color);
+		Position = _screenPosition;
 		//Play the animation :
-		animationPlayer.Play("FloatAway");
+		_animationPlayer.Play("FloatAway");
 		//On End, just delete yourself:
-		animationPlayer.AnimationFinished += (animation) => QueueFree();
+		_animationPlayer.AnimationFinished += (animation) => QueueFree();
 	}
     public override void _PhysicsProcess(double delta)
     {
 		if(!GameManager.Instance.IsGameRunning())
 			return;
-		if(camera == null)
+		if(_camera == null)
 		{
 				return;
 		}
-		if(camera.IsPositionBehind(_worldPos))
+		if(_camera.IsPositionBehind(_worldPos))
 			return;
-		UIPos = camera.UnprojectPosition(_worldPos);
-		Position = UIPos; // + new Vector2(ran.RandfRange(-100f, 100f), ran.RandfRange(-100f, 100f));
+		_screenPosition = _camera.UnprojectPosition(_worldPos);
+		Position = _screenPosition; // + new Vector2(ran.RandfRange(-100f, 100f), ran.RandfRange(-100f, 100f));
         base._PhysicsProcess(delta);
     }
 }

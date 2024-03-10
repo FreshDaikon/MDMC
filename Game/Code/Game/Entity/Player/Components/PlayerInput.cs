@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
-using Daikon.Helpers;
-using Daikon.Client;
-using PlayFab.AdminModels;
+using Mdmc.Code.Game.Entity.Components;
+using Mdmc.Code.System;
+using UIManager = Mdmc.Code.Client.UI.UIManager;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Entity.Player.Components;
 
 public partial class PlayerInput : Node
 {
@@ -344,7 +344,7 @@ public partial class PlayerInput : Node
         
         if(player.TargetId == -1)
         {
-            var enemies = ArenaManager.Instance.GetCurrentArena().GetEnemyEntities();
+            var enemies = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().GetEnemyEntities();
             if(enemies == null)
             {
                 player.TargetId = -1;
@@ -355,13 +355,13 @@ public partial class PlayerInput : Node
         }
         else
         {                
-            var enemies = ArenaManager.Instance.GetCurrentArena().GetEnemyEntities();
+            var enemies = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().GetEnemyEntities();
             if(enemies == null )
             {
                 player.TargetId = -1;
                 return;
             }
-            var index = ArenaManager.Instance.GetCurrentArena().GetEnemyIndex(player.TargetId) + (direction ? 1 : -1);
+            var index = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().GetEnemyIndex(player.TargetId) + (direction ? 1 : -1);
             var newIndex = Mathf.Wrap(index, 0, enemies.Count);
             player.TargetId = int.Parse(enemies[newIndex].Name);
         }
@@ -374,7 +374,7 @@ public partial class PlayerInput : Node
         
         if(player.FriendlyTargetId == -1)
         {
-            var friends = ArenaManager.Instance.GetCurrentArena().GetFriendlyEntities();
+            var friends = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().GetFriendlyEntities();
             if(friends == null)
             {
                 player.FriendlyTargetId = -1;
@@ -385,13 +385,13 @@ public partial class PlayerInput : Node
         }
         else
         {                
-            var friends = ArenaManager.Instance.GetCurrentArena().GetFriendlyEntities();
+            var friends = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().GetFriendlyEntities();
             if(friends == null)
             {
                 player.FriendlyTargetId = -1;
                 return;
             }
-            var index = ArenaManager.Instance.GetCurrentArena().GetFriendlyIndex(player.FriendlyTargetId) + (direction ? 1 : -1);
+            var index = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().GetFriendlyIndex(player.FriendlyTargetId) + (direction ? 1 : -1);
             var newIndex = Mathf.Wrap(index, 0, friends.Count);
             player.FriendlyTargetId = int.Parse(friends[newIndex].Name);
         }

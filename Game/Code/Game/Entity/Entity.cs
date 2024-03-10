@@ -1,6 +1,7 @@
 using Godot;
- 
-namespace Daikon.Game;
+using Mdmc.Code.Game.Entity.Components;
+
+namespace Mdmc.Code.Game.Entity;
 
 public partial class Entity : Node3D
 {
@@ -56,7 +57,7 @@ public partial class Entity : Node3D
         get {
             if(TargetId != -1)
             {
-                var target = ArenaManager.Instance.GetCurrentArena().GetEntity(TargetId);
+                var target = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().GetEntity(TargetId);
                 if(target == null)
                 { 
                     TargetId = -1;    

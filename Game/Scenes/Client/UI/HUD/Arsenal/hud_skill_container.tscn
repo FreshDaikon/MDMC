@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://cj5m27jrog0rj"]
 
-[ext_resource type="Script" path="res://Code/Client/UI/CleanUp/HUD_SkillContainer.cs" id="1_3uhms"]
+[ext_resource type="Script" path="res://Code/Client/UI/HUD/Hotbar/SkillContainer.cs" id="1_3uhms"]
 [ext_resource type="Texture2D" uid="uid://coyetxtc5aald" path="res://Assets/UI/ArsenalSystem/SkillContainers/Warlocks_MK3.png" id="1_kaaot"]
 [ext_resource type="FontFile" uid="uid://q3aynbg5gvis" path="res://Assets/UI/Fonts/LibreFranklin-BlackItalic.ttf" id="1_q1tj0"]
 [ext_resource type="PackedScene" uid="uid://cxax3of812334" path="res://Scenes/Client/UI/HUD/Arsenal/hud_SkillSlot.tscn" id="1_q3fjt"]

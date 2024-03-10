@@ -1,7 +1,6 @@
 using Godot;
-using Daikon.Helpers;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Realization;
 
 public partial class Realization: Node3D
 {    

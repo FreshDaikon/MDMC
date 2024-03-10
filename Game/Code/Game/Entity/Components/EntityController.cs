@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using Godot;
-using Daikon.Helpers;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Entity.Components;
 
 public partial class EntityController : CharacterBody3D
 {

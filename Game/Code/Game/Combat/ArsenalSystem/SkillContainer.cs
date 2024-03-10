@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
-using Daikon.Helpers;
+using Mdmc.Code.Game.Data;
+using Mdmc.Code.Game.Entity.Player;
+using Mdmc.Code.System;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Combat.ArsenalSystem;
 
 public partial class SkillContainer : Node
 {
@@ -13,7 +15,7 @@ public partial class SkillContainer : Node
         Suit,
     }
     
-    public SkillSlotData[] SkillSlots;
+    public Data.Decorators.SkillSlotData[] SkillSlots;
     public List<ModifierData> BuffsGranted;
     public float BaseGcd = 1.5f;
     public MD.ContainerSlot AssignedSlot = 0;

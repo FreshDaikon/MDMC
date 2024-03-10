@@ -2,12 +2,12 @@ using System;
 using Godot;
 using Steamworks;
 
-namespace Daikon.Client;
+namespace Mdmc.Code.Client.Steam;
 
 public partial class SteamManager : Node
 {
     public static SteamManager Instance;
-    private static uint appId { get; } = 2828690;
+    private static uint _appId { get; } = 2828690;
 
     public bool IsSteamRunning = false;
 
@@ -24,11 +24,11 @@ public partial class SteamManager : Node
 
     public bool InitSteam()
     {
-        OS.SetEnvironment("SteamAppID", appId.ToString());
-        OS.SetEnvironment("SteamAppName", appId.ToString());
+        OS.SetEnvironment("SteamAppID", _appId.ToString());
+        OS.SetEnvironment("SteamAppName", _appId.ToString());
         try
         {
-            SteamClient.Init(appId, true);
+            SteamClient.Init(_appId, true);
         }
         catch(Exception e)
         {

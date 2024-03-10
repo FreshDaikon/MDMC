@@ -1,26 +1,25 @@
 using System;
-using Daikon.Game;
 using Godot;
-using ArenaManager = Mdmc.Code.Game.Arena.ArenaManager;
+using Mdmc.Code.Game;
+using Mdmc.Code.Game.Arena;
+using Mdmc.Code.Game.Entity;
+using Mdmc.Code.Game.Entity.Player;
 
 namespace Mdmc.Code.Client.UI.HUD;
 
-public partial class HudContainer : Control
+public partial class Hud : Control
 {
-
+	// Exported:
+	[Export] private Label _fpsLabel;
+	[Export] private Label _latencyLabel;
+	[Export] private Label _timeLeftLabel;
+	
+	// Internals:
 	private PlayerEntity _localPlayer;
-
-	private Label _fpsLabel;
-	private Label _latencyLabel;
-	private Label _timeLeftLabel;
-	public Entity LocalPlayerUiTarget;
 
 	public override void _Ready()
 	{
 		Visible = false;
-		_fpsLabel = GetNode<Label>("%FPS");
-		_latencyLabel = GetNode<Label>("%Latency");
-		_timeLeftLabel = GetNode<Label>("%TimeLeft");
 	}
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)

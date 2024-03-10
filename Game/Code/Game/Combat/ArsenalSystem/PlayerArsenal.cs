@@ -1,10 +1,9 @@
 using System.Linq;
 using Godot;
-using Daikon.Helpers;
-using System.Collections.Generic;
-using System;
+using Mdmc.Code.Game.Entity.Player;
+using Mdmc.Code.System;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Combat.ArsenalSystem;
 
 public partial class PlayerArsenal: Node
 {
@@ -22,7 +21,7 @@ public partial class PlayerArsenal: Node
     public Skill ChannelingSkill;
     public double GCDStartTime = 0;
     
-    public EffectStack Stack { get; private set; }
+    public EffectStack.EffectStack Stack { get; private set; }
     public Skill LastSkill { get; set; }
     
     
@@ -34,7 +33,7 @@ public partial class PlayerArsenal: Node
     {
         //skillContainers = GetNode("%SkillContainers");
         Player = GetParent<PlayerEntity>();
-        Stack = new EffectStack(this);
+        Stack = new EffectStack.EffectStack(this);
     }
 
     public override void _Process(double delta)

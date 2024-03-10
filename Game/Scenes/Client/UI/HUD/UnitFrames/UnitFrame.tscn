@@ -1,6 +1,6 @@
 [gd_scene load_steps=15 format=3 uid="uid://cplev7d1ykh7j"]
 
-[ext_resource type="Script" path="res://Code/Client/UI/HUD/UnitFrames/UI_UnitFrame.cs" id="1_m4g0v"]
+[ext_resource type="Script" path="res://Code/Client/UI/HUD/UnitFrames/UnitFrame.cs" id="1_m4g0v"]
 [ext_resource type="Texture2D" uid="uid://b6k6enogqidv8" path="res://Assets/UI/Core/PlayerBuildTag.png" id="2_8oe0y"]
 [ext_resource type="FontFile" uid="uid://dftj2ckdl3j7d" path="res://Assets/UI/Fonts/LibreFranklin-Black.ttf" id="2_pn6a6"]
 
@@ -189,6 +189,7 @@ expand_mode = 1
 
 [node name="EdgeGlow" type="TextureRect" parent="CastBG"]
 material = SubResource("CanvasItemMaterial_pk5mu")
+layout_mode = 0
 offset_left = 149.0
 offset_top = 1.0
 offset_right = 189.0

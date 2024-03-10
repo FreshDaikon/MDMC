@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://ds72o2h662r4r" path="res://Scenes/Client/UI/HUD/HUD_Main.tscn" id="3_3lbq8"]
 [ext_resource type="PackedScene" uid="uid://bdoagm2ktwyfm" path="res://Scenes/Client/UI/Ingame/Ingame_Main.tscn" id="4_6g5te"]
 [ext_resource type="Script" path="res://Code/Game/DataManager.cs" id="5_kp3vg"]
-[ext_resource type="Script" path="res://Code/Client/DaikonConnect/DaikonConnect.cs" id="7_jq341"]
+[ext_resource type="Script" path="res://Code/Client/Connect/DaikonConnect.cs" id="7_jq341"]
 [ext_resource type="Script" path="res://Code/System/InputBuffer.cs" id="7_ubedu"]
 [ext_resource type="Script" path="res://Code/Game/Arena/ArenaManager.cs" id="9_a7vxa"]
 [ext_resource type="Script" path="res://Code/Game/StateManager.cs" id="9_u2a7f"]
@@ -44,11 +44,12 @@ script = ExtResource("9_v17ox")
 [node name="ClientMultiplayerManager" type="Node" parent="Managers/Client"]
 script = ExtResource("13_pw8dm")
 
-[node name="UIManager" type="Node" parent="Managers/Client"]
+[node name="UIManager" type="Node" parent="Managers/Client" node_paths=PackedStringArray("_uiContainer")]
 script = ExtResource("12_rn5ab")
-frontendScene = ExtResource("2_2g20u")
-hudScene = ExtResource("3_3lbq8")
-ingamemenuScene = ExtResource("4_6g5te")
+_frontendScene = ExtResource("2_2g20u")
+_hudScene = ExtResource("3_3lbq8")
+_ingamemenuScene = ExtResource("4_6g5te")
+_uiContainer = NodePath("UIContainer")
 
 [node name="UIContainer" type="Node" parent="Managers/Client/UIManager"]
 unique_name_in_owner = true

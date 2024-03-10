@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Combat.ArsenalSystem.EffectStack.Rules;
 
 
 public class RuleCombo: EffectRule

@@ -1,18 +1,19 @@
-[gd_scene load_steps=3 format=3 uid="uid://d0fgtib258a7k"]
+[gd_scene load_steps=4 format=3 uid="uid://d0fgtib258a7k"]
 
-[ext_resource type="Script" path="res://Code/Client/UI/CleanUp/DamageMeter.cs" id="1_4qtdq"]
+[ext_resource type="Script" path="res://Code/Client/UI/HUD/DamageMeter/DamageMeter.cs" id="1_4qtdq"]
 [ext_resource type="FontFile" uid="uid://xv28cftjto52" path="res://Assets/UI/Fonts/twoweekendssans-regular.otf" id="1_ti0a1"]
+[ext_resource type="PackedScene" uid="uid://dj2hy5o46q1b1" path="res://Scenes/Client/UI/HUD/Elements/DamageMeter/Meter_Entry.tscn" id="2_j7mkd"]
 
-[node name="DamageMeter" type="Control" node_paths=PackedStringArray("EntryList", "EntryContainer", "TotalLabel", "TypeLabel", "TimeLabel")]
+[node name="DamageMeter" type="Control" node_paths=PackedStringArray("_entryList", "_entryContainer", "_totalLabel", "_typeLabel", "_timeLabel")]
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_4qtdq")
-EntryPath = "res://Scenes/Client/UI/HUD/Elements/DamageMeter/Meter_Entry.tscn"
-EntryList = NodePath("Container/EntryContainer/EntryList")
-EntryContainer = NodePath("Container/EntryContainer")
-TotalLabel = NodePath("Container/InfoBG/TitleBar/HBoxContainer/TotalDamage")
-TypeLabel = NodePath("Container/TitleBG/TitleBar/DamageMeterTitle")
-TimeLabel = NodePath("Container/TitleBG/TitleBar/HBoxContainer/TimePassed")
+_entryScene = ExtResource("2_j7mkd")
+_entryList = NodePath("Container/EntryContainer/EntryList")
+_entryContainer = NodePath("Container/EntryContainer")
+_totalLabel = NodePath("Container/InfoBG/TitleBar/HBoxContainer/TotalValue")
+_typeLabel = NodePath("Container/TitleBG/TitleBar/DamageMeterTitle")
+_timeLabel = NodePath("Container/TitleBG/TitleBar/HBoxContainer/TimePassedValue")
 
 [node name="Container" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -66,7 +67,7 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("1_ti0a1")
 text = "Time"
 
-[node name="TimePassed" type="Label" parent="Container/TitleBG/TitleBar/HBoxContainer"]
+[node name="TimePassedValue" type="Label" parent="Container/TitleBG/TitleBar/HBoxContainer"]
 custom_minimum_size = Vector2(75, 0)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_ti0a1")
@@ -103,7 +104,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="DamageMeterTitle" type="Label" parent="Container/InfoBG/TitleBar"]
+[node name="PlayersTotalTitle" type="Label" parent="Container/InfoBG/TitleBar"]
 layout_mode = 2
 offset_top = 4.0
 offset_right = 146.0
@@ -127,12 +128,12 @@ grow_vertical = 2
 theme_override_constants/separation = 8
 alignment = 2
 
-[node name="TimeTitle" type="Label" parent="Container/InfoBG/TitleBar/HBoxContainer"]
+[node name="TotalTitle" type="Label" parent="Container/InfoBG/TitleBar/HBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_ti0a1")
 text = "TOTAL"
 
-[node name="TotalDamage" type="Label" parent="Container/InfoBG/TitleBar/HBoxContainer"]
+[node name="TotalValue" type="Label" parent="Container/InfoBG/TitleBar/HBoxContainer"]
 custom_minimum_size = Vector2(75, 0)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_ti0a1")

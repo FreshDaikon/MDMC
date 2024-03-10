@@ -1,7 +1,7 @@
-using Daikon.Client;
 using Godot;
+using DamageNumber = Mdmc.Code.Client.UI.HUD.Misc.DamageNumber;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Realization;
 
 public partial class RealizationManager: Node
 {

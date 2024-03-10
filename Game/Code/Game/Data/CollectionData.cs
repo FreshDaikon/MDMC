@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Data;
 
 [GlobalClass]
 public partial class CollectionData: DataObject

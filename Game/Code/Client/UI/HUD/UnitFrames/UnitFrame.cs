@@ -1,10 +1,15 @@
-using Daikon.Game;
-using Daikon.Helpers;
 using Godot;
+using Mdmc.Code.System;
+using AdversaryEntity = Mdmc.Code.Game.Entity.Adversary.AdversaryEntity;
+using ArenaManager = Mdmc.Code.Game.Arena.ArenaManager;
+using Entity = Mdmc.Code.Game.Entity.Entity;
+using EntityStatus = Mdmc.Code.Game.Entity.Components.EntityStatus;
+using GameManager = Mdmc.Code.Game.GameManager;
+using PlayerEntity = Mdmc.Code.Game.Entity.Player.PlayerEntity;
 
 namespace Mdmc.Code.Client.UI.HUD.UnitFrames;
 
-public partial class UI_UnitFrame : Control
+public partial class UnitFrame : Control
 {
 	[Export]
 	private Vector2 BarSize = new Vector2(200f, 100f);

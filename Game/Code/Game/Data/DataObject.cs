@@ -1,7 +1,7 @@
-using Godot; 
-using Daikon.Helpers;
+using Godot;
+using Mdmc.Code.System;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Data;
 
 [GlobalClass]
 public partial class DataObject : Resource
@@ -20,5 +20,4 @@ public partial class DataObject : Resource
     public Texture2D Image;
     [Export]
     public Texture2D Icon;
-
 }

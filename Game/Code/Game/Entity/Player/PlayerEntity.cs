@@ -1,8 +1,9 @@
-using Daikon.Client;
 using Godot;
+using Mdmc.Code.Game.Combat.ArsenalSystem;
+using Mdmc.Code.Game.Entity.Player.Components;
 using static System.Int32;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Entity.Player;
 
 public partial class PlayerEntity : Entity
 {
@@ -22,7 +23,7 @@ public partial class PlayerEntity : Entity
         get {
             if(FriendlyTargetId != -1)
             {
-                var target = ArenaManager.Instance.GetCurrentArena().GetEntity(FriendlyTargetId);
+                var target = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().GetEntity(FriendlyTargetId);
                 if(target == null)
                 { 
                     FriendlyTargetId = -1;    

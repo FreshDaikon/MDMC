@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://1bpfjjvvkhfn"]
 
-[ext_resource type="Script" path="res://Code/Client/UI/Frontend/UILandingPage.cs" id="1_p3haa"]
+[ext_resource type="Script" path="res://Code/Client/UI/Frontend/LandingPage.cs" id="1_p3haa"]
 [ext_resource type="FontFile" uid="uid://xv28cftjto52" path="res://Assets/UI/Fonts/twoweekendssans-regular.otf" id="1_pfx35"]
 [ext_resource type="PackedScene" uid="uid://drwf23ju3cmju" path="res://Scenes/Client/UI/Frontend/Components/MDMC_Title.tscn" id="2_cqgh0"]
 [ext_resource type="FontFile" uid="uid://q3aynbg5gvis" path="res://Assets/UI/Fonts/LibreFranklin-BlackItalic.ttf" id="4_0a1n2"]

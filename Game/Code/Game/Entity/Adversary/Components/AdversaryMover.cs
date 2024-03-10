@@ -1,6 +1,7 @@
 using Godot;
+using Mdmc.Code.Game.Entity.Components;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Entity.Adversary.Components;
 
 public partial class AdversaryMover : Node, IEntityMover
 {

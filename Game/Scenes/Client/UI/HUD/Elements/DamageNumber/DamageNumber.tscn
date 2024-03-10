@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://clfovbg7cevmv"]
 
-[ext_resource type="Script" path="res://Code/Client/UI/CleanUp/DamageNumber.cs" id="1_q7qxf"]
+[ext_resource type="Script" path="res://Code/Client/UI/HUD/Misc/DamageNumber.cs" id="1_q7qxf"]
 [ext_resource type="FontFile" uid="uid://q3aynbg5gvis" path="res://Assets/UI/Fonts/LibreFranklin-BlackItalic.ttf" id="2_onsmx"]
 
 [sub_resource type="Animation" id="Animation_o075t"]
@@ -64,7 +64,7 @@ _data = {
 "RESET": SubResource("Animation_f02bl")
 }
 
-[node name="DmgInstance" type="Control" node_paths=PackedStringArray("label", "animationPlayer")]
+[node name="DmgInstance" type="Control" node_paths=PackedStringArray("_label", "_animationPlayer")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -74,8 +74,8 @@ offset_bottom = -1080.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_q7qxf")
-label = NodePath("Label")
-animationPlayer = NodePath("AnimationPlayer")
+_label = NodePath("Label")
+_animationPlayer = NodePath("AnimationPlayer")
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 1

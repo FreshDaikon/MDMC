@@ -1,7 +1,8 @@
 using System.Linq;
 using Godot;
+using Mdmc.Code.Game.Combat.ArsenalSystem;
 
-namespace Daikon.Game.SkillContainers;
+namespace Mdmc.Code.Game.Data.SkillContainers;
 
 [GlobalClass]
 public partial class StandardContainerData : SkillContainerData

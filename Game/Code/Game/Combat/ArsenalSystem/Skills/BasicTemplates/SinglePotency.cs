@@ -1,11 +1,13 @@
 using System.Linq;
-using Daikon.Client;
-using Daikon.Game.General;
-using Daikon.Game.Realizations;
 using Godot;
-using Daikon.Helpers;
+using Mdmc.Code.Game.Data.Decorators;
+using Mdmc.Code.Game.Data.Realizations;
+using Mdmc.Code.Game.Entity.Adversary.Components;
+using Mdmc.Code.Game.Realization;
+using Mdmc.Code.Game.Realization.Realizations.General;
+using Mdmc.Code.System;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Combat.ArsenalSystem.Skills.BasicTemplates;
 
 public partial class SinglePotency : Skill
 {

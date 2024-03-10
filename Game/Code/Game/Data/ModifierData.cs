@@ -1,9 +1,8 @@
 using Godot;
-using Daikon.Helpers;
-using static Daikon.Game.Modifier;
-using System.Linq;
+using Mdmc.Code.Game.Combat.Modifiers;
+using static Mdmc.Code.Game.Combat.Modifiers.Modifier;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Data;
 
 [GlobalClass]
 public abstract partial class ModifierData : DataObject

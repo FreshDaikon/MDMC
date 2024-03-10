@@ -1,6 +1,8 @@
 using Godot;
+using Mdmc.Code.Game.Combat.ArsenalSystem.EffectStack;
+using Mdmc.Code.Game.Combat.ArsenalSystem.EffectStack.Rules;
 
-namespace Daikon.Game.EffectRules.Rules;
+namespace Mdmc.Code.Game.Data.EffectRules;
 
 [GlobalClass]
 public partial class RuleComboData: EffectRuleData

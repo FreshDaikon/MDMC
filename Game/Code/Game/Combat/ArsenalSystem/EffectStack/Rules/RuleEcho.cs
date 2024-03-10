@@ -1,7 +1,7 @@
-using Daikon.Helpers;
-using Godot;
+using Mdmc.Code.Game.Data.Decorators;
+using Mdmc.Code.System;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Combat.ArsenalSystem.EffectStack.Rules;
 
 public class RuleEcho: EffectRule
 {

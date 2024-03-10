@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Daikon.Game.Realizations.Boss.Mechanics;
+namespace Mdmc.Code.Game.Realization.Realizations.Boss.Mechanics;
 
 
 public partial class CircleAoeRealization: Realization

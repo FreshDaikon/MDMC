@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Daikon.Game.General;
+namespace Mdmc.Code.Game.Realization.Realizations.General;
 
 public partial class ChaseTargetRealization : Realization
 {

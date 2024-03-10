@@ -1,6 +1,7 @@
 using Godot;
+using Mdmc.Code.Game.Entity.Adversary.TimelineSolver;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Entity.Adversary.Actions;
  
 public partial class BaseTriggerCheck: Node
 {

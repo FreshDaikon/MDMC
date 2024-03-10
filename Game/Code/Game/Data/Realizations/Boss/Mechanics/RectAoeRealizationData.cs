@@ -1,13 +1,13 @@
 using Godot;
 
-namespace Daikon.Game.Realizations.Boss.Mechanics;
+namespace Mdmc.Code.Game.Data.Realizations.Boss.Mechanics;
 
 [GlobalClass]
 public partial class RectAoeRealizationData: RealizationData
 {
-    public override Realization GetRealization()
+    public override Realization.Realization GetRealization()
     {
-        var instance = Scene.Instantiate<RectAoeRealization>();
+        var instance = Scene.Instantiate<Realization.Realizations.Boss.Mechanics.RectAoeRealization>();
         return instance;
     }
 }

@@ -1,13 +1,13 @@
-using Daikon.Game;
-using Daikon.Helpers;
 using Godot;
+using Mdmc.Code.Game;
 
-namespace Daikon.Client;
+namespace Mdmc.Code.Client.UI;
 
 public partial class UIManager : Node
 {
+    // Static Accessor:
     public static UIManager Instance;
-
+    // Enums:
     public enum UIState
     {
         None,
@@ -15,19 +15,17 @@ public partial class UIManager : Node
         Ingame,
         HUD,
     }
-    [Export]
-    private PackedScene frontendScene;
-    [Export]
-    private PackedScene hudScene;
-    [Export]
-    private PackedScene ingamemenuScene; 
-    private UIState _currentState = UIState.None;    
+    // Exports:
+    [Export] private PackedScene _frontendScene;
+    [Export] private PackedScene _hudScene;
+    [Export] private PackedScene _ingamemenuScene;
+    [Export] private Node _uiContainer;
     
-    private Node UIContainer;
-
-    private UILandingPage _landingPage;
-    private UIHUDMain _hud;
-    private UIIngameMenu _ingame;
+    // Internals:
+    private UIState _currentState = UIState.None;    
+    private Frontend.LandingPage _landingPage;
+    private HUD.Hud _hud;
+    private Ingame.IngameMenu _ingame;
 
     public override void _Ready()
     {
@@ -37,23 +35,19 @@ public partial class UIManager : Node
             return; 
         }
         Instance = this;
-        UIContainer = GetNode("%UIContainer");
 
-        _landingPage = frontendScene.Instantiate<UILandingPage>();
-        _hud = hudScene.Instantiate<UIHUDMain>();
-        _ingame = ingamemenuScene.Instantiate<UIIngameMenu>();
-
+        _landingPage = _frontendScene.Instantiate<Frontend.LandingPage>();
+        _hud = _hudScene.Instantiate<HUD.Hud>();
+        _ingame = _ingamemenuScene.Instantiate<Ingame.IngameMenu>();
         _landingPage.Visible = false;
         _hud.Visible = false;
         _ingame.Visible = false;
-
         _landingPage.ProcessMode = ProcessModeEnum.Disabled;
         _hud.ProcessMode = ProcessModeEnum.Disabled;
         _ingame.ProcessMode = ProcessModeEnum.Disabled;
-
-        UIContainer.AddChild(_landingPage);
-        UIContainer.AddChild(_hud);
-        UIContainer.AddChild(_ingame);
+        _uiContainer.AddChild(_landingPage);
+        _uiContainer.AddChild(_hud);
+        _uiContainer.AddChild(_ingame);
     }
 
     public override void _ExitTree()
@@ -119,10 +113,10 @@ public partial class UIManager : Node
         {
             GD.Print("Set new state:");
             _currentState = state;
-            if(UIContainer.GetChildCount() > 0)
+            if(_uiContainer.GetChildCount() > 0)
             {
                 GD.Print("Remove old UI..");
-                foreach(var ui in UIContainer.GetChildren())
+                foreach(var ui in _uiContainer.GetChildren())
                 {
                     var control = (Control)ui;
                     control.ProcessMode = ProcessModeEnum.Disabled;

@@ -1,17 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using Daikon.Client.Connect;
 using Daikon.Contracts.Data;
-using Daikon.Contracts.Games;
-using Daikon.Contracts.Models;
-using Daikon.Contracts.Users;
-using Daikon.Helpers;
-using Daikon.Server.Database.Models;
 using Godot;
+using Mdmc.Code.Server.Database.Models;
 using Newtonsoft.Json;
 
-namespace Daikon.Server.Database;
+namespace Mdmc.Code.Server.Database;
 
 public partial class DaikonServerConnect: Node
 {

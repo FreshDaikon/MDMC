@@ -1,7 +1,8 @@
 using System.Linq;
 using Godot;
+using Mdmc.Code.Game.Combat.Modifiers;
 
-namespace Daikon.Game.Modifiers;
+namespace Mdmc.Code.Game.Data.Modifiers;
 
 [GlobalClass]
 public partial class BasicModiferData: ModifierData
@@ -17,7 +18,7 @@ public partial class BasicModiferData: ModifierData
         modifier.MaxStacks = MaxStacks;
         modifier.Tags = Tags.ToList();
         modifier.ModifierValue = ModifierValue; // This is very specific per mod!
-        modifier.RemainingValue = ModifierValue; // Only used for exhaustible mods!
+        modifier.RemainingValue = ModifierValue; // Only used for exhaustible mods! (Like shields for example..)
         modifier.Data = this;
         return modifier;
     }

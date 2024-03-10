@@ -1,60 +1,42 @@
-using System.Diagnostics;
-using Godot;
 using System.Linq;
-using Daikon.Game;
-using Daikon.Helpers;
+using Godot;
+using Mdmc.Code.Game;
+using Mdmc.Code.Game.Arena;
+using Mdmc.Code.Game.Combat;
+using Mdmc.Code.Game.Entity.Player;
+using Mdmc.Code.System;
 
-namespace Daikon.Client;
+namespace Mdmc.Code.Client.UI.HUD.DamageMeter;
 
 public partial class DamageMeterEntry : ColorRect
 {
+	// Set by External:
+	public double SortValue = 0f;
 	public int EntryId;
 	public MD.CombatMessageType BarType;
 
-	[Export]
-	private ColorRect _playerColor;
-
+	//Exported:
+	[Export] private ColorRect _playerColor;
 	[Export] private TextureRect _edgeGlow;
-
-	private GradientTexture1D _barGradient; 
-	[Export]
-	private Label _playerName;
-	[Export]
-	private Label _playerDps;
-	[Export]
-	private Label _playerTotal;
-	[Export]
-	public float EntryWidth;
-
+	[Export] private Label _playerName;
+	[Export] private Label _playerDps;
+	[Export] private Label _playerTotal;
+	[Export] private float _entryWidth;
 	[Export] private TextureRect _tagLeft;
 	[Export] private TextureRect _tagMain;
 	[Export] private TextureRect _tagRight;
 
-
-	private double oldDps;
-	private Tween barTween;
-	public double sortValue = 0f;
-
-	private float[] WeightedValue;
-
-    public override void _Ready()
-    {
-       var testEntity = ArenaManager.Instance.GetCurrentArena().GetEntities()
-			.Where(e => e is PlayerEntity)
-			.Cast<PlayerEntity>()
-			.ToList()
-			.Find(p => p.Name == EntryId.ToString());		
-    }
+	//Internal:
+	private GradientTexture1D _barGradient; 
+	private double _oldDps;
+	private Tween _barTween;
+	private float[] _weightedValue;
+	
 
     public override void _Process(double delta)
 	{
-		if(!GameManager.Instance.IsGameRunning())
-			return;
-		//////////////////////////////////////////
-		
-		
-		if(!CombatManager.Instance.IsInCombat)
-			return;		
+		if(!GameManager.Instance.IsGameRunning()) return;
+		if(!CombatManager.Instance.IsInCombat) return;
 		
 		
 		var playerEntity = ArenaManager.Instance.GetCurrentArena().GetEntities()
@@ -91,22 +73,23 @@ public partial class DamageMeterEntry : ColorRect
 	{
 			var vps = CombatManager.Instance.GetEntityVPS(EntryId, BarType);
 			var topVps = CombatManager.Instance.GetTopVPS(BarType);
-			sortValue = vps;			
+			SortValue = vps;			
 			_playerDps.Text = MD.FormatDisplayNumber((float)vps);
 			_playerTotal.Text = MD.FormatDisplayNumber(CombatManager.Instance.GetEntityValue(EntryId, BarType));	
+			
 			if(vps > 0 && topVps > 0)
 			{
-				if(vps != oldDps)
+				if(vps != _oldDps)
 				{
-					oldDps = vps;
-					barTween = GetTree().CreateTween();
-					barTween.TweenProperty(_playerColor, "size", new Vector2(EntryWidth * ((float)vps/(float)topVps) , _playerColor.Size.Y), 0.1f).SetTrans(Tween.TransitionType.Cubic);
+					_oldDps = vps;
+					_barTween = GetTree().CreateTween();
+					_barTween.TweenProperty(_playerColor, "size", new Vector2(_entryWidth * ((float)vps/(float)topVps) , _playerColor.Size.Y), 0.1f).SetTrans(Tween.TransitionType.Cubic);
 				}				
 			}			
 			if(vps == 0)
 			{
-				barTween = GetTree().CreateTween();
-				barTween.TweenProperty(_playerColor, "size", new Vector2(0f , _playerColor.Size.Y), 0.1f).SetTrans(Tween.TransitionType.Cubic);
+				_barTween = GetTree().CreateTween();
+				_barTween.TweenProperty(_playerColor, "size", new Vector2(0f , _playerColor.Size.Y), 0.1f).SetTrans(Tween.TransitionType.Cubic);
 								
 			}
 			_edgeGlow.Position = new Vector2(_playerColor.Position.X + _playerColor.Size.X - 40, _edgeGlow.Position.Y);

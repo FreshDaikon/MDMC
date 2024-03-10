@@ -1,8 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
+using Mdmc.Code.Game.Entity.Adversary.Components;
+using Mdmc.Code.Game.Entity.Adversary.TimelineSolver;
+using Mdmc.Code.Game.Entity.Components;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Entity.Adversary;
 
 public partial class AdversaryEntity : Entity
 {
@@ -90,7 +93,7 @@ public partial class AdversaryEntity : Entity
 
     private void CheckAggro()
     {
-        var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();
+        var players = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().GetPlayers();
         if (players == null) return;
         foreach (var player in from player in players let distance = (player.Controller.Position - Controller.Position).Length() where distance <= _aggroRange select player)
         {

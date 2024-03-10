@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
-using Daikon.Helpers;
+using Mdmc.Code.Game.Combat;
+using Mdmc.Code.Game.Combat.Modifiers;
+using Mdmc.Code.System;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Entity.Components;
 
 public partial class EntityModifiers : Node
 {

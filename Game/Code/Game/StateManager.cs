@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game;
 
 public partial class StateManager : Node
 {    

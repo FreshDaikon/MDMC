@@ -1,32 +1,29 @@
-using Daikon.Game;
-using Daikon.Helpers;
 using Godot;
+using Mdmc.Code.System;
+using Entity = Mdmc.Code.Game.Entity.Entity;
+using EntityStatus = Mdmc.Code.Game.Entity.Components.EntityStatus;
+using PlayerEntity = Mdmc.Code.Game.Entity.Player.PlayerEntity;
 
 namespace Mdmc.Code.Client.UI.HUD.UnitFrames;
 
-public partial class UI_NamePlate : Control
+public partial class NamePlate : Control
 {
-    [Export]
-	private Vector2 BarSize = new Vector2(150, 15f);
-    [Export]
-    private float ChangeSpeed = 60f;
-
+    // Exposed:
+    [Export] private Vector2 _barSize = new Vector2(150, 15f);
+	[Export] private TextureRect _healthBar;
+	[Export] private Label _nameLabel;
+    
+    // Internals:
     private Vector2 _uiPosition;
 	private Camera3D _camera;
 	private Vector3 _worldPosition;
-
     private Entity _entity;
 
-	private TextureRect HealthBar;
-	private Label NameLabel;
-
-    private GradientTexture1D _barGradient = new GradientTexture1D();
+    private GradientTexture1D _barGradient = new();
 
     public override void _Ready()
     {
-        HealthBar = GetNode<TextureRect>("%HealthBar");
-		NameLabel = GetNode<Label>("%Name");
-        HealthBar.Texture = _barGradient;
+        _healthBar.Texture = _barGradient;
     }
 
     public void InitializeFrame(Entity entity)
@@ -41,25 +38,23 @@ public partial class UI_NamePlate : Control
 
     public override void _PhysicsProcess(double delta)
     {
-        if(_entity == null)
+        switch (_entity)
         {
-            CallDeferred(nameof(QueueFree));
+            case null:
+                CallDeferred(nameof(QueueFree));
+                break;
+            case PlayerEntity entity:
+                _barGradient.Gradient = MD.GetPlayerGradient(entity);
+                break;
         }
-
-        if (_entity is PlayerEntity entity)
-        {
-            _barGradient.Gradient = MD.GetPlayerGradient(entity);
-        }
-        
         _camera = GetViewport().GetCamera3D();
-        
         var entityPos = _entity.Controller.GlobalPosition;
         Visible = !_camera.IsPositionBehind(entityPos) && _entity.Status.CurrentState != EntityStatus.StatusState.KnockedOut;
-        NameLabel.Text = _entity.EntityName;
+        _nameLabel.Text = _entity.EntityName;
         _uiPosition = _camera.UnprojectPosition(entityPos + new Vector3(0f, _entity.EntityHeight, 0f));
 		Position = _uiPosition; 
         var currentHealth = (float)_entity.Status.CurrentHealth / (float)_entity.Status.MaxHealth;
-        HealthBar.Visible = currentHealth > 0f;
-        HealthBar.Size = new Vector2(BarSize.X * currentHealth, BarSize.Y);
+        _healthBar.Visible = currentHealth > 0f;
+        _healthBar.Size = new Vector2(_barSize.X * currentHealth, _barSize.Y);
     }
 }

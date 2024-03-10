@@ -1,7 +1,9 @@
-using Daikon.Game.Realizations;
 using Godot;
+using Mdmc.Code.Game.Combat.ArsenalSystem;
+using Mdmc.Code.Game.Combat.ArsenalSystem.Skills.BasicTemplates;
+using Mdmc.Code.Game.Data.Realizations;
 
-namespace Daikon.Game.Skills;
+namespace Mdmc.Code.Game.Data.Skills;
 
 [GlobalClass]
 public partial class SinglePotencyData: SkillData

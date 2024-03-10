@@ -1,22 +1,15 @@
 using System.Linq;
-using Daikon.Client;
-using Daikon.Game;
 using Godot;
+using ArenaManager = Mdmc.Code.Game.Arena.ArenaManager;
+using GameManager = Mdmc.Code.Game.GameManager;
+using PlayerEntity = Mdmc.Code.Game.Entity.Player.PlayerEntity;
 
 namespace Mdmc.Code.Client.UI.HUD.UnitFrames;
 
-public partial class UI_PartyFrame : Control
+public partial class PartyFrame : Control
 {
-	
-	[Export]
-	private PackedScene UnitFrameAsset;
-
-	private Control PlayerContainer;
-
-	public override void _Ready()
-	{
-		PlayerContainer = GetNode<Control>("%PlayerContainer");
-	}
+	[Export] private PackedScene _unitFrameAsset;
+	[Export] private Control _playerContainer;
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
@@ -28,8 +21,8 @@ public partial class UI_PartyFrame : Control
 		var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();
 		if(players != null)
 		{
-			var playerFrames = PlayerContainer.GetChildren().Where(x => x is UI_UnitFrame).Cast<UI_UnitFrame>().ToList();		
-			foreach(UI_UnitFrame frame in playerFrames)
+			var playerFrames = _playerContainer.GetChildren().Where(x => x is UnitFrame).Cast<UnitFrame>().ToList();		
+			foreach(UnitFrame frame in playerFrames)
             {
                 if(!players.Any(n => n == frame.GetEntity()))
                 {
@@ -40,9 +33,9 @@ public partial class UI_PartyFrame : Control
 			{
 				if(playerFrames.Any(e => e.GetEntity() == player))
 					continue;
-				var newEntry = (UI_UnitFrame)UnitFrameAsset.Instantiate();
+				var newEntry = (UnitFrame)_unitFrameAsset.Instantiate();
 				newEntry.SetEntity(player);
-				PlayerContainer.AddChild(newEntry);
+				_playerContainer.AddChild(newEntry);
 			}
 		}
 	}

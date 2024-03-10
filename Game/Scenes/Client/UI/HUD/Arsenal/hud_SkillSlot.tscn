@@ -1,6 +1,6 @@
 [gd_scene load_steps=15 format=3 uid="uid://cxax3of812334"]
 
-[ext_resource type="Script" path="res://Code/Client/UI/CleanUp/HUD_SkillSlot.cs" id="1_qsnqg"]
+[ext_resource type="Script" path="res://Code/Client/UI/HUD/Hotbar/SkillSlot.cs" id="1_qsnqg"]
 [ext_resource type="Texture2D" uid="uid://cn7n8rp601m1f" path="res://Assets/UI/ArsenalSystem/Skill_Mask.png" id="2_u1ke1"]
 [ext_resource type="Texture2D" uid="uid://db5clcluyn17u" path="res://Scenes/Client/UI/HUD/Arsenal/cd_fill.tres" id="4_0wqda"]
 [ext_resource type="Texture2D" uid="uid://bvbvle8m8rqe5" path="res://Scenes/Client/UI/HUD/Arsenal/gcd_fill.tres" id="4_bdi82"]

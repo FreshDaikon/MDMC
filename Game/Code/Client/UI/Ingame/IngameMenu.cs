@@ -1,36 +1,29 @@
-using Daikon.Game;
 using Godot;
+using Mdmc.Code.Client.UI.Ingame.Elements;
+using Mdmc.Code.Game;
+using Mdmc.Code.Game.Arena;
+using Mdmc.Code.Game.Entity.Player;
 
 namespace Mdmc.Code.Client.UI.Ingame;
 
-public partial class UIIngameMenu: Control
+public partial class IngameMenu: Control
 {
-    [Export]
-    private PackedScene _containerButtonScene;
-    [Export]
-    private PackedScene _skillButtonScene;
-    
-    private UIContainerItem _mainContainer;
-    private UIContainerItem _leftContainer;
-    private UIContainerItem _rightContainer;
+    // Exports:
+    [Export] private PackedScene _containerButtonScene;
+    [Export] private PackedScene _skillButtonScene;
+    [Export] private ContainerDisplayItem _mainContainer;
+    [Export] private ContainerDisplayItem _leftContainer;
+    [Export] private ContainerDisplayItem _rightContainer;
+    [Export] private Control _itemSelector;
+    [Export] private Control _itemContainer;
 
-    private Control _itemSelector;
-    private Control _itemContainer;
-
+    // Internal:
     private bool _itemSelected = false;
     private bool _isContainer = true;
-
     private PlayerEntity _player;
 
     public override void _Ready()
     {
-        _mainContainer = GetNode<UIContainerItem>("%Main");
-        _rightContainer = GetNode<UIContainerItem>("%Right");
-        _leftContainer = GetNode<UIContainerItem>("%Left");
-
-        _itemSelector = GetNode<Control>("%ItemSelector");
-        _itemContainer = GetNode<Control>("%AvailableGrid");
-
         _mainContainer.ContainerSelected += OnContainerSelected;
         _rightContainer.ContainerSelected += OnContainerSelected;
         _leftContainer.ContainerSelected += OnContainerSelected;
@@ -50,8 +43,8 @@ public partial class UIIngameMenu: Control
         var containers = DataManager.Instance.GetAllSkillContainers();
         foreach (var container in containers)
         {
-            var newButton = (UIContainerButton)_containerButtonScene.Instantiate();
-            newButton.AssignedContainer = container;
+            var newButton = (ContainerButton)_containerButtonScene.Instantiate();
+            newButton.SetContainer(container);
             _itemContainer.AddChild(newButton);
 
             newButton.ContainerPressed += id =>
@@ -73,8 +66,8 @@ public partial class UIIngameMenu: Control
         var skills = DataManager.Instance.GetAllSkills();
         foreach (var skill in skills)
         {
-            var newButton = (UISkillButton)_skillButtonScene.Instantiate();
-            newButton.AssignedSkill = skill;
+            var newButton = (SkillButton)_skillButtonScene.Instantiate();
+            newButton.AssignSkill(skill);
             _itemContainer.AddChild(newButton);
             newButton.SkillPressed += id =>
             {

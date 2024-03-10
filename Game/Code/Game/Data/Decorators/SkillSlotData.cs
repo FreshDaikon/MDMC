@@ -1,5 +1,7 @@
-using Daikon.Helpers;
 using Godot;
+using Mdmc.Code.System;
+
+namespace Mdmc.Code.Game.Data.Decorators;
 
 [GlobalClass]
 public partial class SkillSlotData : Resource

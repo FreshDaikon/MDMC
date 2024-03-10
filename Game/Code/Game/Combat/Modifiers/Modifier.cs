@@ -1,9 +1,9 @@
-using Godot;
-using Daikon.Helpers;
 using System.Collections.Generic;
-using System.Linq;
+using Godot;
+using Mdmc.Code.Game.Data;
+using Mdmc.Code.Game.Entity.Components;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Combat.Modifiers;
 
 public partial class Modifier : Node
 {
@@ -45,7 +45,7 @@ public partial class Modifier : Node
 
     // Entity to which this mod is attached:
     public EntityStatus targetStatus;
-    public Entity entity;
+    public Entity.Entity entity;
     //Entity who applied this modifier:   
     
     public override void _Ready()

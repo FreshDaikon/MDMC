@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Daikon.Contracts.Models;
 using Godot;
-using Daikon.Helpers;
-using Daikon.Server.Database;
-using Daikon.Server.Database.Models;
+using Mdmc.Code.Game.Entity.Player;
+using Mdmc.Code.Server.Database;
+using Mdmc.Code.Server.Database.Models;
+using Mdmc.Code.System;
 using static System.Int32;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Combat;
 
 public partial class CombatManager: Node
 {
@@ -55,7 +56,7 @@ public partial class CombatManager: Node
 
     private void SetSignals()
     {
-        ArenaManager.Instance.GetCurrentArena().Victory += EndAndReport;
+        Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().Victory += EndAndReport;
     }
 
     public override void _ExitTree()
@@ -98,7 +99,7 @@ public partial class CombatManager: Node
     public void EndAndReport()
     {
         GD.Print("Ending combat and reporting!");
-        var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();
+        var players = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().GetPlayers();
         if (!(players.Count > 0)) return;
 
         var participants = (from player in players
@@ -117,7 +118,7 @@ public partial class CombatManager: Node
 
         var record = new ServerArenaRecord()
         {
-            ArenaId = ArenaManager.Instance.GetCurrentArena().Data.Id,
+            ArenaId = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().Data.Id,
             Runtime = GetTimeLapsed(),
             Players = participants,
             Progress = 1,

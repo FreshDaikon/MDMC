@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using Daikon.Contracts.Models;
-using Daikon.Game;
 
-namespace Daikon.Server.Database.Models;
+namespace Mdmc.Code.Server.Database.Models;
 
 public record ServerArenaRecord
 {

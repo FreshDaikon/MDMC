@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Data.Decorators;
 
 [GlobalClass]
 public partial class EffectData : Resource

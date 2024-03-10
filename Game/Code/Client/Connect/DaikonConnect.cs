@@ -1,41 +1,32 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Daikon.Contracts.Data;
 using Daikon.Contracts.Games;
-using Daikon.Contracts.Models;
 using Daikon.Contracts.Users;
-using Daikon.Helpers;
 using Godot;
 using Newtonsoft.Json;
 
-namespace Daikon.Client.Connect;
+namespace Mdmc.Code.Client.Connect;
 
 public partial class DaikonConnect: Node
 {
+    // Public Static Access:
     public static DaikonConnect Instance;   
+    
+    // Internal:
     private string _baseLocal = "http://127.0.0.1:5000";
     private string _baseRemote = "http://103.45.246.143:5000";
     private string _baseActual = "";
-
     private string[] _baseHeader = {"Content-Type: application/json"};
-    
-    // Various Configs:
     private bool _connectOnline = false;
-
-    //Session Data 
     private Guid _sessionToken;
     private string _joinCode;
 
     //Signals:
-    [Signal]
-    public delegate void AuthSuccessEventHandler();
-    [Signal]
-    public delegate void GameCreatedEventHandler(string host, int port, string joinCode);
-    [Signal]
-    public delegate void GameFoundEventHandler(string host, int port);
-
+    [Signal] public delegate void AuthSuccessEventHandler();
+    [Signal] public delegate void GameCreatedEventHandler(string host, int port, string joinCode);
+    [Signal] public delegate void GameFoundEventHandler(string host, int port);
 
     public override void _Ready()
     {
@@ -68,7 +59,7 @@ public partial class DaikonConnect: Node
         authRequest.RequestCompleted += (result, responseCode, headers, body) => {
             if(responseCode != 200)
             {
-                GD.Print("Respones was not 200 OK -  [" + responseCode + "]"); 
+                GD.Print("Response was not 200 OK -  [" + responseCode + "]"); 
                 CleanUp(authRequest);
                 return;
             }
@@ -150,7 +141,7 @@ public partial class DaikonConnect: Node
         {
             if(responseCode != 200)
             {
-                GD.Print("Responses was not 200 OK -  [" + responseCode + "]"); 
+                GD.Print("Response was not 200 OK -  [" + responseCode + "]"); 
                 CleanUp(arenaRecordRequest);
                 return;
             }
@@ -186,7 +177,7 @@ public partial class DaikonConnect: Node
         GD.Print(messageData);  
         // Setup Multiplayer interface:
         GD.Print(messageData.JoinCode);
-        EmitSignal(SignalName.GameCreated, new Variant[]{ messageData.ServerHost, messageData.ServerPort, messageData.JoinCode });
+        EmitSignal(SignalName.GameCreated, messageData.ServerHost, messageData.ServerPort, messageData.JoinCode);
     }
 
     private void JoinRequestCompleted(byte[] body)
@@ -194,7 +185,7 @@ public partial class DaikonConnect: Node
         var json = Encoding.UTF8.GetString(body);
         var messageData = JsonConvert.DeserializeObject<GameFoundReponse>(json); 
         GD.Print(messageData);  
-        EmitSignal(nameof(GameFound), new Variant[]{messageData.ServerHost, messageData.ServerPort});
+        EmitSignal(SignalName.GameFound, messageData.ServerHost, messageData.ServerPort);
     }
 
     private void GetArenaRecordResponse(byte[] body)

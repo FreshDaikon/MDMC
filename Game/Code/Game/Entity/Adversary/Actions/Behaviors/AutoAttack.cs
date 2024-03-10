@@ -1,6 +1,7 @@
 using Godot;
+using Mdmc.Code.Game.Realization;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Entity.Adversary.Actions.Behaviors;
 
 [GlobalClass]
 public partial class AutoAttack: BaseBehavior

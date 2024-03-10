@@ -1,21 +1,15 @@
 using System.Linq;
-using Daikon.Client;
-using Daikon.Game;
 using Godot;
+using Mdmc.Code.Game;
+using Mdmc.Code.Game.Arena;
+using Mdmc.Code.Game.Entity.Adversary;
 
 namespace Mdmc.Code.Client.UI.HUD.UnitFrames;
 
-public partial class UI_EnemyList : Control
+public partial class EnemyList : Control
 {
-	[Export]
-	private PackedScene UnitFrameAsset;
-
-	private Control EnemyContainer;
-
-	public override void _Ready()
-	{
-		EnemyContainer = GetNode<Control>("%EnemyContainer");
-	}
+	[Export] private PackedScene _unitFrameAsset;
+	[Export] private Control _enemyContainer;
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
@@ -27,14 +21,14 @@ public partial class UI_EnemyList : Control
 		var enemies = ArenaManager.Instance.GetCurrentArena().GetEnemyEntities();
 		if(enemies != null)
 		{
-			var EnemyFrames = EnemyContainer.GetChildren().Where(x => x is UI_UnitFrame).Cast<UI_UnitFrame>().ToList();		
+			var enemyFrames = _enemyContainer.GetChildren().Where(x => x is UnitFrame).Cast<UnitFrame>().ToList();		
 			foreach(AdversaryEntity enemy in enemies)
 			{
-				if(EnemyFrames.Any(e => e.GetEntity() == enemy))
+				if(enemyFrames.Any(e => e.GetEntity() == enemy))
 					continue;
-				var newEntry = (UI_UnitFrame)UnitFrameAsset.Instantiate();
+				var newEntry = (UnitFrame)_unitFrameAsset.Instantiate();
 				newEntry.SetEntity(enemy);
-				EnemyContainer.AddChild(newEntry);
+				_enemyContainer.AddChild(newEntry);
 			}
 		}
 	}

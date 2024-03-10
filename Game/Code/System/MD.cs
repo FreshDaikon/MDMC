@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Daikon.Game;
 using Godot;
+using Mdmc.Code.Game.Entity.Player;
 
-namespace Daikon.Helpers;
+namespace Mdmc.Code.System;
 
 public static class MD
 {

@@ -1,57 +1,52 @@
 using Godot;
-using Daikon.Game;
-using Daikon.Helpers;
+using Mdmc.Code.System;
+using ArenaManager = Mdmc.Code.Game.Arena.ArenaManager;
+using GameManager = Mdmc.Code.Game.GameManager;
 
-namespace Daikon.Client;
+namespace Mdmc.Code.Client.UI.HUD.Hotbar;
 
-public partial class HUD_SkillContainer : Control
+public partial class SkillContainer : Control
 {
 	[Export]
-	private MD.ContainerSlot containerSlot;
+	private MD.ContainerSlot _containerSlot;
 
-	[Export]
-	private string[] Activators { get; set; }
-	private string[] Cancellors { get; set; }
+	private string[] _cancels;
+	private TextureRect _containerIcon;
 
-	private TextureRect containerIcon;
+	private SkillSlot _slot1;
+	private SkillSlot _slot2;
+	private SkillSlot _slot3;
+	private SkillSlot _slot4;
 
-	public HUD_SkillSlot Slot1;
-	public HUD_SkillSlot Slot2;
-	public HUD_SkillSlot Slot3;
-	public HUD_SkillSlot Slot4;
-
-	private AnimationPlayer animationPlayer;
+	private AnimationPlayer _animationPlayer;
 	private bool _playerUpdate = false;
-
-	private bool isPlaying = false;
+	private bool _isPlaying = false;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		Slot1 = GetNode<HUD_SkillSlot>("%Slot1");
-		Slot2 = GetNode<HUD_SkillSlot>("%Slot2");
-		Slot3 = GetNode<HUD_SkillSlot>("%Slot3");
-		Slot4 = GetNode<HUD_SkillSlot>("%Slot4");
-		containerIcon = GetNode<TextureRect>("%ContainerIcon");
-		animationPlayer = GetNode<AnimationPlayer>("%AnimationPlayer");
+		_slot1 = GetNode<SkillSlot>("%Slot1");
+		_slot2 = GetNode<SkillSlot>("%Slot2");
+		_slot3 = GetNode<SkillSlot>("%Slot3");
+		_slot4 = GetNode<SkillSlot>("%Slot4");
+		_containerIcon = GetNode<TextureRect>("%ContainerIcon");
+		_animationPlayer = GetNode<AnimationPlayer>("%AnimationPlayer");
 		//Set Skills Up:	
-		GD.Print("Container Name : " + containerSlot);
+		GD.Print("Container Name : " + _containerSlot);
 		CallDeferred(nameof(SetupSkillSlots));	
 	}
 	public void SetupSkillSlots()
 	{
-		Slot1.ContainerName = containerSlot;
-		Slot1.SkillSlot = 0;
-		Slot2.ContainerName = containerSlot;
-		Slot2.SkillSlot = 1;
-		Slot3.ContainerName = containerSlot;
-		Slot3.SkillSlot = 2;
-		Slot4.ContainerName = containerSlot;
-		Slot4.SkillSlot = 3;
+		_slot1.ContainerName = _containerSlot;
+		_slot1.Slot = 0;
+		_slot2.ContainerName = _containerSlot;
+		_slot2.Slot = 1;
+		_slot3.ContainerName = _containerSlot;
+		_slot3.Slot = 2;
+		_slot4.ContainerName = _containerSlot;
+		_slot4.Slot = 3;
 	}
 
-	private bool wasActivated = false;
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
 		if(!GameManager.Instance.IsGameRunning())
@@ -79,32 +74,32 @@ public partial class HUD_SkillContainer : Control
 				activatorDepressed(MD.ContainerSlot.Main);
 		}
 		
-		var container = localPlayer.Arsenal.GetSkillContainer(containerSlot);
+		var container = localPlayer.Arsenal.GetSkillContainer(_containerSlot);
 		if(container == null)
 		{
 			return;
 		}
-		containerIcon.Texture = container.Data.Icon;
+		_containerIcon.Texture = container.Data.Icon;
 	}
 	private void activatorPressed(MD.ContainerSlot container)
 	{
-		if(container == containerSlot)
+		if(container == _containerSlot)
 		{
-			if(!isPlaying)
+			if(!_isPlaying)
 			{ 
-				animationPlayer.Play("Active");
-				isPlaying = true;
+				_animationPlayer.Play("Active");
+				_isPlaying = true;
 			}
 		}
 	}
 	private void activatorDepressed(MD.ContainerSlot container)
 	{
-		if(container == containerSlot)
+		if(container == _containerSlot)
 		{
-			if(isPlaying)
+			if(_isPlaying)
 			{ 
-				animationPlayer.Play("RESET");
-				isPlaying = false;
+				_animationPlayer.Play("RESET");
+				_isPlaying = false;
 			}
 		}
 	}

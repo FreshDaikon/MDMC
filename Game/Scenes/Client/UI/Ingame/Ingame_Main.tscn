@@ -1,12 +1,12 @@
 [gd_scene load_steps=6 format=3 uid="uid://bdoagm2ktwyfm"]
 
-[ext_resource type="Script" path="res://Code/Client/UI/Ingame/UIIngameMenu.cs" id="1_liaj1"]
+[ext_resource type="Script" path="res://Code/Client/UI/Ingame/IngameMenu.cs" id="1_liaj1"]
 [ext_resource type="FontFile" uid="uid://q3aynbg5gvis" path="res://Assets/UI/Fonts/LibreFranklin-BlackItalic.ttf" id="2_3fmrh"]
 [ext_resource type="PackedScene" uid="uid://c3pplrj5oumi6" path="res://Scenes/Client/UI/Ingame/Elements/container_button.tscn" id="2_hyxxk"]
 [ext_resource type="PackedScene" uid="uid://bigy6igqibv5v" path="res://Scenes/Client/UI/Ingame/Elements/ContainerItem.tscn" id="3_xcj4n"]
 [ext_resource type="PackedScene" uid="uid://ga4pslnhaokj" path="res://Scenes/Client/UI/Ingame/Elements/skill_button.tscn" id="4_22de3"]
 
-[node name="IngameMain" type="Control"]
+[node name="IngameMain" type="Control" node_paths=PackedStringArray("_mainContainer", "_leftContainer", "_rightContainer", "_itemSelector", "_itemContainer")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -16,6 +16,11 @@ grow_vertical = 2
 script = ExtResource("1_liaj1")
 _containerButtonScene = ExtResource("2_hyxxk")
 _skillButtonScene = ExtResource("4_22de3")
+_mainContainer = NodePath("HBoxContainer/Loadout/MarginContainer/VBoxContainer/LoadoutHolder/Main")
+_leftContainer = NodePath("HBoxContainer/Loadout/MarginContainer/VBoxContainer/LoadoutHolder/Left")
+_rightContainer = NodePath("HBoxContainer/Loadout/MarginContainer/VBoxContainer/LoadoutHolder/Right")
+_itemSelector = NodePath("HBoxContainer/ItemSelector")
+_itemContainer = NodePath("HBoxContainer/ItemSelector/MarginContainer/LoadoutHolder/AvailableGrid")
 metadata/_edit_lock_ = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]

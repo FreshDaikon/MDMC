@@ -1,7 +1,7 @@
 using System;
 using Godot;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Entity.Adversary.TimelineSolver;
 
 public partial class TimelineManager : Node
 {

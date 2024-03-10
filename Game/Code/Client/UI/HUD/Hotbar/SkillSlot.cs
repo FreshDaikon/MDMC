@@ -1,12 +1,14 @@
-using Daikon.Game;
-using Daikon.Helpers;
 using Godot;
+using Mdmc.Code.System;
+using ArenaManager = Mdmc.Code.Game.Arena.ArenaManager;
+using GameManager = Mdmc.Code.Game.GameManager;
+using PlayerEntity = Mdmc.Code.Game.Entity.Player.PlayerEntity;
 
 namespace Mdmc.Code.Client.UI.HUD.Hotbar;
 
-public partial class HUD_SkillSlot : Control
+public partial class SkillSlot : Control
 {
-	public int SkillSlot;
+	public int Slot;
 	public MD.ContainerSlot ContainerName;
 
 	private TextureProgressBar _gcdBar;
@@ -17,8 +19,8 @@ public partial class HUD_SkillSlot : Control
 	private ColorRect _background;
 	private TextureRect _icon;
 	private TextureRect _iconGlow;
+	private PlayerEntity _localPlayer;
 	
-	private PlayerEntity localPlayer;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -39,20 +41,20 @@ public partial class HUD_SkillSlot : Control
 			return;
 		//////////////////////////////////////////
 		
-		if(localPlayer == null)
+		if(_localPlayer == null)
 		{
 			var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();
 			if(players == null)
 				return;
-			localPlayer = players.Find(p => p.Name == Multiplayer.GetUniqueId().ToString());			
-			if(localPlayer != null)
+			_localPlayer = players.Find(p => p.Name == Multiplayer.GetUniqueId().ToString());			
+			if(_localPlayer != null)
 			{
-				localPlayer.playerInput.ActionButtonPressed += TriggerTrigger; 
+				_localPlayer.playerInput.ActionButtonPressed += TriggerTrigger; 
 			}
 		}
 		else
 		{
-			var skill = localPlayer.Arsenal.GetSkill(ContainerName, SkillSlot); 
+			var skill = _localPlayer.Arsenal.GetSkill(ContainerName, Slot); 
 			
 			_iconGlow.Visible = (skill != null);
 			_icon.Visible = (skill != null);  
@@ -77,8 +79,8 @@ public partial class HUD_SkillSlot : Control
 				_icon.SelfModulate = new Color("#ffd000");
 			}
 
-			var gcd = localPlayer.Arsenal.GetArsenalGCD();
-			var gcdStartTime = localPlayer.Arsenal.GCDStartTime;
+			var gcd = _localPlayer.Arsenal.GetArsenalGCD();
+			var gcdStartTime = _localPlayer.Arsenal.GCDStartTime;
 			var gcdLapsed = Mathf.Clamp(GameManager.Instance.GameClock - gcdStartTime, 0, gcd);
 			
 			switch (skill.TimerType)
@@ -124,7 +126,7 @@ public partial class HUD_SkillSlot : Control
 
 	private void TriggerTrigger(int container, int slot)
 	{
-		if ((MD.ContainerSlot)container != ContainerName || slot != SkillSlot) return;
+		if ((MD.ContainerSlot)container != ContainerName || slot != Slot) return;
 		_triggerPlayer.Stop();
 		_triggerPlayer.Play("Trigger");
 	}

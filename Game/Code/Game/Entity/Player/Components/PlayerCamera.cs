@@ -1,7 +1,7 @@
-using Daikon.Client;
 using Godot;
+using UIManager = Mdmc.Code.Client.UI.UIManager;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Entity.Player.Components;
 
 public partial class PlayerCamera : SpringArm3D
 {

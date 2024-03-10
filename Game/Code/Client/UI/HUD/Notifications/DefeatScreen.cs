@@ -1,34 +1,26 @@
-using Daikon.Game;
 using Godot;
+using ArenaManager = Mdmc.Code.Game.Arena.ArenaManager;
 
 namespace Mdmc.Code.Client.UI.HUD.Notifications; 
 
-public partial class UI_DefeatScreen : Control
+public partial class DefeatScreen : Control
 {
-
-	private AnimationPlayer player;
+	private AnimationPlayer _player;
 
 	public override void _Ready()
 	{
-		player = GetNode<AnimationPlayer>("%DefeatPlayer");
+		_player = GetNode<AnimationPlayer>("%DefeatPlayer");
 		ArenaManager.Instance.ArenaDefeat += PlayDefeat;
-		player.AnimationFinished += (animation) => FadeOut(animation);
+		_player.AnimationFinished += (animation) => FadeOut(animation);
 	}
 
 	private void PlayDefeat()
 	{
 		GD.Print("Hello? from player");
-		player.Play("Defeat");
+		_player.Play("Defeat");
 	}
 	private void FadeOut(string animation)
 	{
-		if(animation == "Defeat")
-		{
-			player.Play("FadeOut");
-		}
-		else
-		{
-			player.Play("RESET");
-		}
+		_player.Play(animation == "Defeat" ? "FadeOut" : "RESET");
 	}
 }

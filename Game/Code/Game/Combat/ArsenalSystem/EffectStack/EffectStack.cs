@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using Godot;
+using Mdmc.Code.Game.Data.Decorators;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Combat.ArsenalSystem.EffectStack;
 
 public class EffectStack
 {

@@ -1,39 +1,28 @@
 using System.Collections.Generic;
-using Daikon.Client;
-using Daikon.Game;
 using Godot;
 using Mdmc.Code.Client.Connect;
+using Mdmc.Code.Game;
+using Mdmc.Code.Game.Arena;
+using Mdmc.Code.Game.Data;
 
 namespace Mdmc.Code.Client.UI.Frontend;
 
-public partial class UILandingPage : Control
+public partial class LandingPage : Control
 {
-    //Status
-    private Label _wsConnectionLabel;
-    //Join Code Field
-    [Export]
-    private LineEdit _joinCodeEdit;
-    // Buttons 
-    [Export]
-    private OptionButton _arenaListOptions;
-    [Export]
-    private Button _requestGameButton;
-    [Export]
-    private Button _joinGameButton;
-    [Export]
-    private Button _startGameButton;
-    [Export]
-    private Button _startServerButton;
-    [Export]
-    private Button _joinLocalServerButton;
-    [Export]
-    private Button _connectDaikonLocal;
-    [Export]
-    private Button _connectDaikonRemote;
-    [Export]
-    private Button _getArenaRecords;
+    // Export :
+    [Export] private LineEdit _joinCodeEdit;
+    [Export] private OptionButton _arenaListOptions;
+    [Export] private Button _requestGameButton;
+    [Export] private Button _joinGameButton;
+    [Export] private Button _startGameButton;
+    [Export] private Button _startServerButton;
+    [Export] private Button _joinLocalServerButton;
+    [Export] private Button _connectDaikonLocal;
+    [Export] private Button _connectDaikonRemote;
+    [Export] private Button _getArenaRecords;
+    
+    // Internal :
     private List<ArenaData> _arenas = new();
-
 
     public override void _Ready()
     {

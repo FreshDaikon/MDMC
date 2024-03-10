@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
-using Daikon.Client;
-using Daikon.Game.Realizations.Boss.Mechanics;
 using Godot;
+using Mdmc.Code.Game.Data.Realizations.Boss.Mechanics;
+using Mdmc.Code.Game.Entity.Player;
+using Mdmc.Code.Game.Entity.Player.Components;
+using Mdmc.Code.Game.Realization;
 
-namespace Daikon.Game.Mechanics;
+namespace Mdmc.Code.Game.Entity.Adversary.Actions.Mechanics;
 
 public partial class SpawnRectAoe: BaseMechanic
 {
@@ -19,7 +21,7 @@ public partial class SpawnRectAoe: BaseMechanic
     internal protected override void StartMechanic()
     {
         base.StartMechanic();
-        var playerEntities = ArenaManager.Instance.GetCurrentArena().GetPlayers();
+        var playerEntities = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().GetPlayers();
         _startTime = Time.GetTicksMsec();
         
         manager.Entity.StartCast(_resolveTime);
@@ -92,7 +94,7 @@ public partial class SpawnRectAoe: BaseMechanic
     [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void SpawnIndicatorOnClient(Vector3 position, Vector3 target)
     {
-        var newAoe = (RectAoeRealization)_realizationData.GetRealization();
+        var newAoe = (Realization.Realizations.Boss.Mechanics.RectAoeRealization)_realizationData.GetRealization();
         newAoe.SetData(position, target, _resolveTime, _size);
         newAoe.Spawn();
     }

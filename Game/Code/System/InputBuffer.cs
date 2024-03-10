@@ -1,7 +1,7 @@
 using Godot;
 using Godot.Collections;
 
-namespace Daikon.Helpers;
+namespace Mdmc.Code.System;
 
 public partial class InputBuffer : Node
 {

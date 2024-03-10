@@ -1,8 +1,6 @@
-
-
-using System;
 using Godot;
-using Godot.Collections;
+
+namespace Mdmc.Code.Game.Entity.Components;
 
 public partial class EntityPositionSync : MultiplayerSynchronizer
 {    

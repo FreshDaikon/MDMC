@@ -1,4 +1,4 @@
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Combat;
 
 public class EntityContributionTracker
 {

@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://sefh6iqsxxg4"]
 
-[ext_resource type="Script" path="res://Code/Client/UI/HUD/UnitFrames/UI_NamePlate.cs" id="1_5mepu"]
+[ext_resource type="Script" path="res://Code/Client/UI/HUD/UnitFrames/NamePlate.cs" id="1_5mepu"]
 [ext_resource type="FontFile" uid="uid://dd7g3rwq86uq5" path="res://Assets/UI/Fonts/LibreFranklin-Regular.ttf" id="1_044l2"]
 
 [sub_resource type="Gradient" id="Gradient_ax4l3"]
@@ -12,10 +12,12 @@ gradient = SubResource("Gradient_ax4l3")
 fill_from = Vector2(0, 1)
 fill_to = Vector2(0, 0)
 
-[node name="NamePlate" type="Control"]
+[node name="NamePlate" type="Control" node_paths=PackedStringArray("_healthBar", "_nameLabel")]
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_5mepu")
+_healthBar = NodePath("Anchor/BG/HealthBar")
+_nameLabel = NodePath("Anchor/Name")
 
 [node name="Anchor" type="Control" parent="."]
 anchors_preset = 0

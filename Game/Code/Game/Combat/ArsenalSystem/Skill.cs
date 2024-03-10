@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Daikon.Game.EffectRules;
 using Godot;
-using SmartFormat;
-using Daikon.Helpers;
+using Mdmc.Code.Game.Data;
+using Mdmc.Code.Game.Data.Decorators;
+using Mdmc.Code.Game.Entity.Player;
+using Mdmc.Code.System;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Combat.ArsenalSystem;
 
 public partial class Skill : Node
 {

@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://dj2hy5o46q1b1"]
 
 [ext_resource type="FontFile" uid="uid://bc4wv1o6qdbo8" path="res://Assets/UI/Fonts/Helvete_extraBlack.ttf" id="1_1e5j5"]
-[ext_resource type="Script" path="res://Code/Client/UI/CleanUp/DamageMeterEntry.cs" id="1_stdyy"]
+[ext_resource type="Script" path="res://Code/Client/UI/HUD/DamageMeter/DamageMeterEntry.cs" id="1_stdyy"]
 [ext_resource type="Texture2D" uid="uid://b6k6enogqidv8" path="res://Assets/UI/Core/PlayerBuildTag.png" id="2_0lp51"]
 [ext_resource type="FontFile" uid="uid://xv28cftjto52" path="res://Assets/UI/Fonts/twoweekendssans-regular.otf" id="2_2thcw"]
 
@@ -26,7 +26,7 @@ _edgeGlow = NodePath("EdgeGlow")
 _playerName = NodePath("NameMargin/PlayerName")
 _playerDps = NodePath("MarginContainer/DisplayValues/VPS")
 _playerTotal = NodePath("MarginContainer/DisplayValues/VT")
-EntryWidth = 250.0
+_entryWidth = 250.0
 _tagLeft = NodePath("PlayerTags/LeftTag")
 _tagMain = NodePath("PlayerTags/MainTag")
 _tagRight = NodePath("PlayerTags/RightTag")
@@ -55,6 +55,7 @@ expand_mode = 1
 
 [node name="TagBg" type="TextureRect" parent="."]
 modulate = Color(0, 0, 0, 1)
+layout_mode = 0
 offset_left = 85.0
 offset_right = 131.0
 offset_bottom = 19.0

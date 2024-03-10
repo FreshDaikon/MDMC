@@ -1,7 +1,8 @@
 using Godot;
-using Daikon.Helpers;
+using Mdmc.Code.Game.Entity.Player;
+using Mdmc.Code.System;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Combat.ArsenalSystem;
 
 public partial class SkillSlot : Node
 {

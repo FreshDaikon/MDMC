@@ -1,25 +1,26 @@
 using Godot;
 using PlayFab;
 using PlayFab.ClientModels;
-using Daikon.Helpers;
 
-namespace Daikon.Client.Playfab;
+namespace Mdmc.Code.Client.PlayFab;
 
-public partial class PlayfabClient : Node
+public partial class PlayfabManager : Node
 {
-	public static PlayfabClient instance;
-	private string titleId = "5FDDE";
+	// Public Static Access:
+	public static PlayfabManager Instance;
+	
+	// Internal:
+	private string _titleId = "5FDDE";
 
-	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		if(instance != null)
+		if(Instance != null)
 		{
 			Free();
 			return;
 		}
-		instance = this;
-		PlayFabSettings.staticSettings.TitleId = titleId;
+		Instance = this;
+		PlayFabSettings.staticSettings.TitleId = _titleId;
 		LoginPlayer("rs", "rs");
 	}
 
@@ -52,7 +53,7 @@ public partial class PlayfabClient : Node
 			var wasCreated = apiResult.NewlyCreated;		
 			
 			//figure out the whole client thing :
-			PlayFab.ClientModels.EntityKey playerEntity = apiResult.EntityToken.Entity;
+			global::PlayFab.ClientModels.EntityKey playerEntity = apiResult.EntityToken.Entity;
 		}
 	}
 

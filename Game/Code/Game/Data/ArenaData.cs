@@ -1,6 +1,7 @@
 using Godot;
+using Mdmc.Code.Game.Arena;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Data;
 
 [GlobalClass]
 public partial class ArenaData : DataObject
@@ -9,12 +10,9 @@ public partial class ArenaData : DataObject
     [Export]
     public PackedScene Scene;
 
-    // Note - this is a one shot Object!
-    // Meaning it requires a scene!
-    // NOT abstract - don't reimplement (yet!)
-    public Arena GetArena()
+    public ArenaInstance GetArena()
     {
-        var instance = Scene.Instantiate<Arena>();
+        var instance = Scene.Instantiate<ArenaInstance>();
         instance.Data = this;
         return instance;
     }

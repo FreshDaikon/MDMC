@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://cj1yyie770nrc"]
 
-[ext_resource type="Script" path="res://Code/Client/UI/CleanUp/CastBar.cs" id="1_k4gpv"]
+[ext_resource type="Script" path="res://Code/Client/UI/HUD/Bars/CastBar.cs" id="1_k4gpv"]
 [ext_resource type="FontFile" uid="uid://q3aynbg5gvis" path="res://Assets/UI/Fonts/LibreFranklin-BlackItalic.ttf" id="1_t4gwg"]
 
 [sub_resource type="Animation" id="Animation_tauhk"]
@@ -65,13 +65,13 @@ _data = {
 "RESET": SubResource("Animation_lsjii")
 }
 
-[node name="CastBar" type="Control" node_paths=PackedStringArray("CastBarRect", "animationPlayer")]
+[node name="CastBar" type="Control" node_paths=PackedStringArray("_castBarRect", "_animationPlayer")]
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_k4gpv")
-CastBarRect = NodePath("Control/BG/CastColor")
-CastBarWidth = 450.0
-animationPlayer = NodePath("AnimationPlayer")
+_castBarRect = NodePath("Control/BG/CastColor")
+_castBarWidth = 450.0
+_animationPlayer = NodePath("AnimationPlayer")
 
 [node name="Control" type="Control" parent="."]
 anchors_preset = 0

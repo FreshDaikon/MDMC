@@ -1,8 +1,11 @@
 using System.Collections.Generic;
-using Godot;
 using System.Linq;
+using Godot;
+using Mdmc.Code.Game.Combat.ArsenalSystem;
+using Mdmc.Code.Game.Combat.Modifiers;
+using Mdmc.Code.Game.Data;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game;
 
 public partial class DataManager : Node
 {
@@ -86,7 +89,7 @@ public partial class DataManager : Node
         return arena;
     }
 
-    public Arena GetArenaInstance(int id)
+    public Mdmc.Code.Game.Arena.ArenaInstance GetArenaInstance(int id)
     {
         var arena = GetAllArenas().Find(a => a.Id == id);
         var instance = arena.GetArena();

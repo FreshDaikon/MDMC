@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://c3nva5iqe38aq"]
 
-[ext_resource type="Script" path="res://Code/Client/UI/CleanUp/ChannelBar.cs" id="1_bx7ki"]
+[ext_resource type="Script" path="res://Code/Client/UI/HUD/Bars/ChannelBar.cs" id="1_bx7ki"]
 [ext_resource type="FontFile" uid="uid://q3aynbg5gvis" path="res://Assets/UI/Fonts/LibreFranklin-BlackItalic.ttf" id="2_yixxx"]
 
 [sub_resource type="Animation" id="Animation_1214e"]
@@ -65,16 +65,16 @@ _data = {
 "RESET": SubResource("Animation_c2esb")
 }
 
-[node name="ChannelBar" type="Control" node_paths=PackedStringArray("ChannelBarRect", "animationPlayer")]
+[node name="ChannelBar" type="Control" node_paths=PackedStringArray("_channelBarRect", "_animationPlayer")]
 custom_minimum_size = Vector2(450, 20)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 450.0
 offset_bottom = 20.0
 script = ExtResource("1_bx7ki")
-ChannelBarRect = NodePath("Control/BG/ChannelColor")
-ChannelBarWidth = 450.0
-animationPlayer = NodePath("AnimationPlayer")
+_channelBarRect = NodePath("Control/BG/ChannelColor")
+_channelBarWidth = 450.0
+_animationPlayer = NodePath("AnimationPlayer")
 
 [node name="Control" type="Control" parent="."]
 anchors_preset = 0

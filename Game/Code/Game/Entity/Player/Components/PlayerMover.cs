@@ -1,7 +1,7 @@
-using System;
 using Godot;
+using Mdmc.Code.Game.Entity.Components;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Entity.Player.Components;
 
 public partial class PlayerMover : Node, IEntityMover
 {	

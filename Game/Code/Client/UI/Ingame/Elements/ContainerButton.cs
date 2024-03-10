@@ -1,30 +1,35 @@
 using Godot;
-using System;
-using Daikon.Game;
+using SkillContainerData = Mdmc.Code.Game.Data.SkillContainerData;
 
 namespace Mdmc.Code.Client.UI.Ingame.Elements;
 
-public partial class UIContainerButton : Control
+public partial class ContainerButton : Control
 {
-	public SkillContainerData AssignedContainer;
-
-	private TextureButton _button;
+	// Export :
+	[Export] private TextureButton _button;
 	
-	[Signal]
-	public delegate void ContainerPressedEventHandler(int id);
+	// Internal :
+	private SkillContainerData _assignedContainer;
+	
+	// Signals :
+	[Signal] public delegate void ContainerPressedEventHandler(int id);
 	
 	public override void _Ready()
 	{
-		_button = GetNode<TextureButton>("%Button");
-		_button.Pressed += () => { EmitSignal(SignalName.ContainerPressed, AssignedContainer.Id ); };
+		_button.Pressed += () => { EmitSignal(SignalName.ContainerPressed, _assignedContainer.Id ); };
 	}
 	
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		if (AssignedContainer != null)
+		if (_assignedContainer != null)
 		{
-			_button.TextureNormal = AssignedContainer.Icon;
+			_button.TextureNormal = _assignedContainer.Icon;
 		}
 	}
+
+	public void SetContainer(SkillContainerData containerData)
+	{
+		_assignedContainer = containerData;
+	}
+	
 }

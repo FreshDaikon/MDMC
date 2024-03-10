@@ -1,10 +1,10 @@
 [gd_scene load_steps=4 format=3 uid="uid://4nf73m4b57o1"]
 
-[ext_resource type="Script" path="res://Code/Client/UI/HUD/UnitFrames/UI_EnemyList.cs" id="1_gl2rs"]
+[ext_resource type="Script" path="res://Code/Client/UI/HUD/UnitFrames/EnemyList.cs" id="1_gl2rs"]
 [ext_resource type="PackedScene" uid="uid://cplev7d1ykh7j" path="res://Scenes/Client/UI/HUD/UnitFrames/UnitFrame.tscn" id="2_2fg42"]
 [ext_resource type="FontFile" uid="uid://q3aynbg5gvis" path="res://Assets/UI/Fonts/LibreFranklin-BlackItalic.ttf" id="3_vt656"]
 
-[node name="EnemyList" type="Control"]
+[node name="EnemyList" type="Control" node_paths=PackedStringArray("_enemyContainer")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,7 +12,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_gl2rs")
-UnitFrameAsset = ExtResource("2_2fg42")
+_unitFrameAsset = ExtResource("2_2fg42")
+_enemyContainer = NodePath("Layout/EnemyContainer")
 
 [node name="Layout" type="VBoxContainer" parent="."]
 layout_mode = 0

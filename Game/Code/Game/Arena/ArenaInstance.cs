@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Daikon.Game;
 using Godot;
 using Mdmc.Code.Game.Entity.Adversary;
 using AdversaryEntity = Mdmc.Code.Game.Entity.Adversary.AdversaryEntity;
@@ -11,24 +10,27 @@ using PlayerEntity = Mdmc.Code.Game.Entity.Player.PlayerEntity;
 
 namespace Mdmc.Code.Game.Arena;
 
-public partial class Arena : Node3D
+public partial class ArenaInstance : Node3D
 {
+    // Set From Data Parent:
     public ArenaData Data;
+    
+    // Public Access:
+    public ArenaState CurrentState { get; private set; } = ArenaState.Paused;
+    
+    // Export:
     [Export] private double _arenaDuration = 7200;
     [Export] private Node3D[] _playerStartPositions;
-    //containers:
+    
+    // Internals:
     private Node3D _entityContainer;
-    //How Long has the arena been going in minutes:
     private double _startTime;
     private double _lapsed;
     private Timer _defeatTimer; 
 
-    public ArenaState CurrentState { get; private set; } = ArenaState.Paused;
-
-    [Signal]    
-    public delegate void VictoryEventHandler();
-    [Signal]
-    public delegate void DefeatEventHandler();
+    // Signals:    
+    [Signal] public delegate void VictoryEventHandler();
+    [Signal] public delegate void DefeatEventHandler();
 
     public override void _Ready()
     {

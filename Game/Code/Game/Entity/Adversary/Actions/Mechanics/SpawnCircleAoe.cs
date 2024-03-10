@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
-using Daikon.Client;
-using Daikon.Game.Realizations.Boss.Mechanics;
 using Godot;
+using Mdmc.Code.Game.Data.Realizations.Boss.Mechanics;
+using Mdmc.Code.Game.Entity.Player;
+using Mdmc.Code.Game.Entity.Player.Components;
+using Mdmc.Code.Game.Realization;
+using Mdmc.Code.Game.Realization.Realizations.Boss.Mechanics;
 
-namespace Daikon.Game.Mechanics;
+namespace Mdmc.Code.Game.Entity.Adversary.Actions.Mechanics;
 
 public partial class SpawnCircleAoe: BaseMechanic
 {
@@ -20,7 +23,7 @@ public partial class SpawnCircleAoe: BaseMechanic
     internal protected override void StartMechanic()
     {
         base.StartMechanic();
-        var playerEntities = ArenaManager.Instance.GetCurrentArena().GetPlayers();
+        var playerEntities = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().GetPlayers();
         _startTime = Time.GetTicksMsec();
         
         manager.Entity.StartCast(_resolveTime);

@@ -1,12 +1,11 @@
 using Godot;
-using Daikon.Game;
-using Daikon.Helpers;
+using Mdmc.Code.Game.Data;
+using Mdmc.Code.System;
 
-namespace Daikon.Client;
+namespace Mdmc.Code.Client.Multiplayer;
 
 public partial class ClientMultiplayerManager: Node
 {
-
     public static ClientMultiplayerManager Instance;
     private ENetMultiplayerPeer _clientPeer;
 
@@ -17,8 +16,8 @@ public partial class ClientMultiplayerManager: Node
     private bool _hasId = false;
     private MultiplayerPeer.ConnectionStatus _currentStatus;
 
-    public int LocalPid = -1;
-    public bool HasLocalServer = false;
+    public int LocalPid { get; private set; }  = -1;
+    public bool HasLocalServer { get; private set; }
 
      
 
@@ -89,7 +88,7 @@ public partial class ClientMultiplayerManager: Node
 
     public void StopPeer()
     {
-        ClientManager.Instance.ResetClient();
+        ClientManager.ResetClient();
         GD.Print("Server was disconnected clear info..");
         _clientPeer.Close();
         GetTree().SetMultiplayer(MultiplayerApi.CreateDefaultInterface());
@@ -109,14 +108,14 @@ public partial class ClientMultiplayerManager: Node
             GD.Print("Time to leave the server!");
             _clientPeer.Close();
             _hasData = false;
-            ClientManager.Instance.ResetClient();
+            ClientManager.ResetClient();
             GetTree().SetMultiplayer(MultiplayerApi.CreateDefaultInterface());
-            if(LocalPid != -1)
-            {
-                GD.Print("Server Connection was local - clear LocalData.");
-                LocalPid = -1;
-                HasLocalServer = false;
-            }
+            
+            if (LocalPid == -1) return;
+            
+            GD.Print("Server Connection was local - clear LocalData.");
+            LocalPid = -1;
+            HasLocalServer = false;
         }
         else
         {

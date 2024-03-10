@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ArenaData" load_steps=5 format=3 uid="uid://b2gdswet5orxc"]
+
+[ext_resource type="Script" path="res://Code/Game/Data/ArenaData.cs" id="1_0f2uk"]
+[ext_resource type="Script" path="res://Code/System/DataID.cs" id="1_6vqam"]
+[ext_resource type="PackedScene" uid="uid://04nun7ayudyy" path="res://Data/Scenes/Arenas/TestArena.tscn" id="2_gyqrs"]
+
+[sub_resource type="Resource" id="Resource_2r811"]
+script = ExtResource("1_6vqam")
+Id = 1503418518
+
+[resource]
+script = ExtResource("1_0f2uk")
+Scene = ExtResource("2_gyqrs")
+ID = SubResource("Resource_2r811")
+Name = "The very first arena!"
+Description = "Some Object Description."

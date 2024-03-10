@@ -1,31 +1,36 @@
 using Godot;
-using System;
-using Daikon.Game;
+using SkillData = Mdmc.Code.Game.Data.SkillData;
 
 namespace Mdmc.Code.Client.UI.Ingame.Elements;
 
-public partial class UISkillButton : Control
+public partial class SkillButton : Control
 {
-	public SkillData AssignedSkill;
-
-	private TextureButton _button;
+	// Exported:
+	[Export] private TextureButton _button;
 	
+	// Internal:
+	private SkillData _assignedSkill;
 	
-	[Signal]
-	public delegate void SkillPressedEventHandler(int id);
+	// Signals:
+	[Signal] public delegate void SkillPressedEventHandler(int id);
 	
 	public override void _Ready()
 	{
 		_button = GetNode<TextureButton>("%Button");
-		_button.Pressed += () => { EmitSignal(SignalName.SkillPressed, AssignedSkill.Id ); };
+		_button.Pressed += () => { EmitSignal(SignalName.SkillPressed, _assignedSkill.Id ); };
 	}
 	
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		if (AssignedSkill != null)
+		if (_assignedSkill != null)
 		{
-			_button.TextureNormal = AssignedSkill.Icon;
+			_button.TextureNormal = _assignedSkill.Icon;
 		}
+	}
+
+	public void AssignSkill(SkillData data)
+	{
+		_assignedSkill = data;
 	}
 }

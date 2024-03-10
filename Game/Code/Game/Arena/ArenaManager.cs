@@ -1,20 +1,19 @@
 using Godot;
-using Daikon.Helpers;
 
-namespace Daikon.Game;
+namespace Mdmc.Code.Game.Arena;
 
 public partial class ArenaManager : Node
 {  
-
+    // Public Access:
     public static ArenaManager Instance;   
+    
+    // Internals:
     private Node3D _arenaContainer;
-    private Arena _currentArena;
+    private ArenaInstance _currentArenaInstance;
 
-    //Events for users who rely on this singleton:
-    [Signal]
-    public delegate void ArenaVictoryEventHandler();
-    [Signal]
-    public delegate void ArenaDefeatEventHandler();
+    // Signals:
+    [Signal] public delegate void ArenaVictoryEventHandler();
+    [Signal] public delegate void ArenaDefeatEventHandler();
 
     public override void _Ready()
     {
@@ -28,14 +27,14 @@ public partial class ArenaManager : Node
         base._Ready();
     }
 
-    public Arena GetCurrentArena()
+    public Mdmc.Code.Game.Arena.ArenaInstance GetCurrentArena()
     {
-        return _currentArena;
+        return _currentArenaInstance;
     }
 
     public bool HasArena()
     {
-        return _currentArena != null;
+        return _currentArenaInstance != null;
     }
 
     public bool LoadArena(int id)
@@ -46,9 +45,9 @@ public partial class ArenaManager : Node
         {
             UnloadArena();
             _arenaContainer.AddChild(arena);
-            _currentArena = arena;
-            _currentArena.Victory += () => { Rpc(nameof(SyncEventVictory)); };
-            _currentArena.Defeat += () => { Rpc(nameof(SyncEventDefeat)); };
+            _currentArenaInstance = arena;
+            _currentArenaInstance.Victory += () => { Rpc(nameof(SyncEventVictory)); };
+            _currentArenaInstance.Defeat += () => { Rpc(nameof(SyncEventDefeat)); };
             return true;
         }
         else
@@ -60,20 +59,20 @@ public partial class ArenaManager : Node
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void SyncEventDefeat()
     {
-        EmitSignal( SignalName.ArenaDefeat);
+        EmitSignal(SignalName.ArenaDefeat);
     }
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void SyncEventVictory()
     {
-        EmitSignal( SignalName.ArenaVictory);
+        EmitSignal(SignalName.ArenaVictory);
     }
 
     public void UnloadArena()
     {
-        if(_currentArena != null)
+        if(_currentArenaInstance != null)
         {
-            _arenaContainer.RemoveChild(_currentArena);
-            _currentArena.QueueFree();
+            _arenaContainer.RemoveChild(_currentArenaInstance);
+            _currentArenaInstance.QueueFree();
         }
         else
         {

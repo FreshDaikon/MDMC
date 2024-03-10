@@ -1,9 +1,10 @@
-using Godot;
-using Daikon.Game;
-using Daikon.Helpers;
 using System;
+using Godot;
+using Mdmc.Code.Game;
+using Mdmc.Code.Game.Entity.Player;
+using ArenaManager = Mdmc.Code.Game.Arena.ArenaManager;
 
-namespace Daikon.Server;
+namespace Mdmc.Code.Server;
 
 public partial class ServerManager : Node3D
 {	

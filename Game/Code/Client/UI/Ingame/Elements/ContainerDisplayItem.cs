@@ -1,48 +1,32 @@
 using Godot;
-using System;
-using System.Linq;
-using Daikon.Game;
-using Daikon.Helpers;
+using Mdmc.Code.System;
+using ArenaManager = Mdmc.Code.Game.Arena.ArenaManager;
+using GameManager = Mdmc.Code.Game.GameManager;
 
 namespace Mdmc.Code.Client.UI.Ingame.Elements;
 
-public partial class UIContainerItem : Control
+public partial class ContainerDisplayItem : Control
 {
+	// Exports :
 	[Export] public MD.ContainerSlot AssignedSlot { get; private set; }  
+	[Export] private Label _containerName;
+	[Export] private TextureButton _containerButton;
+	[Export] private TextureButton _slot1Button;
+	[Export] private TextureButton _slot2Button;
+	[Export] private TextureButton _slot3Button;
+	[Export] private TextureButton _slot4Button;
 
+	// Signals:
+	[Signal] public delegate void ContainerSelectedEventHandler(int assignedSlot);
+	[Signal] public delegate void SlotSelectedEventHandler(int containerSlot, int skillSlot);
 	
-	private Label ContainerName;
-
-	private TextureButton ContainerButton;
-	private TextureButton Slot1Button;
-	private TextureButton Slot2Button;
-	private TextureButton Slot3Button;
-	private TextureButton Slot4Button;
-
-	
-	[Signal]
-	public delegate void ContainerSelectedEventHandler(int assignedSlot);
-	[Signal]
-	public delegate void SlotSelectedEventHandler(int containerSlot, int skillSlot);
-	
-	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		ContainerName = GetNode<Label>("%ContainerName");
-		
-		//Setup Buttons :
-		ContainerButton = GetNode<TextureButton>("%ContainerButton");
-		Slot1Button = GetNode<TextureButton>("%SlotButton1");
-		Slot2Button = GetNode<TextureButton>("%SlotButton2");
-		Slot3Button = GetNode<TextureButton>("%SlotButton3");
-		Slot4Button = GetNode<TextureButton>("%SlotButton4");
-
-		ContainerButton.Pressed += () => { EmitSignal(SignalName.ContainerSelected, (int)AssignedSlot); };
-
-		Slot1Button.Pressed += () => { EmitSignal(SignalName.SlotSelected, (int)AssignedSlot, 0); };
-		Slot2Button.Pressed += () => { EmitSignal(SignalName.SlotSelected, (int)AssignedSlot, 1); };
-		Slot3Button.Pressed += () => { EmitSignal(SignalName.SlotSelected, (int)AssignedSlot, 2); };
-		Slot4Button.Pressed += () => { EmitSignal(SignalName.SlotSelected, (int)AssignedSlot, 3); };
+		_containerButton.Pressed += () => { EmitSignal(SignalName.ContainerSelected, (int)AssignedSlot); };
+		_slot1Button.Pressed += () => { EmitSignal(SignalName.SlotSelected, (int)AssignedSlot, 0); };
+		_slot2Button.Pressed += () => { EmitSignal(SignalName.SlotSelected, (int)AssignedSlot, 1); };
+		_slot3Button.Pressed += () => { EmitSignal(SignalName.SlotSelected, (int)AssignedSlot, 2); };
+		_slot4Button.Pressed += () => { EmitSignal(SignalName.SlotSelected, (int)AssignedSlot, 3); };
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -64,54 +48,54 @@ public partial class UIContainerItem : Control
 
 		if (container != null)
 		{
-			ContainerName.Text = container.Data.Name;
-			ContainerButton.TextureNormal = container.Data.Icon;
-			ContainerButton.Modulate = new Color("#ffffff");
+			_containerName.Text = container.Data.Name;
+			_containerButton.TextureNormal = container.Data.Icon;
+			_containerButton.Modulate = new Color("#ffffff");
 		}
 		else
 		{
-			ContainerName.Text = "No Container...";
-			ContainerButton.Modulate = new Color("#000000");
+			_containerName.Text = "No Container...";
+			_containerButton.Modulate = new Color("#000000");
 		}
 
 		if (skill1 != null)
 		{
-			Slot1Button.TextureNormal = skill1.Data.Icon;
-			Slot1Button.Modulate = new Color("#ffffff");
+			_slot1Button.TextureNormal = skill1.Data.Icon;
+			_slot1Button.Modulate = new Color("#ffffff");
 		}
 		else
 		{
-			Slot1Button.Modulate = new Color("#000000");
+			_slot1Button.Modulate = new Color("#000000");
 		}
 
 		if (skill2 != null)
 		{
-			Slot2Button.TextureNormal = skill2.Data.Icon;
-			Slot2Button.Modulate = new Color("#ffffff");
+			_slot2Button.TextureNormal = skill2.Data.Icon;
+			_slot2Button.Modulate = new Color("#ffffff");
 		}
 		else
 		{
-			Slot2Button.Modulate = new Color("#000000");
+			_slot2Button.Modulate = new Color("#000000");
 		}
 		
 		if (skill3 != null)
 		{
-			Slot3Button.TextureNormal = skill3.Data.Icon;
-			Slot3Button.Modulate = new Color("#ffffff");
+			_slot3Button.TextureNormal = skill3.Data.Icon;
+			_slot3Button.Modulate = new Color("#ffffff");
 		}
 		else
 		{
-			Slot3Button.Modulate = new Color("#000000");
+			_slot3Button.Modulate = new Color("#000000");
 		}
 		
 		if (skill4 != null)
 		{
-			Slot4Button.TextureNormal = skill4.Data.Icon;
-			Slot4Button.Modulate = new Color("#ffffff");
+			_slot4Button.TextureNormal = skill4.Data.Icon;
+			_slot4Button.Modulate = new Color("#ffffff");
 		}
 		else
 		{
-			Slot4Button.Modulate = new Color("#000000");
+			_slot4Button.Modulate = new Color("#000000");
 		}
 
 

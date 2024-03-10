@@ -1,15 +1,16 @@
 [gd_scene load_steps=3 format=3 uid="uid://c3pplrj5oumi6"]
 
-[ext_resource type="Script" path="res://Code/Client/UI/Ingame/Elements/UIContainerButton.cs" id="1_6jr6q"]
+[ext_resource type="Script" path="res://Code/Client/UI/Ingame/Elements/ContainerButton.cs" id="1_6jr6q"]
 [ext_resource type="Texture2D" uid="uid://d1g6ehxjt0nof" path="res://Assets/UI/ArsenalSystem/SkillContainers/Drachen_MK1.png" id="1_16bnq"]
 
-[node name="ContainerButton" type="Control"]
+[node name="ContainerButton" type="Control" node_paths=PackedStringArray("_button")]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 100.0
 offset_bottom = 100.0
 script = ExtResource("1_6jr6q")
+_button = NodePath("Button")
 
 [node name="Button" type="TextureButton" parent="."]
 unique_name_in_owner = true

@@ -1,5 +1,6 @@
-using Daikon.Game;
 using Godot;
+
+namespace Mdmc.Code.Game.Data;
 
 [GlobalClass]
 public abstract partial class RealizationData: Resource
@@ -8,5 +9,5 @@ public abstract partial class RealizationData: Resource
     [Export]
     public PackedScene Scene;
     
-    public abstract Realization GetRealization();
+    public abstract Realization.Realization GetRealization();
 }
