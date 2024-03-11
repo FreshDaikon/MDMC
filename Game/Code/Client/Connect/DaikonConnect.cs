@@ -79,7 +79,6 @@ public partial class DaikonConnect: Node
         GD.Print("Let's try to get a game! give the ID:" + ArenaId);
         if(_sessionToken == Guid.Empty)
         {
-            // We need a valid token to proceed!
             return;
         }
         var gameRequest = new HttpRequest();
@@ -107,7 +106,6 @@ public partial class DaikonConnect: Node
     {
         if(_sessionToken == Guid.Empty)
         {
-            // We need a valid token to proceed!
             return;
         }
         

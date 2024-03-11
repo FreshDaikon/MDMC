@@ -10,21 +10,26 @@ public partial class PlayerArsenal: Node
     [Export]
     public float BaseGcd { get; private set; } = 1.5f;
     
-    public PlayerEntity Player;
-    public bool IsCasting = false;
-    public double CastingStartTime;
-    public double CastingTime;
-    public bool IsChanneling = false;
-    public double ChannelingStartTime;
-    public double ChannelingTime;
-    public Skill CastingSkill;
-    public Skill ChannelingSkill;
-    public double GCDStartTime = 0;
+    // Player :
+    public PlayerEntity Player { get; private set; }
+    // Casting:
+    public Skill CastingSkill { get; private set; }
+    public bool IsCasting { get; private set; } = false;
+    public double CastingStartTime { get; private set; }
+    public double CastingTime { get; private set; }
+    // Channeling :
+    public Skill ChannelingSkill { get; private set; }
+    public bool IsChanneling { get; private set; } = false;
+    public double ChannelingStartTime { get; private set; }
+    public double ChannelingTime { get; private set; }
+    // GCD Skills :
+    public double GCDStartTime { get; private set; } = 0;
     
+
     public EffectStack.EffectStack Stack { get; private set; }
     public Skill LastSkill { get; set; }
     
-    
+    // Todo: remove these : 
     bool hasBeenInit = false;
     bool hasBeenInitLocal = false;
 

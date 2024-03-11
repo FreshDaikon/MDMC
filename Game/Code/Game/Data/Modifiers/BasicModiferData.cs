@@ -9,17 +9,19 @@ public partial class BasicModiferData: ModifierData
 {
     public override Modifier GetModifier()
     {
-        var modifier = new Modifier();
-        modifier.IsPermanent = IsPermanent;
-        modifier.Duration = Duration;
-        modifier.IsTicked = IsTicked;
-        modifier.TickRate = TickRate;
-        modifier.CanStack = CanStack;
-        modifier.MaxStacks = MaxStacks;
-        modifier.Tags = Tags.ToList();
-        modifier.ModifierValue = ModifierValue; // This is very specific per mod!
-        modifier.RemainingValue = ModifierValue; // Only used for exhaustible mods! (Like shields for example..)
-        modifier.Data = this;
+        var modifier = new Modifier
+        {
+            IsPermanent = IsPermanent,
+            Duration = Duration,
+            IsTicked = IsTicked,
+            TickRate = TickRate,
+            CanStack = CanStack,
+            MaxStacks = MaxStacks,
+            Tags = Tags.ToList(),
+            ModifierValue = ModifierValue, // This is very specific per mod!
+            RemainingValue = ModifierValue, // Only used for exhaustible mods! (Like shields for example..)
+            Data = this
+        };
         return modifier;
     }
 }

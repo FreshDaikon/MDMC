@@ -9,15 +9,10 @@ namespace Mdmc.Code.Game.Combat.ArsenalSystem;
 
 public partial class SkillContainer : Node
 {
-    public enum ContainerType
-    {
-        Armament,
-        Suit,
-    }
-    
+    // Temp :
     public Data.Decorators.SkillSlotData[] SkillSlots;
+    
     public List<ModifierData> BuffsGranted;
-    public float BaseGcd = 1.5f;
     public MD.ContainerSlot AssignedSlot = 0;
     //Internals:
     public PlayerEntity Player;

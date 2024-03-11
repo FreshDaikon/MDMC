@@ -12,23 +12,25 @@ public partial class SinglePotencyData: SkillData
     
     public override Skill GetSkill()
     {
-        var skill = new SinglePotency();
-        skill.Data = this;
-        skill.IsUniversalSkill = IsUniversalSkill;
-        skill.TimerType = TimerType;
-        skill.ActionType = ActionType;
-        skill.BasePotency = BasePotency;
-        skill.Range = Range;
-        skill.Cooldown = Cooldown;
-        skill.CanMove = CanMove;
-        skill.CastTime = CastTime;
-        skill.ChannelTime = ChannelTime;
-        skill.TickRate = TickRate;
-        skill.ThreatMultiplier = ThreatMultiplier;
-        // Realizations:
-        skill.OnSkillCastRealization = _onSkillCastRealizationData;
-        // Rules:
-        skill.Rules = Rules;
+        var skill = new SinglePotency
+        {
+            Data = this,
+            IsUniversalSkill = IsUniversalSkill,
+            TimerType = TimerType,
+            ActionType = ActionType,
+            BasePotency = BasePotency,
+            Range = Range,
+            Cooldown = Cooldown,
+            CanMove = CanMove,
+            CastTime = CastTime,
+            ChannelTime = ChannelTime,
+            TickRate = TickRate,
+            ThreatMultiplier = ThreatMultiplier,
+            // Realizations:
+            OnSkillCastRealization = _onSkillCastRealizationData,
+            // Rules:
+            Rules = Rules
+        };
         // Finally pass it back :
         return skill;
     }

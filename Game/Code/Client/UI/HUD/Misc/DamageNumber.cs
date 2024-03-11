@@ -15,15 +15,13 @@ public partial class DamageNumber : Control
 	public void Initialize(string value, Color color, Vector3 worldPos)
 	{
 		var ran = new RandomNumberGenerator();
-		_worldPos = worldPos + new Vector3(ran.RandfRange(-0.6f, 0.6f), ran.RandfRange(-0.6f, 0.6f), ran.RandfRange(-0.6f, 0.6f));
+		_worldPos = worldPos + new Vector3(ran.RandfRange(-1f, 1f), ran.RandfRange(-1f, 1f), ran.RandfRange(-1f, 1f));
 		_camera = GetViewport().GetCamera3D();
 		_screenPosition = _camera.UnprojectPosition(_worldPos);
 		_label.Text = value;
 		_label.AddThemeColorOverride("font_color", color);
 		Position = _screenPosition;
-		//Play the animation :
 		_animationPlayer.Play("FloatAway");
-		//On End, just delete yourself:
 		_animationPlayer.AnimationFinished += (animation) => QueueFree();
 	}
     public override void _PhysicsProcess(double delta)
@@ -36,8 +34,8 @@ public partial class DamageNumber : Control
 		}
 		if(_camera.IsPositionBehind(_worldPos))
 			return;
+			
 		_screenPosition = _camera.UnprojectPosition(_worldPos);
-		Position = _screenPosition; // + new Vector2(ran.RandfRange(-100f, 100f), ran.RandfRange(-100f, 100f));
-        base._PhysicsProcess(delta);
+		Position = _screenPosition; 
     }
 }

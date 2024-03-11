@@ -27,7 +27,6 @@ public partial class PlayfabManager : Node
 	public async void LoginPlayer(string username, string password) 
 	{
 		GD.Print("Trying to login player...");
-		// TODO : change to use steam...
 		LoginWithCustomIDRequest request = new LoginWithCustomIDRequest
 		{
 			CustomId = username,
@@ -53,7 +52,7 @@ public partial class PlayfabManager : Node
 			var wasCreated = apiResult.NewlyCreated;		
 			
 			//figure out the whole client thing :
-			global::PlayFab.ClientModels.EntityKey playerEntity = apiResult.EntityToken.Entity;
+			EntityKey playerEntity = apiResult.EntityToken.Entity;
 		}
 	}
 

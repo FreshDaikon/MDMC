@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
+using Mdmc.Code.Game.Combat;
+using Mdmc.Code.Game.Data;
 using Mdmc.Code.Game.Entity.Adversary;
-using AdversaryEntity = Mdmc.Code.Game.Entity.Adversary.AdversaryEntity;
-using ArenaData = Mdmc.Code.Game.Data.ArenaData;
-using CombatManager = Mdmc.Code.Game.Combat.CombatManager;
-using EntityStatus = Mdmc.Code.Game.Entity.Components.EntityStatus;
-using PlayerEntity = Mdmc.Code.Game.Entity.Player.PlayerEntity;
+using Mdmc.Code.Game.Entity.Components;
+using Mdmc.Code.Game.Entity.Player;
 
 namespace Mdmc.Code.Game.Arena;
 
@@ -72,6 +71,7 @@ public partial class ArenaInstance : Node3D
 
     public double GetTimeLeft() => Mathf.Clamp(_arenaDuration - _lapsed, 0, _arenaDuration);
 
+
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void SyncStartTime(double time)
     {
@@ -101,10 +101,8 @@ public partial class ArenaInstance : Node3D
         
         if (players == null) return;
         
-        var knocked = players.Where(p => p.Status.CurrentState == EntityStatus.StatusState.KnockedOut).ToList();
-        
+        var knocked = players.Where(p => p.Status.CurrentState == EntityStatus.StatusState.KnockedOut).ToList();        
         if (knocked.Count != players.Count) return;
-        //:
         GD.Print("All Players are knocked! Init Reset!");                
         CurrentState = ArenaState.Defeat;
         CombatManager.Instance.ResetCombat();

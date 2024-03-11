@@ -1,3 +1,4 @@
+using System.Reflection;
 using Godot;
 
 namespace Mdmc.Code.System;
@@ -9,6 +10,7 @@ public partial class Loader : Node
     private string ServerPath;
     [Export(PropertyHint.File)]
     private string ClientPath;
+
    
     public override void _Ready()
     {

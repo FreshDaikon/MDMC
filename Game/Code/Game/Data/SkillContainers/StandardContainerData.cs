@@ -9,11 +9,12 @@ public partial class StandardContainerData : SkillContainerData
 {
     public override SkillContainer GetSkillContainer()
     {
-        var container = new SkillContainer();
-        container.BaseGcd = BaseGcd;
-        container.Data = this;
-        container.SkillSlots = skillSlots;
-        container.BuffsGranted = Modifiers.ToList();
+        var container = new SkillContainer
+        {
+            Data = this,
+            SkillSlots = skillSlots,
+            BuffsGranted = Modifiers.ToList()
+        };
         return container;
     }
 }

@@ -3,6 +3,8 @@ using Mdmc.Code.Game;
 using Mdmc.Code.Game.Arena;
 using Mdmc.Code.Game.Combat;
 using Mdmc.Code.System;
+using Mdmc.Code.Client.Multiplayer;
+
 namespace Mdmc.Code.Client;
 
 public partial class ClientManager : Node3D
@@ -37,9 +39,9 @@ public partial class ClientManager : Node3D
     public override void _ExitTree()
     {
         //If We started a serve locally make sure to kill it.
-        if(Mdmc.Code.Client.Multiplayer.ClientMultiplayerManager.Instance.LocalPid != -1)
+        if(ClientMultiplayerManager.Instance.LocalPid != -1)
         {
-            var error = OS.Kill(Mdmc.Code.Client.Multiplayer.ClientMultiplayerManager.Instance.LocalPid);
+            var error = OS.Kill(ClientMultiplayerManager.Instance.LocalPid);
             if(error != Error.Ok)
             {
                 GD.Print("Could not kill Saved Server ID.");

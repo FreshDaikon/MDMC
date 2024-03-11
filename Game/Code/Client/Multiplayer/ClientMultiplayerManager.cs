@@ -80,7 +80,6 @@ public partial class ClientMultiplayerManager: Node
         else 
         {
             Multiplayer.MultiplayerPeer = _clientPeer;
-            //Multiplayer.ServerDisconnected += () => StopPeer(); 
             GD.Print("Client Connected to Server! As : " + Multiplayer.MultiplayerPeer ); 
             return true;
         }
