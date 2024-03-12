@@ -285,9 +285,7 @@ public partial class PlayerInput : Node
     }
 
     private void UpdateSkillBuffer()
-    {
-        _skillBuffer.ToList().ForEach(b => { GD.Print("Input Message: " + b.Key.container + "@" + b.Key.slot + " time :" + b.Value);});
-        
+    {        
         var current = Time.GetTicksMsec();
         foreach (var buffered in (from buffered in _skillBuffer
                      let lapsed = Time.GetTicksMsec() - buffered.Value

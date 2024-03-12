@@ -3,7 +3,7 @@ using Godot;
 namespace Mdmc.Code.Game.Combat.ArsenalSystem.EffectStack.Rules;
 
 
-public class RuleCombo: EffectRule
+public class RuleCombo: Rule
 {
     public enum ComboDirection
     {
@@ -21,9 +21,7 @@ public class RuleCombo: EffectRule
 
     public override bool CheckCondition()
     {
-        if (IsConditional && !PreviousOutcome)
-            return false;
-        
+      
         var nextSlot = OriginSkill.AssignedSlot + GetOffset();
         nextSlot = Mathf.Wrap(nextSlot, 0, 4);
         var nextSkill = OriginSkill.Player.Arsenal.GetSkill(OriginSkill.AssignedContainerSlot, nextSlot);

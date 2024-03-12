@@ -11,10 +11,11 @@ public partial class RuleEchoData: EffectRuleData
     [Export]
     public MD.SkillType TypeToEcho { get; set; }
     
-    public override EffectRule GetRule()
+    public override Rule GetRule()
     {
         var newRule = new RuleEcho
         {
+            Charges = Charges,
             TriggerEffectData = EffectData,
             TypeToEcho = TypeToEcho,
         };

@@ -56,8 +56,8 @@ public partial class SkillSlot : Control
 		{
 			var skill = _localPlayer.Arsenal.GetSkill(ContainerName, Slot); 
 			
-			_iconGlow.Visible = (skill != null);
-			_icon.Visible = (skill != null);  
+			_iconGlow.Visible = skill != null;
+			_icon.Visible = skill != null;  
 
 			if (skill == null) return;
 			

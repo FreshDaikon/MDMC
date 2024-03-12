@@ -2,7 +2,7 @@ using Mdmc.Code.System;
 
 namespace Mdmc.Code.Game.Combat.ArsenalSystem.EffectStack.Rules;
 
-public class RuleSkillEffect: EffectRule
+public class RuleSkillEffect: Rule
 {
     public MD.SkillType TypeToEffect { get; init; }
     
@@ -14,9 +14,6 @@ public class RuleSkillEffect: EffectRule
     
     public override bool CheckCondition()
     {
-        if (IsConditional && !PreviousOutcome)
-            return false;
-
         return TriggerSkill != null && TriggerSkill.SkillType == TypeToEffect;
     }
 }

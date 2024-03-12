@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
+using Mdmc.Code.Game.Combat.ArsenalSystem.EffectStack;
 using Mdmc.Code.Game.Data;
 using Mdmc.Code.Game.Data.Decorators;
 using Mdmc.Code.Game.Entity.Player;
@@ -13,6 +15,8 @@ public partial class Skill : Node
     // Runtime Data:
     public bool IsUniversalSkill = false;
     public MD.SkillTimerType TimerType;
+    public bool RequiresResource = false;
+    public int RequiredAmountOfResource = 1;
     public int BasePotency = 100;
     public int AdjustedPotency = 100;
     public float Range = 10f;
@@ -24,12 +28,13 @@ public partial class Skill : Node
     public float TickRate = 1f;
     public float ThreatMultiplier = 1f;
     
+    public SkillContainer ParentContainer;
     public MD.ContainerSlot AssignedContainerSlot = MD.ContainerSlot.Main;
     public int AssignedSlot = -1;
     
     //Test :
     public EffectRuleData[] Rules;
-    public List<EffectData> Effects = new();
+    public List<Effect> Effects = new();
 
     //Class Internals:
     public SkillData Data;
@@ -45,7 +50,15 @@ public partial class Skill : Node
     //Time Keeping continued:
     private int _lastLapse = 0;
     private int _ticks = 0;
+
+    private float _adjustedCooldown;
+    private float _adjustedCasttime;
+
+    private List<ModTriggerEffct> _modEffects = new List<ModTriggerEffct>();
    
+    // Signals :
+    [Signal] public delegate void SkillTriggeredEventHandler(Skill skill);
+
     public void InitSkill()
     {
         if(Cooldown > 0f)
@@ -53,6 +66,7 @@ public partial class Skill : Node
             StartTime = Mathf.Max(GameManager.Instance.GameClock - Cooldown, 0);
         }
     }
+    
     public void Reset()
     {
         _isCasting = false;
@@ -61,6 +75,7 @@ public partial class Skill : Node
         StartTime = GameManager.Instance.GameClock - Cooldown;
         Rpc(nameof(SyncCooldown), StartTime);
     }
+
     public SkillResult TriggerSkill()
     {
         if(!Multiplayer.IsServer())
@@ -70,6 +85,15 @@ public partial class Skill : Node
         {
             return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.ON_COOLDOWN };
         }
+
+        if(RequiresResource)
+        {
+            if(ParentContainer.GetCurrentResourceAmount() < RequiredAmountOfResource)
+            {
+                return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.NOT_ENOUGH_RESOURCE };
+            }
+        }
+
         switch (ActionType)
         {
             case MD.SkillActionType.CAST:
@@ -92,14 +116,19 @@ public partial class Skill : Node
             StartTime = GameManager.Instance.GameClock;
             Rpc(nameof(SyncCooldown), StartTime);
         }
+        EmitSignal(SignalName.SkillTriggered, this);
+        if(RequiresResource)
+        {
+            ParentContainer.DecreaseResource(RequiredAmountOfResource);
+        }
         return TriggerResult();        
+
     }
 
     public SkillResult StartCast()
     {
         var check = CheckSkill();
-        if (!check.SUCCESS) return check;
-        
+        if (!check.SUCCESS) return check;        
         GD.Print("Start Casting!");
         Player.Arsenal.StartCasting(this);
         _startCastTime = GameManager.Instance.GameClock;
@@ -115,6 +144,11 @@ public partial class Skill : Node
         if(Player.Arsenal.ChannelingSkill != null) Player.Arsenal.TryInterruptChanneling();
         
         Player.Arsenal.StartChanneling(this);
+        EmitSignal(SignalName.SkillTriggered, this);
+        if(RequiresResource)
+        {
+            ParentContainer.DecreaseResource(RequiredAmountOfResource);
+        }
         _ticks = 0;
         _lastLapse = 0;
         _startChannelTime = GameManager.Instance.GameClock;
@@ -135,6 +169,12 @@ public partial class Skill : Node
         _ticks = 0;
         _lastLapse = 0;
     }    
+
+    public void ApplyModifierEffect(ModTriggerEffct effect)
+    {
+        _modEffects.Add(effect);
+    }
+
     
     public override void _PhysicsProcess(double delta)
     {
@@ -153,6 +193,11 @@ public partial class Skill : Node
                     Rpc(nameof(SyncCooldown), StartTime);
                 } 
                 var Result = TriggerResult();
+                if(RequiresResource)
+                {
+                    ParentContainer.DecreaseResource(RequiredAmountOfResource);
+                }
+                EmitSignal(SignalName.SkillTriggered, this);
                 Player.Arsenal.FinishCasting(Result);
             }
         }

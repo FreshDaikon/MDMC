@@ -5,17 +5,15 @@ using Mdmc.Code.Game.Combat.ArsenalSystem.EffectStack.Rules;
 namespace Mdmc.Code.Game.Data.EffectRules;
 
 [GlobalClass]
-public partial class RuleComboData: EffectRuleData
+public partial class RuleCooldownData: EffectRuleData
 {
-    [Export] public RuleCombo.ComboDirection Direction { get; private set; }
-    
+   
     public override Rule GetRule()
     {
-        var newCombo = new RuleCombo()
+        var newCombo = new RuleCooldown()
         {
             Charges = Charges,
             TriggerEffectData = EffectData,
-            Direction = Direction,
         };
         return newCombo;
     }

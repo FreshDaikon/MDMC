@@ -1,30 +1,21 @@
 using Godot;
+using Mdmc.Code.Game.Combat.ArsenalSystem.EffectStack;
 
 namespace Mdmc.Code.Game.Data.Decorators;
 
 [GlobalClass]
 public partial class EffectData : Resource
-{
-    public enum EffectType
+{    
+    [Export] public Effect.EffectType Type { get; private set; } = Effect.EffectType.Potency;
+    [Export] public float EffectValue { get; private set; } = 0;
+
+    public Effect GetEffect()
     {
-        Failed,
-        NoEffect,
-        Trigger,
-        Potency,
-        Range,
-        CastTime,
-        Cooldown,
+        var effect = new Effect()
+        {
+            EffectValue = EffectValue,
+            Type = Type
+        };
+        return effect;
     }
-    
-    public enum DataType
-    {
-        FreeCast
-    }
-    
-    [Export]
-    public EffectType Type { get; private set; } = EffectType.Failed;
-    [Export]
-    public double Value { get; private set; } = 0;
-    
-    public dynamic ExtraData { get; set; } 
 }

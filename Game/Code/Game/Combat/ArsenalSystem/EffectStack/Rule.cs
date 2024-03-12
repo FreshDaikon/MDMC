@@ -4,43 +4,42 @@ using Mdmc.Code.Game.Data.Decorators;
 namespace Mdmc.Code.Game.Combat.ArsenalSystem.EffectStack;
 
 
-public class EffectRule
+public class Rule
 {
     public EffectData TriggerEffectData { get; init; }
-    public bool IsConditional { get; init; }
+
+    public int Charges { get; init; } = 1;
 
     public Skill TriggerSkill { get; private set; }
-    public bool PreviousOutcome { get; private set; }
     public Skill OriginSkill { get; private set; }
+
     public bool HasData { get; private set; } = false;
     public bool WasResolved { get; private set; } = true;
 
     private int _resolveTries = 0;
+    private int _chargesLeft;
 
     public void Init(Skill owner)
     {
         OriginSkill = owner;
+        _chargesLeft = Charges;
     }
     
-    public void SetTrigger(Skill triggerSkill, bool previousOutcome)
+    public void ArmTrigger(Skill triggerSkill)
     {
-        GD.Print("Setting Trigger data..");
         TriggerSkill = triggerSkill;
-        PreviousOutcome = previousOutcome;
         HasData = true;
     }
     
-    public EffectData Trigger()
+    public bool Trigger()
     {
         if (!HasData)
         {
-            return new EffectData();
+            return false;
         }
-
-        if (!CheckCondition()) return new EffectData();
-        GD.Print("Condition was ok! try and resolve");
+        if (!CheckCondition()) return false;
         TryResolve();
-        return GetEffect();
+        return true;
     }
 
     public virtual void TryResolve()
@@ -49,6 +48,14 @@ public class EffectRule
         {
             GD.Print("We failed in 10 attempts..");
             SetWasResolved(true);
+        }
+        if(CheckCondition())
+        {
+            _chargesLeft -= 1;
+            if(_chargesLeft <= 0)
+            {
+                SetWasResolved(true);
+            }
         }
         _resolveTries++;
     }
@@ -63,8 +70,9 @@ public class EffectRule
         return false;
     }
 
-    public virtual EffectData GetEffect()
+    public Effect GetEffect()
     {
-        return TriggerEffectData;
+        var effect = TriggerEffectData.GetEffect();
+        return effect;
     }
 }

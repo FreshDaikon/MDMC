@@ -19,6 +19,8 @@ public partial class SinglePotencyData: SkillData
             TimerType = TimerType,
             ActionType = ActionType,
             BasePotency = BasePotency,
+            RequiresResource = RequiresResource,
+            RequiredAmountOfResource = RequiredAmountOfResource,
             Range = Range,
             Cooldown = Cooldown,
             CanMove = CanMove,

@@ -26,8 +26,10 @@ public partial class PlayerArsenal: Node
     public double GCDStartTime { get; private set; } = 0;
     
 
-    public EffectStack.EffectStack Stack { get; private set; }
+    public EffectStack.RuleStack Stack { get; private set; }
     public Skill LastSkill { get; set; }
+
+    public Skill LastSkillTriggered { get; private set; }
     
     // Todo: remove these : 
     bool hasBeenInit = false;
@@ -38,7 +40,7 @@ public partial class PlayerArsenal: Node
     {
         //skillContainers = GetNode("%SkillContainers");
         Player = GetParent<PlayerEntity>();
-        Stack = new EffectStack.EffectStack(this);
+        Stack = new EffectStack.RuleStack();
     }
 
     public override void _Process(double delta)
@@ -81,16 +83,6 @@ public partial class PlayerArsenal: Node
             var firstSkill = skills[0];
             SetSkillContainer(firstContainer.Id, slot);
             Rpc(nameof(SyncSkillContainer), firstContainer.Id, (int)slot);
-            
-            SetSkill(firstSkill.Id, slot, 0);
-            SetSkill(firstSkill.Id, slot, 1);
-            SetSkill(firstSkill.Id, slot, 2);
-            SetSkill(firstSkill.Id, slot, 3);
-
-            Rpc(nameof(SyncSkill), firstSkill.Id, (int)slot, 0);
-            Rpc(nameof(SyncSkill), firstSkill.Id, (int)slot, 1);
-            Rpc(nameof(SyncSkill), firstSkill.Id, (int)slot, 2);
-            Rpc(nameof(SyncSkill), firstSkill.Id, (int)slot, 3);
         }
         hasBeenInit = true;
     }  
@@ -110,10 +102,6 @@ public partial class PlayerArsenal: Node
                 foreach(var container in containers)
                 {                    
                     RpcId(requester, nameof(SyncSkillContainer), container.Data.Id, (int)container.AssignedSlot);
-                    RpcId(requester,nameof(SyncSkill), container.GetSkill(0).Data.Id, (int)container.AssignedSlot, 0);
-                    RpcId(requester,nameof(SyncSkill), container.GetSkill(1).Data.Id, (int)container.AssignedSlot, 1);
-                    RpcId(requester,nameof(SyncSkill), container.GetSkill(2).Data.Id, (int)container.AssignedSlot, 2);
-                    RpcId(requester,nameof(SyncSkill), container.GetSkill(3).Data.Id, (int)container.AssignedSlot, 3);
                 }
             }
         }
@@ -160,8 +148,6 @@ public partial class PlayerArsenal: Node
         newContainer.Name = containerSlot.ToString();
         newContainer.AssignedSlot = containerSlot;
         AddChild(newContainer); 
-
-        newContainer.InitSkills();
     }    
     
     public Skill GetSkill(MD.ContainerSlot containerSlot, int slot)
@@ -174,29 +160,11 @@ public partial class PlayerArsenal: Node
         return null;
     }
 
-    public void SetSkill(int id, MD.ContainerSlot containerSlot, int slot)
-    {
-        var container = GetSkillContainer(containerSlot);
-        if(container != null)
-        {
-            container.SetSkill(id, slot);
-        }
-        else
-        {
-            GD.Print("Container was null... bullockes!");
-        }
-    }
-
     public void TrySetContainer(int id, int slot)
     {
         RpcId(1, nameof(RequestContainerChange), id, slot);
     }
-
-    public void TrySetSkill(int id, int containerSlot, int slot)
-    {
-        RpcId(1, nameof(RequestSkillChange), id, containerSlot, slot);
-    }    
-    
+   
     #endregion
     
     #region SERVER_CALLS
@@ -213,31 +181,47 @@ public partial class PlayerArsenal: Node
             
             TryInterruptChanneling();
             
-            if(container.IsSkillOGCD(index))
+            var skill = container.GetSkill(index);
+
+            if(skill.TimerType == MD.SkillTimerType.OGCD)
             {
                 GD.Print("Try Trigger OGCD Skill:");
-                return container.TriggerSkill(index);
+                var ogcdResult = container.TriggerSkill(index);
+                
+                if(!ogcdResult.SUCCESS) return ogcdResult;
+                
+                LastSkillTriggered = skill;
+                UpdateContainerStates();
+                
+                return ogcdResult;
             }            
             
             var lapsed = GameManager.Instance.GameClock - GCDStartTime;
+            //TODO : Add gcd modifiers from skill containers here!
             var modGCD = BaseGcd; 
+
             if(lapsed < modGCD)
             {
                 return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.ON_COOLDOWN };
             }
 
             var result = container.TriggerSkill(index);
-            if(result.SUCCESS)
-            {
-                GD.Print("We triggered and it was success.");
-                Rpc(nameof(SyncGCD), GameManager.Instance.GameClock);
-                GCDStartTime = GameManager.Instance.GameClock;
-                return result;
-            }
-            GD.Print("We triggered, but it was not success");
+            if(!result.SUCCESS) return result;
+          
+            GD.Print("We triggered and it was success.");
+            LastSkillTriggered = skill;
+            UpdateContainerStates();
+            Rpc(nameof(SyncGCD), GameManager.Instance.GameClock);
+            GCDStartTime = GameManager.Instance.GameClock;
             return result;
         }
         return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.ERROR };
+    }
+
+    private void UpdateContainerStates()
+    {
+        if(GetChildCount() <= 0 ) return;
+        GetChildren().Where(c => c is SkillContainer).Cast<SkillContainer>().ToList().ForEach(x => x.UpdateComponentStates());
     }
 
     public void StartCasting(Skill caster)
@@ -318,25 +302,12 @@ public partial class PlayerArsenal: Node
         SetSkillContainer(id, (MD.ContainerSlot)slot);
         Rpc(nameof(SyncSkillContainer), id, slot);
     }
-
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void RequestSkillChange(int id, int containerSlot, int slot)
-    {
-        SetSkill(id, (MD.ContainerSlot)containerSlot, slot);
-        Rpc(nameof(SyncSkill), id, containerSlot, slot);
-    }
     
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void SyncSkillContainer(int id, int containerSlot)
     {
         GD.Print("Adding skillContainer on client for " + containerSlot);
         SetSkillContainer(id, (MD.ContainerSlot)containerSlot);
-    }
-    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void SyncSkill(int id, int containerSlot, int slot)
-    {
-        GD.Print("Adding skill on client");
-        SetSkill(id, (MD.ContainerSlot)containerSlot, slot);
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -419,60 +390,7 @@ public partial class PlayerArsenal: Node
     {
         var modGCD = BaseGcd;
         return modGCD;
-    }    
+    }   
 
-    public float[] GetArsenalSkillWeights()
-    {
-        float[] weights = new float[4];
-        
-        if(GetChildCount() > 0)
-        {
-            var containers = GetChildren()
-                .Where(c => c is SkillContainer)
-                .Cast<SkillContainer>()
-                .ToList();
-
-            foreach(var container in containers)
-            {                
-                var skillSlots = container.SkillSlots.ToList();
-                foreach(var slot in skillSlots)
-                {
-                    var skill = container.GetSkill(skillSlots.IndexOf(slot));
-                    if(skill == null || skill.IsUniversalSkill)
-                    {
-                        weights[3] += 1f;
-                        continue;
-                    }
-                    switch(skill.SkillType)
-                    {
-                        case MD.SkillType.DPS:
-                            weights[0] += 1f;
-                            break;  
-                        case MD.SkillType.HEAL:
-                            weights[1] += 1f;
-                            break;                                              
-                        case MD.SkillType.TANK:
-                            weights[2] += 1f;
-                            break;   
-                    }
-                }                
-            }       
-            return weights;
-        }
-        else
-        {
-            return weights;
-        }
-    } 
-    public float[] GetWeightedTotal(float[] weights)
-    {
-        var list = weights.ToList();
-        float[] totals = new float[4];
-        foreach(float value in list)
-        {
-            totals[list.IndexOf(value)] = Mathf.Remap(value, 0, 12, 0.1f, 0.9f); 
-        }
-        return totals;
-    }
     #endregion
 }

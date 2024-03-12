@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using Godot;
+using Mdmc.Code.Game.Combat.ArsenalSystem;
+using Mdmc.Code.Game.Combat.Modifiers.SkillTriggers;
 using Mdmc.Code.Game.Data;
 using Mdmc.Code.Game.Entity.Components;
 
@@ -22,34 +24,59 @@ public partial class Modifier : Node
         Mitigation,
         HealPower,
     }
+
+    public enum ModType
+    {
+        RuleMod,
+        NormalMod,
+    }
+
     // Runtime Variables:
-    public bool IsPermanent = false;
-    public float Duration = 5f;
-    public bool IsTicked = false;
-    public float TickRate = 1f;
-    public bool CanStack = false;
-    public int MaxStacks = 1;
+    public required ModType Type { get; init; } 
+    public required bool IsPermanent { get; init; }
+    public required float Duration { get; init; }
+    public required bool IsTicked { get; init; }
+    public float TickRate { get; init; }
+    public bool CanStack { get; init; }
+    public int MaxStacks { get; init; }
     public double ModifierValue = 0; // This is very specific per mod!
     public double RemainingValue;
     public List<ModTags> Tags = new();
+
+    public ModSkillTriggerData SkillTriggerData { get; init;}
+    public int Charges = 1;
+
+    
+    // Entity to which this mod is attached:
+    public EntityStatus Status {get; private set;}
+    public Entity.Entity Affected { get; private set;}
+    public Entity.Entity Applier { get; private set;}
+    public ModifierData Data { get; init;}
 
     // Synced Properties:
     public int Stacks = 1;
     private double startTime;    
     public double TimeRemaining = -1f;
 
-    public ModifierData Data;
     //Time Keeping continued:
     private int lastLapse = 0;
     private int ticks = 0;
+    private ModSkillTrigger _skillTrigger;
 
-    // Entity to which this mod is attached:
-    public EntityStatus targetStatus;
-    public Entity.Entity entity;
-    //Entity who applied this modifier:   
     
     public override void _Ready()
     {
+        if(SkillTriggerData != null && Type == ModType.RuleMod)
+        {
+            _skillTrigger = new ModSkillTrigger()
+            {
+                Effect = SkillTriggerData.Effect,
+                Type = SkillTriggerData.Type,
+                TypeToCheck = SkillTriggerData.TypeToCheck,
+
+            };
+
+        }
         if(!IsPermanent)
         {
             if(Multiplayer.IsServer())
@@ -59,6 +86,14 @@ public partial class Modifier : Node
                 Rpc(nameof(SyncStartTime), startTime);
             }
         }          
+    }
+
+    // Please call thiS!
+    public void InitData(Entity.Entity affected, Entity.Entity applier)
+    {        
+        Status = affected.Status;
+        Affected = affected;
+        Applier = applier;
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -87,7 +122,7 @@ public partial class Modifier : Node
             if(lapsed > Duration)
             {
                 GD.Print(" Total Ticks : " + ticks );
-                entity.Modifiers.RemoveModifier(Data.Id);
+                Affected.Modifiers.RemoveModifier(Data.Id);
             }
         }        
     }
@@ -105,6 +140,24 @@ public partial class Modifier : Node
             return remaining / Duration;
         }
     }
+
+    public void HandleSkillTrigger(Skill skill)
+    {
+        if(Type != ModType.RuleMod) return;
+        if(_skillTrigger == null) return;
+
+        if(_skillTrigger.CheckSkill(skill))
+        {
+            var effect = _skillTrigger.GetModifierEffect();
+            skill.ApplyModifierEffect(effect);
+            Charges -= 1;
+            if(Charges <= 0)
+            {
+                Affected.Modifiers.RemoveModifier(Data.Id);
+            }
+        }
+    }
+
     public virtual void Tick()
     {
         

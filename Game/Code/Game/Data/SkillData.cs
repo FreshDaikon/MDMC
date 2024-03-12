@@ -11,6 +11,8 @@ public abstract partial class SkillData : DataObject
     [Export] public bool IsUniversalSkill = false;
     [Export] public MD.SkillTimerType TimerType;
     [Export] public int BasePotency = 100;
+    [Export] public bool RequiresResource = false;
+    [Export] public int RequiredAmountOfResource = 0;
     [Export] public float Range = 10f;
     [Export] public float Cooldown = 1f;
     [ExportCategory("Action Type")]

@@ -11,6 +11,7 @@ public partial class BasicModiferData: ModifierData
     {
         var modifier = new Modifier
         {
+            Type = Type,
             IsPermanent = IsPermanent,
             Duration = Duration,
             IsTicked = IsTicked,
@@ -20,6 +21,8 @@ public partial class BasicModiferData: ModifierData
             Tags = Tags.ToList(),
             ModifierValue = ModifierValue, // This is very specific per mod!
             RemainingValue = ModifierValue, // Only used for exhaustible mods! (Like shields for example..)
+            Charges = Charges,
+            SkillTriggerData = ModTriggerData,
             Data = this
         };
         return modifier;

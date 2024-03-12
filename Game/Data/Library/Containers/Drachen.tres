@@ -2,43 +2,30 @@
 
 [ext_resource type="Script" path="res://Code/System/DataID.cs" id="1_21jcf"]
 [ext_resource type="Texture2D" uid="uid://d1g6ehxjt0nof" path="res://Assets/UI/ArsenalSystem/SkillContainers/Drachen_MK1.png" id="2_fi1h7"]
+[ext_resource type="Resource" uid="uid://bj731stl0vj5f" path="res://Data/Library/Skills/Simple_Instant_Test.tres" id="3_d13bn"]
 [ext_resource type="Script" path="res://Code/Game/Data/SkillContainers/StandardContainerData.cs" id="3_nfma3"]
-[ext_resource type="Script" path="res://Code/Game/Data/Decorators/SkillSlotData.cs" id="4_0e1xy"]
+[ext_resource type="Resource" uid="uid://cao825sb4cux6" path="res://Data/Library/Skills/FirstSkillEver.tres" id="3_nhmcq"]
+[ext_resource type="Script" path="res://Code/Game/Data/Decorators/ContainerComponents/SkillSwapComponentData.cs" id="4_l7xld"]
+[ext_resource type="Resource" uid="uid://c43voovxhow2r" path="res://Data/Library/Skills/Simple_Cast_Test.tres" id="4_mxr6k"]
+
+[sub_resource type="Resource" id="Resource_dxeht"]
+script = ExtResource("4_l7xld")
+_swapSlot = 0
+_swapSkills = Array[Object]([ExtResource("3_nhmcq"), ExtResource("3_d13bn"), ExtResource("4_mxr6k")])
+_resourceGenerated = 1
 
 [sub_resource type="Resource" id="Resource_v6623"]
 script = ExtResource("1_21jcf")
 Id = -1315057978
 
-[sub_resource type="Resource" id="Resource_e124e"]
-script = ExtResource("4_0e1xy")
-SlotSkillType = 1
-PotencyMultiplier = 1.2
-ThreatMultiplier = 1.0
-
-[sub_resource type="Resource" id="Resource_ja6j6"]
-script = ExtResource("4_0e1xy")
-SlotSkillType = 1
-PotencyMultiplier = 1.0
-ThreatMultiplier = 1.0
-
-[sub_resource type="Resource" id="Resource_wa4q8"]
-script = ExtResource("4_0e1xy")
-SlotSkillType = 0
-PotencyMultiplier = 0.8
-ThreatMultiplier = 1.0
-
-[sub_resource type="Resource" id="Resource_aevpr"]
-script = ExtResource("4_0e1xy")
-SlotSkillType = 1
-PotencyMultiplier = 0.8
-ThreatMultiplier = 1.0
-
 [resource]
 script = ExtResource("3_nfma3")
 ContainerColor = Color(0.458824, 0.419608, 0.74902, 1)
-BaseGcd = 1.5
-skillSlots = Array[Object]([SubResource("Resource_e124e"), SubResource("Resource_ja6j6"), SubResource("Resource_wa4q8"), SubResource("Resource_aevpr")])
+Skills = Array[Object]([ExtResource("3_nhmcq"), ExtResource("3_d13bn"), ExtResource("4_mxr6k"), ExtResource("4_mxr6k")])
 Modifiers = Array[Object]([])
+GeneratesResource = true
+MaxResource = 5
+ComponentDatas = Array[Object]([SubResource("Resource_dxeht")])
 ID = SubResource("Resource_v6623")
 Name = "Purple"
 Description = "Some Object Description."

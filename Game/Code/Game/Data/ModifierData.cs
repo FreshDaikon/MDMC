@@ -8,8 +8,8 @@ namespace Mdmc.Code.Game.Data;
 public abstract partial class ModifierData : DataObject
 {
     [ExportGroup("Modifier Settings")]
-    [Export]
-    public bool IsPermanent = false;
+    [Export] public ModType Type;
+    [Export] public bool IsPermanent = false;
     [ExportCategory("REMEMBER : only use saved mods - don't create inline!")]
     [Export]
     public float Duration = 5f;
@@ -25,8 +25,9 @@ public abstract partial class ModifierData : DataObject
     public int MaxStacks = 1;
     [Export]
     public Godot.Collections.Array<ModTags> Tags { get; set; }
-    [Export]
-    public double ModifierValue = 0; // This is very specific per mod!
+    [Export] public double ModifierValue = 0; // This is very specific per mod!
+    [Export] public int Charges = 0;
+    [Export] public ModSkillTriggerData ModTriggerData;
 
     public abstract Modifier GetModifier();
 

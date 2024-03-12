@@ -11,10 +11,11 @@ public partial class RuleSkillEffectData: EffectRuleData
     [Export]
     public MD.SkillType TypeToEffect { get; set; }
     
-    public override EffectRule GetRule()
+    public override Rule GetRule()
     {
         var newRule = new RuleSkillEffect()
         {
+            Charges = Charges,
             TriggerEffectData = EffectData,
             TypeToEffect = TypeToEffect,
         };

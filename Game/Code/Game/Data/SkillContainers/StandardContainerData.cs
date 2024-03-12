@@ -12,7 +12,10 @@ public partial class StandardContainerData : SkillContainerData
         var container = new SkillContainer
         {
             Data = this,
-            SkillSlots = skillSlots,
+            Skills = Skills,
+            Components = ComponentDatas,
+            GeneratesResource = GeneratesResource,
+            MaxResource = MaxResource,
             BuffsGranted = Modifiers.ToList()
         };
         return container;

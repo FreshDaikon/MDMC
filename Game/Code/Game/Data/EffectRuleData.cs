@@ -8,7 +8,7 @@ namespace Mdmc.Code.Game.Data;
 public abstract partial class EffectRuleData: Resource
 {
     [Export] public EffectData EffectData { get; set; }
-    [Export] public bool IsConditional { get; set; }
+    [Export] public int Charges { get; set; } = 1;
     
-    public abstract EffectRule GetRule();
+    public abstract Rule GetRule();
 }

@@ -40,7 +40,6 @@ public partial class EntityModifiers : Node
                     {
                         existingMod.Stacks += 1;
                         mod.Name = "mod_" + mod.Data.Id;
-                        mod.entity = _entity;
                         _modContainer.AddChild(mod);
                         Rpc(nameof(SyncMod), mod.Data.Id, true);
                         return new SkillResult() { SUCCESS = true, result = MD.ActionResult.CAST };
@@ -51,7 +50,6 @@ public partial class EntityModifiers : Node
             else
             {
                 mod.Name = "mod_" + mod.Data.Id;
-                mod.entity = _entity;
                 _modContainer.AddChild(mod);
                 Rpc(nameof(SyncMod), mod.Data.Id, true);
                 return new SkillResult() { SUCCESS = true, result = MD.ActionResult.CAST }; 
@@ -84,7 +82,6 @@ public partial class EntityModifiers : Node
             if(newMod != null)
             {
                 newMod.Name = "mod_" + id;
-                newMod.entity = _entity;
                 _modContainer.AddChild(newMod);
             }
         }

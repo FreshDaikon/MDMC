@@ -20,6 +20,7 @@ public static class MD
         ON_COOLDOWN,
         CANT_STACK,
         MAX_STACKS,
+        NOT_ENOUGH_RESOURCE,
         OUT_OF_RANGE,
         INVALID_TARGET,
         INSUFFICIENT_RESOURCE,

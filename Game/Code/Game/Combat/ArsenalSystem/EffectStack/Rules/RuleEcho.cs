@@ -3,7 +3,7 @@ using Mdmc.Code.System;
 
 namespace Mdmc.Code.Game.Combat.ArsenalSystem.EffectStack.Rules;
 
-public class RuleEcho: EffectRule
+public class RuleEcho: Rule
 {
     //Stuff..
     public MD.SkillType TypeToEcho { get; init; }
@@ -19,18 +19,6 @@ public class RuleEcho: EffectRule
     
     public override bool CheckCondition()
     {
-        if (IsConditional && !PreviousOutcome)
-            return false;
-
         return TriggerSkill != null && TriggerSkill.SkillType == TypeToEcho;
-    }
-
-    public override EffectData GetEffect()
-    {
-        TriggerEffectData.ExtraData = new
-        {
-            Type = EffectData.DataType.FreeCast
-        };
-        return base.GetEffect();
     }
 }

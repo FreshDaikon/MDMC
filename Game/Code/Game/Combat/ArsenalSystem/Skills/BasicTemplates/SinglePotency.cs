@@ -24,19 +24,7 @@ public partial class SinglePotency : Skill
             return new SkillResult(){ SUCCESS = false, result = MD.ActionResult.INVALID_SETUP };
         }
 
-        var workingValue = AdjustedPotency;
-        
-        if (Effects != null)
-        {
-            var potency = Effects.Where(e => e.Type == EffectData.EffectType.Potency);
-            if (potency.Any())
-            {
-                GD.Print("The value of the sum is: " + potency.Sum(p => p.Value));
-                GD.Print("The sum of all the potency effects are:" + ( AdjustedPotency * potency.Sum(p => p.Value))); 
-                workingValue = (int)( AdjustedPotency * potency.Sum(p => p.Value));
-                GD.Print("New working value : " + workingValue);
-            }
-        }
+        var workingValue = AdjustedPotency;        
         
         switch(SkillType)
         {

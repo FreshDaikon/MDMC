@@ -60,7 +60,7 @@ public partial class IngameMenu: Control
     private void OnSlotSelected(int containerSlot, int skillSlot)
     {
         _itemSelected = true;
-        
+                
         CleanUp();
 
         var skills = DataManager.Instance.GetAllSkills();
@@ -72,7 +72,6 @@ public partial class IngameMenu: Control
             newButton.SkillPressed += id =>
             {
                 GD.Print("SkillSelected " + id + "For Slot:" + containerSlot);
-                _player.Arsenal.TrySetSkill(id, containerSlot, skillSlot);
                 _itemSelected = false;
             };
         }
