@@ -1,3 +1,4 @@
+using System.Linq;
 using Godot;
 using Mdmc.Code.Client.UI.Ingame.Elements;
 using Mdmc.Code.Game;
@@ -27,11 +28,9 @@ public partial class IngameMenu: Control
         _mainContainer.ContainerSelected += OnContainerSelected;
         _rightContainer.ContainerSelected += OnContainerSelected;
         _leftContainer.ContainerSelected += OnContainerSelected;
-
         _mainContainer.SlotSelected += OnSlotSelected;
         _rightContainer.SlotSelected += OnSlotSelected;
         _leftContainer.SlotSelected += OnSlotSelected;
-
     }
 
     private void OnContainerSelected(int slot)
@@ -95,7 +94,7 @@ public partial class IngameMenu: Control
             var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();
             if(players == null) return;
 
-            _player = players.Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
+            _player = players.ToList().Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
             
             if(_player == null) return;
         }    

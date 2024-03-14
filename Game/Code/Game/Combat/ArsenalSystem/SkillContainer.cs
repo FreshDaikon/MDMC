@@ -77,22 +77,15 @@ public partial class SkillContainer : Node
         for(int i = 0; i < Skills.Length; i++)
         {
             GD.Print("Adding Skill..");
-            var newSkill = DataManager.Instance.GetSkillInstance(Skills[i].Id);
-            if(newSkill == null)
-            { 
-                GD.PrintErr("Can't init container skill was null..");
-                return;
-            }
-            newSkill.AssignedSlot = i;
-            newSkill.ParentContainer = this;
-            newSkill.AssignedContainerSlot = AssignedSlot;
-            newSkill.Name = "Skill_" + Skills[i].Name + "_" + i;
-            newSkill.Player = Player;        
-            AddChild(newSkill);
-            newSkill.SkillTriggered += OnSkillTriggered;
-            newSkill.InitSkill();
+            var skill = Skills[i].GetSkill();
+            // Can't init container if skill is borked:
+            if(skill == null) return;
+            skill.SetData(Skills[i]);
+            skill.SetArsenal(Arsenal);
+            skill.Name = "Skill_" + skill.Data.Name + "_" + i;
+            skill.AssignSlot(i);
+            AddChild(skill);
         }
-
         var counter = 0;
         foreach(var comp in Components)
         {
@@ -113,10 +106,10 @@ public partial class SkillContainer : Node
         }        
     }
 
-    public Skill GetSkill(int slot)
+    public SkillHandler GetSkill(int slot)
     {
         if (GetChildCount() <= 0) return null;
-        var current = GetChildren().Where(s => s is Skill).Cast<Skill>().ToList().Find(x => x.AssignedSlot == slot);
+        var current = GetChildren().Where(s => s is SkillHandler).Cast<SkillHandler>().ToList().Find(x => x.AssignedSlot == slot);
         return current;
     }
 
@@ -127,15 +120,9 @@ public partial class SkillContainer : Node
 
         if (skill == null) return new SkillResult() { SUCCESS = false, result = MD.ActionResult.ERROR };
 
-        var ruleMods = Player.Modifiers.GetModifiers().Where(m => m.Type == Modifiers.Modifier.ModType.RuleMod).ToList();
-        foreach(var mod in ruleMods)
-        {
-            mod.HandleSkillTrigger(skill);
-        } 
         var result = skill.TriggerSkill();
 
         if (!result.SUCCESS) return new SkillResult() { SUCCESS = false, result = MD.ActionResult.ERROR };
-
         EmitSignal(SignalName.ContainerTriggered, this, skill);
         return result;
 
@@ -149,7 +136,6 @@ public partial class SkillContainer : Node
         
         foreach(var comp in components)
         {
-            GD.Print("Update Component!");
             comp.UpdateComponent();
         }
     }

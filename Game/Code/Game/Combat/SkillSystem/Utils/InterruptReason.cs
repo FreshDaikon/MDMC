@@ -1,0 +1,6 @@
+
+
+public record InterruptReason
+{
+    
+}

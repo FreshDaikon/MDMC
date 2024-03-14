@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://mqy1fcnfwrjp"]
+[gd_scene load_steps=19 format=3 uid="uid://mqy1fcnfwrjp"]
 
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/AdversaryEntity.cs" id="1_c7f3p"]
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/TimelineSolver/TimelineManager.cs" id="1_vf7wp"]
@@ -9,19 +9,9 @@
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/Actions/Mechanics/SpawnCircleAoe.cs" id="5_e17fn"]
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/Components/AdversaryStatus.cs" id="6_ahpdf"]
 [ext_resource type="PackedScene" uid="uid://clp5eucv45owf" path="res://Data/Scenes/Realizations/Boss/CircleAoe.tscn" id="6_gcqwy"]
-[ext_resource type="Script" path="res://Code/Game/Data/Realizations/Boss/Mechanics/CircleAoeRealizationData.cs" id="7_sj66h"]
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/Components/AdversaryController.cs" id="7_ymrw4"]
-[ext_resource type="Script" path="res://Code/Game/Data/Realizations/Boss/Mechanics/RectAoeRealizationData.cs" id="8_1e1qa"]
 [ext_resource type="Script" path="res://Code/Game/Entity/Adversary/Actions/Mechanics/SpawnRectAoe.cs" id="8_od7gs"]
 [ext_resource type="PackedScene" uid="uid://dogebc18mwo8y" path="res://Data/Scenes/Realizations/Boss/RectAoeRealization.tscn" id="9_ba2ob"]
-
-[sub_resource type="Resource" id="Resource_h6iss"]
-script = ExtResource("7_sj66h")
-Scene = ExtResource("6_gcqwy")
-
-[sub_resource type="Resource" id="Resource_raby0"]
-script = ExtResource("8_1e1qa")
-Scene = ExtResource("9_ba2ob")
 
 [sub_resource type="Animation" id="Animation_l313m"]
 resource_name = "Phase_01"
@@ -145,14 +135,13 @@ attackTime = 1.0
 
 [node name="AOECircle" type="Node" parent="TimeLineManager"]
 script = ExtResource("5_e17fn")
-_realizationData = SubResource("Resource_h6iss")
+CircleAoeScene = ExtResource("6_gcqwy")
 _radius = 10.0
 _resolveTime = 3.0
 
 [node name="AoeSquare" type="Node" parent="TimeLineManager"]
 script = ExtResource("8_od7gs")
-_realizationData = SubResource("Resource_raby0")
-_size = Vector2(4, 20)
+_rectAoeScene = ExtResource("9_ba2ob")
 _resolveTime = 3.0
 
 [node name="BehaviorPlayer" type="AnimationPlayer" parent="."]

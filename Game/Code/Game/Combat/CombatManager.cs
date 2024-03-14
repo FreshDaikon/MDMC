@@ -100,7 +100,7 @@ public partial class CombatManager: Node
     {
         GD.Print("Ending combat and reporting!");
         var players = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().GetPlayers();
-        if (!(players.Count > 0)) return;
+        if (!(players.Count() > 0)) return;
 
         var participants = (from player in players
             let dps =

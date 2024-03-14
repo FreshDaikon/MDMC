@@ -1,35 +1,17 @@
 using Godot;
-using Mdmc.Code.Game.Combat.ArsenalSystem;
-using Mdmc.Code.System;
 
 namespace Mdmc.Code.Game.Data;
 
 [GlobalClass]
-public abstract partial class SkillData : DataObject
+public partial class SkillData : DataObject
 {
-    [ExportGroup("Skill Options:")]
-    [Export] public bool IsUniversalSkill = false;
-    [Export] public MD.SkillTimerType TimerType;
-    [Export] public int BasePotency = 100;
-    [Export] public bool RequiresResource = false;
-    [Export] public int RequiredAmountOfResource = 0;
-    [Export] public float Range = 10f;
-    [Export] public float Cooldown = 1f;
-    [ExportCategory("Action Type")]
-    [Export] public MD.SkillActionType ActionType;
-    [ExportCategory("Casting Skill Options")]
-    [Export] public bool CanMove = false;
-    [Export] public float CastTime = 0f;
-    [ExportCategory("Channeling SKill Options")]
-    [Export] public float ChannelTime = 0f;
-    [Export] public float TickRate = 1f;
-    [Export] public float ThreatMultiplier = 1f;
-    // Effects and rules:
-    [ExportCategory("Skill Effects :")]
-    [Export] public EffectRuleData[] Rules { get; private set; }
-    // Realizations:
-    
+    [ExportGroup("Skill")]
+    [Export] private PackedScene SkillScene;
+   
     // Methods that needs overwriting :
-    public abstract Skill GetSkill();
-
+    public SkillHandler GetSkill()
+    {
+        var skill = SkillScene.Instantiate<SkillHandler>();
+        return SkillScene.Instantiate<SkillHandler>();
+    }
 }

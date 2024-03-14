@@ -1,4 +1,6 @@
+using System;
 using Godot;
+using Mdmc.Code.Game.Arena;
 using Mdmc.Code.Game.Combat.ArsenalSystem;
 using Mdmc.Code.Game.Entity.Player.Components;
 using static System.Int32;
@@ -19,26 +21,26 @@ public partial class PlayerEntity : Entity
 
     [Export]
     public int FriendlyTargetId = -1;
-    public Entity CurrentFriendlyTarget { 
-        get {
-            if(FriendlyTargetId != -1)
-            {
-                var target = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().GetEntity(FriendlyTargetId);
-                if(target == null)
-                { 
-                    FriendlyTargetId = -1;    
-                    return null;            
-                }
-                else 
-                {
-                    return target;
-                }
-            }
-            else
-            {
-                return null;
-            } 
+    public Entity CurrentFriendlyTarget { get; private set; }
+
+    public void ChangeFriedlyTarget(Entity target)
+    {
+        CurrentFriendlyTarget = target;
+        GD.Print("Friend ID:" + target.Name);
+        Rpc(nameof(SyncFriendlyTarget), Parse(target.Name));
+    }
+
+    [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SyncFriendlyTarget(int id)
+    {
+        var entities = ArenaManager.Instance.GetCurrentArena().GetEntities();
+        if(entities.Count > 0)
+        {
+            var entity = entities.Find(e => Parse(e.Name) == id );
+            if(entity != null) CurrentFriendlyTarget = entity;
+            return;
         }
+        CurrentFriendlyTarget = null;
     }
 
     public PlayerInput playerInput

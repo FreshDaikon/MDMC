@@ -1,15 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://dogebc18mwo8y"]
+[gd_scene load_steps=3 format=3 uid="uid://dogebc18mwo8y"]
 
-[ext_resource type="Script" path="res://Code/Game/Realization/Realizations/Boss/Mechanics/RectAoeRealization.cs" id="1_qd10p"]
+[ext_resource type="Script" path="res://Code/Game/Realization/RealizerTypes/Boss/Mechanics/RectAoeRealizer.cs" id="1_b7p7g"]
 [ext_resource type="Texture2D" uid="uid://b7porsy4xnmj2" path="res://Assets/Effects/Generated/RectAoe.tres" id="2_j70ti"]
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_crfa0"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pael1"]
-albedo_color = Color(0, 0, 0, 1)
-
 [node name="RectAoeRealization" type="Node3D" node_paths=PackedStringArray("_indicator")]
-script = ExtResource("1_qd10p")
+script = ExtResource("1_b7p7g")
 _indicator = NodePath("Decal")
 
 [node name="Decal" type="Decal" parent="."]
@@ -17,10 +12,3 @@ size = Vector3(1, 1, 1)
 texture_emission = ExtResource("2_j70ti")
 emission_energy = 0.5
 cull_mask = 1048569
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-visible = false
-mesh = SubResource("PlaneMesh_crfa0")
-surface_material_override/0 = SubResource("StandardMaterial3D_pael1")

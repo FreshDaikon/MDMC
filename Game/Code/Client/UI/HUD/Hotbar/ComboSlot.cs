@@ -1,3 +1,4 @@
+using System.Linq;
 using Godot;
 using Mdmc.Code.System;
 using ArenaManager = Mdmc.Code.Game.Arena.ArenaManager;
@@ -34,7 +35,7 @@ public partial class ComboSlot : Control
 			var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();
 			if(players == null)
 				return;
-			_localPlayer = players.Find(p => p.Name == Multiplayer.GetUniqueId().ToString());			
+			_localPlayer = players.ToList().Find(p => p.Name == Multiplayer.GetUniqueId().ToString());			
 		}
 		else
 		{

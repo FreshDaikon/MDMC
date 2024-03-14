@@ -1,38 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://clp5eucv45owf"]
+[gd_scene load_steps=3 format=3 uid="uid://clp5eucv45owf"]
 
-[ext_resource type="Script" path="res://Code/Game/Realization/Realizations/Boss/Mechanics/CircleAoeRealization.cs" id="1_ngt8v"]
+[ext_resource type="Script" path="res://Code/Game/Realization/RealizerTypes/Boss/Mechanics/CircleAoeRealizer.cs" id="1_5o436"]
 [ext_resource type="Texture2D" uid="uid://bbpfefdjbww27" path="res://Assets/Effects/Generated/Circle_Aoe_Alpha.png" id="2_vr0th"]
 
-[sub_resource type="Animation" id="Animation_s454k"]
-resource_name = "End"
-length = 0.001
-tracks/0/type = "rotation_3d"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Indicator")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.5, 1, 0, 0, 0, 1)
-
-[sub_resource type="Animation" id="Animation_ufopy"]
-resource_name = "Spawn"
-loop_mode = 1
-tracks/0/type = "rotation_3d"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Indicator")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1)
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_65iqx"]
-_data = {
-"End": SubResource("Animation_s454k"),
-"Spawn": SubResource("Animation_ufopy")
-}
-
 [node name="CircleAoe" type="Node3D" node_paths=PackedStringArray("_indicator")]
-script = ExtResource("1_ngt8v")
+script = ExtResource("1_5o436")
 _indicator = NodePath("Indicator")
 
 [node name="Indicator" type="Decal" parent="."]
@@ -41,9 +13,3 @@ size = Vector3(2, 13.3858, 2)
 texture_emission = ExtResource("2_vr0th")
 emission_energy = 0.5
 cull_mask = 1048569
-
-[node name="Player" type="AnimationPlayer" parent="."]
-unique_name_in_owner = true
-libraries = {
-"": SubResource("AnimationLibrary_65iqx")
-}

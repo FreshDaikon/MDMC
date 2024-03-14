@@ -1,3 +1,4 @@
+using System.Linq;
 using Godot;
 using Mdmc.Code.System;
 using ArenaManager = Mdmc.Code.Game.Arena.ArenaManager;
@@ -35,7 +36,7 @@ public partial class ContainerDisplayItem : Control
 			return;
 		var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();
 
-		var localPlayer = players?.Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
+		var localPlayer = players.ToList().Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
 		
 		if(localPlayer == null) return;
 

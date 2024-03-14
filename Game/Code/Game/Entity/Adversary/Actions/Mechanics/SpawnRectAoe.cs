@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
-using Mdmc.Code.Game.Data.Realizations.Boss.Mechanics;
 using Mdmc.Code.Game.Entity.Player;
 using Mdmc.Code.Game.Entity.Player.Components;
 using Mdmc.Code.Game.Realization;
@@ -10,8 +9,8 @@ namespace Mdmc.Code.Game.Entity.Adversary.Actions.Mechanics;
 
 public partial class SpawnRectAoe: BaseMechanic
 {
-    [Export] private RectAoeRealizationData _realizationData;
-    [Export] private Vector2 _size = new Vector2(1f, 1f);
+    [Export] private PackedScene _rectAoeScene;
+    [Export] private Vector3 _size = new Vector3(1f, 1f, 1f);
     [Export] private int _damage = 1000;
 
     private ulong _startTime;
@@ -94,9 +93,12 @@ public partial class SpawnRectAoe: BaseMechanic
     [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void SpawnIndicatorOnClient(Vector3 position, Vector3 target)
     {
-        var newAoe = (Realization.Realizations.Boss.Mechanics.RectAoeRealization)_realizationData.GetRealization();
-        newAoe.SetData(position, target, _resolveTime, _size);
-        newAoe.Spawn();
+        var builder = RealizationManager.Instance.CreateRealizationBuilder();
+        var real = builder.New(_rectAoeScene, _resolveTime)
+            .WithSize(_size)
+            .WithLookatTarget(target)
+            .WithStartPosition(position)
+            .Spawn();
     }
 
     [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]

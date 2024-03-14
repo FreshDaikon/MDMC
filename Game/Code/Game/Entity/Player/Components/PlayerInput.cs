@@ -103,6 +103,19 @@ public partial class PlayerInput : Node
         {
             RpcId(1, nameof(RequestEnemyTargetChange), false);
         }
+
+        // PC:
+        if(Input.IsActionJustPressed("ChangeTargetPC"))
+        {
+            if(Input.IsKeyPressed(Key.Ctrl))
+            {
+                RpcId(1, nameof(RequestFriendlyTargetChange), true);
+            }
+            else
+            {
+               RpcId(1, nameof(RequestEnemyTargetChange), true);
+            }
+        }
     }
     
     private void AddBufferMessage(int containerSlot, int slot)
@@ -197,10 +210,7 @@ public partial class PlayerInput : Node
                 AddBufferMessage((int)MD.ContainerSlot.Main, 3);
             }
         }
-    }
-
-
-    
+    }    
     
     private void HandleSkillActions(MD.ContainerSlot containerSlot)
     {
@@ -340,29 +350,19 @@ public partial class PlayerInput : Node
     {
         if (!Multiplayer.IsServer()) return;
         
-        if(player.TargetId == -1)
+        var current = player.CurrentTarget;
+        var enemies = Arena.ArenaManager.Instance.GetCurrentArena().GetEnemyEntities();
+        if(current == null )
         {
-            var enemies = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().GetEnemyEntities();
-            if(enemies == null)
-            {
-                player.TargetId = -1;
-                return;
-            }
-            var target  = enemies[0];
-            player.TargetId = int.Parse(target.Name);                
+            player.ChangeTarget(enemies.First());
         }
         else
-        {                
-            var enemies = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().GetEnemyEntities();
-            if(enemies == null )
-            {
-                player.TargetId = -1;
-                return;
-            }
-            var index = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().GetEnemyIndex(player.TargetId) + (direction ? 1 : -1);
-            var newIndex = Mathf.Wrap(index, 0, enemies.Count);
-            player.TargetId = int.Parse(enemies[newIndex].Name);
-        }
+        {
+            var currentIndex = enemies.IndexOf((Adversary.AdversaryEntity)current);
+            var newIndex = Mathf.Wrap(currentIndex + (direction ? 1 : -1), 0, enemies.Count);
+            var newTarget = enemies[newIndex];
+            player.ChangeTarget(newTarget);
+        } 
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -370,29 +370,19 @@ public partial class PlayerInput : Node
     {
         if (!Multiplayer.IsServer()) return;
         
-        if(player.FriendlyTargetId == -1)
+        var current = player.CurrentFriendlyTarget;
+        var friends = Arena.ArenaManager.Instance.GetCurrentArena().GetPlayers();
+        if(current == null )
         {
-            var friends = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().GetFriendlyEntities();
-            if(friends == null)
-            {
-                player.FriendlyTargetId = -1;
-                return;
-            }
-            var target = friends[0];
-            player.FriendlyTargetId = int.Parse(target.Name);                
+            player.ChangeFriedlyTarget(friends.First());
         }
         else
-        {                
-            var friends = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().GetFriendlyEntities();
-            if(friends == null)
-            {
-                player.FriendlyTargetId = -1;
-                return;
-            }
-            var index = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().GetFriendlyIndex(player.FriendlyTargetId) + (direction ? 1 : -1);
-            var newIndex = Mathf.Wrap(index, 0, friends.Count);
-            player.FriendlyTargetId = int.Parse(friends[newIndex].Name);
-        }
+        {
+            var currentIndex = friends.IndexOf((PlayerEntity)current);
+            var newIndex = Mathf.Wrap(currentIndex + (direction ? 1 : -1), 0, friends.Count);
+            var newFriend = friends[newIndex];
+            player.ChangeFriedlyTarget(newFriend);
+        }        
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]

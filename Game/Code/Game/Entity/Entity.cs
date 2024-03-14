@@ -1,4 +1,5 @@
 using Godot;
+using Mdmc.Code.Game.Arena;
 using Mdmc.Code.Game.Entity.Components;
 
 namespace Mdmc.Code.Game.Entity;
@@ -53,27 +54,7 @@ public partial class Entity : Node3D
     {
         get { return modifiers; }
     }  
-    public Entity CurrentTarget { 
-        get {
-            if(TargetId != -1)
-            {
-                var target = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().GetEntity(TargetId);
-                if(target == null)
-                { 
-                    TargetId = -1;    
-                    return null;            
-                }
-                else 
-                {
-                    return target;
-                }
-            }
-            else
-            {
-                return null;
-            } 
-        }
-    }
+    public Entity CurrentTarget { get; private set; }
     #endregion
 
     public override void _Ready()
@@ -81,5 +62,24 @@ public partial class Entity : Node3D
         controller = (EntityController)GetNode("%Controller");
         modifiers = GetNode<EntityModifiers>("%EntityModifiers");
         status = GetNodeOrNull<EntityStatus>("%EntityStatus");
+    }
+
+    public void ChangeTarget(Entity target)
+    {
+        CurrentTarget = target;
+        Rpc(nameof(SyncTarget), int.Parse(target.Name));
+    }
+
+    [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SyncTarget(int id)
+    {
+        var entities = ArenaManager.Instance.GetCurrentArena().GetEntities();
+        if(entities.Count > 0)
+        {
+            var entity = entities.Find(e => int.Parse(e.Name) == id );
+            if(entity != null) CurrentTarget = entity;
+            return;
+        }
+        CurrentTarget = null;
     }
 }

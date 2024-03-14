@@ -70,7 +70,7 @@ public partial class DataManager : Node
         return skill;
     }
 
-    public Skill GetSkillInstance(int id)
+    public SkillHandler GetSkillInstance(int id)
     {
         var skill = GetAllSkills().Find(s => s.Id == id);
         var instance = skill.GetSkill();
@@ -99,6 +99,7 @@ public partial class DataManager : Node
     public List<SkillContainerData> GetAllSkillContainers()
     {
         var skillContainers = _library.Where(container => container is SkillContainerData).Cast<SkillContainerData>().ToList();
+        GD.Print("Skill Containers: " + skillContainers.Count );
         return skillContainers;
     }
 

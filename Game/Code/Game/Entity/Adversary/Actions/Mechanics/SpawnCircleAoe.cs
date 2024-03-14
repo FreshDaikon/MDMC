@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
-using Mdmc.Code.Game.Data.Realizations.Boss.Mechanics;
 using Mdmc.Code.Game.Entity.Player;
 using Mdmc.Code.Game.Entity.Player.Components;
 using Mdmc.Code.Game.Realization;
@@ -11,7 +10,7 @@ namespace Mdmc.Code.Game.Entity.Adversary.Actions.Mechanics;
 
 public partial class SpawnCircleAoe: BaseMechanic
 {
-    [Export] private CircleAoeRealizationData _realizationData;
+    [Export] private PackedScene CircleAoeScene;
     [Export] private float _radius = 4;
     [Export] private int _damage = 1000;
 
@@ -93,9 +92,11 @@ public partial class SpawnCircleAoe: BaseMechanic
     [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void SpawnIndicatorOnClient(Vector3 position)
     {
-        var newAoe = (CircleAoeRealization)_realizationData.GetRealization();
-        newAoe.SetData(position, _radius, _resolveTime);
-        newAoe.Spawn();
+        var builder = RealizationManager.Instance.CreateRealizationBuilder();
+        var real = builder.New(CircleAoeScene, _resolveTime)
+            .WithRadius(_radius)
+            .WithStartPosition(position)
+            .Spawn();
     }
     
     [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]

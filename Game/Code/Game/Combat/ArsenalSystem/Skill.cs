@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
-using Mdmc.Code.Game.Combat.ArsenalSystem.EffectStack;
 using Mdmc.Code.Game.Data;
-using Mdmc.Code.Game.Data.Decorators;
 using Mdmc.Code.Game.Entity.Player;
 using Mdmc.Code.System;
 
@@ -32,10 +30,6 @@ public partial class Skill : Node
     public MD.ContainerSlot AssignedContainerSlot = MD.ContainerSlot.Main;
     public int AssignedSlot = -1;
     
-    //Test :
-    public EffectRuleData[] Rules;
-    public List<Effect> Effects = new();
-
     //Class Internals:
     public SkillData Data;
     public MD.SkillType SkillType;
@@ -130,7 +124,6 @@ public partial class Skill : Node
         var check = CheckSkill();
         if (!check.SUCCESS) return check;        
         GD.Print("Start Casting!");
-        Player.Arsenal.StartCasting(this);
         _startCastTime = GameManager.Instance.GameClock;
         _isCasting = true;
         return new SkillResult(){SUCCESS = true, result = MD.ActionResult.CAST };
@@ -143,7 +136,6 @@ public partial class Skill : Node
         
         if(Player.Arsenal.ChannelingSkill != null) Player.Arsenal.TryInterruptChanneling();
         
-        Player.Arsenal.StartChanneling(this);
         EmitSignal(SignalName.SkillTriggered, this);
         if(RequiresResource)
         {
@@ -153,7 +145,7 @@ public partial class Skill : Node
         _lastLapse = 0;
         _startChannelTime = GameManager.Instance.GameClock;
         _isChanneling = true;
-        return new SkillResult(){ result = MD.ActionResult.CAST };
+        return new SkillResult(){ SUCCESS = true, result = MD.ActionResult.CAST };
     }
     
     public void InterruptCast()
@@ -198,7 +190,6 @@ public partial class Skill : Node
                     ParentContainer.DecreaseResource(RequiredAmountOfResource);
                 }
                 EmitSignal(SignalName.SkillTriggered, this);
-                Player.Arsenal.FinishCasting(Result);
             }
         }
         if(_isChanneling)
@@ -222,7 +213,6 @@ public partial class Skill : Node
                 _ticks = 0;
                 _lastLapse = 0;
                 _isChanneling = false;
-                Player.Arsenal.FinishChanneling(new SkillResult(){ SUCCESS= true, result=MD.ActionResult.CHANNELING_FINISHED });
             }
         }
     }

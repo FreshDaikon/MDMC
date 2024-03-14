@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Godot;
 using Mdmc.Code.Game;
 using Mdmc.Code.Game.Arena;
@@ -43,7 +44,7 @@ public partial class Hud : Control
 		
 		if(players == null) return;
 		
-		_localPlayer = players.Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
+		_localPlayer = players.ToList().Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
 		Visible = _localPlayer != null;
 	}
 }

@@ -1,3 +1,4 @@
+using System.Linq;
 using Godot;
 using Mdmc.Code.System;
 using ArenaManager = Mdmc.Code.Game.Arena.ArenaManager;
@@ -46,7 +47,7 @@ public partial class SkillSlot : Control
 			var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();
 			if(players == null)
 				return;
-			_localPlayer = players.Find(p => p.Name == Multiplayer.GetUniqueId().ToString());			
+			_localPlayer = players.ToList().Find(p => p.Name == Multiplayer.GetUniqueId().ToString());			
 			if(_localPlayer != null)
 			{
 				_localPlayer.playerInput.ActionButtonPressed += TriggerTrigger; 
@@ -65,38 +66,26 @@ public partial class SkillSlot : Control
 			_iconGlow.Texture = skill.Data.Icon;
 			
 			//Color Background:			
-			_cdTimer.Visible = skill.Cooldown > 0 && (skill.Cooldown - (GameManager.Instance.GameClock - skill.StartTime) > 0f);
-			
-			_icon.SelfModulate = skill.SkillType switch
-			{
-				MD.SkillType.TANK => new Color("#0088ff"),
-				MD.SkillType.DPS => new Color("#ff2424"),
-				MD.SkillType.HEAL => new Color("#2bff24"),
-				_ => new Color(0.0f, 0.0f, 0.0f)
-			};
-			if(skill.IsUniversalSkill)
-			{
-				_icon.SelfModulate = new Color("#ffd000");
-			}
-
+			var timeInfo = skill.GetTimeInfo();
+			_cdTimer.Visible = timeInfo.CurrentCooldown > 0 && (timeInfo.CurrentCooldown - (GameManager.Instance.GameClock - timeInfo.StartTime) > 0f);
 			var gcd = _localPlayer.Arsenal.GetArsenalGCD();
 			var gcdStartTime = _localPlayer.Arsenal.GCDStartTime;
 			var gcdLapsed = Mathf.Clamp(GameManager.Instance.GameClock - gcdStartTime, 0, gcd);
 			
-			switch (skill.TimerType)
+			switch (skill.GetTypeInfo())
 			{
-				case MD.SkillTimerType.GCD:
+				case SkillHandler.SkillType.GCD:
 				{
 					var gcdLeft = gcd - gcdLapsed;
 					var gcdPercent = 100 - ((float)gcdLapsed / (float)gcd * 100f);
-					var cd = skill.Cooldown;
-					var cdStartTime = skill.StartTime;
+					var cd = timeInfo.CurrentCooldown;
+					var cdStartTime = timeInfo.StartTime;
 					var cdLapsed = Mathf.Clamp(GameManager.Instance.GameClock - cdStartTime, 0, cd);
 					var cdPercent = 100 - cdLapsed / cd * 100f;
-					if(skill.Cooldown > 0f)
+					if(timeInfo.CurrentCooldown > 0f)
 					{
 						var cdLeft = cd - cdLapsed;
-						_cdTimer.Text = (skill.Cooldown - cdLapsed).ToString((skill.Cooldown - cdLapsed) < 5 ? "0.0" : "0");
+						_cdTimer.Text = (timeInfo.CurrentCooldown - cdLapsed).ToString((timeInfo.CurrentCooldown - cdLapsed) < 5 ? "0.0" : "0");
 						var highest = cdLeft > gcdLeft ? cdPercent : gcdPercent;
 						_gcdBar.Value = highest;
 					}
@@ -106,12 +95,11 @@ public partial class SkillSlot : Control
 					}
 					break;
 				}
-				case MD.SkillTimerType.OGCD:
+				case SkillHandler.SkillType.OGCD:
 				{
-					var startTime = skill.StartTime;
-					var lapsed = GameManager.Instance.GameClock - startTime;
-					_cdTimer.Text = (skill.Cooldown - lapsed).ToString((skill.Cooldown - lapsed) < 5 ? "0.0" : "0");
-					_gcdBar.Value = 100 - ((float)lapsed / (float)skill.Cooldown * 100f);
+					var lapsed = GameManager.Instance.GameClock - timeInfo.StartTime;
+					_cdTimer.Text = (timeInfo.CurrentCooldown - lapsed).ToString((timeInfo.CurrentCooldown - lapsed) < 5 ? "0.0" : "0");
+					_gcdBar.Value = 100 - ((float)lapsed / (float)timeInfo.CurrentCooldown * 100f);
 					break;
 				}
 				default:

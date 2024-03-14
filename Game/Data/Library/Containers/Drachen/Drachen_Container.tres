@@ -1,0 +1,76 @@
+[gd_resource type="Resource" script_class="StandardContainerData" load_steps=19 format=3 uid="uid://d1ja8xavxxplf"]
+
+[ext_resource type="Script" path="res://Code/Game/Data/SkillContainers/StandardContainerData.cs" id="1_1fw8f"]
+[ext_resource type="Script" path="res://Code/System/DataID.cs" id="1_lam2q"]
+[ext_resource type="Texture2D" uid="uid://d1g6ehxjt0nof" path="res://Assets/UI/ArsenalSystem/SkillContainers/Drachen_MK1.png" id="2_74677"]
+[ext_resource type="Texture2D" uid="uid://gc3l6kwp32bf" path="res://Assets/UI/ArsenalSystem/Skills/Skill_Blast_01.png" id="2_dh2pg"]
+[ext_resource type="PackedScene" uid="uid://b8xim26pnfs5" path="res://Data/Scenes/Skills/Drachen/Drachen_01_Scene.tscn" id="3_vyh34"]
+[ext_resource type="Script" path="res://Code/Game/Data/SkillData.cs" id="4_xt51y"]
+[ext_resource type="Texture2D" uid="uid://d3rxixpw7ukyo" path="res://Assets/UI/ArsenalSystem/Skills/Skill_Echo_Test.png" id="5_qk6eb"]
+[ext_resource type="Texture2D" uid="uid://dphqphuwtn0tm" path="res://Assets/UI/ArsenalSystem/Skills/Skill_Spark_01.png" id="7_6vgbu"]
+[ext_resource type="Texture2D" uid="uid://7kefw74xxdvy" path="res://Assets/UI/ArsenalSystem/Skills/Skill_Slash_01.png" id="9_rxea0"]
+
+[sub_resource type="Resource" id="Resource_3vsm5"]
+script = ExtResource("1_lam2q")
+Id = 458154375
+
+[sub_resource type="Resource" id="Resource_dsluk"]
+script = ExtResource("1_lam2q")
+Id = -929842843
+
+[sub_resource type="Resource" id="Resource_jx2uk"]
+script = ExtResource("4_xt51y")
+SkillScene = ExtResource("3_vyh34")
+ID = SubResource("Resource_dsluk")
+Name = "Skill 1"
+Description = "Some Object Description."
+Icon = ExtResource("2_dh2pg")
+
+[sub_resource type="Resource" id="Resource_m1be2"]
+script = ExtResource("1_lam2q")
+Id = 444694929
+
+[sub_resource type="Resource" id="Resource_24rpi"]
+script = ExtResource("4_xt51y")
+SkillScene = ExtResource("3_vyh34")
+ID = SubResource("Resource_m1be2")
+Name = "Skill 2"
+Description = "Some Object Description."
+Icon = ExtResource("5_qk6eb")
+
+[sub_resource type="Resource" id="Resource_vjvfr"]
+script = ExtResource("1_lam2q")
+Id = 1487559315
+
+[sub_resource type="Resource" id="Resource_scbdr"]
+script = ExtResource("4_xt51y")
+SkillScene = ExtResource("3_vyh34")
+ID = SubResource("Resource_vjvfr")
+Name = "Skill 3"
+Description = "Some Object Description."
+Icon = ExtResource("7_6vgbu")
+
+[sub_resource type="Resource" id="Resource_rkkoe"]
+script = ExtResource("1_lam2q")
+Id = -479303176
+
+[sub_resource type="Resource" id="Resource_tuqiv"]
+script = ExtResource("4_xt51y")
+SkillScene = ExtResource("3_vyh34")
+ID = SubResource("Resource_rkkoe")
+Name = "Skill 4"
+Description = "Some Object Description."
+Icon = ExtResource("9_rxea0")
+
+[resource]
+script = ExtResource("1_1fw8f")
+ContainerColor = Color(0.556863, 0.309804, 0.839216, 1)
+Skills = Array[Object]([SubResource("Resource_jx2uk"), SubResource("Resource_24rpi"), SubResource("Resource_scbdr"), SubResource("Resource_tuqiv")])
+Modifiers = null
+GeneratesResource = false
+MaxResource = 0
+ComponentDatas = Array[Object]([])
+ID = SubResource("Resource_3vsm5")
+Name = "Some Cool Container!"
+Description = "Some Object Description."
+Icon = ExtResource("2_74677")

@@ -9,7 +9,6 @@ public partial class RealizationManager: Node
     
     [Export] private Node3D _realizationContainer;
 
-
     [ExportGroup("Damage Numbers")] [Export]
     private PackedScene _damageNumberScene;
     [Export] private Control _damageNumberContainer;
@@ -32,6 +31,12 @@ public partial class RealizationManager: Node
             Instance = null;
         }
         base._ExitTree();
+    }
+
+    public RealizationBuilder CreateRealizationBuilder()
+    {
+        var builder = new RealizationBuilder();
+        return builder;
     }
 
     public void AddRealization(Realization realization)

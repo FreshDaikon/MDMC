@@ -4,6 +4,9 @@
 
 [node name="SkillSlot1" type="Node"]
 script = ExtResource("1_f3if5")
+SlotSkillType = null
+PotencyMultiplier = null
+ThreatMultiplier = null
 
 [node name="SkillHolder" type="Node" parent="."]
 unique_name_in_owner = true

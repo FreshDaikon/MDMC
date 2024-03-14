@@ -4,6 +4,7 @@ namespace Mdmc.Code.Game.Combat;
 
 public class SkillResult
 {
-    public bool SUCCESS;
-    public MD.ActionResult result;
+    public required bool SUCCESS { get; init; }
+    public required MD.ActionResult result { get; init; }
+    public dynamic extraData { get; init; }
 }

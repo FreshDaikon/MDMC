@@ -63,7 +63,7 @@ public partial class ArenaInstance : Node3D
         var enemies = GetEnemyEntities();
         if(enemies != null)
         {
-            enemies.ForEach(e => { e.Engaged += OnAdversaryEngaged; });
+            enemies.ToList().ForEach(e => { e.Engaged += OnAdversaryEngaged; });
         }
         _defeatTimer.Timeout += ResetArena;
         AddChild(_defeatTimer);
@@ -87,10 +87,10 @@ public partial class ArenaInstance : Node3D
         }
         var enemies = GetEnemyEntities();
         var players = GetPlayers();
-        enemies?.ForEach( a => {
+        enemies.ToList().ForEach( a => {
                 if(a.CurrentState == AdversaryState.Idle)
                 {
-                    a.Engage(players?[0]);
+                    a.Engage(players.First());
                 }
         });
     }
@@ -102,7 +102,7 @@ public partial class ArenaInstance : Node3D
         if (players == null) return;
         
         var knocked = players.Where(p => p.Status.CurrentState == EntityStatus.StatusState.KnockedOut).ToList();        
-        if (knocked.Count != players.Count) return;
+        if (knocked.Count()!= players.Count()) return;
         GD.Print("All Players are knocked! Init Reset!");                
         CurrentState = ArenaState.Defeat;
         CombatManager.Instance.ResetCombat();
@@ -115,7 +115,7 @@ public partial class ArenaInstance : Node3D
         var enemies = GetEnemyEntities();
         if (enemies == null) return;
         var defeated = enemies.Where(e => e.CurrentState == AdversaryState.Dead).ToList();
-        if (defeated.Count != enemies.Count) return;
+        if (defeated.Count() != enemies.Count()) return;
         foreach(var e in enemies) e.QueueFree();                
         EmitSignal(SignalName.Victory);
         CurrentState = ArenaState.Victory;
@@ -126,10 +126,12 @@ public partial class ArenaInstance : Node3D
         var players = GetPlayers();
         if(players != null)
         {
+            var index = 0;
             foreach(var p in players)
             {
-                p.Controller.Teleport(_playerStartPositions[Mathf.Wrap(players.IndexOf(p), 0, _playerStartPositions.Length)].Position);
+                p.Controller.Teleport(_playerStartPositions[Mathf.Wrap(index, 0, _playerStartPositions.Length)].Position);
                 p.Status.Reset();
+                index++;
             }
         }
         var adversaries = GetEnemyEntities();

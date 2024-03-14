@@ -1,0 +1,72 @@
+[gd_scene load_steps=10 format=3 uid="uid://06kq0vu0vw6l"]
+
+[ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/SkillHandler.cs" id="1_3ouq2"]
+[ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/Controllers/CastController.cs" id="2_iuq02"]
+[ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/TimeController.cs" id="3_3pc8m"]
+[ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/Actions/DealDamageAction.cs" id="3_34bkl"]
+[ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/Targeting/AcquireDirect.cs" id="3_d6gtt"]
+[ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/Targeting/AcquireAllInRangeOf.cs" id="4_ty758"]
+[ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/Actions/DealHealAction.cs" id="5_yk4bu"]
+[ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/Actions/ApplyModifierAction.cs" id="7_fbeb8"]
+[ext_resource type="Resource" uid="uid://ho11qrwwl5d0" path="res://Data/Library/Modifiers/BasicModifier.tres" id="8_6k8y0"]
+
+[node name="Skill" type="Node" node_paths=PackedStringArray("_timeController", "_actionController")]
+script = ExtResource("1_3ouq2")
+_timeController = NodePath("TimeController")
+_actionController = NodePath("CastController")
+
+[node name="Alterations" type="Node" parent="."]
+
+[node name="CastController" type="Node" parent="."]
+script = ExtResource("2_iuq02")
+
+[node name="DoDamage" type="Node" parent="CastController" node_paths=PackedStringArray("_skill", "_acquisition")]
+script = ExtResource("3_34bkl")
+_skill = NodePath("../..")
+_acquisition = NodePath("TargetAquisition")
+_potency = 3000
+
+[node name="TargetAquisition" type="Node" parent="CastController/DoDamage" node_paths=PackedStringArray("Skill")]
+script = ExtResource("3_d6gtt")
+Skill = NodePath("../../..")
+Target = 2
+IsTargetRequired = true
+
+[node name="DoDoHeal" type="Node" parent="CastController" node_paths=PackedStringArray("_skill", "_acquisition")]
+script = ExtResource("5_yk4bu")
+_skill = NodePath("../..")
+_acquisition = NodePath("AcquireAllInRangeOf")
+_potency = 1500
+
+[node name="AcquireAllInRangeOf" type="Node" parent="CastController/DoDoHeal" node_paths=PackedStringArray("Skill")]
+script = ExtResource("4_ty758")
+Skill = NodePath("../../..")
+WhatTarget = 2
+Range = 20.0
+InRange = 20.0
+IsTargetRequired = true
+
+[node name="Dash" type="Node" parent="CastController"]
+
+[node name="ApplyModifier" type="Node" parent="CastController" node_paths=PackedStringArray("_skill", "_acquisition")]
+script = ExtResource("7_fbeb8")
+_skill = NodePath("../..")
+_acquisition = NodePath("TargetAquisition")
+_modifierData = ExtResource("8_6k8y0")
+
+[node name="TargetAquisition" type="Node" parent="CastController/ApplyModifier" node_paths=PackedStringArray("Skill")]
+script = ExtResource("3_d6gtt")
+Skill = NodePath("../../..")
+Target = 1
+Range = 10.0
+IsTargetRequired = true
+
+[node name="TimeController" type="Node" parent="."]
+script = ExtResource("3_3pc8m")
+BaseCooldown = 10.0
+
+[node name="Realizations" type="Node" parent="."]
+
+[node name="OnAction" type="Node" parent="Realizations"]
+
+[node name="OnCast" type="Node" parent="Realizations"]

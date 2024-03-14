@@ -1,0 +1,43 @@
+[gd_scene load_steps=8 format=3 uid="uid://b8xim26pnfs5"]
+
+[ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/SkillHandler.cs" id="1_ljarf"]
+[ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/Controllers/CastController.cs" id="2_yb8o6"]
+[ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/Actions/DealDamageAction.cs" id="3_0p2gc"]
+[ext_resource type="PackedScene" uid="uid://da8lo0ouug0so" path="res://Data/Scenes/Realizations/BigIMpact.tscn" id="3_d3yxn"]
+[ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/Targeting/AcquireDirect.cs" id="4_pncow"]
+[ext_resource type="PackedScene" uid="uid://xk1bpl62qpho" path="res://Data/Scenes/Realizations/Skills/BasicChase.tscn" id="5_0q80f"]
+[ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/TimeController.cs" id="9_clkie"]
+
+[node name="Drachen_01" type="Node" node_paths=PackedStringArray("_timeController", "_actionController")]
+script = ExtResource("1_ljarf")
+_timeController = NodePath("TimeController")
+_actionController = NodePath("CastController")
+
+[node name="CastController" type="Node" parent="." node_paths=PackedStringArray("_skill")]
+script = ExtResource("2_yb8o6")
+_castFinishedRealization = ExtResource("3_d3yxn")
+_skill = NodePath("..")
+_realizationScene = ExtResource("3_d3yxn")
+
+[node name="DoDamage" type="Node" parent="CastController" node_paths=PackedStringArray("_skill", "_acquisition")]
+script = ExtResource("3_0p2gc")
+_skill = NodePath("../..")
+_acquisition = NodePath("TargetAquisition")
+_potency = 2000
+_realizationScene = ExtResource("5_0q80f")
+
+[node name="TargetAquisition" type="Node" parent="CastController/DoDamage" node_paths=PackedStringArray("Skill")]
+script = ExtResource("4_pncow")
+Skill = NodePath("../../..")
+Target = 2
+Range = 200.0
+IsTargetRequired = true
+
+[node name="TimeController" type="Node" parent="."]
+script = ExtResource("9_clkie")
+
+[node name="Realizations" type="Node" parent="."]
+
+[node name="OnAction" type="Node" parent="Realizations"]
+
+[node name="OnCast" type="Node" parent="Realizations"]

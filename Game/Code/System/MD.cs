@@ -10,6 +10,8 @@ public static class MD
     public enum ActionResult
     {
         CAST,
+        START_CASTING,
+        START_CHANNELING,
         IS_CASTING,
         CASTING_INTERUPTED,
         CASTING_FINISHED,

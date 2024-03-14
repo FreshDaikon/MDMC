@@ -1,3 +1,4 @@
+using System.Linq;
 using Godot;
 using ArenaManager = Mdmc.Code.Game.Arena.ArenaManager;
 using GameManager = Mdmc.Code.Game.GameManager;
@@ -24,7 +25,7 @@ public partial class ChannelBar : Control
 		var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();
 		if(players == null)
 			return;
-		_localPlayer = players.Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
+		_localPlayer = players.ToList().Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
 		if(_localPlayer ==  null)
 			return;
 

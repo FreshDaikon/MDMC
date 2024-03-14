@@ -1,3 +1,4 @@
+using System.Linq;
 using Godot;
 using Mdmc.Code.System;
 using AdversaryEntity = Mdmc.Code.Game.Entity.Adversary.AdversaryEntity;
@@ -75,7 +76,7 @@ public partial class UnitFrame : Control
 				var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();
 				if(players == null)
 					return;
-				var localPlayer = players.Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
+				var localPlayer = players.ToList().Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
 				if(localPlayer != null)
 				{
 					if(localPlayer.CurrentFriendlyTarget == player)
@@ -95,7 +96,7 @@ public partial class UnitFrame : Control
 				var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();
 				if(players == null)
 					return;
-				var localPlayer = players.Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
+				var localPlayer = players.ToList().Find(p => p.Name == Multiplayer.GetUniqueId().ToString());
 				if(localPlayer != null)
 				{
 					if(localPlayer.CurrentTarget == unit)
