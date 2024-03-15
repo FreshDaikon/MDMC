@@ -44,6 +44,7 @@ public partial class RealizationManager: Node
         _realizationContainer.AddChild(realization);
     }
     
+    // For temporal objects (AOE detectors etc.)
     public void AddDisposable(Node obj)
     {
         _realizationContainer.AddChild(obj);

@@ -13,6 +13,7 @@ public partial class CircleAoeRealizer: BaseRealizer
 
     public override void Initialize()
     {
+        GD.Print("Realizing Circle AOE?");
         _radius = ParentRealization.Radius;
         _indicator.Size = new Vector3(0.01f, 0.01f, 0.01f);
         _indicatorTween = GetTree().CreateTween();        

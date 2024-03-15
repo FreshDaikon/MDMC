@@ -1,15 +1,15 @@
- using Godot;
-using Mdmc.Code.Game.Realization;
-using Steamworks.Data;
+using Godot;
 
-public partial class RealizationBuilder
- {
+namespace Mdmc.Code.Game.Realization;
 
-    private Realization realization;
+public class RealizationBuilder
+{
+
+    private Realization _realization;
 
     public RealizationBuilder New(PackedScene scene, float lifetime)
     {
-        realization = new Realization
+        _realization = new Realization
         {
             Scene = scene,
             Lifetime = lifetime,            
@@ -19,53 +19,57 @@ public partial class RealizationBuilder
 
     public RealizationBuilder WithStartPosition(Vector3 position)
     {
-        realization.StartPosition = position;
+        _realization.StartPosition = position;
         return this;
     }
 
-    public RealizationBuilder InTransform(Node3D rootTransform, Vector3 offset)
+    public RealizationBuilder InTransform(Node3D rootTransform)
     {
-        realization.RootTransform = rootTransform;
-        realization.StartPosition = offset;
+        _realization.RootTransform = rootTransform;
         return this;
     }
 
     public RealizationBuilder WithTarget(Node3D target, float speed)
     {
-        realization.TargetObject = target;
-        realization.Speed = speed;
+        _realization.TargetObject = target;
+        _realization.Speed = speed;
         return this;
     }
 
     public RealizationBuilder WithTargetPosition(Vector3 target, float speed)
     {
-        realization.TargetPosition = target;
-        realization.Speed = speed;
+        _realization.TargetPosition = target;
+        _realization.Speed = speed;
+        return this;
+    }
+
+    public RealizationBuilder WithOffset(Vector3 offset)
+    {
+        _realization.Offset = offset;
         return this;
     }
     
     public RealizationBuilder WithLookatTarget(Vector3 target)
     {
-        realization.LookatTarget = target;
+        _realization.LookatTarget = target;
         return this;
     }
 
     public RealizationBuilder WithSize(Vector3 size)
     {
-        realization.Size = size;
+        _realization.Size = size;
         return this;
     }
     
     public RealizationBuilder WithRadius(float radius)
     {
-        realization.Radius = radius;
+        _realization.Radius = radius;
         return this;
     }
 
     public Realization Spawn()
     {
-        realization.SpawnRealization();
-        return realization;
+        _realization.SpawnRealization();
+        return _realization;
     }
-
- }
+}

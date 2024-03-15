@@ -10,12 +10,14 @@ public partial class Realization: Node3D
     public float Lifetime { get; set; }
     public double StartTime { get; set; } 
     public Vector3 StartPosition { get; set; }
+    public Vector3 Offset { get; set; }
     public Vector3 TargetPosition { get; set; }
     public float Speed { get; set; }
     public Vector3 Size { get; set; }
     public float Radius { get; set; }
     public Node3D RootTransform { get; set; }
     public Vector3 LookatTarget { get; set; }
+
 
     [Signal]
     public delegate void OnRealizationEndEventHandler();
@@ -32,7 +34,6 @@ public partial class Realization: Node3D
             if (!(distance <= 0.01f)) return;
             EmitSignal(SignalName.OnRealizationEnd);
             Despawn();
-            return;
         }
         else if(TargetPosition != Vector3.Zero)
         {
@@ -44,7 +45,6 @@ public partial class Realization: Node3D
             if (!(distance <= 0.01f)) return;
             EmitSignal(SignalName.OnRealizationEnd);
             Despawn();
-            return;
         }
         else
         {   
@@ -58,19 +58,28 @@ public partial class Realization: Node3D
 
     public void SpawnRealization()
     {
+        StartTime = Time.GetTicksMsec();
         //Add the realization base to the correct object:
         if(RootTransform != null)
         {
             RootTransform.AddChild(this);
             Position = StartPosition;
+            if(Offset != Vector3.Zero)
+            {
+                Position += Offset;
+            }
         }
         else
         {
             RealizationManager.Instance.AddRealization(this);
             GlobalPosition = StartPosition;
+            if(Offset != Vector3.Zero)
+            {
+                Position += Offset;
+            }
         }
         // Add the Scene:
-        var newScene = Scene.Instantiate() as BaseRealizer;
+        if (Scene.Instantiate() is not BaseRealizer newScene) return;
         newScene.ParentRealization = this;
         AddChild(newScene);
         newScene.CallDeferred(nameof(newScene.Initialize));
@@ -83,5 +92,4 @@ public partial class Realization: Node3D
     {   
         QueueFree();
     }
-
 }
