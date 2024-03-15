@@ -50,7 +50,7 @@ public partial class SkillSlot : Control
 			_localPlayer = players.ToList().Find(p => p.Name == Multiplayer.GetUniqueId().ToString());			
 			if(_localPlayer != null)
 			{
-				_localPlayer.playerInput.ActionButtonPressed += TriggerTrigger; 
+				_localPlayer.Input.ActionButtonPressed += TriggerTrigger; 
 			}
 		}
 		else
@@ -74,7 +74,7 @@ public partial class SkillSlot : Control
 			
 			switch (skill.GetTypeInfo())
 			{
-				case SkillHandler.SkillType.GCD:
+				case Game.Combat.SkillSystem.SkillHandler.SkillType.GCD:
 				{
 					var gcdLeft = gcd - gcdLapsed;
 					var gcdPercent = 100 - ((float)gcdLapsed / (float)gcd * 100f);
@@ -95,7 +95,7 @@ public partial class SkillSlot : Control
 					}
 					break;
 				}
-				case SkillHandler.SkillType.OGCD:
+				case Game.Combat.SkillSystem.SkillHandler.SkillType.OGCD:
 				{
 					var lapsed = GameManager.Instance.GameClock - timeInfo.StartTime;
 					_cdTimer.Text = (timeInfo.CurrentCooldown - lapsed).ToString((timeInfo.CurrentCooldown - lapsed) < 5 ? "0.0" : "0");

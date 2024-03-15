@@ -9,9 +9,9 @@ public partial class SkillData : DataObject
     [Export] private PackedScene SkillScene;
    
     // Methods that needs overwriting :
-    public SkillHandler GetSkill()
+    public Combat.SkillSystem.SkillHandler GetSkill()
     {
-        var skill = SkillScene.Instantiate<SkillHandler>();
-        return SkillScene.Instantiate<SkillHandler>();
+        var skill = SkillScene.Instantiate<Combat.SkillSystem.SkillHandler>();
+        return SkillScene.Instantiate<Combat.SkillSystem.SkillHandler>();
     }
 }

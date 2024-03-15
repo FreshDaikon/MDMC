@@ -9,21 +9,18 @@ namespace Mdmc.Code.Game.Entity.Player;
 
 public partial class PlayerEntity : Entity
 {
-    public bool IsLocalPlayer = false;
+    public bool IsLocalPlayer;
     //Private Player  members:
-    private PlayerInput input;
-    private PlayerArsenal arsenal;
-    private PlayerCamera camera;
-    private PlayerMover mover;
+    [Export] public PlayerCamera Camera { get; private set; }
+    [Export] public PlayerInput Input { get; private set; }
+    [Export] public PlayerArsenal Arsenal { get; private set; } 
+    [Export] public PlayerMover Mover { get; private set; }
 
-    public PlayerArsenal Arsenal { get {return arsenal;}}
-    public PlayerMover Mover { get {return mover; }}
+    public int Id { get; set; }
 
-    [Export]
-    public int FriendlyTargetId = -1;
     public Entity CurrentFriendlyTarget { get; private set; }
 
-    public void ChangeFriedlyTarget(Entity target)
+    public void ChangeFriendlyTarget(Entity target)
     {
         CurrentFriendlyTarget = target;
         GD.Print("Friend ID:" + target.Name);
@@ -43,40 +40,30 @@ public partial class PlayerEntity : Entity
         CurrentFriendlyTarget = null;
     }
 
-    public PlayerInput playerInput
-    {
-        get { return input; }
-    }
-
     public override void _Ready()
     {
-        input = GetNode<PlayerInput>("%Input");
-        arsenal = GetNode<PlayerArsenal>("%Arsenal");
-        camera = GetNode<PlayerCamera>("%Rig");
-        mover = GetNode<PlayerMover>("%Mover");
         //Make Sure the Input Component is owned by the client peer.
-        input.SetMultiplayerAuthority(Parse(Name));
+        Input.SetMultiplayerAuthority(Parse(Name));
         
         if(Multiplayer.GetUniqueId() == Parse(Name))
 		{
 			IsLocalPlayer = true;
-            camera.GetCamera().Current = true;
+            Camera.GetCamera().Current = true;
             
             GameManager.Instance.ConnectionStarted += () => {
                 RpcId(1, nameof(Reset));
             };
-            //mover.QueueFree();
 
 		}
         else if(Multiplayer.GetUniqueId() == 1)
         {
-            camera.QueueFree();
+            Camera.QueueFree();
         }
         else
         {
-            camera.QueueFree();
-            input.QueueFree();
-            mover.QueueFree();
+            Camera.QueueFree();
+            Input.QueueFree();
+            Mover.QueueFree();
         }
              
         base._Ready();
@@ -93,6 +80,6 @@ public partial class PlayerEntity : Entity
     public void Reset()
     {
         //Just reset arsenal for now:
-        arsenal.ResetArsenal();
+        Arsenal.ResetArsenal();
     }
 }

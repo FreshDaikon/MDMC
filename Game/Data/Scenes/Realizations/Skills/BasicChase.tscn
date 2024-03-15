@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://xk1bpl62qpho"]
 
-[ext_resource type="Script" path="res://Code/Game/Realization/RealizerTypes/General/PlainRealizer.cs" id="1_ljunn"]
+[ext_resource type="Script" path="res://Code/Game/RealizationSystem/RealizerTypes/General/PlainRealizer.cs" id="1_cveb4"]
 
 [sub_resource type="Animation" id="Animation_8aq24"]
 resource_name = "End"
@@ -63,7 +63,7 @@ _data = {
 albedo_color = Color(1, 0.396078, 1, 1)
 
 [node name="RealizationTemplate" type="Node3D"]
-script = ExtResource("1_ljunn")
+script = ExtResource("1_cveb4")
 
 [node name="RealizationPlayer" type="AnimationPlayer" parent="."]
 unique_name_in_owner = true

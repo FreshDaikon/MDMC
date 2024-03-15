@@ -3,7 +3,7 @@ using System.Linq;
 using Godot;
 using Mdmc.Code.Game.Entity.Player;
 using Mdmc.Code.Game.Entity.Player.Components;
-using Mdmc.Code.Game.Realization;
+using Mdmc.Code.Game.RealizationSystem;
 
 namespace Mdmc.Code.Game.Entity.Adversary.Actions.Mechanics;
 
@@ -17,7 +17,7 @@ public partial class SpawnRectAoe: BaseMechanic
     private List<Area3D> _detectors = new();
     private List<PlayerEntity> _players = new ();
     
-    internal protected override void StartMechanic()
+    protected internal override void StartMechanic()
     {
         base.StartMechanic();
         var playerEntities = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().GetPlayers();

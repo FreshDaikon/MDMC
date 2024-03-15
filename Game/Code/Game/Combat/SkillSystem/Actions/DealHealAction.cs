@@ -1,9 +1,10 @@
 using System;
 using Godot;
 using Mdmc.Code.Game.Arena;
-using Mdmc.Code.Game.Combat;
-using Mdmc.Code.Game.Realization;
+using Mdmc.Code.Game.RealizationSystem;
 using Mdmc.Code.System;
+
+namespace Mdmc.Code.Game.Combat.SkillSystem.Actions;
 
 [GlobalClass]
 public partial class DealHealAction : SkillAction
@@ -28,7 +29,7 @@ public partial class DealHealAction : SkillAction
         foreach(var entity in targets)
         {
             var result = entity.Status.InflictHeal(_potency, player);
-            var message = new CombatMessage()
+            var message = new CombatMessage
             {
                 Caster = int.Parse(player.Name),
                 Target = int.Parse(entity.Name),
@@ -36,7 +37,7 @@ public partial class DealHealAction : SkillAction
                 MessageType = MD.CombatMessageType.HEAL,
                 Effect = "X damaged Y"
             };
-            Rpc(nameof(RealizeAction), Int32.Parse(entity.Name), result);
+            Rpc(nameof(RealizeAction), int.Parse(entity.Name), result);
             CombatManager.Instance.AddCombatMessage(message);
         }
     }

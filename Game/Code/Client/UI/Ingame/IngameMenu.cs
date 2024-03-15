@@ -3,6 +3,7 @@ using Godot;
 using Mdmc.Code.Client.UI.Ingame.Elements;
 using Mdmc.Code.Game;
 using Mdmc.Code.Game.Arena;
+using Mdmc.Code.Game.Data;
 using Mdmc.Code.Game.Entity.Player;
 
 namespace Mdmc.Code.Client.UI.Ingame;
@@ -39,7 +40,7 @@ public partial class IngameMenu: Control
         
         CleanUp();
 
-        var containers = DataManager.Instance.GetAllSkillContainers();
+        var containers = DataManager.Instance.GetData<SkillContainerData>();
         foreach (var container in containers)
         {
             var newButton = (ContainerButton)_containerButtonScene.Instantiate();
@@ -62,7 +63,7 @@ public partial class IngameMenu: Control
                 
         CleanUp();
 
-        var skills = DataManager.Instance.GetAllSkills();
+        var skills = DataManager.Instance.GetData<SkillData>();
         foreach (var skill in skills)
         {
             var newButton = (SkillButton)_skillButtonScene.Instantiate();

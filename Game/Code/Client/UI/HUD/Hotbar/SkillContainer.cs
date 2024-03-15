@@ -61,15 +61,15 @@ public partial class SkillContainer : Control
 
 		if(localPlayer !=  null) 
 		{
-			if(localPlayer.playerInput.isActivator1Pressed)
+			if(localPlayer.Input.isActivator1Pressed)
 				activatorPressed(MD.ContainerSlot.Left);			
 			else
 				activatorDepressed(MD.ContainerSlot.Left);			
-			if(localPlayer.playerInput.isActivator2Pressed)
+			if(localPlayer.Input.isActivator2Pressed)
 				activatorPressed(MD.ContainerSlot.Right);
 			else
 				activatorDepressed(MD.ContainerSlot.Right);
-			if(localPlayer.playerInput.isActivator3Pressed)
+			if(localPlayer.Input.isActivator3Pressed)
 				activatorPressed(MD.ContainerSlot.Main);
 			else
 				activatorDepressed(MD.ContainerSlot.Main);

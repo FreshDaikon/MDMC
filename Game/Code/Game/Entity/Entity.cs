@@ -22,7 +22,7 @@ public partial class Entity : Node3D
     [Export]
     public int TargetId = -1;  
     [Export]
-    public string EntityName = "Unamed Entity";
+    public string EntityName = "Unnamed Entity";
     [Export]
     public float EntityHeight = 2f;
 

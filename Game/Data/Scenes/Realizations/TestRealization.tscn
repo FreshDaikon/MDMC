@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://bduahwfjqovxp"]
-
-[ext_resource type="Script" path="res://Code/Game/Realization/Realization.cs" id="1_dtcqp"]
-
-[node name="TestRealization" type="Node"]
-script = ExtResource("1_dtcqp")

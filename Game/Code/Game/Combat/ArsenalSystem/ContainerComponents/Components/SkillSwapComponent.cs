@@ -12,9 +12,9 @@ public partial class SkillSwapComponent : ContainerComponent
     public SkillData[] SwapSkillsData;
     public int ResourceGenerated = 1;
 
-    private SkillHandler _currentSkill;
+    private SkillSystem.SkillHandler _currentSkill;
     private int _currentIndex = 0;    
-    private SkillHandler[] _swapSkills;
+    private SkillSystem.SkillHandler[] _swapSkills;
 
     public override void ResolveComponent()
     {
@@ -27,7 +27,7 @@ public partial class SkillSwapComponent : ContainerComponent
 
     public override void SetupComponent()
     {
-        _swapSkills = new SkillHandler[SwapSkillsData.Length];
+        _swapSkills = new SkillSystem.SkillHandler[SwapSkillsData.Length];
 
         var fake = Container.GetSkill(SwapSlot);
         fake.AssignSlot(-1);
@@ -50,7 +50,7 @@ public partial class SkillSwapComponent : ContainerComponent
 
     public override void UpdateComponent()
     {
-        if(Container.Arsenal.LastSkillTriggered != _currentSkill && Container.Arsenal.LastSkillTriggered.GetTypeInfo() == SkillHandler.SkillType.GCD)
+        if(Container.Arsenal.LastSkillTriggered != _currentSkill && Container.Arsenal.LastSkillTriggered.GetTypeInfo() == SkillSystem.SkillHandler.SkillType.GCD)
         {        
             _currentIndex = 0;
             _currentSkill.AssignSlot(-1);

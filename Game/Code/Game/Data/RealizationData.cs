@@ -9,5 +9,5 @@ public abstract partial class RealizationData: Resource
     [Export]
     public PackedScene Scene;
     
-    public abstract Realization.Realization GetRealization();
+    public abstract RealizationSystem.Realization GetRealization();
 }

@@ -106,10 +106,10 @@ public partial class SkillContainer : Node
         }        
     }
 
-    public SkillHandler GetSkill(int slot)
+    public SkillSystem.SkillHandler GetSkill(int slot)
     {
         if (GetChildCount() <= 0) return null;
-        var current = GetChildren().Where(s => s is SkillHandler).Cast<SkillHandler>().ToList().Find(x => x.AssignedSlot == slot);
+        var current = GetChildren().Where(s => s is SkillSystem.SkillHandler).Cast<SkillSystem.SkillHandler>().ToList().Find(x => x.AssignedSlot == slot);
         return current;
     }
 

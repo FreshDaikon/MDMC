@@ -1,11 +1,10 @@
 using System;
 using Godot;
-using Mdmc.Code.Game;
 using Mdmc.Code.Game.Arena;
 using Mdmc.Code.Game.Data;
-using Mdmc.Code.Game.Realization;
-using Mdmc.Code.System;
+using Mdmc.Code.Game.RealizationSystem;
 
+namespace Mdmc.Code.Game.Combat.SkillSystem.Actions;
 
 [GlobalClass]
 public partial class ApplyModifierAction : SkillAction

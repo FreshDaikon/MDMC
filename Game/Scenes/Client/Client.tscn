@@ -97,8 +97,5 @@ horizontal_alignment = 2
 [node name="Game_Container" type="Node3D" parent="."]
 unique_name_in_owner = true
 
-[node name="RealizationPool" type="Node3D" parent="Game_Container"]
-unique_name_in_owner = true
-
 [node name="ArenaContainer" type="Node3D" parent="Game_Container"]
 unique_name_in_owner = true

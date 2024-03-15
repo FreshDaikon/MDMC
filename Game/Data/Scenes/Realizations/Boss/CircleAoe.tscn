@@ -1,10 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://clp5eucv45owf"]
 
-[ext_resource type="Script" path="res://Code/Game/Realization/RealizerTypes/Boss/Mechanics/CircleAoeRealizer.cs" id="1_5o436"]
+[ext_resource type="Script" path="res://Code/Game/RealizationSystem/RealizerTypes/Boss/Mechanics/CircleAoeRealizer.cs" id="1_uuxt2"]
 [ext_resource type="Texture2D" uid="uid://bbpfefdjbww27" path="res://Assets/Effects/Generated/Circle_Aoe_Alpha.png" id="2_vr0th"]
 
 [node name="CircleAoe" type="Node3D" node_paths=PackedStringArray("_indicator")]
-script = ExtResource("1_5o436")
+script = ExtResource("1_uuxt2")
 _indicator = NodePath("Indicator")
 
 [node name="Indicator" type="Decal" parent="."]

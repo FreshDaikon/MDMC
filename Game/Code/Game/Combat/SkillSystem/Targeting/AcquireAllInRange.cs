@@ -1,21 +1,19 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Godot;
 using Mdmc.Code.Game.Arena;
-using Mdmc.Code.Game.Entity;
-using Mdmc.Code.Game.Entity.Player;
 
+namespace Mdmc.Code.Game.Combat.SkillSystem.Targeting;
 
 [GlobalClass]
 public partial class AcquireAllInRange : TargetAcquisition
 {
-    [Export] SkillHandler Skill;
+    [Export] Mdmc.Code.Game.Combat.SkillSystem.SkillHandler Skill;
     [Export] public bool IncludePlayer;
     [Export] public TargetTypes Types;
     [Export] public float Range;
 
-    public override List<Entity> GetTargets()
+    public override List<Entity.Entity> GetTargets()
     {
         var player = Skill.Arsenal.Player;
         var players = ArenaManager.Instance.GetCurrentArena().GetPlayers();
@@ -30,8 +28,7 @@ public partial class AcquireAllInRange : TargetAcquisition
             _ => null
         };
         if(targets is null) return null;
-        if(targets.Where(t => t is not null).Count() == 0 ) return null;
-        return targets.Where(x => x is not null).ToList();
+        return !targets.Where(t => t is not null).Any() ? null : targets.Where(x => x is not null).ToList();
     }
     
 }

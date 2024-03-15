@@ -1,7 +1,7 @@
 using Godot;
 using DamageNumber = Mdmc.Code.Client.UI.HUD.Misc.DamageNumber;
 
-namespace Mdmc.Code.Game.Realization;
+namespace Mdmc.Code.Game.RealizationSystem;
 
 public partial class RealizationManager: Node
 {

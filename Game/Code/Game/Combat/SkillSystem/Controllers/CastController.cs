@@ -1,14 +1,14 @@
 using Godot;
-using Mdmc.Code.Game;
-using Mdmc.Code.Game.Combat;
-using Mdmc.Code.Game.Realization;
+using Mdmc.Code.Game.RealizationSystem;
+using Mdmc.Code.System;
 
+namespace Mdmc.Code.Game.Combat.SkillSystem.Controllers;
 
 [GlobalClass]
 public partial class CastController : ActionController
 {        
     [Export] public float BaseCastTime = 2.5f;
-    [Export] public bool CanMove = false;
+    [Export] public bool CanMove;
 
     [Export] private PackedScene _castFinishedRealization;
 
@@ -16,7 +16,6 @@ public partial class CastController : ActionController
     public double CurrentCastTime { get; private set; }
     public double StartCastTime { get; private set; }
     public double Lapsed { get; private set; }
-
 
     [Signal] public delegate void FinishedCastingEventHandler();
 
@@ -43,10 +42,10 @@ public partial class CastController : ActionController
         IsCasting = true;
         CurrentCastTime = BaseCastTime;
         Rpc(nameof(RealizeActionTrigger));
-        return new SkillResult()
+        return new SkillResult
         {
             SUCCESS = true,
-            result = Mdmc.Code.System.MD.ActionResult.START_CASTING,
+            result = MD.ActionResult.START_CASTING,
             extraData = new 
             {
                 controller = this,
@@ -58,19 +57,19 @@ public partial class CastController : ActionController
 
     public override SkillResult CanActivate()
     {
-        foreach(var action in skillActions)
+        foreach(var action in SkillActions)
         {
             if(!action.CanTrigger()) 
-            return new SkillResult()
-            { 
-                SUCCESS = false,
-                result = Mdmc.Code.System.MD.ActionResult.INVALID_TARGET
-            };
+                return new SkillResult
+                { 
+                    SUCCESS = false,
+                    result = MD.ActionResult.INVALID_TARGET
+                };
         }
-        return new SkillResult(){ SUCCESS = true, result = Mdmc.Code.System.MD.ActionResult.CAST };
+        return new SkillResult { SUCCESS = true, result = MD.ActionResult.CAST };
     }
 
-   public void Interrupt(bool wasMove)
+    public void Interrupt(bool wasMove)
     {
         if(!IsCasting) return;
 
@@ -84,7 +83,7 @@ public partial class CastController : ActionController
 
     private void TriggerActions()
     {
-        foreach(var action in skillActions)
+        foreach(var action in SkillActions)
         {
             action.TriggerAction();
         }

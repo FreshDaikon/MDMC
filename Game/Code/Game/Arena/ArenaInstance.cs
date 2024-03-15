@@ -213,6 +213,7 @@ public partial class ArenaInstance : Node3D
             .ToList();        
         return entities;
     }
+
     public List<PlayerEntity> GetPlayers()
     {
         if(_entityContainer.GetChildren().Count == 0)
@@ -223,6 +224,7 @@ public partial class ArenaInstance : Node3D
             .ToList();     
         return players.Count == 0 ? null : players;
     }
+
     public List<Entity.Entity> GetFriendlyEntities()
     {
         if(_entityContainer.GetChildren().Count == 0)
@@ -234,6 +236,7 @@ public partial class ArenaInstance : Node3D
             .ToList();        
         return entities.Count == 0 ? null : entities;
     }
+    
     public List<AdversaryEntity> GetEnemyEntities()
     {
         if(_entityContainer.GetChildren().Count == 0)

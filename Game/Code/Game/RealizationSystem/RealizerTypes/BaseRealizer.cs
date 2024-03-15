@@ -1,5 +1,6 @@
 using Godot;
-using Mdmc.Code.Game.Realization;
+
+namespace Mdmc.Code.Game.RealizationSystem.RealizerTypes;
 
 [GlobalClass]
 public partial class BaseRealizer: Node3D

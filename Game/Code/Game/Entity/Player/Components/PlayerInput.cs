@@ -374,14 +374,14 @@ public partial class PlayerInput : Node
         var friends = Arena.ArenaManager.Instance.GetCurrentArena().GetPlayers();
         if(current == null )
         {
-            player.ChangeFriedlyTarget(friends.First());
+            player.ChangeFriendlyTarget(friends.First());
         }
         else
         {
             var currentIndex = friends.IndexOf((PlayerEntity)current);
             var newIndex = Mathf.Wrap(currentIndex + (direction ? 1 : -1), 0, friends.Count);
             var newFriend = friends[newIndex];
-            player.ChangeFriedlyTarget(newFriend);
+            player.ChangeFriendlyTarget(newFriend);
         }        
     }
 

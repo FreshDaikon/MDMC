@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://b8xim26pnfs5"]
+[gd_scene load_steps=11 format=3 uid="uid://b8xim26pnfs5"]
 
 [ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/SkillHandler.cs" id="1_ljarf"]
 [ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/Controllers/CastController.cs" id="2_yb8o6"]
@@ -6,7 +6,10 @@
 [ext_resource type="PackedScene" uid="uid://da8lo0ouug0so" path="res://Data/Scenes/Realizations/BigIMpact.tscn" id="3_d3yxn"]
 [ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/Targeting/AcquireDirect.cs" id="4_pncow"]
 [ext_resource type="PackedScene" uid="uid://xk1bpl62qpho" path="res://Data/Scenes/Realizations/Skills/BasicChase.tscn" id="5_0q80f"]
+[ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/Actions/DealHealAction.cs" id="5_7srqo"]
+[ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/Targeting/AcquireAllInRange.cs" id="8_a5kg7"]
 [ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/TimeController.cs" id="9_clkie"]
+[ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/Actions/ApplyThreatAction.cs" id="9_glsr2"]
 
 [node name="Drachen_01" type="Node" node_paths=PackedStringArray("_timeController", "_actionController")]
 script = ExtResource("1_ljarf")
@@ -32,6 +35,24 @@ Skill = NodePath("../../..")
 Target = 2
 Range = 200.0
 IsTargetRequired = true
+
+[node name="DealHealAction" type="Node" parent="CastController" node_paths=PackedStringArray("_skill", "_acquisition")]
+script = ExtResource("5_7srqo")
+_skill = NodePath("../..")
+_acquisition = NodePath("AcquireAllInRange")
+_potency = 300
+_realizationScene = ExtResource("5_0q80f")
+
+[node name="AcquireAllInRange" type="Node" parent="CastController/DealHealAction" node_paths=PackedStringArray("Skill")]
+script = ExtResource("8_a5kg7")
+Skill = NodePath("../../..")
+Range = 10.0
+
+[node name="ApplyThreatAction" type="Node" parent="CastController" node_paths=PackedStringArray("_skill", "_acquisition")]
+script = ExtResource("9_glsr2")
+_skill = NodePath("../..")
+_acquisition = NodePath("../DoDamage/TargetAquisition")
+_threat = 200
 
 [node name="TimeController" type="Node" parent="."]
 script = ExtResource("9_clkie")

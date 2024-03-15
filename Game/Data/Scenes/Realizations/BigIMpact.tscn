@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://da8lo0ouug0so"]
 
-[ext_resource type="Script" path="res://Code/Game/Realization/RealizerTypes/General/PlainRealizer.cs" id="1_njykb"]
+[ext_resource type="Script" path="res://Code/Game/RealizationSystem/RealizerTypes/General/PlainRealizer.cs" id="1_k6yvw"]
 
 [sub_resource type="Animation" id="Animation_057b6"]
 resource_name = "End"
@@ -77,7 +77,7 @@ albedo_color = Color(0.8, 0, 0.8, 1)
 
 [node name="BasicImpact" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00105095, 0.00285125, -0.00127983)
-script = ExtResource("1_njykb")
+script = ExtResource("1_k6yvw")
 
 [node name="RealizationPlayer" type="AnimationPlayer" parent="."]
 unique_name_in_owner = true

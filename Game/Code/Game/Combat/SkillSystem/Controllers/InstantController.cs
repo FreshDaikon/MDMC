@@ -1,35 +1,37 @@
 using Godot;
-using Mdmc.Code.Game.Combat;
-using Mdmc.Code.Game.Realization;
+using Mdmc.Code.Game.RealizationSystem;
+using Mdmc.Code.System;
 
+namespace Mdmc.Code.Game.Combat.SkillSystem.Controllers;
 
 [GlobalClass]
 public partial class InstantController : ActionController
 {
     public override SkillResult ActivateAction()
     {
-        // Instant Cast can just trigger right away:
         Rpc(nameof(RealizeActionTrigger));
-        foreach(var action in skillActions)
+        foreach(var action in SkillActions)
         {
             action.TriggerAction();
         }
         EmitSignal(SignalName.ActionsTriggered);
-        return new SkillResult(){
+        return new SkillResult
+        {
             SUCCESS = true,
-            result = Mdmc.Code.System.MD.ActionResult.CAST
+            result = MD.ActionResult.CAST
         };
     }
 
     public override SkillResult CanActivate()
     {
-        foreach(var action in skillActions)
+        foreach(var action in SkillActions)
         {
-            if(!action.CanTrigger()) return new SkillResult(){ 
+            if(!action.CanTrigger()) return new SkillResult
+            { 
                 SUCCESS = false,
-                result = Mdmc.Code.System.MD.ActionResult.INVALID_TARGET };
+                result = MD.ActionResult.INVALID_TARGET };
         }
-        return new SkillResult(){ SUCCESS = true, result = Mdmc.Code.System.MD.ActionResult.CAST };
+        return new SkillResult { SUCCESS = true, result = MD.ActionResult.CAST };
     }
 
     [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]

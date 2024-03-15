@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
+using Mdmc.Code.Game.Arena;
 using Mdmc.Code.Game.Combat.ArsenalSystem;
 using Mdmc.Code.Game.Combat.Modifiers;
+using Mdmc.Code.Game.Combat.SkillSystem;
 using Mdmc.Code.Game.Data;
 
 namespace Mdmc.Code.Game;
@@ -58,79 +60,36 @@ public partial class DataManager : Node
         dir.ListDirEnd();
     }
 
-    public List<SkillData> GetAllSkills()
+    public List<T> GetData<T>()
     {
-        var skills = _library.Where(skill => skill is SkillData).Cast<SkillData>().ToList();
-        return skills;
-    }
-
-    public SkillData GetSkill(int id)
-    {
-        var skill = GetAllSkills().Find(s => s.Id == id);
-        return skill;
+        return _library.Where(t => t is T).Cast<T>().ToList();
     }
 
     public SkillHandler GetSkillInstance(int id)
     {
-        var skill = GetAllSkills().Find(s => s.Id == id);
+        var skills = GetData<SkillData>();
+        var skill = skills.Find(s => s.Id == id);
         var instance = skill.GetSkill();
         return instance;
     }
 
-    public List<ArenaData> GetAllArenas()
+    public ArenaInstance GetArenaInstance(int id)
     {
-        var arenas = _library.Where(arena => arena is ArenaData).Cast<ArenaData>().ToList();
-        return arenas;
-    }
-    
-    public ArenaData GetArena(int id)
-    {
-        var arena = GetAllArenas().Find(s => s.Id == id);
-        return arena;
-    }
-
-    public Mdmc.Code.Game.Arena.ArenaInstance GetArenaInstance(int id)
-    {
-        var arena = GetAllArenas().Find(a => a.Id == id);
+        var arena = GetData<ArenaData>().Find(a => a.Id == id);
         var instance = arena.GetArena();
         return instance;
     }
 
-    public List<SkillContainerData> GetAllSkillContainers()
-    {
-        var skillContainers = _library.Where(container => container is SkillContainerData).Cast<SkillContainerData>().ToList();
-        GD.Print("Skill Containers: " + skillContainers.Count );
-        return skillContainers;
-    }
-
-    public SkillContainerData GetSkillContainer(int id)
-    {
-        var container = GetAllSkillContainers().Find(s => s.Id == id);
-        return container;
-    }
-
     public SkillContainer GetSkillContainerInstance(int id)
     {
-        var container = GetAllSkillContainers().Find(s => s.Id == id);
+        var container = GetData<SkillContainerData>().Find(s => s.Id == id);
         var instance = container.GetSkillContainer();
         return instance;
     }
 
-    public List<ModifierData> GetAllModifiers()
-    {
-        var modifiers = _library.Where(mod => mod is ModifierData).Cast<ModifierData>().ToList();
-        return modifiers;
-    }
-
-    public ModifierData GetModifier(int id)
-    {
-        var mod = GetAllModifiers().Find(m => m.Id == id);
-        return mod;
-    }
-
     public Modifier GetModifierInstance(int id)
     {
-        var mod = GetAllModifiers().Find(m => m.Id == id);
+        var mod = GetData<ModifierData>().Find(m => m.Id == id);
         var instance = mod.GetModifier();
         return instance;
     }

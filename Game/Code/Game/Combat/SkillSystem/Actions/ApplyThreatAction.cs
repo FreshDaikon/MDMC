@@ -1,16 +1,14 @@
 using System;
-using System.Collections.Generic;
 using Godot;
 using Mdmc.Code.Game.Arena;
-using Mdmc.Code.Game.Combat;
-using Mdmc.Code.Game.Entity.Adversary;
 using Mdmc.Code.Game.Entity.Adversary.Components;
-using Mdmc.Code.Game.Realization;
+using Mdmc.Code.Game.RealizationSystem;
 using Mdmc.Code.System;
 
+namespace Mdmc.Code.Game.Combat.SkillSystem.Actions;
 
 [GlobalClass]
-public partial class ApplyThreat : SkillAction
+public partial class ApplyThreatAction : SkillAction
 {
     [Export] private SkillHandler _skill;
     [ExportCategory("Acquisition should only apply adversaries!")]
@@ -20,10 +18,8 @@ public partial class ApplyThreat : SkillAction
 
     public override bool CanTrigger()
     {
-        GD.Print("try and get some targets!");
         if(_acquisition.CanAcquireTargets())
         {
-            GD.Print("Got some targets!");
             _acquisition.StoreTargets();
         }
         return _acquisition.CanAcquireTargets();
@@ -36,6 +32,7 @@ public partial class ApplyThreat : SkillAction
         foreach(var entity in targets)
         {
             var adversaryStatus = entity.Status as AdversaryStatus;
+            adversaryStatus.InflictThreat(_threat, entity);
             Rpc(nameof(RealizeAction), Int32.Parse(entity.Name), _threat);
         }
     }

@@ -1,10 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://dogebc18mwo8y"]
 
-[ext_resource type="Script" path="res://Code/Game/Realization/RealizerTypes/Boss/Mechanics/RectAoeRealizer.cs" id="1_b7p7g"]
+[ext_resource type="Script" path="res://Code/Game/RealizationSystem/RealizerTypes/Boss/Mechanics/RectAoeRealizer.cs" id="1_jq555"]
 [ext_resource type="Texture2D" uid="uid://b7porsy4xnmj2" path="res://Assets/Effects/Generated/RectAoe.tres" id="2_j70ti"]
 
 [node name="RectAoeRealization" type="Node3D" node_paths=PackedStringArray("_indicator")]
-script = ExtResource("1_b7p7g")
+script = ExtResource("1_jq555")
 _indicator = NodePath("Decal")
 
 [node name="Decal" type="Decal" parent="."]

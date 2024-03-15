@@ -134,6 +134,7 @@ public partial class ServerManager : Node3D
         var prefab = (PackedScene)ResourceLoader.Load(playerEntityPath);
         PlayerEntity player = prefab.Instantiate<PlayerEntity>();
         player.Name =  id.ToString();
+        player.Id = (int)id;
         player.EntityName = string.Concat("Player", id.ToString().AsSpan(0, 4));
         return player;        
     }

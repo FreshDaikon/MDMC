@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Mdmc.Code.Game.Realization;
+namespace Mdmc.Code.Game.RealizationSystem;
 
 public partial class Realization: Node3D
 {    
@@ -79,7 +79,7 @@ public partial class Realization: Node3D
             }
         }
         // Add the Scene:
-        if (Scene.Instantiate() is not BaseRealizer newScene) return;
+        if (Scene.Instantiate() is not RealizerTypes.BaseRealizer newScene) return;
         newScene.ParentRealization = this;
         AddChild(newScene);
         newScene.CallDeferred(nameof(newScene.Initialize));

@@ -122,16 +122,15 @@ script = ExtResource("1_vf7wp")
 
 [node name="Chase" type="Node" parent="TimeLineManager"]
 script = ExtResource("3_1pc8c")
-chaseDistance = 4.0
+_chaseSpeed = 10.0
 
 [node name="AutoAttack" type="Node" parent="TimeLineManager"]
 script = ExtResource("5_4tabc")
-attackDamage = 50
+_attackDamage = 250
 
 [node name="AutoAttack2" type="Node" parent="TimeLineManager"]
 script = ExtResource("5_4tabc")
-attackDamage = 50
-attackTime = 1.0
+_attackDamage = 100
 
 [node name="AOECircle" type="Node" parent="TimeLineManager"]
 script = ExtResource("5_e17fn")
@@ -142,6 +141,7 @@ _resolveTime = 3.0
 [node name="AoeSquare" type="Node" parent="TimeLineManager"]
 script = ExtResource("8_od7gs")
 _rectAoeScene = ExtResource("9_ba2ob")
+_size = Vector3(1, 1, 10)
 _resolveTime = 3.0
 
 [node name="BehaviorPlayer" type="AnimationPlayer" parent="."]

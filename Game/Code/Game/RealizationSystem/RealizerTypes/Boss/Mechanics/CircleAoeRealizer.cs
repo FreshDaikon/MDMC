@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Mdmc.Code.Game.Realization.Realizations.Boss.Mechanics;
+namespace Mdmc.Code.Game.RealizationSystem.RealizerTypes.Boss.Mechanics;
 
 [GlobalClass]
 public partial class CircleAoeRealizer: BaseRealizer

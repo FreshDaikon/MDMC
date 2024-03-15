@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Mdmc.Code.Game.Realization;
+namespace Mdmc.Code.Game.RealizationSystem.RealizerTypes.General;
 
 [GlobalClass]
 public partial class PlainRealizer: BaseRealizer

@@ -1,10 +1,8 @@
-using System.Collections.Generic;
-using System.Linq;
 using Godot;
-using Godot.NativeInterop;
-using Mdmc.Code.Game.Combat;
 using Mdmc.Code.Game.Combat.ArsenalSystem;
 using Mdmc.Code.Game.Data;
+
+namespace Mdmc.Code.Game.Combat.SkillSystem;
 
 [GlobalClass]
 public partial class SkillHandler: Node
@@ -17,7 +15,7 @@ public partial class SkillHandler: Node
 
     [Export] private SkillType _type;
     [Export] private TimeController _timeController;
-    [Export] private ActionController _actionController;
+    [Export] private Mdmc.Code.Game.Combat.SkillSystem.ActionController _actionController;
 
     public PlayerArsenal Arsenal { get; private set; }
     public SkillData Data { get; private set; }
@@ -28,7 +26,7 @@ public partial class SkillHandler: Node
     
     public void SetData(SkillData data)
     { 
-         Data = data;
+        Data = data;
     }
     public void AssignSlot(int slot) => AssignedSlot = slot;
     // Getters:

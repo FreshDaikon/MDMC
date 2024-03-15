@@ -1,8 +1,7 @@
 using Godot;
-using Mdmc.Code.Game;
-using Mdmc.Code.Game.Combat;
-using Mdmc.Code.Game.Realization;
+using Mdmc.Code.Game.RealizationSystem;
 
+namespace Mdmc.Code.Game.Combat.SkillSystem.Controllers;
 
 [GlobalClass]
 public partial class ChannelController : ActionController
@@ -40,7 +39,7 @@ public partial class ChannelController : ActionController
                 Ticks = 0;
                 LastLapse = 0;
                 IsChanneling = false;
-                EmitSignal(SignalName.ActionsTriggered);
+                EmitSignal(ActionController.SignalName.ActionsTriggered);
                 EmitSignal(SignalName.FinishedChanneling);
             }
         }
@@ -56,7 +55,7 @@ public partial class ChannelController : ActionController
         return new SkillResult()
         {
             SUCCESS = true,
-            result = Mdmc.Code.System.MD.ActionResult.START_CHANNELING,
+            result = System.MD.ActionResult.START_CHANNELING,
             extraData = new 
             {
                 controller = this,
@@ -68,13 +67,13 @@ public partial class ChannelController : ActionController
 
     public override SkillResult CanActivate()
     {
-        foreach(var action in skillActions)
+        foreach(var action in SkillActions)
         {
             if(!action.CanTrigger()) return new SkillResult(){ 
                 SUCCESS = false,
-                result = Mdmc.Code.System.MD.ActionResult.INVALID_TARGET };
+                result = System.MD.ActionResult.INVALID_TARGET };
         }
-        return new SkillResult(){ SUCCESS = true, result = Mdmc.Code.System.MD.ActionResult.CAST };
+        return new SkillResult(){ SUCCESS = true, result = System.MD.ActionResult.CAST };
     }
 
     public void Interrupt(bool wasMove)
@@ -91,7 +90,7 @@ public partial class ChannelController : ActionController
 
     public void TriggerActions()
     {
-        foreach(var action in skillActions)
+        foreach(var action in SkillActions)
         {
             action.TriggerAction();
         }

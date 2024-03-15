@@ -1,5 +1,6 @@
 using Godot;
-using Mdmc.Code.Game;
+
+namespace Mdmc.Code.Game.Combat.SkillSystem;
 
 [GlobalClass]
 public partial class TimeController : Node 

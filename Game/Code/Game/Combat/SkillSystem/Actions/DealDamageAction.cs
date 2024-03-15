@@ -1,10 +1,10 @@
 using System;
 using Godot;
 using Mdmc.Code.Game.Arena;
-using Mdmc.Code.Game.Combat;
-using Mdmc.Code.Game.Realization;
+using Mdmc.Code.Game.RealizationSystem;
 using Mdmc.Code.System;
 
+namespace Mdmc.Code.Game.Combat.SkillSystem.Actions;
 
 [GlobalClass]
 public partial class DealDamageAction : SkillAction
@@ -31,7 +31,7 @@ public partial class DealDamageAction : SkillAction
             foreach(var entity in targets)
             {
                 var result = entity.Status.InflictDamage(_potency, player);
-                var message = new CombatMessage()
+                var message = new CombatMessage
                 {
                     Caster = int.Parse(player.Name),
                     Target = int.Parse(entity.Name),

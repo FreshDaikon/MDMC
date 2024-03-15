@@ -3,8 +3,7 @@ using System.Linq;
 using Godot;
 using Mdmc.Code.Game.Entity.Player;
 using Mdmc.Code.Game.Entity.Player.Components;
-using Mdmc.Code.Game.Realization;
-using Mdmc.Code.Game.Realization.Realizations.Boss.Mechanics;
+using Mdmc.Code.Game.RealizationSystem;
 
 namespace Mdmc.Code.Game.Entity.Adversary.Actions.Mechanics;
 

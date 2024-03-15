@@ -6,11 +6,8 @@ namespace Mdmc.Code.Game.Entity.Adversary.Actions.Behaviors;
 [GlobalClass]
 public partial class Chase: BaseBehavior
 {   
-    [Export]
-    private float chaseDistance = 2f;
-    [Export]
-    private float chaseSpeed = 3f;
-
+    [Export] private float _chaseDistance = 2f;
+    [Export] private float _chaseSpeed = 3f;
 
     public override void ProcessBehavior()
     {
@@ -23,7 +20,7 @@ public partial class Chase: BaseBehavior
         
         var direction = topThreat.Controller.GlobalPosition - Manager.Entity.Controller.GlobalPosition;
         float distance = direction.Length();
-        if(distance > chaseDistance)
+        if(distance > _chaseDistance)
         {
             Manager.Entity.Mover.SetDirection(direction.Normalized());
         }

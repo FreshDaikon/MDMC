@@ -1,5 +1,6 @@
 using System.Linq;
 using Godot;
+using Mdmc.Code.Game.Data;
 using Mdmc.Code.Game.Entity.Player;
 using Mdmc.Code.System;
 
@@ -11,20 +12,20 @@ public partial class PlayerArsenal: Node
     // Player :
     public PlayerEntity Player { get; private set; }
     // Casting:
-    public SkillHandler CastingSkill { get; private set; }
-    public CastController CastingController { get; private set; }
+    public SkillSystem.SkillHandler CastingSkill { get; private set; }
+    public SkillSystem.Controllers.CastController CastingController { get; private set; }
     public bool IsCasting { get; private set; } = false;
     public double CastingStartTime { get; private set; }
     public double CastingTime { get; private set; }
     // Channeling :
-    public SkillHandler ChannelingSkill { get; private set; }
-    public ChannelController ChannelingController { get; private set; }
+    public SkillSystem.SkillHandler ChannelingSkill { get; private set; }
+    public SkillSystem.Controllers.ChannelController ChannelingController { get; private set; }
     public bool IsChanneling { get; private set; } = false;
     public double ChannelingStartTime { get; private set; }
     public double ChannelingTime { get; private set; }
     // GCD Skills :
     public double GCDStartTime { get; private set; } = 0;
-    public SkillHandler LastSkillTriggered { get; private set; }
+    public SkillSystem.SkillHandler LastSkillTriggered { get; private set; }
     
     // Todo: remove these : 
     bool hasBeenInit = false;
@@ -64,7 +65,7 @@ public partial class PlayerArsenal: Node
 
     private void SetupDebug()
     {
-        var containers = DataManager.Instance.GetAllSkillContainers();
+        var containers = DataManager.Instance.GetData<SkillContainerData>();
         var slots = new MD.ContainerSlot[]{
             MD.ContainerSlot.Main, 
             MD.ContainerSlot.Right,
@@ -142,7 +143,7 @@ public partial class PlayerArsenal: Node
         AddChild(newContainer); 
     }    
     
-    public SkillHandler GetSkill(MD.ContainerSlot containerSlot, int slot)
+    public SkillSystem.SkillHandler GetSkill(MD.ContainerSlot containerSlot, int slot)
     {
         var container = GetSkillContainer(containerSlot);
         if(container != null)
@@ -174,7 +175,7 @@ public partial class PlayerArsenal: Node
             
             var skill = container.GetSkill(index);
 
-            if(skill.GetTypeInfo() == SkillHandler.SkillType.OGCD)
+            if(skill.GetTypeInfo() == SkillSystem.SkillHandler.SkillType.OGCD)
             {
                 GD.Print("Try Trigger OGCD Skill:");
                 var ogcdResult = container.TriggerSkill(index);
@@ -223,10 +224,10 @@ public partial class PlayerArsenal: Node
         GetChildren().Where(c => c is SkillContainer).Cast<SkillContainer>().ToList().ForEach(x => x.UpdateComponentStates());
     }
 
-    public void StartCasting(SkillHandler skill, CastController controller)
+    public void StartCasting(SkillSystem.SkillHandler skill, SkillSystem.Controllers.CastController controller)
     {
         IsCasting = true;
-        if(skill.GetTypeInfo() == SkillHandler.SkillType.GCD)
+        if(skill.GetTypeInfo() == SkillSystem.SkillHandler.SkillType.GCD)
         {
             GCDStartTime = GameManager.Instance.GameClock;
             Rpc(nameof(SyncGCD), GameManager.Instance.GameClock);
@@ -239,10 +240,10 @@ public partial class PlayerArsenal: Node
         CastingSkill = skill;
     }
 
-    public void StartChanneling(SkillHandler skill, ChannelController controller)
+    public void StartChanneling(SkillSystem.SkillHandler skill, SkillSystem.Controllers.ChannelController controller)
     {
         IsChanneling = true;
-        if(skill.GetTypeInfo() == SkillHandler.SkillType.GCD)
+        if(skill.GetTypeInfo() == SkillSystem.SkillHandler.SkillType.GCD)
         {
             GCDStartTime = GameManager.Instance.GameClock;
             Rpc(nameof(SyncGCD), GameManager.Instance.GameClock);
@@ -277,7 +278,7 @@ public partial class PlayerArsenal: Node
     {
         if (!IsCasting) return;
         
-        if(CastingSkill.GetTypeInfo() == SkillHandler.SkillType.GCD)
+        if(CastingSkill.GetTypeInfo() == SkillSystem.SkillHandler.SkillType.GCD)
         { 
             GCDStartTime -= BaseGcd;
             Rpc(nameof(SyncGCD), GCDStartTime);
@@ -360,7 +361,7 @@ public partial class PlayerArsenal: Node
         {
             return new SkillResult() { SUCCESS = false, result= MD.ActionResult.IS_CASTING };
         }
-        if(IsArsenalOnCD() && skill.GetTypeInfo() != SkillHandler.SkillType.OGCD)
+        if(IsArsenalOnCD() && skill.GetTypeInfo() != SkillSystem.SkillHandler.SkillType.OGCD)
         {
             return new SkillResult() { SUCCESS = false, result= MD.ActionResult.ON_COOLDOWN };
         }  

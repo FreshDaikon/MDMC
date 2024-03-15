@@ -1,15 +1,14 @@
 using Godot;
-using Mdmc.Code.Game.Realization;
+using Mdmc.Code.Game.RealizationSystem;
 
 namespace Mdmc.Code.Game.Entity.Adversary.Actions.Behaviors;
 
 [GlobalClass]
 public partial class AutoAttack: BaseBehavior
 {   
-    [Export]
-    private int attackDamage;
-    [Export]
-    private double attackTime = 5;
+    [Export] private int _attackDamage;
+    [Export] private double _attackTime = 5;
+    
     private double lastAttack;
 
     public override void ProcessBehavior()
@@ -20,7 +19,7 @@ public partial class AutoAttack: BaseBehavior
             StopBehavior();
             return;
         }
-        if(GameManager.Instance.GameClock - lastAttack > attackTime)
+        if(GameManager.Instance.GameClock - lastAttack > _attackTime)
         {
             //auto attack
             Attack(topThreat);
@@ -37,7 +36,7 @@ public partial class AutoAttack: BaseBehavior
 
     private void Attack(Entity entity)
     {
-        var dmg = entity.Status.InflictDamage(attackDamage, Manager.Entity);
+        var dmg = entity.Status.InflictDamage(_attackDamage, Manager.Entity);
         Rpc(nameof(SpawnDamageNumber), entity.Controller.GlobalPosition, dmg);
     }
     

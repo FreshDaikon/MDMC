@@ -45,7 +45,7 @@ public partial class LandingPage : Control
 
     private void GetArenaList()
     {
-        _arenas = DataManager.Instance.GetAllArenas();
+        _arenas = DataManager.Instance.GetData<ArenaData>();
         GD.Print("Arenas to show: " + _arenas.Count);
         if(_arenas.Count > 0)
         {
