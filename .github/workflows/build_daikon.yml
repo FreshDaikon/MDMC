@@ -39,7 +39,7 @@ jobs:
         username: root
         password: ${{ secrets.VPS1_SSH_PASS }}
         script: |
-          echo "${{ secrets.DAIKON_DOCKERPASS }}" | docker login -u "${{ secrets.DAIKON_DOCKERPASS }}" --password-stdin
+          docker login -u "${{ secrets.DAIKON_DOCKERUSERNAME }}" -p "${{ secrets.DAIKON_DOCKERPASS }}"
           docker stop $(docker ps -a -q) 
           docker rmi -f $(docker images -aq)
           docker pull freshdaikon/daikonconnect:latest

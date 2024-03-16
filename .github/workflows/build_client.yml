@@ -9,9 +9,13 @@ jobs:
   build_and_export:
     runs-on: windows-latest
 
+    env:
+      GODOT_EXE: ${{ github.workspace }}/godot/Godot_v4.2.1-stable_mono_win64/Godot_v4.2.1-stable_mono_win64.exe
+
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
+
     - uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '7.0.x'
@@ -21,15 +25,15 @@ jobs:
         mkdir godot
         curl -fsSL -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.2.1-stable/Godot_v4.2.1-stable_mono_win64.zip
         Expand-Archive godot.zip -DestinationPath godot
-        $env:GODOT_EXE = "$PWD/godot/Godot_v4.2.1-stable_mono_win64/Godot_v4.2.1-stable_mono_win64.exe"
 
     - name: Build and Export Godot Project
       run: |
-        godot --export "Client" /Game/project.godot /bin/Client/MDMC.exe
+        $env:PATH += ";${{ env.GODOT_EXE }}"
+        godot --export-release "Client" /Game/project.godot /bin/Client/MDMC.exe
 
     - name: Zip Exported Files
       run: |
-        cd  /bin
+        cd /bin
         zip -r Client.zip Client/*/*
 
     - name: Archive Exported Files
@@ -37,5 +41,3 @@ jobs:
       with:
           name: MDMC_Client
           path: /bin/Client/Client.zip
-        
-
