@@ -26,6 +26,8 @@ public partial class Entity : Node3D
     [Export]
     public float EntityHeight = 2f;
 
+    [Export] public int Id { get; set; }
+
     // Internal Data:
     private EntityController controller;
     private EntityModifiers modifiers;
@@ -67,7 +69,7 @@ public partial class Entity : Node3D
     public void ChangeTarget(Entity target)
     {
         CurrentTarget = target;
-        Rpc(nameof(SyncTarget), int.Parse(target.Name));
+        Rpc(nameof(SyncTarget), target.Id);
     }
 
     [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -76,7 +78,7 @@ public partial class Entity : Node3D
         var entities = ArenaManager.Instance.GetCurrentArena().GetEntities();
         if(entities.Count > 0)
         {
-            var entity = entities.Find(e => int.Parse(e.Name) == id );
+            var entity = entities.Find(e => e.Id == id );
             if(entity != null) CurrentTarget = entity;
             return;
         }

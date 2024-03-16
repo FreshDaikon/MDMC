@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using Mdmc.Code.Game.Combat;
-using Mdmc.Code.Game.Combat.Modifiers;
+using Mdmc.Code.Game.Combat.ModifierSystem;
+using Mdmc.Code.Game.Combat.ModifierSystem.Buffs;
 using Mdmc.Code.Game.Entity.Player;
 using Mdmc.Code.System;
 
@@ -110,12 +112,7 @@ public partial class EntityStatus : Node
         var mods = _modifiers.GetModifiers();
         if (mods != null)
         {
-            var speed = mods.Where(m => m.Tags.Contains(Modifier.ModTags.MoveSpeed));
-            if (speed.Any())
-            {
-                CurrentSpeed = _baseSpeed + (int)speed.Sum(s => s.ModifierValue);
-            }
-            
+            // TODO : imple ment speed buffs.            
         }
     }
 
@@ -131,7 +128,7 @@ public partial class EntityStatus : Node
             {
                 CombatManager.Instance.AddCombatMessage(new CombatMessage()
                 {
-                    Caster = int.Parse(_entity.Name),
+                    Caster = _entity.Id,
                     Effect = "Knocked Out",
                     MessageType = MD.CombatMessageType.KNOCKED_OUT,
                     Value = 1,
@@ -144,11 +141,7 @@ public partial class EntityStatus : Node
         var mods = _modifiers.GetModifiers();
         if (mods != null)
         {
-            var regen = mods.Where(m => m.Tags.Contains(Modifier.ModTags.Regen));
-            if (regen.Any())
-            {
-                CurrentHealth += (int)regen.Sum(v => v.ModifierValue);
-            }
+            // TODO : implement the regen buff yes.
         }
         
         CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
@@ -162,10 +155,12 @@ public partial class EntityStatus : Node
             CurrentShield = 0;
             return;
         }
-        var shields = mods.Where(m => m.Tags.Contains(Modifier.ModTags.Shield));
+        var buffs = mods.SelectMany(m => m.BuffControl.Buffs).ToList();
+        var shields = buffs.Any() ? buffs.Where(b => b is BuffShield).Cast<BuffShield>() : null;
+
         if (!shields.Any())
             CurrentShield = 0;
-        CurrentShield = (int)shields.Sum(s => s.RemainingValue);
+        CurrentShield = shields.Sum(s => s.ShieldValue);
     }
 
     public int InflictDamage(int amount, Entity entity)
@@ -176,49 +171,21 @@ public partial class EntityStatus : Node
         // A little bit of boiler plate:
         var workingValue = amount;
         var variance = _random.RandfRange(1.0f, 1.05f);
-        //Apply a bit of variance:
         workingValue = (int)(workingValue * variance);
-        // Time to get all the mods:
         var mods = _modifiers.GetModifiers();
 
         if (mods != null)
         {
-            // First Increase the value by damage taken: (Note : we might want to move mits before weakness to make it more scary.)
-            var weaknesses = mods.Where(m => m.Tags.Contains(Modifier.ModTags.DamageTaken));
-            if(weaknesses.Any())
-            {
-                // Expected values : 0.1 + 0.4 + 0.4 = 1 + 0.9 = 1.9 = value * 1.9 for example.
-                var multiplier = weaknesses.Sum(w => w.ModifierValue);
-                workingValue = (int)(workingValue * (1 + multiplier));
-            }
-            // Now that the value is greater - we can reduce it by mitigation:
-            var mits = mods.Where(m => m.Tags.Contains(Modifier.ModTags.Mitigation));
-            if (mits.Any())
-            {
-                // Expected values : 0.8 * 0.8 * 0.9 = 0.576 = value * 0.576 for example.
-                var factor = mits.Aggregate(1d, (current, mit) => current * mit.ModifierValue);
-                workingValue = (int)(workingValue * Mathf.Clamp(factor, 0.4d, 1d)); // Maximum is 60%
-            }
             // Now then we can reduce the remaining damage by shields.
-            var shields = mods.Where(m => m.Tags.Contains(Modifier.ModTags.Shield));
+            var buffs = mods.SelectMany(m => m.BuffControl.Buffs).ToList();
+            var shields = buffs.Any() ? buffs.Where(b => b is BuffShield).Cast<BuffShield>() : null;
             if (shields.Any())
             {
+                GD.Print("There are some shields - reduce them by damage.");
                 var remainder = workingValue;
                 foreach (var shield in shields)
                 {
-                    var stored = remainder;
-                    remainder = Mathf.Clamp(remainder - (int)shield.RemainingValue, 0, remainder);
-              
-                    var newValue = shield.RemainingValue - stored;
-                    if (newValue < 0)
-                    {
-                        _modifiers.RemoveModifier(shield.Data.Id);
-                    }
-                    else
-                    {
-                        shield.RemainingValue = newValue;
-                    }
-                    // Check if damage was fully absorbed:
+                    remainder = shield.ImpactShield(remainder);
                     if (remainder == 0)
                         break;
                 }
@@ -248,10 +215,7 @@ public partial class EntityStatus : Node
         var mods = _modifiers.GetModifiers();
         if(mods != null)
         {
-            healMods += (float)mods.Where(m => 
-                m.Tags.Contains(Modifier.ModTags.Buff) && m.Tags.Contains(Modifier.ModTags.HealPower))
-                .ToList()
-                .Sum(x => x.ModifierValue);
+           
         }        
         int adjusted = (int)(amount * healMods);
 

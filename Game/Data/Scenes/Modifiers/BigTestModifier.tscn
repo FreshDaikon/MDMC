@@ -1,0 +1,34 @@
+[gd_scene load_steps=7 format=3 uid="uid://dmmrjnnxlypib"]
+
+[ext_resource type="Script" path="res://Code/Game/Combat/ModifierSystem/ModifierHandler.cs" id="1_71c8m"]
+[ext_resource type="Script" path="res://Code/Game/Combat/ModifierSystem/TickController.cs" id="2_4gqob"]
+[ext_resource type="Script" path="res://Code/Game/Combat/ModifierSystem/Ticks/HealAffectedTick.cs" id="3_tung0"]
+[ext_resource type="Script" path="res://Code/Game/Combat/ModifierSystem/BuffController.cs" id="4_6wume"]
+[ext_resource type="PackedScene" uid="uid://da8lo0ouug0so" path="res://Data/Scenes/Realizations/BigIMpact.tscn" id="4_8plap"]
+[ext_resource type="Script" path="res://Code/Game/Combat/ModifierSystem/Buffs/BuffShield.cs" id="5_ikg1v"]
+
+[node name="BigTestModifier" type="Node" node_paths=PackedStringArray("BuffControl", "Ticker")]
+script = ExtResource("1_71c8m")
+Duration = 10.0
+BuffControl = NodePath("BuffController")
+Ticker = NodePath("TickController")
+
+[node name="TickController" type="Node" parent="." node_paths=PackedStringArray("_modifier")]
+script = ExtResource("2_4gqob")
+_modifier = NodePath("..")
+_tickRate = 1.0
+
+[node name="HealAffectedTick" type="Node" parent="TickController" node_paths=PackedStringArray("_modifier")]
+script = ExtResource("3_tung0")
+HealValue = 300
+_modifier = NodePath("../..")
+_realizationScene = ExtResource("4_8plap")
+
+[node name="BuffController" type="Node" parent="." node_paths=PackedStringArray("_modifier")]
+script = ExtResource("4_6wume")
+_modifier = NodePath("..")
+
+[node name="BuffShield" type="Node" parent="BuffController" node_paths=PackedStringArray("Modifier")]
+script = ExtResource("5_ikg1v")
+ShieldValue = 4000
+Modifier = NodePath("../..")

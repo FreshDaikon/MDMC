@@ -33,14 +33,14 @@ public partial class DealDamageAction : SkillAction
                 var result = entity.Status.InflictDamage(_potency, player);
                 var message = new CombatMessage
                 {
-                    Caster = int.Parse(player.Name),
-                    Target = int.Parse(entity.Name),
+                    Caster = player.Id,
+                    Target = entity.Id,
                     Value = result,
                     MessageType = MD.CombatMessageType.DAMAGE,
                     Effect = "X damaged Y"
                 };
                 CombatManager.Instance.AddCombatMessage(message);
-                Rpc(nameof(RealizeAction), Int32.Parse(entity.Name), result);
+                Rpc(nameof(RealizeAction), entity.Id, result);
             }
         }
     }

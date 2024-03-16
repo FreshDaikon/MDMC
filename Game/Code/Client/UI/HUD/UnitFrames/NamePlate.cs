@@ -1,4 +1,5 @@
 using Godot;
+using Mdmc.Code.Game.Entity.Adversary;
 using Mdmc.Code.System;
 using Entity = Mdmc.Code.Game.Entity.Entity;
 using EntityStatus = Mdmc.Code.Game.Entity.Components.EntityStatus;
@@ -19,13 +20,6 @@ public partial class NamePlate : Control
 	private Vector3 _worldPosition;
     private Entity _entity;
 
-    private GradientTexture1D _barGradient = new();
-
-    public override void _Ready()
-    {
-        _healthBar.Texture = _barGradient;
-    }
-
     public void InitializeFrame(Entity entity)
     {
         _entity = entity;
@@ -44,14 +38,17 @@ public partial class NamePlate : Control
                 CallDeferred(nameof(QueueFree));
                 break;
             case PlayerEntity entity:
-                _barGradient.Gradient = MD.GetPlayerGradient(entity);
+                _healthBar.Modulate = new Color("#b1cf84");
+                break;
+            case AdversaryEntity entity:
+                _healthBar.Modulate = new Color("#d65858");
                 break;
         }
         _camera = GetViewport().GetCamera3D();
         var entityPos = _entity.Controller.GlobalPosition;
         Visible = !_camera.IsPositionBehind(entityPos) && _entity.Status.CurrentState != EntityStatus.StatusState.KnockedOut;
         _nameLabel.Text = _entity.EntityName;
-        _uiPosition = _camera.UnprojectPosition(entityPos + new Vector3(0f, _entity.EntityHeight, 0f));
+        _uiPosition = _camera.UnprojectPosition(entityPos + new Vector3(0f, _entity.EntityHeight + 1f, 0f));
 		Position = _uiPosition; 
         var currentHealth = (float)_entity.Status.CurrentHealth / (float)_entity.Status.MaxHealth;
         _healthBar.Visible = currentHealth > 0f;

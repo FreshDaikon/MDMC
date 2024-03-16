@@ -1,5 +1,6 @@
 using System.Linq;
 using Godot;
+using Mdmc.Code.Game.Combat.ModifierSystem;
 using Mdmc.Code.System;
 using AdversaryEntity = Mdmc.Code.Game.Entity.Adversary.AdversaryEntity;
 using ArenaManager = Mdmc.Code.Game.Arena.ArenaManager;
@@ -12,12 +13,10 @@ namespace Mdmc.Code.Client.UI.HUD.UnitFrames;
 
 public partial class UnitFrame : Control
 {
-	[Export]
-	private Vector2 BarSize = new Vector2(200f, 100f);
-	[Export]
-	private float ChangeSpeed = 5f;
-
+	[Export] private Vector2 BarSize = new Vector2(200f, 100f);
+	[Export] private float ChangeSpeed = 5f;
 	[Export] private TextureRect _edgeGlow;
+	[Export] private Vector2 MinSize = new Vector2(200f, 150f); 
 	private ColorRect BarBG;
 	
 	private ColorRect SelectionIndicator;
@@ -34,10 +33,13 @@ public partial class UnitFrame : Control
 	[Export] private TextureRect _tagMain;
 	[Export] private TextureRect _tagRight;
 
+	[Export] private HBoxContainer _modContainer;
+	[Export] private PackedScene _modScene;
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		CustomMinimumSize = BarSize;
+		CustomMinimumSize = MinSize;
 		BarBG = GetNode<ColorRect>("%BarBG");
 		SelectionIndicator = GetNode<ColorRect>("%SelectionIndicator");
 		SelectionIndicator.Visible = false;
@@ -61,7 +63,6 @@ public partial class UnitFrame : Control
 	{
 		CastBG.Visible = false;
 		_edgeGlow.Visible = false;
-		//TODO: implemen unit check here!
 		if(unit != null)
 		{
 			NameLabel.Text = unit.EntityName;
@@ -114,6 +115,7 @@ public partial class UnitFrame : Control
 					_edgeGlow.Position = new Vector2(CastBar.Position.X + CastBar.Size.X - 40, _edgeGlow.Position.Y );
 				}
 			}
+			DrawMods(unit);
 			//TODO : modulate color based on either team/skills etc.
 			var currentHealth = (float)unit.Status.CurrentHealth / (float)unit.Status.MaxHealth;
 			HealthBar.Visible = currentHealth > 0f;
@@ -124,6 +126,41 @@ public partial class UnitFrame : Control
 			HealthBar.Size = new Vector2(BarSize.X * currentHealth, BarSize.Y);
 			ShieldBar.Size = new Vector2(BarSize.X * currentShield, BarSize.Y); 
 			ShieldBar.Position = HealthBar.Position + new Vector2(HealthBar.Size.X - (BarSize.X * shieldClip), 0f);
+		}
+	}
+
+	private void DrawMods(Entity unit)
+	{
+		var mods = unit.Modifiers.GetModifiers();
+		if(mods != null)
+		{
+			var modIcons = _modContainer.GetChildren().Where(x => x is ModIcon).Cast<ModIcon>().ToList();		
+			foreach(ModIcon frame in modIcons)
+            {
+                if(!mods.Any(n => n == frame.Modifier))
+                {
+                    frame.QueueFree();
+                }
+            }
+			foreach(ModifierHandler mod in mods)
+			{
+				if(modIcons.Any(e => e.Modifier == mod))
+					continue;
+				var newEntry = (ModIcon)_modScene.Instantiate();
+				newEntry.Modifier = mod;
+				_modContainer.AddChild(newEntry);
+			}
+		}
+		else
+		{
+			var modIcons = _modContainer.GetChildren().Where(x => x is ModIcon).Cast<ModIcon>().ToList();	
+			if(modIcons.Count > 0)
+			{
+				foreach(var icon in modIcons)
+				{
+					icon.QueueFree();
+				}
+			}
 		}
 	}
 }

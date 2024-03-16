@@ -4,6 +4,3 @@
 
 [node name="EntityModifiers" type="Node"]
 script = ExtResource("1_p4ak5")
-
-[node name="Mods" type="Node" parent="."]
-unique_name_in_owner = true

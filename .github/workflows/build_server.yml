@@ -1,0 +1,54 @@
+name: Build and Export Godot Project
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_export:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Install .NET 7.0
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '7.0.'
+
+    - name: Install Godot Engine
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wget unzip
+        wget https://github.com/godotengine/godot-builds/releases/download/4.2.1-stable/Godot_v4.2.1-stable_mono_linux_x86_64.zip
+        unzip Godot_v4.2.1-stable_mono_linux_x86_64
+        chmod +x Godot_v4.2.1-stable_mono_linux_x86_64
+        sudo mv Godot_v4.2.1-stable_mono_linux_x86_64 /usr/local/bin/godot
+
+    - name: Build and Export Godot Project
+      run: |
+        godot --export "Server" /Game/project.godot /bin/Server/mdmc_server_x86_64
+
+    - name: Zip Exported Files
+      run: |
+        cd  /bin
+        zip -r Server.zip Server/*/*
+    
+    - name: Move Zip File
+      run: |
+          mv /bin/Server/Server.zip /.docker/Server.zip
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.PLAYFAB_DOCKER_REPO }}
+        password: ${{ secrets.PLAYFAB_DOCKER_REPO_PASS }}
+
+    - name: Do the docker things
+      run: |
+        docker build -t ${{ secrets.PLAYFAB_DOCKER_REPO }}/mdmc:latest -f .docker/dockerfile
+        docker push ${{ secrets.PLAYFAB_DOCKER_REPO }}/mdmc:latest
+        
+

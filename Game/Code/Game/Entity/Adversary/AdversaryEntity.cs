@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using Godot;
 using Mdmc.Code.Game.Entity.Adversary.Components;
 using Mdmc.Code.Game.Entity.Adversary.TimelineSolver;
@@ -9,10 +11,8 @@ namespace Mdmc.Code.Game.Entity.Adversary;
 
 public partial class AdversaryEntity : Entity
 {
-    [Export]
-    private Node3D _startPosition;
-    [Export]
-    private float _aggroRange = 2f;
+    [Export] private Node3D _startPosition;
+    [Export] private float _aggroRange = 2f;
 
     private AdversaryStatus _adversaryStatus;
 
@@ -36,6 +36,8 @@ public partial class AdversaryEntity : Entity
         base._Ready();
         Manager = GetNode<TimelineManager>("%TimeLineManager");
         Mover = GetNode<AdversaryMover>("%Mover");
+        
+        Id = Int32.Parse(Name);
 
         _damageTable = new Dictionary<Entity, int>();
         _threatTable = new Dictionary<Entity, int>();

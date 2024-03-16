@@ -3,7 +3,7 @@ using System.Linq;
 using Godot;
 using Mdmc.Code.Game.Arena;
 using Mdmc.Code.Game.Combat.ArsenalSystem;
-using Mdmc.Code.Game.Combat.Modifiers;
+using Mdmc.Code.Game.Combat.ModifierSystem;
 using Mdmc.Code.Game.Combat.SkillSystem;
 using Mdmc.Code.Game.Data;
 
@@ -87,7 +87,7 @@ public partial class DataManager : Node
         return instance;
     }
 
-    public Modifier GetModifierInstance(int id)
+    public ModifierHandler GetModifierInstance(int id)
     {
         var mod = GetData<ModifierData>().Find(m => m.Id == id);
         var instance = mod.GetModifier();

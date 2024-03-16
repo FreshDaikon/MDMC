@@ -126,7 +126,7 @@ _chaseSpeed = 10.0
 
 [node name="AutoAttack" type="Node" parent="TimeLineManager"]
 script = ExtResource("5_4tabc")
-_attackDamage = 250
+_attackDamage = 1000
 
 [node name="AutoAttack2" type="Node" parent="TimeLineManager"]
 script = ExtResource("5_4tabc")

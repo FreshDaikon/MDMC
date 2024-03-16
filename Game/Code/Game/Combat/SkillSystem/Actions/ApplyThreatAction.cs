@@ -1,4 +1,3 @@
-using System;
 using Godot;
 using Mdmc.Code.Game.Arena;
 using Mdmc.Code.Game.Entity.Adversary.Components;
@@ -32,8 +31,8 @@ public partial class ApplyThreatAction : SkillAction
         foreach(var entity in targets)
         {
             var adversaryStatus = entity.Status as AdversaryStatus;
-            adversaryStatus.InflictThreat(_threat, entity);
-            Rpc(nameof(RealizeAction), Int32.Parse(entity.Name), _threat);
+            adversaryStatus.InflictThreat(_threat, player);
+            Rpc(nameof(RealizeAction), entity.Id, _threat);
         }
     }
     [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]

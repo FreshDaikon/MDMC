@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://04nun7ayudyy"]
+[gd_scene load_steps=20 format=3 uid="uid://04nun7ayudyy"]
 
 [ext_resource type="Script" path="res://Code/Game/Arena/ArenaInstance.cs" id="1_1mb5o"]
 [ext_resource type="PackedScene" uid="uid://c3rdlqkf2jd7e" path="res://Assets/3D/Hero_Female_Base.glb" id="3_4es0r"]
@@ -12,42 +12,13 @@
 [ext_resource type="PackedScene" uid="uid://clp5eucv45owf" path="res://Data/Scenes/Realizations/Boss/CircleAoe.tscn" id="10_eha4w"]
 [ext_resource type="PackedScene" uid="uid://dogebc18mwo8y" path="res://Data/Scenes/Realizations/Boss/RectAoeRealization.tscn" id="11_mkw21"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tt0g8"]
-sky_top_color = Color(0.156863, 0.329412, 0.858824, 1)
-sky_horizon_color = Color(0.811765, 0.882353, 1, 1)
-sky_curve = 0.0609192
-ground_bottom_color = Color(0.694118, 0.803922, 1, 1)
-ground_horizon_color = Color(0.513726, 0.827451, 1, 1)
-ground_curve = 0.0857417
-sun_angle_max = 28.68
-
-[sub_resource type="Sky" id="Sky_nj8bo"]
-sky_material = SubResource("ProceduralSkyMaterial_tt0g8")
-
-[sub_resource type="Environment" id="Environment_e0a7j"]
+[sub_resource type="Environment" id="Environment_lt74i"]
 background_mode = 1
-background_color = Color(0.0941176, 0.803922, 0.870588, 1)
-background_energy_multiplier = 0.0
-sky = SubResource("Sky_nj8bo")
-ambient_light_energy = 0.0
+background_color = Color(0.372549, 0.388235, 0.301961, 1)
 tonemap_mode = 2
-ssao_enabled = true
-ssao_radius = 3.56
-sdfgi_enabled = true
-sdfgi_y_scale = 0
-glow_enabled = true
-glow_intensity = 1.0
-glow_bloom = 0.02
-glow_blend_mode = 0
-fog_light_color = Color(1, 1, 1, 1)
-fog_light_energy = 0.0
-fog_density = 0.0
-fog_sky_affect = 0.0
-fog_height = -29.8
-fog_height_density = 2.8774
-volumetric_fog_density = 0.1702
-volumetric_fog_length = 5.0
-volumetric_fog_sky_affect = 0.0
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0262
+volumetric_fog_albedo = Color(1, 1, 0.890196, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5y40w"]
 albedo_color = Color(0.223529, 0.321569, 0.101961, 1)
@@ -103,7 +74,7 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_e0a7j")
+environment = SubResource("Environment_lt74i")
 
 [node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://Scenes/Game/EntitySystem/Player/PlayerEntity.tscn")

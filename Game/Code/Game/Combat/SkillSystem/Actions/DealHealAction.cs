@@ -1,4 +1,3 @@
-using System;
 using Godot;
 using Mdmc.Code.Game.Arena;
 using Mdmc.Code.Game.RealizationSystem;
@@ -31,16 +30,17 @@ public partial class DealHealAction : SkillAction
             var result = entity.Status.InflictHeal(_potency, player);
             var message = new CombatMessage
             {
-                Caster = int.Parse(player.Name),
-                Target = int.Parse(entity.Name),
+                Caster = player.Id,
+                Target = entity.Id,
                 Value = result,
                 MessageType = MD.CombatMessageType.HEAL,
                 Effect = "X damaged Y"
             };
-            Rpc(nameof(RealizeAction), int.Parse(entity.Name), result);
+            Rpc(nameof(RealizeAction), entity.Id, result);
             CombatManager.Instance.AddCombatMessage(message);
         }
     }
+
     [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void RealizeAction(int target, int value)
     {

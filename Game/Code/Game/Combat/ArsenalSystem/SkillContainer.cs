@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using Mdmc.Code.Game.Combat.ArsenalSystem.ContainerComponents;
+using Mdmc.Code.Game.Combat.ModifierSystem;
 using Mdmc.Code.Game.Data;
 using Mdmc.Code.Game.Data.Decorators;
 using Mdmc.Code.Game.Entity.Player;
@@ -25,10 +26,9 @@ public partial class SkillContainer : Node
     public PlayerEntity Player { get; private set; }    
     public PlayerArsenal Arsenal { get; private set; }
 
+    private List<ModifierHandler> _liveBuffs = new();
     private int _currentResourceAmount = 0;
 
-    // Signals :
-    [Signal] public delegate void ContainerTriggeredEventHandler(SkillContainer container, Skill skill);
 
     public override void _Ready()
     {
@@ -44,10 +44,9 @@ public partial class SkillContainer : Node
 
     public void CleanUp()
     {
-        foreach(var buff in BuffsGranted)
+        foreach(var buff in _liveBuffs)
         {
-            // This really only works if all the mods are unique - so keep that in mind!
-            Player.Modifiers.RemoveModifier(buff.Id);
+           buff.Terminate();
         }
     }
 
@@ -101,8 +100,9 @@ public partial class SkillContainer : Node
         
         foreach (var mod in BuffsGranted.Select(buff => buff.GetModifier()))
         {
-            mod.InitData(Player, Player);
-            Player.Modifiers.AddModifier(mod);
+            mod.SetLiveData(Player, Player);
+            Player.Modifiers.AddModifier(mod, Player);
+            _liveBuffs.Add(mod);
         }        
     }
 
@@ -123,12 +123,9 @@ public partial class SkillContainer : Node
         var result = skill.TriggerSkill();
 
         if (!result.SUCCESS) return new SkillResult() { SUCCESS = false, result = MD.ActionResult.ERROR };
-        EmitSignal(SignalName.ContainerTriggered, this, skill);
         return result;
 
     }
-
-    public virtual void OnSkillTriggered(Skill skill){}
 
     public void UpdateComponentStates()
     {

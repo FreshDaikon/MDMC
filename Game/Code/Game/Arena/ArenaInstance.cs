@@ -147,8 +147,7 @@ public partial class ArenaInstance : Node3D
 
     public void AddPlayerEntity(PlayerEntity player)
     {
-        if (!Multiplayer.IsServer()) return;
-        
+        if (!Multiplayer.IsServer()) return;        
         var players = GetPlayers();
         var count = players == null ? 0 : player.GetChildCount();
         _entityContainer.AddChild(player);
@@ -162,47 +161,15 @@ public partial class ArenaInstance : Node3D
         if(_entityContainer.GetChildCount() == 0)
             return;
         var player = _entityContainer.GetChildren().Where(p => p is PlayerEntity).Cast<PlayerEntity>().ToList()
-            .Find(e => e.Name == id.ToString());        
+            .Find(e => e.Id == id);        
         _entityContainer.RemoveChild(player);
     }
 
     public Entity.Entity GetEntity(int id) => _entityContainer.GetChildCount() == 0
         ? null
         : _entityContainer.GetChildren().Where(x => x is Entity.Entity).Cast<Entity.Entity>().ToList()
-            .Find(e => e.Name == id.ToString());
+            .Find(e => e.Id == id);
 
-    public int GetEntityIndex(int id)
-    {
-        if(_entityContainer.GetChildCount() == 0)
-            return -1;
-        return _entityContainer.GetNode(id.ToString()).GetIndex();
-    }
-    public int GetEnemyIndex(int id)
-    {
-        if(_entityContainer.GetChildCount() == 0)
-            return -1;
-        var enemies = _entityContainer.GetChildren()
-            .Where(child => child is AdversaryEntity)
-            .Cast<AdversaryEntity>()
-            .ToList();
-        if(enemies.Count == 0)
-            return -1;
-        return enemies.IndexOf(enemies.Find(p => p.Name == id.ToString()));
-    }
-
-    public int GetFriendlyIndex(int id)
-    {
-        if(_entityContainer.GetChildCount() == 0)
-            return -1;
-        var friends = _entityContainer.GetChildren()
-            .Where(child => child is Entity.Entity)
-            .Cast<Entity.Entity>()
-            .Where(e => e.Team == Entity.Entity.TeamType.Player)
-            .ToList();
-        if(friends.Count == 0)
-            return -1;
-        return friends.IndexOf(friends.Find(p => p.Name == id.ToString())); 
-    }
     public List<Entity.Entity> GetEntities()
     {
         if(_entityContainer.GetChildCount() == 0)

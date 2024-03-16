@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://b8xim26pnfs5"]
+[gd_scene load_steps=13 format=3 uid="uid://b8xim26pnfs5"]
 
 [ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/SkillHandler.cs" id="1_ljarf"]
 [ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/Controllers/CastController.cs" id="2_yb8o6"]
@@ -10,6 +10,8 @@
 [ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/Targeting/AcquireAllInRange.cs" id="8_a5kg7"]
 [ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/TimeController.cs" id="9_clkie"]
 [ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/Actions/ApplyThreatAction.cs" id="9_glsr2"]
+[ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/Actions/ApplyModifierAction.cs" id="10_i0re7"]
+[ext_resource type="Resource" uid="uid://b0r0ak5qdicsi" path="res://Data/Library/Modifiers/DrachenMod.tres" id="11_0d1f6"]
 
 [node name="Drachen_01" type="Node" node_paths=PackedStringArray("_timeController", "_actionController")]
 script = ExtResource("1_ljarf")
@@ -54,11 +56,18 @@ _skill = NodePath("../..")
 _acquisition = NodePath("../DoDamage/TargetAquisition")
 _threat = 200
 
+[node name="ApplyModifierAction" type="Node" parent="CastController" node_paths=PackedStringArray("_skill", "_acquisition")]
+script = ExtResource("10_i0re7")
+_skill = NodePath("../..")
+_acquisition = NodePath("AcquireDirect")
+_modifierData = ExtResource("11_0d1f6")
+_realizationScene = ExtResource("3_d3yxn")
+
+[node name="AcquireDirect" type="Node" parent="CastController/ApplyModifierAction" node_paths=PackedStringArray("Skill")]
+script = ExtResource("4_pncow")
+Skill = NodePath("../../..")
+Range = 10.0
+IsTargetRequired = true
+
 [node name="TimeController" type="Node" parent="."]
 script = ExtResource("9_clkie")
-
-[node name="Realizations" type="Node" parent="."]
-
-[node name="OnAction" type="Node" parent="Realizations"]
-
-[node name="OnCast" type="Node" parent="Realizations"]

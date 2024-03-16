@@ -31,8 +31,19 @@ public partial class DamageMeter : Control
 		//////////////////////////////////////////
 
 		_entryContainer.Visible = CombatManager.Instance.IsInCombat;
+		
 		if(!CombatManager.Instance.IsInCombat)
+		{
+			var oldEntries = _entryList.GetChildren().Where(x => x is DamageMeterEntry).Cast<DamageMeterEntry>().ToList();	
+			if(oldEntries.Count > 0)
+			{
+				foreach(var entry in oldEntries)
+				{
+					entry.QueueFree();
+				}
+			}
 			return;
+		}
 				
 		if(Input.IsActionJustPressed("ToggleMeter"))
 		{

@@ -1,0 +1,52 @@
+[gd_scene load_steps=6 format=3 uid="uid://cr45rhdgxsnsx"]
+
+[ext_resource type="Texture2D" uid="uid://do6mkfdyxlvf5" path="res://Assets/UI/ArsenalSystem/Skills/FlubberSkill_DEBUGF.png" id="1_62exj"]
+[ext_resource type="Script" path="res://Code/Client/UI/HUD/UnitFrames/ModIcon.cs" id="1_cmjse"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_su0p0"]
+blend_mode = 3
+
+[sub_resource type="Gradient" id="Gradient_2yjxc"]
+offsets = PackedFloat32Array(0, 0.866197)
+colors = PackedColorArray(0, 0, 0, 0, 0.7, 0.689733, 0.546, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_mu5u7"]
+gradient = SubResource("Gradient_2yjxc")
+width = 25
+height = 25
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 1)
+
+[node name="mod" type="ColorRect" node_paths=PackedStringArray("_progressBar", "_icon")]
+custom_minimum_size = Vector2(25, 25)
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(0, 0, 0, 1)
+script = ExtResource("1_cmjse")
+_progressBar = NodePath("MarginContainer/TextureProgressBar")
+_icon = NodePath("MarginContainer/TextureRect")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_62exj")
+expand_mode = 1
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="MarginContainer"]
+material = SubResource("CanvasItemMaterial_su0p0")
+layout_mode = 2
+value = 35.0
+fill_mode = 4
+texture_progress = SubResource("GradientTexture2D_mu5u7")

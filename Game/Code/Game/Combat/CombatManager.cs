@@ -93,7 +93,9 @@ public partial class CombatManager: Node
         _heal = new List<EntityContributionTracker>();
         _enmity = new List<EntityContributionTracker>();
         _effect = new List<EntityContributionTracker>();
+        IsInCombat = false;
         CombatStartTime = GameManager.Instance.GameClock;
+        Rpc(nameof(SyncReset));
     }
 
     public void EndAndReport()
@@ -104,21 +106,21 @@ public partial class CombatManager: Node
 
         var participants = (from player in players
             let dps =
-                _damage.Any(d => d.Id == Parse(player.Name))
-                    ? _damage.First(d => d.Id == Parse(player.Name)).TotalValue
+                _damage.Any(d => d.Id == player.Id)
+                    ? _damage.First(d => d.Id == player.Id).TotalValue
                     : 0
             let hps =
-                _heal.Any(h => h.Id == Parse(player.Name))
-                    ? _heal.First(h => h.Id == Parse(player.Name)).TotalValue 
+                _heal.Any(h => h.Id == player.Id)
+                    ? _heal.First(h => h.Id == player.Id).TotalValue 
                     : 0
-            let death = _deaths.Any(d => d.Id == Parse(player.Name))
-                    ? _deaths.First(d => d.Id == Parse(player.Name)).TotalValue
+            let death = _deaths.Any(d => d.Id == player.Id)
+                    ? _deaths.First(d => d.Id == player.Id).TotalValue
                     : 0
             select MakeParticipantFromPlayer(player, dps, hps, death)).ToList();
 
         var record = new ServerArenaRecord()
         {
-            ArenaId = Mdmc.Code.Game.Arena.ArenaManager.Instance.GetCurrentArena().Data.Id,
+            ArenaId = Arena.ArenaManager.Instance.GetCurrentArena().Data.Id,
             Runtime = GetTimeLapsed(),
             Players = participants,
             Progress = 1,
@@ -131,7 +133,7 @@ public partial class CombatManager: Node
     {
         var participant = new ArenaParticipant()
         {
-            Id = Parse(player.Name),
+            Id = player.Id,
             Deaths = deaths,
             Dps = dps,
             Hps = hps,
@@ -175,6 +177,7 @@ public partial class CombatManager: Node
         _heal = new List<EntityContributionTracker>();
         _enmity = new List<EntityContributionTracker>();
         _effect = new List<EntityContributionTracker>();
+        IsInCombat = false;
         CombatStartTime = GameManager.Instance.GameClock;
     }
 

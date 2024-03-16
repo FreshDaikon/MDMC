@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
+using Mdmc.Code.Game.Arena;
 using Mdmc.Code.Game.Combat;
-using Mdmc.Code.Game.Combat.Modifiers;
+using Mdmc.Code.Game.Combat.ModifierSystem;
 using Mdmc.Code.System;
 
 namespace Mdmc.Code.Game.Entity.Components;
@@ -10,94 +11,86 @@ namespace Mdmc.Code.Game.Entity.Components;
 public partial class EntityModifiers : Node
 {
     //Container:
-    private Node _modContainer;
     private Entity _entity;
 
     public override void _Ready()
     {        
-		SetProcess(GetMultiplayerAuthority() == 1);
-        _modContainer = GetNode("%Mods");
         _entity = GetParent<Entity>();
-        base._Ready();
     }
 
-    public SkillResult AddModifier(Modifier mod)
+    public SkillResult AddModifier(ModifierHandler mod, Entity applier)
     {
-        if(!Multiplayer.IsServer())
-            return new SkillResult() { SUCCESS = false, result = MD.ActionResult.ERROR }; ;
-        if(mod != null)
+        // Error if not server:
+        if(!Multiplayer.IsServer()) return new SkillResult() { SUCCESS = false, result = MD.ActionResult.ERROR };
+        // Error if the new mod is null:
+        if(mod == null) return new SkillResult() { SUCCESS = false, result = MD.ActionResult.ERROR };
+
+        if(GetChildren().Count > 0 )
         {
-            var existingMod = _modContainer.GetChildren().Where(m => m is Modifier).Cast<Modifier>().ToList().Find( m => m.Data.Id == mod.Data.Id);
+            GD.Print("Already had some mods - let's see if it's the one we are adding:");
+            var mods = GetChildren().Where(m => m is ModifierHandler).Cast<ModifierHandler>().ToList();
+            var existingMod = mods.Count > 0 ? mods.Find(m => m.Data.Id == mod.Data.Id) : null;
             if(existingMod != null)
             {
-                if(!existingMod.CanStack)
+                GD.Print("The mod already existed so try and add a stack.");
+                if(existingMod.Stacks < existingMod.MaxStacks)
                 {
-                    return new SkillResult() { SUCCESS= false, result = MD.ActionResult.CANT_STACK };
+                    existingMod.AddStack();
+                    return new SkillResult() { SUCCESS = true, result = MD.ActionResult.CAST };
                 }             
                 else
                 {
-                    if(existingMod.Stacks < existingMod.MaxStacks)
-                    {
-                        existingMod.Stacks += 1;
-                        mod.Name = "mod_" + mod.Data.Id;
-                        _modContainer.AddChild(mod);
-                        Rpc(nameof(SyncMod), mod.Data.Id, true);
-                        return new SkillResult() { SUCCESS = true, result = MD.ActionResult.CAST };
-                    }
                     return new SkillResult() { SUCCESS = false, result = MD.ActionResult.MAX_STACKS};                    
                 }   
             }
             else
             {
-                mod.Name = "mod_" + mod.Data.Id;
-                _modContainer.AddChild(mod);
-                Rpc(nameof(SyncMod), mod.Data.Id, true);
+                Rpc(nameof(SyncAddMod), mod.Data.Id, applier.Id);
+                AddChild(mod);
                 return new SkillResult() { SUCCESS = true, result = MD.ActionResult.CAST }; 
-            }            
+            } 
         }
         else
         {
-            GD.Print("Could not add mod...");
-            return new SkillResult() { SUCCESS = false, result = MD.ActionResult.ERROR };            
+            Rpc(nameof(SyncAddMod), mod.Data.Id, applier.Id);
+            AddChild(mod);
+            return new SkillResult() { SUCCESS = true, result = MD.ActionResult.CAST }; 
         }
     }
 
-    public void RemoveModifier(int id)
+    public void RemoveModifier(int modId)
     {
-        var existingMod = _modContainer.GetChildren().Where(m => m is Modifier).Cast<Modifier>().ToList().Find( m => m.Data.Id == id);
-        if (existingMod == null) return;
-        existingMod.QueueFree();
-        if(Multiplayer.IsServer())
-        {  
-            Rpc(nameof(SyncMod), id, false);
+        GD.Print("Remove mod!");
+        var mods = GetChildren().Where(m => m is ModifierHandler).Cast<ModifierHandler>().ToList();
+        var existingMod = mods.Count > 0 ? mods.Find(m => m.Data.Id == modId) : null;
+        existingMod?.QueueFree();
+        if(existingMod != null)
+        {
+            Rpc(nameof(SyncRemoveMod), modId);
         }
     }
 
     [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void SyncMod(int id, bool add)
+    private void SyncAddMod(int modId, int applierId)
     {
-        if(add)
-        {
-            var newMod = DataManager.Instance.GetModifierInstance(id);
-            if(newMod != null)
-            {
-                newMod.Name = "mod_" + id;
-                _modContainer.AddChild(newMod);
-            }
-        }
-        else
-        {
-            var existingMod = _modContainer.GetChildren().Where(m => m is Modifier).Cast<Modifier>().ToList().Find( m => m.Data.Id == id);
-            if(existingMod != null)
-            {
-                existingMod.QueueFree();
-            }
-        }
+        var newMod = DataManager.Instance.GetModifierInstance(modId);
+        var applier = ArenaManager.Instance.GetCurrentArena().GetEntity(applierId); 
+        newMod.SetLiveData(_entity, applier);
+        AddChild(newMod);
     }
 
-    public List<Modifier> GetModifiers()
+    [Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SyncRemoveMod(int modId)
     {
-        var mods = _modContainer.GetChildren().ToList();
-        return mods.Count == 0 ? null : mods.Where(mod => mod is Modifier).Cast<Modifier>().ToList();
+        GD.Print("Synced removal of mod!");
+        var mods = GetChildren().Where(m => m is ModifierHandler).Cast<ModifierHandler>().ToList();
+        var existingMod = mods.Count > 0 ? mods.Find(m => m.Data.Id == modId) : null;
+        existingMod?.QueueFree();
+    }
+
+    public List<ModifierHandler> GetModifiers()
+    {
+        var mods = GetChildren().ToList();
+        return mods.Count == 0 ? null : mods.Where(mod => mod is ModifierHandler).Cast<ModifierHandler>().ToList();
     }
 }

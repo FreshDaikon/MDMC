@@ -14,9 +14,7 @@ public partial class PlayerEntity : Entity
     [Export] public PlayerCamera Camera { get; private set; }
     [Export] public PlayerInput Input { get; private set; }
     [Export] public PlayerArsenal Arsenal { get; private set; } 
-    [Export] public PlayerMover Mover { get; private set; }
-
-    public int Id { get; set; }
+    [Export] public PlayerMover Mover { get; private set; }    
 
     public Entity CurrentFriendlyTarget { get; private set; }
 
@@ -24,7 +22,7 @@ public partial class PlayerEntity : Entity
     {
         CurrentFriendlyTarget = target;
         GD.Print("Friend ID:" + target.Name);
-        Rpc(nameof(SyncFriendlyTarget), Parse(target.Name));
+        Rpc(nameof(SyncFriendlyTarget), target.Id);
     }
 
     [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -33,7 +31,7 @@ public partial class PlayerEntity : Entity
         var entities = ArenaManager.Instance.GetCurrentArena().GetEntities();
         if(entities.Count > 0)
         {
-            var entity = entities.Find(e => Parse(e.Name) == id );
+            var entity = entities.Find(e => e.Id == id );
             if(entity != null) CurrentFriendlyTarget = entity;
             return;
         }
@@ -42,10 +40,13 @@ public partial class PlayerEntity : Entity
 
     public override void _Ready()
     {
+        GD.Print("Let's have a look at this:" + Name);
+        Id = Int32.Parse(Name);
+        GD.Print("Let's have a look at this:" + Id);
         //Make Sure the Input Component is owned by the client peer.
-        Input.SetMultiplayerAuthority(Parse(Name));
+        Input.SetMultiplayerAuthority(Id);
         
-        if(Multiplayer.GetUniqueId() == Parse(Name))
+        if(Multiplayer.GetUniqueId() == Id)
 		{
 			IsLocalPlayer = true;
             Camera.GetCamera().Current = true;

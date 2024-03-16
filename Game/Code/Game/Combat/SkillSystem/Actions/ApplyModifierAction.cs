@@ -30,9 +30,10 @@ public partial class ApplyModifierAction : SkillAction
         {
             foreach(var entity in targets)
             {
-                var mod = DataManager.Instance.GetModifierInstance(_modifierData.Id);
-                Rpc(nameof(RealizeAction), Int32.Parse(entity.Name));
-                entity.Modifiers.AddModifier(mod);
+                var mod = _modifierData.GetModifier();
+                mod.SetLiveData(entity, player);
+                Rpc(nameof(RealizeAction), entity.Id);
+                entity.Modifiers.AddModifier(mod, player);
             }
         }
         GD.Print(targets.ToString());
@@ -41,8 +42,7 @@ public partial class ApplyModifierAction : SkillAction
     [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void RealizeAction(int target)
     {
-        if(_realizationScene == null ) return;
-        
+        if(_realizationScene == null ) return;        
         var entity = ArenaManager.Instance.GetCurrentArena().GetEntity(target);
         
         if(entity == null) return;
