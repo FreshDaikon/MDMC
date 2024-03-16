@@ -25,11 +25,16 @@ jobs:
         wget https://github.com/godotengine/godot-builds/releases/download/4.2.1-stable/Godot_v4.2.1-stable_mono_linux_x86_64.zip
         unzip Godot_v4.2.1-stable_mono_linux_x86_64
         chmod +x Godot_v4.2.1-stable_mono_linux_x86_64/Godot_v4.2.1-stable_mono_linux.x86_64
+        sudo mv Godot_v4.2.1-stable_mono_linux_x86_64/GodotSharp /usr/local/bin/GodotSharp
         sudo mv Godot_v4.2.1-stable_mono_linux_x86_64/Godot_v4.2.1-stable_mono_linux.x86_64 /usr/local/bin/godot
+
+    - name: Rebuild csproj
+      run: |
+          dotnet build Game/MDMC.csproj
 
     - name: Build and Export Godot Project
       run: |
-        godot --headless --export-release "Server" /Game/project.godot /bin/Server/mdmc_server_x86_64
+        godot --headless --export-debug "Server" /Game/project.godot /bin/Server/mdmc_server_x86_64
 
     - name: Zip Exported Files
       run: |
