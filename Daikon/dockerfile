@@ -14,5 +14,5 @@ FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /Daikon
 EXPOSE 5000/udp
 EXPOSE 5000/tcp
-COPY --from=build-env Daikon/Daikon/bin/Release/net7.0 .
+COPY --from=build-env /Daikon/Daikon/out .
 ENTRYPOINT ["dotnet", "Daikon.dll"]
