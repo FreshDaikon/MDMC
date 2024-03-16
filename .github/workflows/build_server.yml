@@ -1,4 +1,4 @@
-name: Build and Export Godot Project
+name: Build and deploy Server
 
 on:
   push:

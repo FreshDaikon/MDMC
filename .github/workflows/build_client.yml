@@ -1,0 +1,47 @@
+name: Build and package Client
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_export:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    # Install Chocolatey
+    - name: Install Chocolatey
+      run: |
+        Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+
+    - name: Install .NET
+      run: |
+        choco install dotnet-sdk --version 7.0 --yes
+
+    - name: Install Godot Engine
+      run: |
+        mkdir godot
+        curl -fsSL -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.2.1-stable/Godot_v4.2.1-stable_mono_win64.zip
+        Expand-Archive godot.zip -DestinationPath godot
+        $env:GODOT_EXE = "$PWD/godot/Godot_v4.2.1-stable_mono_win64/Godot_v4.2.1-stable_mono_win64.exe"
+
+    - name: Build and Export Godot Project
+      run: |
+        godot --export "Client" /Game/project.godot /bin/Client/MDMC.exe
+
+    - name: Zip Exported Files
+      run: |
+        cd  /bin
+        zip -r Client.zip Client/*/*
+
+    - name: Archive Exported Files
+      uses: actions/upload-artifact@v2
+      with:
+          name: MDMC_Client
+          path: /bin/Client/Client.zip
+        
+
