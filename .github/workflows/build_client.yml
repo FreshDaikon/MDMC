@@ -9,9 +9,6 @@ jobs:
   build_and_export:
     runs-on: windows-latest
 
-    env:
-      GODOT_EXE: ${{ github.workspace }}/godot/Godot_v4.2.1-stable_mono_win64/Godot_v4.2.1-stable_mono_win64.exe
-
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
@@ -28,16 +25,14 @@ jobs:
 
     - name: Build and Export Godot Project
       run: |
-        $env:PATH += ";${{ env.GODOT_EXE }}"
         godot --export-release "Client" /Game/project.godot /bin/Client/MDMC.exe
 
     - name: Zip Exported Files
       run: |
-        cd /bin
-        zip -r Client.zip Client/*/*
+        zip -r /bin/Client.zip /bin/Client/*
 
     - name: Archive Exported Files
       uses: actions/upload-artifact@v2
       with:
           name: MDMC_Client
-          path: /bin/Client/Client.zip
+          path: /bin/Client.zip
