@@ -42,5 +42,5 @@ jobs:
           docker login -u "${{ secrets.DAIKON_DOCKERUSERNAME }}" -p "${{ secrets.DAIKON_DOCKERPASS }}"
           docker stop $(docker ps -a -q) 
           docker rmi -f $(docker images -aq)
-          docker pull freshdaikon/daikonconnect:latest
-          docker run run -p 5000:5000 freshdaikon/daikonconnect:latest
+          docker pull ${{ secrets.DAIKON_DOCKERUSERNAME }}/daikonconnect:latest
+          docker run run -p 5000:5000 ${{ secrets.DAIKON_DOCKERUSERNAME }}/daikonconnect:latest

@@ -29,7 +29,7 @@ jobs:
 
     - name: Build and Export Godot Project
       run: |
-        godot --export-release "Server" /Game/project.godot /bin/Server/mdmc_server_x86_64
+        godot --headless --export-release "Server" /Game/project.godot /bin/Server/mdmc_server_x86_64
 
     - name: Zip Exported Files
       run: |
