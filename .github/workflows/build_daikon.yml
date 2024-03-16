@@ -29,8 +29,8 @@ jobs:
 
     - name: Build Docker Image
       run: |
-        docker build -t ${{ secrets.DAIKON_DOCKERUSERNAME }}/daikonconnect:latest -f Daikon/dockerfile
-        docker push -t ${{ secrets.DAIKON_DOCKERUSERNAME }}/daikonconnect:latest
+        docker build ${{ secrets.DAIKON_DOCKERUSERNAME }}/daikonconnect:latest -f Daikon/dockerfile
+        docker push ${{ secrets.DAIKON_DOCKERUSERNAME }}/daikonconnect:latest
 
     - name: SSH into Server and Update Docker Container
       uses: appleboy/ssh-action@master

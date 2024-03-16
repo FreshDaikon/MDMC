@@ -48,7 +48,7 @@ jobs:
 
     - name: Do the docker things
       run: |
-        docker build -t ${{ secrets.PLAYFAB_DOCKER_REPO }}/mdmc:latest -f .docker/dockerfile
+        docker build ${{ secrets.PLAYFAB_DOCKER_REPO }}/mdmc:latest -f .docker/dockerfile
         docker push ${{ secrets.PLAYFAB_DOCKER_REPO }}/mdmc:latest
         
 
