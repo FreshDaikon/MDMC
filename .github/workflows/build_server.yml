@@ -32,8 +32,8 @@ jobs:
 
     - name: Unzip templates and move them
       run: |
-        unzip Templates/data.zip
-        cp -r Templates/data/* ~/.local/share/godot/export_templates/
+        wget https://github.com/godotengine/godot-builds/releases/download/4.2.1-stable/Godot_v4.2.1-stable_mono_export_templates.tpz
+        sudo mv Godot_v4.2.1-stable_mono_export_templates.tpz ~/.local/share/godot/export_templates/Godot_v4.2.1-stable_mono_export_templates.tpz
 
     - name: Install NuGet Packages
       run: |
