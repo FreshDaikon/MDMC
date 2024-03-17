@@ -1,4 +1,4 @@
-name: Build and deploy Server
+name: Build and deploy Server and Client
 
 on:
   push:
@@ -47,14 +47,16 @@ jobs:
     - name: Build and Export Godot Project
       run: |
         mkdir -p ${{ github.workspace }}/bin/Server
+        mkdir -p ${{ github.workspace }}/bin/Client
         godot --headless --export-debug --verbose LinuxServer Game/project.godot ${{ github.workspace }}/bin/Server/mdmc_server_x86_64
+        godot --headless --export-release --verbose Client Game/project.godot ${{ github.workspace }}/bin/Client/mdmc.exe
         ls ${{ github.workspace }}/bin/Server
 
     - name: Zip Exported Files
       run: |
         zip -r -j server.zip ${{ github.workspace }}/bin/Server/
-        ls
-    
+        zip -r -j client.zip ${{ github.workspace}}/bin/Client/
+
     - name: DOCKER!
       uses: docker/login-action@v3
       with:
@@ -67,4 +69,8 @@ jobs:
         docker build -t ${{ secrets.PLAYFAB_DOCKER_REPO }}.azurecr.io/mdmc:latest -f .docker/dockerfile .
         docker push ${{ secrets.PLAYFAB_DOCKER_REPO }}.azurecr.io/mdmc:latest
         
-
+    - name: Archive Exported Files
+      uses: actions/upload-artifact@v4
+      with:
+            name: MDMC_Client
+            path: ${{ github.workspace }}/client.zip
