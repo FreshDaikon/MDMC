@@ -29,11 +29,11 @@ jobs:
         sudo mv Godot_v4.2.1-stable_mono_linux_x86_64/GodotSharp /usr/local/bin/GodotSharp
         sudo mv Godot_v4.2.1-stable_mono_linux_x86_64/Godot_v4.2.1-stable_mono_linux.x86_64 /usr/local/bin/godot
 
-    - name: Unzip templates and move them
-      run: |
-         mkdir -p ~/.local/share/godot/templates
-         unzip Templates/data.zip
-         cp -r Templates/data/* ~/.local/share/godot/templates/
+    ##- name: Unzip templates and move them
+      ##run: |
+        ##   mkdir -p ~/.local/share/godot/templates
+          ## unzip Templates/data.zip
+           ##cp -r Templates/data/* ~/.local/share/godot/templates/
 
     - name: Install NuGet Packages
       run: |
@@ -45,16 +45,15 @@ jobs:
 
     - name: Build and Export Godot Project
       run: |
-        godot --headless --export-debug "LinuxServer" /Game/project.godot /bin/Server/mdmc_server_x86_64
+        godot --headless --export-debug "LinuxServer" Game/project.godot bin/Server/mdmc_server_x86_64
 
     - name: Zip Exported Files
       run: |
-        cd  /bin
-        zip -r Server.zip Server/*/*
+        zip -r Server.zip bin/Server/*/*
     
     - name: Move Zip File
       run: |
-          mv /bin/Server/Server.zip /.docker/Server.zip
+          mv bin/Server/Server.zip /.docker/Server.zip
 
     - name: Log in to Docker Hub
       uses: docker/login-action@v1
