@@ -62,6 +62,7 @@ jobs:
     - name: Log in to Docker Hub
       uses: docker/login-action@v1
       with:
+        registry: ${{ secrets.PLAYFAB_DOCKER_REPO }}.azurecr.io
         username: ${{ secrets.PLAYFAB_DOCKER_REPO }}
         password: ${{ secrets.PLAYFAB_DOCKER_REPO_PASS }}
 
