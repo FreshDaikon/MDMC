@@ -46,7 +46,7 @@ jobs:
 
     - name: Zip Exported Files
       run: |
-        Compress-Archive -Path ${{ github.workspace }}/bin/Client/* -DestinationPath ${{ github.workspace }}/bin/Client.zip 
+        Compress-Archive -Path "${{ github.workspace }}\bin\Client\*" -DestinationPath ${{ github.workspace }}\bin\Client.zip 
 
     - name: Archive Exported Files
       uses: actions/upload-artifact@v4
