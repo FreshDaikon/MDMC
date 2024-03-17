@@ -53,4 +53,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
           name: MDMC_Client
-          path: ${{ github.workspace }}/bin/Client.zip
+          path: ${{ github.workspace }}client.zip
