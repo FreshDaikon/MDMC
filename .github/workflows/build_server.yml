@@ -48,11 +48,11 @@ jobs:
       run: |
         mkdir -p ${{ github.workspace }}/bin/Server
         godot --headless --export-debug --verbose LinuxServer Game/project.godot ${{ github.workspace }}/bin/Server/mdmc_server_x86_64
-        echo ls ${{ github.workspace }}/bin/Server
+        ls ${{ github.workspace }}/bin/Server
 
     - name: Zip Exported Files
       run: |
-        zip -r Server.zip . -i ${{ github.workspace }}/bin/Server
+        zip -r server.zip ${{ github.workspace }}/bin/Server
     
     - name: Move Zip File
       run: |
