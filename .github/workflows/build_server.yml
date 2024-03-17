@@ -44,10 +44,13 @@ jobs:
         dotnet add Game/Mdmc.csproj package PlayFabAllSDK --version 1.174.240119
         dotnet add Game/Mdmc.csproj package SmartFormat.NET --version 3.3.0
 
-    - name: Build and Export Godot Project
+    - name: Build and Export Server
       run: |
         mkdir -p ${{ github.workspace }}/bin/Server
         godot --headless --export-debug LinuxServer Game/project.godot ${{ github.workspace }}/bin/Server/mdmc_server.x86_64
+
+    - name: Build and Export Client
+      run: |
         mkdir -p ${{ github.workspace }}/bin/Client
         godot --headless --export-debug Client Game/project.godot ${{ github.workspace }}/bin/Client/mdmc.exe
 
