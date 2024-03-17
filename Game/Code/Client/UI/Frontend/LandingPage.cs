@@ -21,6 +21,8 @@ public partial class LandingPage : Control
     [Export] private Button _connectDaikonLocal;
     [Export] private Button _connectDaikonRemote;
     [Export] private Button _getArenaRecords;
+
+    private Timer _tokenRefresh;
     
     // Internal :
     private List<ArenaData> _arenas = new();
@@ -38,7 +40,15 @@ public partial class LandingPage : Control
 
         _startGameButton.ButtonUp += StartGame;
         _getArenaRecords.ButtonUp += GetArenaRecords;
-      
+
+        _tokenRefresh = new Timer()
+        {
+            Autostart = true,
+            WaitTime = 5 * 60f, 
+        };
+        AddChild(_tokenRefresh);
+        _tokenRefresh.Timeout += () => { ConnectToDaikon(true); };
+        ConnectToDaikon(true);      
         CallDeferred(nameof(GetArenaList));
         CallDeferred(nameof(SetupNetworkListeners));
     }
@@ -69,8 +79,7 @@ public partial class LandingPage : Control
         DaikonConnect.Instance.GameFound += (host, port) => {
             GD.Print("We have gotten a game here!");
             ClientMultiplayerManager.Instance.SetData(host, port);
-        };
-        
+        };        
     }
 
     private void RequestGame()
@@ -90,7 +99,8 @@ public partial class LandingPage : Control
     }
 
     private void StartGame()
-    {        
+    {       
+
         ClientMultiplayerManager.Instance.StartPeer();
         if(ArenaManager.Instance.GetCurrentArena() == null)
         {
