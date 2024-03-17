@@ -43,5 +43,5 @@ jobs:
           docker stop $(docker ps -a -q) 
           docker rmi -f $(docker images -aq)
           docker pull ${{ secrets.DAIKON_DOCKERUSERNAME }}/daikonconnect:latest
-          nohup docker run -p 5000:5000 ${{ secrets.DAIKON_DOCKERUSERNAME }}/daikonconnect:latest /dev/null 2>&1 &
-          logout
+          nohup docker run -d -p 5000:5000 ${{ secrets.DAIKON_DOCKERUSERNAME }}/daikonconnect:latest
+          exit 0  # Add this line to explicitly mark the script as completed
