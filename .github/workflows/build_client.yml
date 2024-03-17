@@ -38,11 +38,12 @@ jobs:
       run: |
         mkdir -p $env:APPDATA\Godot\export_templates
         Expand-Archive -Path Templates/data.zip -DestinationPath $env:APPDATA\Godot\export_templates
+        mkdir -p ${{ github.workspace }}/bin/Client
     
     - name: Build and Export Godot Project
       run: |
           $godot_exe = "$PWD/godot/Godot_v4.2.1-stable_mono_win64/Godot_v4.2.1-stable_mono_win64.exe"
-          & $godot_exe --headless --export-release "Client" Game/project.godot bin/Client/MDMC.exe
+          & $godot_exe --headless --export-release Client Game/project.godot bin/Client/MDMC.exe
 
     - name: Zip Exported Files
       run: |
