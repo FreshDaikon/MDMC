@@ -35,7 +35,7 @@ jobs:
     - name: Unzip templates and move them
       run: |
             mkdir -p $env:APPDATA\Godot\export_templates
-            Expand-Archive -Path Templates\data.zip -DestinationPath $env:APPDATA\Godot\templates
+            Expand-Archive -Path Templates\data.zip -DestinationPath $env:APPDATA\Godot\export_templates
     
     - name: Build and Export Godot Project
       run: |
