@@ -11,4 +11,4 @@ RUN chmod +x mdmc_server_x86_64
 
 EXPOSE 8080/udp
 
-ENTRYPOINT [ "./mdmc_server_x86_64", "--headless", "--playfab"]
+ENTRYPOINT [ "./mdmc_server_x86_64", "--headless", "--arena 1503418518"]
