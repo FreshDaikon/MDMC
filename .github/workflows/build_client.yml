@@ -13,6 +13,8 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
+      with:
+        lfs: true
 
     - uses: actions/setup-dotnet@v4
       with:
@@ -35,8 +37,7 @@ jobs:
     - name: Unzip templates and move them
       run: |
         mkdir -p $env:APPDATA\Godot\export_templates
-        curl -fsSl templates.zip https://github.com/godotengine/godot-builds/releases/download/4.2.1-stable/Godot_v4.2.1-stable_mono_export_templates.tpz
-        Expand-Archive -Path templates.zip -DestinationPath $env:APPDATA\Godot\export_templates        
+        Expand-Archive -Path Templates/data.zip -DestinationPath $env:APPDATA\Godot\export_templates
     
     - name: Build and Export Godot Project
       run: |

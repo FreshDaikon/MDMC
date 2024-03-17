@@ -12,7 +12,9 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
+      with:
+        lfs: true
 
     - name: Install .NET 7.0
       uses: actions/setup-dotnet@v4
@@ -32,9 +34,7 @@ jobs:
 
     - name: Unzip templates and move them
       run: |
-        wget https://github.com/godotengine/godot-builds/releases/download/4.2.1-stable/Godot_v4.2.1-stable_mono_export_templates.tpz
-        mkdir ~/.local/share/godot/export_templates
-        sudo mv Godot_v4.2.1-stable_mono_export_templates.tpz ~/.local/share/godot/export_templates/Godot_v4.2.1-stable_mono_export_templates.tpz
+        unzip Templates/data.zip -d ~/.local/share/godot/export_templates
 
     - name: Install NuGet Packages
       run: |
