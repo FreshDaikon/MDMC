@@ -33,6 +33,7 @@ jobs:
     - name: Unzip templates and move them
       run: |
         wget https://github.com/godotengine/godot-builds/releases/download/4.2.1-stable/Godot_v4.2.1-stable_mono_export_templates.tpz
+        mkdir ~/.local/share/godot/export_templates
         sudo mv Godot_v4.2.1-stable_mono_export_templates.tpz ~/.local/share/godot/export_templates/Godot_v4.2.1-stable_mono_export_templates.tpz
 
     - name: Install NuGet Packages
