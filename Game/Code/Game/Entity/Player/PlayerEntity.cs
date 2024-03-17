@@ -43,9 +43,9 @@ public partial class PlayerEntity : Entity
 		GD.Print("Let's have a look at this:" + Name);
 		Id = Int32.Parse(Name);
 		Input = GetNode<PlayerInput>("%Input");
-        Arsenal = GetNode<PlayerArsenal>("%Arsenal");
-        Camera = GetNode<PlayerCamera>("%Rig");
-        Mover = GetNode<PlayerMover>("%Mover");
+		Arsenal = GetNode<PlayerArsenal>("%Arsenal");
+		Camera = GetNode<PlayerCamera>("%Rig");
+		Mover = GetNode<PlayerMover>("%Mover");
 		GD.Print("Let's have a look at this:" + Id);
 		//Make Sure the Input Component is owned by the client peer.
 		Input.SetMultiplayerAuthority(Id);		
