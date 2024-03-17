@@ -58,6 +58,11 @@ folder_colors={
 "res://Scenes/Server/": "blue"
 }
 
+[filesystem]
+
+import/blender/enabled=false
+import/fbx/enabled=false
+
 [input]
 
 Camera_Down={
