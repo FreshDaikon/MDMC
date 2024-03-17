@@ -8,6 +8,7 @@ on:
 jobs:
   build_and_export:
     runs-on: ubuntu-latest
+    permissions: write-all
 
     steps:
     - name: Checkout Repository
@@ -31,7 +32,7 @@ jobs:
     - name: Unzip templates and move them
       run: |
          mkdir -p ~/.local/share/godot/templates
-         unzip Templates/data
+         unzip Templates/data.zip
          cp -r Templates/data/* ~/.local/share/godot/templates/
 
     - name: Install NuGet Packages
