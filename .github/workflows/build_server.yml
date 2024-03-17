@@ -38,11 +38,11 @@ jobs:
 
     - name: Install NuGet Packages
       run: |
-            dotnet add Game/Mdmc.csproj package com.playfab.csharpgsdk --version 0.11.210519
-            dotnet add Game/Mdmc.csproj package Facepunch.Steamworks --version 2.3.3
-            dotnet add Game/Mdmc.csproj package LiteDB --version 5.0.17
-            dotnet add Game/Mdmc.csproj package PlayFabAllSDK --version 1.174.240119
-            dotnet add Game/Mdmc.csproj package SmartFormat.NET --version 3.3.0
+        dotnet add Game/Mdmc.csproj package com.playfab.csharpgsdk --version 0.11.210519
+        dotnet add Game/Mdmc.csproj package Facepunch.Steamworks --version 2.3.3
+        dotnet add Game/Mdmc.csproj package LiteDB --version 5.0.17
+        dotnet add Game/Mdmc.csproj package PlayFabAllSDK --version 1.174.240119
+        dotnet add Game/Mdmc.csproj package SmartFormat.NET --version 3.3.0
 
     - name: Build and Export Godot Project
       run: |
@@ -55,7 +55,7 @@ jobs:
         zip -r -j server.zip ${{ github.workspace }}/bin/Server/
         ls
 
-    - name: DOCKER!
+    - name: DOCKER
       uses: docker/login-action@v3
       with:
         registry: ${{ secrets.PLAYFAB_DOCKER_REPO }}.azurecr.io

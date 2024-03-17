@@ -38,7 +38,7 @@ public partial class ClientManager : Node3D
     
     public override void _ExitTree()
     {
-        //If We started a serve locally make sure to kill it.
+        //If We started a server locally make sure to kill it.
         if(ClientMultiplayerManager.Instance.LocalPid != -1)
         {
             var error = OS.Kill(ClientMultiplayerManager.Instance.LocalPid);

@@ -1,0 +1,15 @@
+TextureProgressBar
+ProgressBar
+MarginContainer
+TextureRect
+ColorRect
+HBoxContainer
+VBoxContainer
+Control
+AcquireDirect
+ApplyModifierAction
+BuffShield
+HealAffectedTick
+BuffController
+TickController
+Node
