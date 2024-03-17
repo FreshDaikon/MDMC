@@ -36,6 +36,7 @@ jobs:
         mkdir -p ~/.local/share/godot/export_templates
         unzip Templates/data.zip
         sudo mv Templates ~/.local/share/godot/export_templates
+        ls ~/.local/share/godot/export_templates
 
     - name: Install NuGet Packages
       run: |
