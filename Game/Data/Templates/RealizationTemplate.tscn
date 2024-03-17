@@ -1,6 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://b38obr8fyupjc"]
+[gd_scene load_steps=5 format=3 uid="uid://cei0y2udeey13"]
 
-[ext_resource type="Script" path="res://Code/Game/Realization/Realization.cs" id="1_blwot"]
+[ext_resource type="Script" path="res://Code/Game/RealizationSystem/Realization.cs" id="1_blwot"]
 
 [sub_resource type="Animation" id="Animation_8aq24"]
 resource_name = "End"

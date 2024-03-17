@@ -3,7 +3,6 @@ bin/
 out/
 .godot/
 .DIST/
-.Tools/
 .Engine/
 .SOURCE/
 .idea/

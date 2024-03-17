@@ -8,7 +8,7 @@
 [ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/Targeting/AcquireAllInRangeOf.cs" id="4_ty758"]
 [ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/Actions/DealHealAction.cs" id="5_yk4bu"]
 [ext_resource type="Script" path="res://Code/Game/Combat/SkillSystem/Actions/ApplyModifierAction.cs" id="7_fbeb8"]
-[ext_resource type="Resource" uid="uid://ho11qrwwl5d0" path="res://Data/Library/Modifiers/BasicModifier.tres" id="8_6k8y0"]
+[ext_resource type="Resource" uid="uid://b0r0ak5qdicsi" path="res://Data/Library/Modifiers/DrachenMod.tres" id="8_6k8y0"]
 
 [node name="Skill" type="Node" node_paths=PackedStringArray("_timeController", "_actionController")]
 script = ExtResource("1_3ouq2")
@@ -41,7 +41,6 @@ _potency = 1500
 [node name="AcquireAllInRangeOf" type="Node" parent="CastController/DoDoHeal" node_paths=PackedStringArray("Skill")]
 script = ExtResource("4_ty758")
 Skill = NodePath("../../..")
-WhatTarget = 2
 Range = 20.0
 InRange = 20.0
 IsTargetRequired = true
