@@ -1,10 +1,10 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /Daikon
-
 # Copy everything
 COPY . ./
 # Restore as distinct layers
 WORKDIR /Daikon/Daikon
+RUN ls
 RUN dotnet restore
 # Build and publish a release
 RUN dotnet publish -c Release -o out

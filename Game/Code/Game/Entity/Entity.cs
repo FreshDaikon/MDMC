@@ -25,7 +25,6 @@ public partial class Entity : Node3D
     public string EntityName = "Unnamed Entity";
     [Export]
     public float EntityHeight = 2f;
-
     [Export] public int Id { get; set; }
 
     // Internal Data:
@@ -61,7 +60,7 @@ public partial class Entity : Node3D
 
     public override void _Ready()
     {
-        controller = (EntityController)GetNode("%Controller");
+        controller = GetNode<EntityController>("%Controller");
         modifiers = GetNode<EntityModifiers>("%EntityModifiers");
         status = GetNodeOrNull<EntityStatus>("%EntityStatus");
     }

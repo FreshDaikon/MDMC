@@ -1,2 +1,0 @@
-docker tag mdmc:latest customerefgmaudvn25ic.azurecr.io/mdmc:latest
-docker push customerefgmaudvn25ic.azurecr.io/mcmc:latest

@@ -35,8 +35,9 @@ top_radius = 20.0
 bottom_radius = 20.0
 height = 1.0
 
-[node name="TestArena" type="Node3D" node_paths=PackedStringArray("_playerStartPositions")]
+[node name="TestArena" type="Node3D" node_paths=PackedStringArray("_entityContainer", "_playerStartPositions")]
 script = ExtResource("1_1mb5o")
+_entityContainer = NodePath("EntityContainer")
 _playerStartPositions = [NodePath("Arena/PlayerSpawns/1"), NodePath("Arena/PlayerSpawns/4"), NodePath("Arena/PlayerSpawns/5"), NodePath("Arena/PlayerSpawns/2"), NodePath("Arena/PlayerSpawns/3")]
 
 [node name="Managers" type="Node" parent="."]
