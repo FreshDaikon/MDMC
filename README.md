@@ -1,5 +1,5 @@
 ![image](https://github.com/FreshDaikon/MDMC3/assets/36603973/87a01509-36a9-4656-979c-191fd4dcca6c)
-
+[![Build and deploy Server](https://github.com/FreshDaikon/MDMC/actions/workflows/build_server.yml/badge.svg?branch=main)](https://github.com/FreshDaikon/MDMC/actions/workflows/build_server.yml)
 
 **MDMC (Multi Dimensional Monster Combatants)** </br>
 This project has been going for a while now, and as evident by the name, this is the 3rd reboot!
