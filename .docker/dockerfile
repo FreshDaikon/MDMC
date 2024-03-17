@@ -1,6 +1,6 @@
 FROM ubuntu
 
-COPY Server.zip Server.zip
+COPY server.zip server.zip
 RUN apt-get update
 RUN apt-get -y install unzip
 RUN apt-get install -y dotnet-sdk-7.0
