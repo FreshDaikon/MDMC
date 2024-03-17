@@ -52,7 +52,7 @@ jobs:
     - name: Build and Export Client
       run: |
         mkdir -p ${{ github.workspace }}/bin/Client
-        godot --headless --export-debug Client Game/project.godot ${{ github.workspace }}/bin/Client/mdmc.exe
+        godot --headless --export-release Client Game/project.godot ${{ github.workspace }}/bin/Client/mdmc.exe
 
 
     - name: Zip Exported Files
