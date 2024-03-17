@@ -55,16 +55,16 @@ jobs:
         zip -r -j server.zip ${{ github.workspace }}/bin/Server/
         ls
     
-    - name: Log in to Docker Hub
+    - name: DOCKER!
       uses: docker/login-action@v3
       with:
         registry: ${{ secrets.PLAYFAB_DOCKER_REPO }}.azurecr.io
         username: ${{ secrets.PLAYFAB_DOCKER_REPO }}
-        password: ${{ secrets.PLAYFAB_DOCKER_REPO_PASS }}
-
+        password: ${{ secrets.PLAYFAB_DOCKER_REPO_PASS }}      
+      
     - name: Do the docker things
       run: |
         docker build -t ${{ secrets.PLAYFAB_DOCKER_REPO }}/mdmc:latest -f .docker/dockerfile .
-        docker push ${{ secrets.PLAYFAB_DOCKER_REPO }}/mdmc:latest
+        docker push ${{ secrets.PLAYFAB_DOCKER_REPO }}.azurecr.io/mdmc:latest
         
 
