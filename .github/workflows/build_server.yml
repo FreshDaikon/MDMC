@@ -47,7 +47,8 @@ jobs:
     - name: Build and Export Godot Project
       run: |
         mkdir -p ${{ github.workspace }}/bin/Server
-        godot --headless --export-debug "LinuxServer" Game/project.godot ${{ github.workspace }}/bin/Server/mdmc_server_x86_64
+        godot --headless --build-solutions Game/project.godot
+        godot --headless --export-release LinuxServer Game/project.godot ${{ github.workspace }}/bin/Server/mdmc_server_x86_64
 
     - name: Zip Exported Files
       run: |
