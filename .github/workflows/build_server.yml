@@ -33,7 +33,7 @@ jobs:
 
     - name: Unzip templates and move them
       run: |
-        unzip /Templates/data.zip -d /usr/local/share/godot/export_templates
+        unzip Templates/data.zip -d /usr/local/share/godot/export_templates
 
     - name: Install NuGet Packages
       run: |
