@@ -46,6 +46,7 @@ jobs:
 
     - name: Build and Export Godot Project
       run: |
+        mkdir -p bin/Server
         godot --headless --export-debug "LinuxServer" Game/project.godot bin/Server/mdmc_server_x86_64
 
     - name: Zip Exported Files
