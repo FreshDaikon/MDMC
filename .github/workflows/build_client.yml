@@ -14,7 +14,7 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
       with:
-        lfs: true
+        lfs: 'true'
 
     - uses: actions/setup-dotnet@v4
       with:
@@ -45,10 +45,10 @@ jobs:
           & $godot_exe --headless --export-release "Client" Game/project.godot bin/Client/MDMC.exe
 
     - name: Zip Exported Files
-      run: Compress-Archive -Path "/bin/Client/*" -DestinationPath "/bin/Client.zip"    
+      run: Compress-Archive -Path bin/Client/* -DestinationPath bin/Client.zip 
 
     - name: Archive Exported Files
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
           name: MDMC_Client
-          path: /bin/Client.zip
+          path: bin/Client.zip
