@@ -46,12 +46,12 @@ jobs:
 
     - name: Build and Export Godot Project
       run: |
-        mkdir -p ${{ github.workspace }}/bin/Server
-        godot --headless --editor --export-debug --verbose LinuxServer Game/project.godot ${{ github.workspace }}/bin/Server/mdmc_server.x86_64
+        mkdir -p bin/Server
+        godot --headless --editor --export-debug LinuxServer Game/project.godot bin/Server/mdmc_server.x86_64
 
     - name: Zip Exported Files
       run: |
-        zip -r -j server.zip ${{ github.workspace }}/bin/Server/
+        zip -r -j server.zip bin/Server/
 
     - name: DOCKER!
       uses: docker/login-action@v3
