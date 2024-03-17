@@ -52,7 +52,7 @@ jobs:
 
     - name: Zip Exported Files
       run: |
-        zip -r server.zip ${{ github.workspace }}/bin/Server
+        zip server.zip ${{ github.workspace }}/bin/Server
         ls
     
     - name: Log in to Docker Hub
