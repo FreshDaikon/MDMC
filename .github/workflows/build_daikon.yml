@@ -44,3 +44,4 @@ jobs:
           docker rmi -f $(docker images -aq)
           docker pull ${{ secrets.DAIKON_DOCKERUSERNAME }}/daikonconnect:latest
           nohup docker run -p 5000:5000 ${{ secrets.DAIKON_DOCKERUSERNAME }}/daikonconnect:latest /dev/null 2>&1 &
+          logout

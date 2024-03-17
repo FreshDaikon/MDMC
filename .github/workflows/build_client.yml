@@ -8,6 +8,7 @@ on:
 jobs:
   build_and_export:
     runs-on: windows-latest
+    permissions: write-all
 
     steps:
     - name: Checkout Repository
@@ -16,12 +17,20 @@ jobs:
     - uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '7.0.x'
-
+    
     - name: Install Godot Engine
       run: |
         mkdir godot
         curl -fsSL -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.2.1-stable/Godot_v4.2.1-stable_mono_win64.zip
         Expand-Archive godot.zip -DestinationPath godot
+    
+    - name: Install NuGet Packages
+      run: |
+          dotnet add Game/Mdmc.csproj package com.playfab.csharpgsdk --version 0.11.210519
+          dotnet add Game/Mdmc.csproj package Facepunch.Steamworks --version 2.3.3
+          dotnet add Game/Mdmc.csproj package LiteDB --version 5.0.17
+          dotnet add Game/Mdmc.csproj package PlayFabAllSDK --version 1.174.240119
+          dotnet add Game/Mdmc.csproj package SmartFormat.NET --version 3.3.0
 
     - name: Build and Export Godot Project
       run: |
@@ -29,7 +38,8 @@ jobs:
           & $godot_exe --headless --export-release "Client" /Game/project.godot /bin/Client/MDMC.exe
 
     - name: Zip Exported Files
-      run: Compress-Archive -Path "${{ github.workspace }}/bin/Client/*" -DestinationPath "${{ github.workspace }}/bin/Client.zip"   
+      run: Compress-Archive -Path "/bin/Client/*" -DestinationPath "/bin/Client.zip"
+    
 
     - name: Archive Exported Files
       uses: actions/upload-artifact@v2
