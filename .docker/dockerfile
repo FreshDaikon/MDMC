@@ -1,11 +1,13 @@
 FROM ubuntu
 
 COPY server.zip server.zip
+RUN ls
 RUN apt-get update
 RUN apt-get -y install unzip
 RUN apt-get install -y dotnet-sdk-7.0
 RUN apt-get install -y libfontconfig
 RUN unzip server.zip
+RUN ls
 RUN rm -f server.zip
 RUN chmod +x Server.x86_64
 
