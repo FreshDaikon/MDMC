@@ -51,7 +51,6 @@ folder_colors={
 "res://Code/System/": "gray",
 "res://Data/": "blue",
 "res://Data/Scenes/": "green",
-"res://Data/Templates/": "red",
 "res://Scenes/": "yellow",
 "res://Scenes/Client/": "teal",
 "res://Scenes/Game/": "pink",

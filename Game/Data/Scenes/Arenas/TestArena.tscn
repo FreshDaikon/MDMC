@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://04nun7ayudyy"]
+[gd_scene load_steps=16 format=3 uid="uid://04nun7ayudyy"]
 
 [ext_resource type="Script" path="res://Code/Game/Arena/ArenaInstance.cs" id="1_1mb5o"]
 [ext_resource type="Script" path="res://Code/Game/Combat/CombatManager.cs" id="3_xg5fo"]
@@ -34,12 +34,6 @@ albedo_color = Color(0.235294, 0.290196, 0.329412, 1)
 top_radius = 20.0
 bottom_radius = 20.0
 height = 1.0
-
-[sub_resource type="NavigationMesh" id="NavigationMesh_c2hkm"]
-vertices = PackedVector3Array(-3.5935, 0.301025, 20.5302, -3.3435, 0.301025, 14.2802, -5.0935, 0.301025, 14.0302, -23.0935, 0.301025, 20.5302, -5.0935, 0.301025, -13.9698, -3.3435, 0.301025, -14.2198, -3.5935, 0.301025, -20.4698, -23.0935, 0.301025, -20.4698, -5.0935, 0.301025, 12.2802, -2.8435, 0.301025, 12.0302, -2.8435, 0.301025, -11.9698, -5.0935, 0.301025, -12.2198, -5.0935, 0.301025, 12.2802, -5.0935, 0.301025, -12.2198, -23.0935, 0.301025, -20.4698, -23.0935, 0.301025, 20.5302, -5.0935, 0.301025, -12.2198, -5.0935, 0.301025, -13.9698, -23.0935, 0.301025, -20.4698, -23.0935, 0.301025, 20.5302, -5.0935, 0.301025, 14.0302, -5.0935, 0.301025, 12.2802, -3.3435, 0.301025, -14.2198, 3.4065, 0.301025, -14.2198, 3.6565, 0.301025, -20.4698, -3.5935, 0.301025, -20.4698, 5.1565, 0.301025, 14.0302, 3.4065, 0.301025, 14.2802, 3.6565, 0.301025, 20.5302, 23.1565, 0.301025, 20.5302, 3.6565, 0.301025, -20.4698, 3.4065, 0.301025, -14.2198, 5.1565, 0.301025, -13.9698, 23.1565, 0.301025, -20.4698, 5.1565, 0.301025, -12.2198, 5.1565, 0.301025, 12.2802, 23.1565, 0.301025, 20.5302, 23.1565, 0.301025, -20.4698, 5.1565, 0.301025, -12.2198, 2.9065, 0.301025, -11.9698, 2.9065, 0.301025, 12.0302, 5.1565, 0.301025, 12.2802, 5.1565, 0.301025, 12.2802, 5.1565, 0.301025, 14.0302, 23.1565, 0.301025, 20.5302, 23.1565, 0.301025, -20.4698, 5.1565, 0.301025, -13.9698, 5.1565, 0.301025, -12.2198, -2.8435, 0.301025, 12.0302, 2.9065, 0.301025, 12.0302, 2.9065, 0.301025, -11.9698, -2.8435, 0.301025, -11.9698, -3.5935, 0.301025, 20.5302, 3.6565, 0.301025, 20.5302, 3.4065, 0.301025, 14.2802, -3.3435, 0.301025, 14.2802)
-polygons = [PackedInt32Array(1, 0, 2), PackedInt32Array(2, 0, 3), PackedInt32Array(5, 4, 6), PackedInt32Array(6, 4, 7), PackedInt32Array(9, 8, 10), PackedInt32Array(10, 8, 11), PackedInt32Array(12, 15, 13), PackedInt32Array(13, 15, 14), PackedInt32Array(18, 17, 16), PackedInt32Array(21, 20, 19), PackedInt32Array(22, 25, 23), PackedInt32Array(23, 25, 24), PackedInt32Array(27, 26, 28), PackedInt32Array(28, 26, 29), PackedInt32Array(31, 30, 32), PackedInt32Array(32, 30, 33), PackedInt32Array(34, 37, 35), PackedInt32Array(35, 37, 36), PackedInt32Array(39, 38, 40), PackedInt32Array(40, 38, 41), PackedInt32Array(44, 43, 42), PackedInt32Array(47, 46, 45), PackedInt32Array(51, 50, 48), PackedInt32Array(48, 50, 49), PackedInt32Array(55, 54, 52), PackedInt32Array(52, 54, 53)]
-geometry_source_geometry_mode = 1
-geometry_source_group_name = &"ArenaNav"
 
 [node name="TestArena" type="Node3D" node_paths=PackedStringArray("_playerStartPositions")]
 script = ExtResource("1_1mb5o")
@@ -133,9 +127,6 @@ transform = Transform3D(0.443692, 0.872101, 0.206342, -0.0510172, -0.205293, 0.9
 light_color = Color(1, 0.956863, 0.909804, 1)
 light_energy = 0.367
 shadow_enabled = true
-
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Arena/Enviroment"]
-navigation_mesh = SubResource("NavigationMesh_c2hkm")
 
 [node name="SpotLight3D" type="SpotLight3D" parent="Arena/Enviroment"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 11.5526, -1.31134e-07)

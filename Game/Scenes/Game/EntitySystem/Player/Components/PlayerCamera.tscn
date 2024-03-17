@@ -2,9 +2,10 @@
 
 [ext_resource type="Script" path="res://Code/Game/Entity/Player/Components/PlayerCamera.cs" id="1_evmce"]
 
-[node name="Rig" type="SpringArm3D"]
+[node name="Rig" type="SpringArm3D" node_paths=PackedStringArray("camera")]
 collision_mask = 4
 script = ExtResource("1_evmce")
+camera = NodePath("Camera")
 
 [node name="Camera" type="Camera3D" parent="."]
 unique_name_in_owner = true
