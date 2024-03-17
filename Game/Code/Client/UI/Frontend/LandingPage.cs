@@ -64,12 +64,10 @@ public partial class LandingPage : Control
         DaikonConnect.Instance.GameCreated += (serverhost, port, joincode) => {
             GD.Print("We got a game Created over here!");
             _joinCodeEdit.Text = joincode;
-            ArenaManager.Instance.LoadArena(_arenas[_arenaListOptions.Selected].Id);
             ClientMultiplayerManager.Instance.SetData(serverhost, port);
         };
         DaikonConnect.Instance.GameFound += (host, port) => {
             GD.Print("We have gotten a game here!");
-            ArenaManager.Instance.LoadArena(_arenas[_arenaListOptions.Selected].Id);
             ClientMultiplayerManager.Instance.SetData(host, port);
         };
         
@@ -92,8 +90,12 @@ public partial class LandingPage : Control
     }
 
     private void StartGame()
-    {
+    {        
         ClientMultiplayerManager.Instance.StartPeer();
+        if(ArenaManager.Instance.GetCurrentArena() == null)
+        {
+            ArenaManager.Instance.LoadArena(_arenas[_arenaListOptions.Selected].Id);
+        }
         UIManager.Instance.TrySetUIState(UIManager.UIState.HUD);
         Multiplayer.ConnectedToServer += () => 
         {
