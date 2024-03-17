@@ -9,8 +9,8 @@ RUN apt-get install -y libfontconfig
 RUN unzip server.zip
 RUN ls
 RUN rm -f server.zip
-RUN chmod +x bin/Server/Server.x86_64
+RUN chmod +x home/runner/work/MDMC/MDMC/bin/Server/Server.x86_64
 
 EXPOSE 8080/udp
 
-ENTRYPOINT [ "bin/Server/Server.x86_64", "--headless", "--playfab"]
+ENTRYPOINT [ "home/runner/work/MDMC/MDMC/bin/Server/Server.x86_64", "--headless", "--playfab"]
