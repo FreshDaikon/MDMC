@@ -55,11 +55,6 @@ jobs:
         zip -r server.zip ${{ github.workspace }}/bin/Server
         ls
     
-    - name: Move Zip File
-      run: |
-        mv ${{ github.workspace }}/server.zip ${{ github.workspace }}/.docker/server.zip
-        ls ${{ github.workspace }}/.docker
-
     - name: Log in to Docker Hub
       uses: docker/login-action@v3
       with:
