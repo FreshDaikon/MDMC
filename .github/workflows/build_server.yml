@@ -28,6 +28,12 @@ jobs:
         sudo mv Godot_v4.2.1-stable_mono_linux_x86_64/GodotSharp /usr/local/bin/GodotSharp
         sudo mv Godot_v4.2.1-stable_mono_linux_x86_64/Godot_v4.2.1-stable_mono_linux.x86_64 /usr/local/bin/godot
 
+    - name: Unzip templates and move them
+      run: |
+         mkdir -p ~/.local/share/godot/templates
+         unzip Templates/data
+         cp -r Templates/data/* ~/.local/share/godot/templates/
+
     - name: Install NuGet Packages
       run: |
             dotnet add Game/Mdmc.csproj package com.playfab.csharpgsdk --version 0.11.210519
