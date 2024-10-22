@@ -29,8 +29,8 @@ public class DataController : ControllerBase
         _logger = logger;
         _userService = userService;
         IFirebaseConfig config = new FirebaseConfig {
-            AuthSecret = "K5bOXRWuH2JLTWoNsYWZeT54CwAEwPteVqySRV10",
-            BasePath = "https://mdmc-fe55d-default-rtdb.europe-west1.firebasedatabase.app"
+            AuthSecret = "",
+            BasePath = ""
         };
         _client = new FirebaseClient(config);
     }
