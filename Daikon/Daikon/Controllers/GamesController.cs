@@ -37,8 +37,8 @@ public class GamesController : ControllerBase
         if(auth)
         {
             _logger.LogInformation("Success in authing user - request new server");
-            PlayFabSettings.staticSettings.TitleId= "5FDDE";
-            PlayFabSettings.staticSettings.DeveloperSecretKey ="SJBDAIQS9GIDTBCKM3K5FXXFYAHM9Z6QEB8R1Z9BFSUOEN39OR";
+            PlayFabSettings.staticSettings.TitleId= "";
+            PlayFabSettings.staticSettings.DeveloperSecretKey ="";
             var pfToken = await PlayFabAuthenticationAPI.GetEntityTokenAsync(new PlayFab.AuthenticationModels.GetEntityTokenRequest());
             // Could not auth this Controller.
             if(pfToken.Error != null)
