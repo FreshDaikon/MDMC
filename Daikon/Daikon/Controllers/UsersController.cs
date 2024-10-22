@@ -44,8 +44,8 @@ public class UsersController : ControllerBase
         {
             return NoContent();
         }
-        PlayFabSettings.staticSettings.TitleId= "5FDDE";
-        PlayFabSettings.staticSettings.DeveloperSecretKey ="SJBDAIQS9GIDTBCKM3K5FXXFYAHM9Z6QEB8R1Z9BFSUOEN39OR";
+        PlayFabSettings.staticSettings.TitleId= "";
+        PlayFabSettings.staticSettings.DeveloperSecretKey ="";
         var pfToken = await PlayFabAuthenticationAPI.GetEntityTokenAsync(new PlayFab.AuthenticationModels.GetEntityTokenRequest());
 
         if(pfToken.Error != null)
